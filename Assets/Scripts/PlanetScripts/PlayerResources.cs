@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+public static class PlayerResources
+{
+    public static int Plants = 0;
+    public static int Water = 0;
+    public static int Biofuel = 0;
+    public static int WaterBottle = 0;
+    public static int Battery = 0;
+
+    public static string AddCurrentResource(ref int currentResourceSet, int amount)
+    {
+        currentResourceSet += amount;
+        return currentResourceSet.ToString();
+    }
+
+    public static string ReduceCurrentResource(ref int currentResourceSet, int amount)
+    {
+        currentResourceSet -= amount;
+        return currentResourceSet.ToString();
+    }
+
+    public static string GetCurrentResource(ref int currentResourceSet)
+    {
+        return currentResourceSet.ToString();
+    }
+
+    public static string ResetCurrentResource(ref int currentResourceSet)
+    {
+        currentResourceSet = 0;
+        return currentResourceSet.ToString();
+    }
+}
