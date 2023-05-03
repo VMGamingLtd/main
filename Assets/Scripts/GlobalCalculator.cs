@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 using System;
@@ -15,7 +16,7 @@ public class GlobalCalculator : MonoBehaviour
 
     // current date display
     public TextMeshProUGUI DateDisplay;
-    public TextMeshProUGUI planet0Index;
+    public RotateImage rotateImage;
 
     public bool GameStarted = false;
 
@@ -36,11 +37,12 @@ public class GlobalCalculator : MonoBehaviour
                 timer -= delayTime;
                 seconds++;
 
-                if (seconds > 10)
+                if (seconds > 59)
                 {
                     seconds = 1;
                     minutes++;
                     saveManager.SaveToJsonFile();
+                    StartCoroutine(rotateImage.RotateOverTime(0.5f));
                 }
                 if (minutes > 60)
                 {
@@ -55,9 +57,8 @@ public class GlobalCalculator : MonoBehaviour
     public void UpdateEverySecond()
     {
         DateDisplay.text = $"{GlobalCalculator.hours.ToString("00")}:{GlobalCalculator.minutes.ToString("00")}:{GlobalCalculator.seconds.ToString("00")}";
-        planet0Index.text = $"{Planet0Buildings.Planet0Index.ToString()}%";
-        planet0Index.color = Color.green;     
     }
+
 }
 
 

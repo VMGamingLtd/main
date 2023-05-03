@@ -11,8 +11,8 @@ public class Planet0Name : MonoBehaviour
 
     void OnEnable()
     {
-        myInputField.Select();
-        myInputField.text = "";
+        //myInputField.Select();
+        //myInputField.text = "";
         NameText.text = Planet0Name.planet0Name;
     }
 

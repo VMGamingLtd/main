@@ -16,7 +16,7 @@ public class StartGameInputChecker : MonoBehaviour
     {
          globalCalculator.GameStarted = true;
          NewGamePopup.SetActive(false);
-         AchievementPoints.ResetPoints();
+         EXPPoints.ResetPoints();
 
          //initialize starting resources
          Credits.ResetCredits();

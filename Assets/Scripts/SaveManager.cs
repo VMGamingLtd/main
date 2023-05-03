@@ -24,7 +24,7 @@ public class SaveManager : MonoBehaviour
         public int biofuel;
         public int waterbottle;
         public int battery;
-        public int achievementPoints;
+        public int expPoints;
         public bool registeredUser;
         public float credits;
 
@@ -67,7 +67,7 @@ public class SaveManager : MonoBehaviour
         currentSaveData.biofuel = PlayerResources.Biofuel;
         currentSaveData.waterbottle = PlayerResources.WaterBottle;
         currentSaveData.battery = PlayerResources.Battery;
-        currentSaveData.achievementPoints = AchievementPoints.achievementPoints;
+        currentSaveData.expPoints = EXPPoints.expPoints;
         currentSaveData.registeredUser = CoroutineManager.registeredUser;
         currentSaveData.credits = Credits.credits;
 

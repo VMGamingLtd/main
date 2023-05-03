@@ -36,6 +36,7 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] biofuelTexts;
     public TextMeshProUGUI[] waterBottleTexts;
     public TextMeshProUGUI[] batteryTexts;
+    public TextMeshProUGUI[] planetStatsTexts;
 
 
 
@@ -69,6 +70,10 @@ public class CoroutineManager : MonoBehaviour
         {
             StartCoroutine("StopCollectWaterBottle");
         }
+        else if (CoroutineManager.IndexNumber == 4)
+        {
+            StartCoroutine("StopCreateBattery");
+        }
     }
 
     IEnumerator WaitForLoadingBar () {
@@ -77,7 +82,7 @@ public class CoroutineManager : MonoBehaviour
         globalCalculator.GameStarted = false;
         yield return new WaitForSeconds(2.0f);
 
-        if (registeredUser == false) 
+        if (registeredUser == false)
         {
             loginMenu.SetActive (true);
             loadingBar.SetActive (false);
@@ -89,7 +94,7 @@ public class CoroutineManager : MonoBehaviour
             loadingBar.SetActive(false);
             loginMenu.SetActive(false);
         }
-        
+
     }
 
     IEnumerator ResetNewGame () {
@@ -141,7 +146,7 @@ public class CoroutineManager : MonoBehaviour
             timer += UnityEngine.Time.deltaTime;
             yield return null;
         }
-   
+
         imageToFillCollectPlants.fillAmount = 0f;
 
         PlayerResources.AddCurrentResource(ref PlayerResources.Plants, 5);
@@ -349,5 +354,22 @@ public class CoroutineManager : MonoBehaviour
             batteryTexts[i].text = currentBatteryResource;
         }
 
+    }
+    public IEnumerator StopCreateBattery()
+    {
+        StopCoroutine("CreateBattery");
+        CoroutineManager.AllCoroutineBooleans[4] = true;
+        PlayerResources.AddCurrentResource(ref PlayerResources.Biofuel, 10);
+
+        string currentBiofuelResource = PlayerResources.GetCurrentResource(ref PlayerResources.Biofuel);
+
+        for (int i = 0; i < biofuelTexts.Length; i++)
+        {
+            biofuelTexts[i].text = currentBiofuelResource;
+        }
+
+
+        imageToFillCreateBattery.fillAmount = 0f;
+        yield return null;
     }
 }
