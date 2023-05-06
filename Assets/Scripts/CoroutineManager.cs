@@ -13,6 +13,13 @@ public class CoroutineManager : MonoBehaviour
     public GameObject newGamePopup;
     private TextMeshProUGUI textObject;
 
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI currentExpText;
+    public TextMeshProUGUI maxExpText;
+    public TextMeshProUGUI skillPointsText;
+    public TextMeshProUGUI statPointsText;
+    public Image ExpBar;
+
     // data for server
     public static bool registeredUser = false;
 
@@ -146,10 +153,31 @@ public class CoroutineManager : MonoBehaviour
             timer += UnityEngine.Time.deltaTime;
             yield return null;
         }
-
         imageToFillCollectPlants.fillAmount = 0f;
 
         PlayerResources.AddCurrentResource(ref PlayerResources.Plants, 5);
+        Level.AddCurrentResource(ref Level.PlayerCurrentExp, 1);
+        currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
+
+        int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
+        int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
+        float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
+        ExpBar.fillAmount = fillAmount;
+
+        if (playerCurrentExp >= playerMaxExp)
+        {
+            ExpBar.fillAmount = 0f;
+            currentExpText.text = "0";
+            Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
+            int result = playerMaxExp * 2;
+            Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+            Level.AddCurrentResource(ref Level.PlayerLevel, 1);
+            levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
+            Level.AddCurrentResource(ref Level.StatPoints, 5);
+            Level.AddCurrentResource(ref Level.SkillPoints, 1);
+            statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
+            skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
+        }
 
         string currentPlantResource = PlayerResources.GetCurrentResource(ref PlayerResources.Plants);
 
@@ -182,6 +210,28 @@ public class CoroutineManager : MonoBehaviour
         }
 
         PlayerResources.AddCurrentResource(ref PlayerResources.Water, 10);
+        Level.AddCurrentResource(ref Level.PlayerCurrentExp, 1);
+        currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
+
+        int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
+        int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
+        float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
+        ExpBar.fillAmount = fillAmount;
+
+        if (playerCurrentExp >= playerMaxExp)
+        {
+            ExpBar.fillAmount = 0f;
+            currentExpText.text = "0";
+            Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
+            int result = playerMaxExp * 2;
+            Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+            Level.AddCurrentResource(ref Level.PlayerLevel, 1);
+            levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
+            Level.AddCurrentResource(ref Level.StatPoints, 5);
+            Level.AddCurrentResource(ref Level.SkillPoints, 1);
+            statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
+            skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
+        }
 
         string currentWaterResource = PlayerResources.GetCurrentResource(ref PlayerResources.Water);
 
@@ -231,6 +281,28 @@ public class CoroutineManager : MonoBehaviour
             imageToFillCollectBiofuel.fillAmount = 0f;
 
             PlayerResources.AddCurrentResource(ref PlayerResources.Biofuel, 1);
+            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 5);
+            currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
+
+            int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
+            int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
+            float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
+            ExpBar.fillAmount = fillAmount;
+
+            if (playerCurrentExp >= playerMaxExp)
+            {
+                ExpBar.fillAmount = 0f;
+                currentExpText.text = "0";
+                Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
+                int result = playerMaxExp * 2;
+                Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+                Level.AddCurrentResource(ref Level.PlayerLevel, 1);
+                levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
+                Level.AddCurrentResource(ref Level.StatPoints, 5);
+                Level.AddCurrentResource(ref Level.SkillPoints, 1);
+                statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
+                skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
+            }
 
             string currentBiofuelResource = PlayerResources.GetCurrentResource(ref PlayerResources.Biofuel);
 
@@ -238,9 +310,11 @@ public class CoroutineManager : MonoBehaviour
             {
                 biofuelTexts[i].text = currentBiofuelResource;
             }
-            imageToFillCollectWater.fillAmount = 0f;
-
             StartCoroutine("CollectBiofuel");
+        }
+        else
+        {
+            CoroutineManager.AllCoroutineBooleans[2] = false;
         }
     }
 
@@ -289,6 +363,28 @@ public class CoroutineManager : MonoBehaviour
             }
 
             PlayerResources.AddCurrentResource(ref PlayerResources.WaterBottle, 1);
+            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 5);
+            currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
+
+            int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
+            int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
+            float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
+            ExpBar.fillAmount = fillAmount;
+
+            if (playerCurrentExp >= playerMaxExp)
+            {
+                ExpBar.fillAmount = 0f;
+                currentExpText.text = "0";
+                Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
+                int result = playerMaxExp * 2;
+                Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+                Level.AddCurrentResource(ref Level.PlayerLevel, 1);
+                levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
+                Level.AddCurrentResource(ref Level.StatPoints, 5);
+                Level.AddCurrentResource(ref Level.SkillPoints, 1);
+                statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
+                skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
+            }
 
             imageToFillCollectWaterBottle.fillAmount = 0f;
 
@@ -300,6 +396,10 @@ public class CoroutineManager : MonoBehaviour
             }
 
             StartCoroutine("CollectWaterBottle");
+        }
+        else
+        {
+            CoroutineManager.AllCoroutineBooleans[3] = false;
         }
     }
 
@@ -322,38 +422,68 @@ public class CoroutineManager : MonoBehaviour
 
     public IEnumerator CreateBattery()
     {
-        float timer = 0f;
-        float fillTimePlanet0bb = 5f;
-        CoroutineManager.AllCoroutineBooleans[4] = true;
+        int biofuel = PlayerResources.Biofuel;
 
-        PlayerResources.ReduceCurrentResource(ref PlayerResources.Biofuel, 10);
-
-        string currentBiofuelResource = PlayerResources.GetCurrentResource(ref PlayerResources.Biofuel);
-
-        for (int i = 0; i < biofuelTexts.Length; i++)
+        if (biofuel >= 10)
         {
-            biofuelTexts[i].text = currentBiofuelResource;
-        }
+            float timer = 0f;
+            float fillTimePlanet0bb = 5f;
+            CoroutineManager.AllCoroutineBooleans[4] = true;
 
-        while (timer < fillTimePlanet0bb)
+            PlayerResources.ReduceCurrentResource(ref PlayerResources.Biofuel, 10);
+
+            string currentBiofuelResource = PlayerResources.GetCurrentResource(ref PlayerResources.Biofuel);
+
+            for (int i = 0; i < biofuelTexts.Length; i++)
+            {
+                biofuelTexts[i].text = currentBiofuelResource;
+            }
+
+            while (timer < fillTimePlanet0bb)
+            {
+                currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
+                imageToFillCreateBattery.fillAmount = currentFillAmountPlanet0bb;
+                timer += UnityEngine.Time.deltaTime;
+                yield return null;
+            }
+
+            PlayerResources.AddCurrentResource(ref PlayerResources.Battery, 1);
+            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 10);
+            currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
+
+            int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
+            int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
+            float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
+            ExpBar.fillAmount = fillAmount;
+
+            if (playerCurrentExp >= playerMaxExp)
+            {
+                ExpBar.fillAmount = 0f;
+                currentExpText.text = "0";
+                Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
+                int result = playerMaxExp * 2;
+                Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+                Level.AddCurrentResource(ref Level.PlayerLevel, 1);
+                levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
+                Level.AddCurrentResource(ref Level.StatPoints, 5);
+                Level.AddCurrentResource(ref Level.SkillPoints, 1);
+                statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
+                skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
+            }
+
+            imageToFillCreateBattery.fillAmount = 0f;
+
+            string currentBatteryResource = PlayerResources.GetCurrentResource(ref PlayerResources.Battery);
+
+            for (int i = 0; i < batteryTexts.Length; i++)
+            {
+                batteryTexts[i].text = currentBatteryResource;
+            }
+        }
+        else
         {
-            currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-            imageToFillCreateBattery.fillAmount = currentFillAmountPlanet0bb;
-            timer += UnityEngine.Time.deltaTime;
-            yield return null;
+            CoroutineManager.AllCoroutineBooleans[4] = false;
         }
-
-        PlayerResources.AddCurrentResource(ref PlayerResources.Battery, 1);
-
-        imageToFillCreateBattery.fillAmount = 0f;
-
-        string currentBatteryResource = PlayerResources.GetCurrentResource(ref PlayerResources.Battery);
-
-        for (int i = 0; i < batteryTexts.Length; i++)
-        {
-            batteryTexts[i].text = currentBatteryResource;
-        }
-
     }
     public IEnumerator StopCreateBattery()
     {

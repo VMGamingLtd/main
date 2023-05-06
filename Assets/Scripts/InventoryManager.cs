@@ -9,6 +9,7 @@ public class InventoryManager : MonoBehaviour
     public GameObject[] RawItems;
     public GameObject[] IntermediateItems;
     public GameObject[] AssembledItems;
+    public GameObject[] UtilityItems;
 
     public static string ShowItemTypes = "ALL";
 
@@ -24,6 +25,18 @@ public class InventoryManager : MonoBehaviour
         {
             ShowRawItems();
         }
+        else if (showItemTypes == "INTERMEDIATE")
+        {
+            ShowIntermediateItems();
+        }
+        else if (showItemTypes == "ASSEMBLED")
+        {
+            ShowAssembledItems();
+        }
+        else if (showItemTypes == "UTILITY")
+        {
+            ShowUtilityItems();
+        }
     }
 
     public void ShowAllItems()
@@ -35,7 +48,7 @@ public class InventoryManager : MonoBehaviour
             if (HasChildTextGreaterThanZero(rawItem))
             {
                 rawItem.SetActive(true);
-            }  
+            }
         }
 
         foreach (GameObject intermediateItem in IntermediateItems)
@@ -43,7 +56,7 @@ public class InventoryManager : MonoBehaviour
             if (HasChildTextGreaterThanZero(intermediateItem))
             {
                 intermediateItem.SetActive(true);
-            }      
+            }
         }
 
         foreach (GameObject assembledItem in AssembledItems)
@@ -51,7 +64,15 @@ public class InventoryManager : MonoBehaviour
             if (HasChildTextGreaterThanZero(assembledItem))
             {
                 assembledItem.SetActive(true);
-            }     
+            }
+        }
+
+        foreach (GameObject utilityItem in UtilityItems)
+        {
+            if (HasChildTextGreaterThanZero(utilityItem))
+            {
+                utilityItem.SetActive(true);
+            }
         }
     }
 
@@ -68,7 +89,7 @@ public class InventoryManager : MonoBehaviour
         }
 
         foreach (GameObject intermediateItem in IntermediateItems)
-        {           
+        {
             {
                 intermediateItem.SetActive(false);
             }
@@ -78,6 +99,115 @@ public class InventoryManager : MonoBehaviour
         {
             {
                 assembledItem.SetActive(false);
+            }
+        }
+
+        foreach (GameObject utilityItem in UtilityItems)
+        {
+            {
+                utilityItem.SetActive(false);
+            }
+        }
+    }
+
+    public void ShowIntermediateItems()
+    {
+        InventoryManager.ShowItemTypes = "INTERMEDIATE";
+
+        foreach (GameObject rawItem in RawItems)
+        {
+            {
+                rawItem.SetActive(false);
+            }
+        }
+
+        foreach (GameObject intermediateItem in IntermediateItems)
+        {
+            if (HasChildTextGreaterThanZero(intermediateItem))
+            {
+                intermediateItem.SetActive(true);
+            }
+        }
+
+        foreach (GameObject assembledItem in AssembledItems)
+        {
+            {
+                assembledItem.SetActive(false);
+            }
+        }
+
+        foreach (GameObject utilityItem in UtilityItems)
+        {
+            {
+                utilityItem.SetActive(false);
+            }
+        }
+    }
+
+    public void ShowAssembledItems()
+    {
+        InventoryManager.ShowItemTypes = "ASSEMBLED";
+
+        foreach (GameObject rawItem in RawItems)
+        {
+            {
+                rawItem.SetActive(false);
+            }
+        }
+
+        foreach (GameObject intermediateItem in IntermediateItems)
+        {
+            {
+                intermediateItem.SetActive(false);
+            }
+        }
+
+        foreach (GameObject assembledItem in AssembledItems)
+        {
+            if (HasChildTextGreaterThanZero(assembledItem))
+            {
+                assembledItem.SetActive(true);
+            }
+        }
+
+        foreach (GameObject utilityItem in UtilityItems)
+        {
+            {
+                utilityItem.SetActive(false);
+            }
+        }
+    }
+
+    public void ShowUtilityItems()
+    {
+        InventoryManager.ShowItemTypes = "UTILITY";
+
+        foreach (GameObject rawItem in RawItems)
+        {
+            {
+                rawItem.SetActive(false);
+            }
+        }
+
+        foreach (GameObject intermediateItem in IntermediateItems)
+        {
+            {
+                intermediateItem.SetActive(false);
+            }
+        }
+
+        foreach (GameObject assembledItem in AssembledItems)
+        {
+            {
+                assembledItem.SetActive(false);
+            }
+        }
+
+        foreach (GameObject utilityItem in UtilityItems)
+        {
+            if (HasChildTextGreaterThanZero(utilityItem))
+            {
+                utilityItem.SetActive(true);
             }
         }
     }

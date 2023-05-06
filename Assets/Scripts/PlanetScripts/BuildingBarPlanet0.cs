@@ -9,12 +9,10 @@ public class BuildingBarPlanet0 : MonoBehaviour {
     public CoroutineManager coroutineManager;
     public Animation errorMessage;
 
-    public TextMeshProUGUI toolsMessageText;
-    public TextMeshProUGUI materialsMessageText;
 
 
 
-    public void StartWaterBottle() 
+    public void StartWaterBottle()
     {
         int water = PlayerResources.Water;
         if (CoroutineManager.AllCoroutineBooleans[3] == true)
@@ -81,7 +79,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
         {
             CoroutineManager.AllCoroutineBooleans[1] = true;
             coroutineManager.StartCoroutine("CollectWater");
-        }          
+        }
     }
 
     public void StartCollectBiofuel()
@@ -102,7 +100,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
             else
             {
                 StartCoroutine(errorCoroutine());
-            }                
+            }
         }
         else if (plants >= 20)
         {
