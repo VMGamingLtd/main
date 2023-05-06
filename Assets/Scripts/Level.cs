@@ -5,7 +5,7 @@ using UnityEngine;
 public static class Level
 {
     public static int PlayerLevel = 1;
-    public static int PlayerCurrentExp = 0;
+    public static int PlayerCurrentExp = 1;
     public static int PlayerMaxExp = 20;
     public static int SkillPoints = 0;
     public static int StatPoints = 0;
