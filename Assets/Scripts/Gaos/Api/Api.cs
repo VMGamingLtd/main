@@ -52,7 +52,7 @@ namespace Gaos.Api
 
     public class Configuration
     {
-        public static Configuration Config = new Configuration("https://localhost:7107");
+        public static Configuration Config = new Configuration("https://localhost:7070");
 
         public string API_URL;
         public int RequestTimeoutSeconds = 10;
@@ -85,6 +85,8 @@ namespace Gaos.Api
 
         public string ResponseJsonStr;
         public bool IsResponseError = false;
+        public bool IsResponseTimeout = false;
+
 
         private Configuration Config = Configuration.Config.clone();
 
@@ -137,7 +139,7 @@ namespace Gaos.Api
             {
                 Debug.LogError($"{CLASS_NAME}:{METHOD}: error: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
                 this.IsResponseError = true;
-                yield break;
+                this.IsResponseTimeout = wr.error.Contains("timeout");
             }
             else
             {
@@ -146,12 +148,9 @@ namespace Gaos.Api
                 {
                     Debug.LogError($"{CLASS_NAME}:{METHOD}: error: response content type is not json, url: {wr.url}");
                     this.IsResponseError = true;
-                    yield break;
-
                 }
                 this.ResponseJsonStr = wr.downloadHandler.text;
                 this.IsResponseError = false;
-                yield break;
             }
 
 
@@ -176,6 +175,7 @@ namespace Gaos.Api
 
         public string ResponseJsonStr;
         public bool IsResponseError = false;
+        public bool IsResponseTimeout = false;
 
 
         private Configuration config = Configuration.Config.clone();
@@ -242,6 +242,7 @@ namespace Gaos.Api
             {
                 Debug.LogError($"{CLASS_NAME}:{METHOD}: error: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
                 this.IsResponseError = true;
+                this.IsResponseTimeout = wr.error.Contains("timeout");
             }
             else
             {
@@ -270,22 +271,23 @@ namespace Gaos.Api
 
     }
 
-    public class ApiCall<RequestDataT, ResponseDataT>
+    public class ApiCall
     {
-        public readonly static string CLASS_NAME = typeof(ApiCall<RequestDataT, ResponseDataT>).Name;
+        public readonly static string CLASS_NAME = typeof(ApiCall).Name;
 
         private string UrlPath;
 
-        public readonly RequestDataT Request;
-        public ResponseDataT Response;
-        public bool IsResponseError;
+        public readonly string RequestJsonStr;
+        public string ResponseJsonStr;
+        public bool IsResponseError = false;
+        public bool IsResponseTimeout = false;
 
-        public Configuration Config = null;
+        public Configuration Config = Configuration.Config.clone();
 
-        public ApiCall(string urlPath, RequestDataT request)
+        public ApiCall(string urlPath, string requestJsonStr)
         {
             this.UrlPath = urlPath;
-            this.Request = request;
+            this.RequestJsonStr = requestJsonStr;
         }
         public void SetConfig(Configuration config)
         {
@@ -295,12 +297,8 @@ namespace Gaos.Api
         {
             string METHOD = "Call()";
 
-            string requestJsonStr = JsonUtility.ToJson(Request);
-            HttpPostJsonCall http = new HttpPostJsonCall($"{Configuration.Config.API_URL}{this.UrlPath}", requestJsonStr);
-            if (this.Config != null)
-            {
-                http.SetConfig(this.Config);
-            }
+            HttpPostJsonCall http = new HttpPostJsonCall($"{Configuration.Config.API_URL}/{this.UrlPath}", RequestJsonStr);
+            http.SetConfig(this.Config);
 
             yield return http.Call();
 
@@ -308,10 +306,11 @@ namespace Gaos.Api
             {
                 Debug.LogError($"{CLASS_NAME}:{METHOD}: error calling api url: {Configuration.Config.API_URL}{this.UrlPath}");
                 this.IsResponseError = true;
+                this.IsResponseTimeout = http.IsResponseTimeout;
             }
             else
             {
-                this.Response = JsonUtility.FromJson<ResponseDataT>(http.ResponseJsonStr);
+                this.ResponseJsonStr = http.ResponseJsonStr;
                 this.IsResponseError = false;
             }
 
