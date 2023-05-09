@@ -13,7 +13,6 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
 
         string objectName = eventData.pointerEnter.transform.name;
-        Debug.Log(objectName);
         DisplayTooltip(objectName);
     }
 
@@ -29,9 +28,29 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             tooltipObjects.PlanetIndex.SetActive(true);
         }
+        else if (objectName == "Plants")
+        {
+            tooltipObjects.Plants.SetActive(true);
+        }
         else if (objectName == "Water")
         {
             tooltipObjects.Water.SetActive(true);
+        }
+        else if (objectName == "Biofuel")
+        {
+            tooltipObjects.Biofuel.SetActive(true);
+        }
+        else if (objectName == "WaterBottle")
+        {
+            tooltipObjects.WaterBottle.SetActive(true);
+        }
+        else if (objectName == "Battery")
+        {
+            tooltipObjects.Battery.SetActive(true);
+        }
+        else if (objectName == "OxygenTank")
+        {
+            tooltipObjects.OxygenTank.SetActive(true);
         }
     }
 
@@ -41,9 +60,29 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             tooltipObjects.PlanetIndex.SetActive(false);
         }
+        else if (objectName == "Plants")
+        {
+            tooltipObjects.Plants.SetActive(false);
+        }
         else if (objectName == "Water")
         {
             tooltipObjects.Water.SetActive(false);
+        }
+        else if (objectName == "Biofuel")
+        {
+            tooltipObjects.Biofuel.SetActive(false);
+        }
+        else if (objectName == "WaterBottle")
+        {
+            tooltipObjects.WaterBottle.SetActive(false);
+        }
+        else if (objectName == "Battery")
+        {
+            tooltipObjects.Battery.SetActive(false);
+        }
+        else if (objectName == "OxygenTank")
+        {
+            tooltipObjects.OxygenTank.SetActive(false);
         }
     }
 }
