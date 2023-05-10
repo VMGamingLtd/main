@@ -137,7 +137,7 @@ namespace Gaos.Api
 
             if (wr.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError($"{CLASS_NAME}:{METHOD}: error: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
                 this.IsResponseError = true;
                 this.IsResponseTimeout = wr.error.Contains("timeout");
             }
@@ -146,7 +146,7 @@ namespace Gaos.Api
                 string contenType = wr.GetResponseHeader("Content-Type");
                 if (!contenType.Contains("json"))
                 {
-                    Debug.LogError($"{CLASS_NAME}:{METHOD}: error: response content type is not json, url: {wr.url}");
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR:  response content type is not json, url: {wr.url}");
                     this.IsResponseError = true;
                 }
                 this.ResponseJsonStr = wr.downloadHandler.text;
@@ -240,7 +240,7 @@ namespace Gaos.Api
 
             if (wr.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError($"{CLASS_NAME}:{METHOD}: error: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
                 this.IsResponseError = true;
                 this.IsResponseTimeout = wr.error.Contains("timeout");
             }
@@ -255,7 +255,7 @@ namespace Gaos.Api
                 }
                 else
                 {
-                    Debug.LogError($"{CLASS_NAME}:{METHOD}: error: response content type is not json, url: {wr.url}");
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: response content type is not json, url: {wr.url}");
                     this.IsResponseError = true;
                 }
             }
@@ -304,7 +304,7 @@ namespace Gaos.Api
 
             if (http.IsResponseError)
             {
-                Debug.LogError($"{CLASS_NAME}:{METHOD}: error calling api url: {Configuration.Config.API_URL}{this.UrlPath}");
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {Configuration.Config.API_URL}{this.UrlPath}");
                 this.IsResponseError = true;
                 this.IsResponseTimeout = http.IsResponseTimeout;
             }

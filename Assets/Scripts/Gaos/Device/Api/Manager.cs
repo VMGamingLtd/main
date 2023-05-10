@@ -13,34 +13,13 @@ namespace Gaos.Device.Manager
 
         private static bool TryToRegisterAgain = false;
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        private static void TestFromJson()
+
+        private static string GetPlatformType()
         {
-            Gaos.Device.Api.DeviceRegisterResponse respone = new Gaos.Device.Api.DeviceRegisterResponse
-            {
-                isError = true,
-
-                errorMessage = "some error",
-
-                deviceId = 5,
-                identification = "xyz",
-                platformType = "windows",
-                buildVersion = "1.2.3",
-
-            };
-
-            string responseJsonStr = JsonUtility.ToJson(respone);
-
-            Gaos.Device.Api.DeviceRegisterResponse responseFromJson = JsonUtility.FromJson<Gaos.Device.Api.DeviceRegisterResponse>(responseJsonStr);
-            Debug.Log(responseFromJson);
-
-            string responseJsonStr1 = "{\"isError\":true,\"errorMessage\":\"platformType is not found\",\"deviceId\":null,\"identification\":null,\"platformType\":null,\"buildVersion\":null}";
-            Gaos.Device.Api.DeviceRegisterResponse responseFromJson1 = JsonUtility.FromJson<Gaos.Device.Api.DeviceRegisterResponse>(responseJsonStr1);
-            Debug.Log(responseFromJson);
-
+            string platformType = null;
+            platformType = Application.platform.ToString();
+            return platformType;
         }
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 
         private static IEnumerator RegisterDevice_()
         {
@@ -48,7 +27,7 @@ namespace Gaos.Device.Manager
 
             Gaos.Device.Api.DeviceRegisterRequest request = new Gaos.Device.Api.DeviceRegisterRequest();
             request.identification = SystemInfo.deviceUniqueIdentifier;
-            request.platformType = SystemInfo.operatingSystem;
+            request.platformType = GetPlatformType();
             request.buildVersion = Application.version;
 
             string requestJsonStr = JsonUtility.ToJson(request);
@@ -58,7 +37,7 @@ namespace Gaos.Device.Manager
 
             if (apiCall.IsResponseTimeout == true)
             {
-                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: Timeout registering device, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout registering device, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
                 TryToRegisterAgain = true;
             }
             else
@@ -66,15 +45,14 @@ namespace Gaos.Device.Manager
                 TryToRegisterAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: Error registering device");
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device");
                 }
                 else
                 {
-                    TestFromJson(); // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                     DeviceRegisterResponse = JsonUtility.FromJson<Gaos.Device.Api.DeviceRegisterResponse>(apiCall.ResponseJsonStr);
                     if (DeviceRegisterResponse.isError == true)
                     {
-                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: Error registering device: {DeviceRegisterResponse.errorMessage}");
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device: {DeviceRegisterResponse.errorMessage}");
                     }
                     else
                     {
@@ -104,7 +82,7 @@ namespace Gaos.Device.Manager
                     }
                     else
                     {
-                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: device not registered");
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
                     }
                     break;
                 }
