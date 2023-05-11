@@ -140,6 +140,12 @@ namespace Gaos.Api
                 Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
                 this.IsResponseError = true;
                 this.IsResponseTimeout = wr.error.Contains("timeout");
+
+                string contenType = wr.GetResponseHeader("Content-Type");
+                if (contenType.Contains("json"))
+                {
+                    this.ResponseJsonStr = wr.downloadHandler.text;
+                }
             }
             else
             {
@@ -243,6 +249,12 @@ namespace Gaos.Api
                 Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
                 this.IsResponseError = true;
                 this.IsResponseTimeout = wr.error.Contains("timeout");
+
+                string contenType = wr.GetResponseHeader("Content-Type");
+                if (contenType.Contains("json"))
+                {
+                    this.ResponseJsonStr = wr.downloadHandler.text;
+                }
             }
             else
             {
@@ -304,7 +316,7 @@ namespace Gaos.Api
 
             if (http.IsResponseError)
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {Configuration.Config.API_URL}{this.UrlPath}");
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {Configuration.Config.API_URL}{this.UrlPath}, {http.ResponseJsonStr}");
                 this.IsResponseError = true;
                 this.IsResponseTimeout = http.IsResponseTimeout;
             }
