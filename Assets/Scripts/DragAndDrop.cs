@@ -12,6 +12,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     private Vector2 offset;
     private Vector2 fixedSize = new Vector2(64f, 64f);
     public GameObject[] highlightObjects;
+    public InventoryManager inventoryManager;
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -47,12 +48,19 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        // Stop dragging
         isDragging = false;
 
-        // Destroy the dragging image
+        string parentName = draggingImage.transform.parent.name;
+        if (parentName == "OxygenButton")
+        {
+            PlayerResources.OxygenTank = PlayerResources.AddCurrentResource(ref PlayerResources.OxygenTank, 1);
+            inventoryManager.ItemCountText[5].text = PlayerResources.GetCurrentResource(ref PlayerResources.OxygenTank).ToString();
+        }
+        else
+        {
+            Debug.Log("Can't check parent object");
+        }
         Destroy(draggingImage.gameObject);
-
         ResetHighlight();
     }
 
@@ -90,6 +98,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
             highlightImage.gameObject.SetActive(true);
         }
     }
+
 
     private void ResetHighlight()
     {

@@ -11130,7 +11130,7 @@ GameObject:
   - component: {fileID: 206003857}
   - component: {fileID: 206003856}
   m_Layer: 5
-  m_Name: CountInventory
+  m_Name: PlantsCountInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15748,7 +15748,7 @@ GameObject:
   - component: {fileID: 324022320}
   - component: {fileID: 324022319}
   m_Layer: 5
-  m_Name: CountInventory
+  m_Name: BioFuelCountInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20553,7 +20553,7 @@ GameObject:
   - component: {fileID: 410601360}
   - component: {fileID: 410601359}
   m_Layer: 5
-  m_Name: CountInventory
+  m_Name: BatteryCountInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34900,7 +34900,7 @@ GameObject:
   - component: {fileID: 604334841}
   - component: {fileID: 604334840}
   m_Layer: 5
-  m_Name: CountInventory
+  m_Name: WaterBottleCountInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46427,6 +46427,7 @@ MonoBehaviour:
   highlightObjects:
   - {fileID: 1525661546}
   - {fileID: 1613020110}
+  inventoryManager: {fileID: 1177101670}
 --- !u!1 &810854729
 GameObject:
   m_ObjectHideFlags: 0
@@ -56606,7 +56607,7 @@ GameObject:
   - component: {fileID: 1019664801}
   - component: {fileID: 1019664800}
   m_Layer: 5
-  m_Name: CountInventory
+  m_Name: OxygenTankCountInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64019,7 +64020,7 @@ GameObject:
   - component: {fileID: 1177101667}
   - component: {fileID: 1177101670}
   m_Layer: 5
-  m_Name: List Content
+  m_Name: InventoryManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64118,6 +64119,13 @@ MonoBehaviour:
   - {fileID: 470690974}
   UtilityItems:
   - {fileID: 1454681159}
+  ItemCountText:
+  - {fileID: 206003856}
+  - {fileID: 1799810576}
+  - {fileID: 324022319}
+  - {fileID: 604334840}
+  - {fileID: 410601359}
+  - {fileID: 1019664800}
 --- !u!1 &1178616130
 GameObject:
   m_ObjectHideFlags: 0
@@ -97622,7 +97630,7 @@ GameObject:
   - component: {fileID: 1799810577}
   - component: {fileID: 1799810576}
   m_Layer: 5
-  m_Name: CountInventory
+  m_Name: WaterCountInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -10,6 +10,7 @@ public class InventoryManager : MonoBehaviour
     public GameObject[] IntermediateItems;
     public GameObject[] AssembledItems;
     public GameObject[] UtilityItems;
+    public TextMeshProUGUI[] ItemCountText;
 
     public static string ShowItemTypes = "ALL";
 
