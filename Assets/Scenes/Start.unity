@@ -45609,6 +45609,7 @@ MonoBehaviour:
   - {fileID: 1229881866}
   - {fileID: 873852072}
   inventoryManager: {fileID: 1177101670}
+  itemCreator: {fileID: 1361483257}
 --- !u!1 &810854729
 GameObject:
   m_ObjectHideFlags: 0
@@ -53901,6 +53902,7 @@ MonoBehaviour:
   - {fileID: 1229881866}
   - {fileID: 873852072}
   inventoryManager: {fileID: 1177101670}
+  itemCreator: {fileID: 0}
 --- !u!114 &977809534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55210,6 +55212,7 @@ MonoBehaviour:
   - {fileID: 1229881866}
   - {fileID: 873852072}
   inventoryManager: {fileID: 1177101670}
+  itemCreator: {fileID: 0}
 --- !u!114 &1006139194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58184,6 +58187,7 @@ MonoBehaviour:
   - {fileID: 1229881866}
   - {fileID: 873852072}
   inventoryManager: {fileID: 1177101670}
+  itemCreator: {fileID: 0}
 --- !u!114 &1071779311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58585,6 +58589,7 @@ MonoBehaviour:
   - {fileID: 1229881866}
   - {fileID: 873852072}
   inventoryManager: {fileID: 1177101670}
+  itemCreator: {fileID: 0}
 --- !u!114 &1080411153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63472,7 +63477,6 @@ RectTransform:
   - {fileID: 1035207750}
   - {fileID: 1168358451}
   - {fileID: 470690975}
-  - {fileID: 1454681160}
   m_Father: {fileID: 1789405206}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -63547,8 +63551,7 @@ MonoBehaviour:
   - {fileID: 1168358450}
   AssembledItems:
   - {fileID: 470690974}
-  UtilityItems:
-  - {fileID: 1454681159}
+  UtilityItems: []
   ItemCountText:
   - {fileID: 206003856}
   - {fileID: 1799810576}
@@ -73157,6 +73160,52 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!1 &1361483255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1361483256}
+  - component: {fileID: 1361483257}
+  m_Layer: 0
+  m_Name: ItemCreator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1361483256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1361483255}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 822.90015, y: 564.8451, z: -2479.1196}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1454681160}
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1361483257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1361483255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a59127890ce2c74b839b0b0833c6600, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OxygenTank: {fileID: 1454681159}
+  inventoryManager: {fileID: 1177101670}
 --- !u!1 &1366090569
 GameObject:
   m_ObjectHideFlags: 0
@@ -73442,6 +73491,7 @@ MonoBehaviour:
   - {fileID: 1229881866}
   - {fileID: 873852072}
   inventoryManager: {fileID: 1177101670}
+  itemCreator: {fileID: 0}
 --- !u!114 &1368321884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77717,6 +77767,7 @@ MonoBehaviour:
   - {fileID: 1229881866}
   - {fileID: 873852072}
   inventoryManager: {fileID: 1177101670}
+  itemCreator: {fileID: 0}
 --- !u!114 &1451494374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77963,8 +78014,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1454681159}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2569.1196}
+  m_LocalScale: {x: 0.875, y: 0.875, z: 0.875}
   m_Children:
   - {fileID: 1573047640}
   - {fileID: 1788810409}
@@ -77973,12 +78024,12 @@ RectTransform:
   - {fileID: 1140285646}
   - {fileID: 2048729072}
   - {fileID: 1488096170}
-  m_Father: {fileID: 1177101666}
-  m_RootOrder: 5
+  m_Father: {fileID: 1361483256}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 670, y: -70}
+  m_AnchoredPosition: {x: -192.90015, y: 164.49371}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!111 &1454681161
@@ -96847,6 +96898,7 @@ MonoBehaviour:
   - {fileID: 1229881866}
   - {fileID: 873852072}
   inventoryManager: {fileID: 1177101670}
+  itemCreator: {fileID: 0}
 --- !u!114 &1791282829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109803,6 +109855,7 @@ MonoBehaviour:
   - {fileID: 1229881866}
   - {fileID: 873852072}
   inventoryManager: {fileID: 1177101670}
+  itemCreator: {fileID: 0}
 --- !u!114 &2050978546
 MonoBehaviour:
   m_ObjectHideFlags: 0

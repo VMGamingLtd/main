@@ -39,6 +39,32 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void InventoryCheckUp()
+    {
+        string showItemTypes = InventoryManager.ShowItemTypes;
+
+        if (showItemTypes == "ALL")
+        {
+            ShowAllItems();
+        }
+        else if (showItemTypes == "RAW")
+        {
+            ShowRawItems();
+        }
+        else if (showItemTypes == "INTERMEDIATE")
+        {
+            ShowIntermediateItems();
+        }
+        else if (showItemTypes == "ASSEMBLED")
+        {
+            ShowAssembledItems();
+        }
+        else if (showItemTypes == "UTILITY")
+        {
+            ShowUtilityItems();
+        }
+    }
+
     public void ShowAllItems()
     {
         InventoryManager.ShowItemTypes = "ALL";
@@ -224,6 +250,7 @@ public class InventoryManager : MonoBehaviour
 
     public void AddToAssembledItems(GameObject newItem)
     {
+        newItem.transform.SetParent(transform);
         // Create a new array with increased size to accommodate the new item
         GameObject[] newAssembledItems = new GameObject[AssembledItems.Length + 1];
 
@@ -241,6 +268,7 @@ public class InventoryManager : MonoBehaviour
     }
     public void AddToUtilityItems(GameObject newItem)
     {
+        newItem.transform.SetParent(transform);
         // Create a new array with increased size to accommodate the new item
         GameObject[] newUtilityItems = new GameObject[UtilityItems.Length + 1];
 

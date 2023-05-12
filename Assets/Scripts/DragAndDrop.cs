@@ -16,6 +16,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     public GameObject[] highlightObjects;
     public GameObject[] placeholderObjects;
     public InventoryManager inventoryManager;
+    public ItemCreator itemCreator;
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -80,7 +81,8 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
                 {
                     fullButton.gameObject.SetActive(false);
                 }
-                inventoryManager.ShowAllItems();
+                itemCreator.CreateOxygenTankItem();
+                inventoryManager.InventoryCheckUp();
             }
             else
             {
