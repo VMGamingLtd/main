@@ -11,7 +11,10 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     private Image draggingImage;
     private Vector2 offset;
     private Vector2 fixedSize = new Vector2(64f, 64f);
+    private GameObject highlightedObject;
+    private GameObject draggingObject;
     public GameObject[] highlightObjects;
+    public GameObject[] placeholderObjects;
     public InventoryManager inventoryManager;
 
     public void OnPointerDown(PointerEventData eventData)
@@ -22,6 +25,10 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         // Create the dragging image at the mouse cursor location
         draggingImage = CreateDraggingImage(eventData.position);
 
+        foreach (GameObject placeholderObject in placeholderObjects)
+        {
+            placeholderObject.gameObject.SetActive(true);
+        }
         ResetHighlight();
     }
 
@@ -50,21 +57,47 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     {
         isDragging = false;
 
-        string parentName = draggingImage.transform.parent.name;
-        if (parentName == "OxygenButton")
+        if (highlightedObject != null)
         {
-            PlayerResources.OxygenTank = PlayerResources.AddCurrentResource(ref PlayerResources.OxygenTank, 1);
-            inventoryManager.ItemCountText[5].text = PlayerResources.GetCurrentResource(ref PlayerResources.OxygenTank).ToString();
+            // Where are you dragging object onto
+            string highlightedObjectName = highlightedObject.transform.name;
+
+            // Check parent object of an object that you are currently dragging
+            string draggingObjectImage = draggingImage.GetComponent<Image>().sprite.name;
+
+            if (draggingObjectImage == "OxygenTank" && highlightedObjectName == "InventoryContent")
+            {
+                PlayerResources.OxygenTank = PlayerResources.AddCurrentResource(ref PlayerResources.OxygenTank, 1);
+                inventoryManager.ItemCountText[5].text = PlayerResources.GetCurrentResource(ref PlayerResources.OxygenTank).ToString();
+
+                Transform emptyButton = draggingImage.transform.parent.Find("EmptyButton");
+                if (emptyButton != null)
+                {
+                    emptyButton.gameObject.SetActive(true);
+                }
+                Transform fullButton = draggingImage.transform.parent.Find("ButtonIcon");
+                if (fullButton != null)
+                {
+                    fullButton.gameObject.SetActive(false);
+                }
+                inventoryManager.ShowAllItems();
+            }
+            else
+            {
+                Debug.Log("Can't check parent object");
+            }
         }
-        else
+
+        foreach (GameObject placeholderObject in placeholderObjects)
         {
-            Debug.Log("Can't check parent object");
+            placeholderObject.gameObject.SetActive(false);
         }
+
         Destroy(draggingImage.gameObject);
         ResetHighlight();
     }
 
-    private Image CreateDraggingImage(Vector2 position)
+    public Image CreateDraggingImage(Vector2 position)
     {
         Image originalImage = GetComponent<Image>();
 
@@ -87,7 +120,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
         return draggingImage;
     }
-    private void HighlightObject(GameObject obj)
+    public void HighlightObject(GameObject obj)
     {
         // Search for the child object named "HighlightImage"
         Transform highlightImage = obj.transform.Find("HighlightImage");
@@ -97,21 +130,24 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         {
             highlightImage.gameObject.SetActive(true);
         }
+        highlightedObject = obj;
     }
 
 
-    private void ResetHighlight()
+    public void ResetHighlight()
     {
+        highlightedObject = null;
+
         foreach (GameObject obj in highlightObjects)
-    {
+        {
         // Search for the child object named "HighlightImage"
         Transform highlightImage = obj.transform.Find("HighlightImage");
 
-        // Disable the highlight image if found
-        if (highlightImage != null)
-        {
-            highlightImage.gameObject.SetActive(false);
+            // Disable the highlight image if found
+            if (highlightImage != null)
+            {
+                highlightImage.gameObject.SetActive(false);
+            }
         }
-    }
     }
 }

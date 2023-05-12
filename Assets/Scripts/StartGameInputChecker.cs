@@ -10,6 +10,7 @@ public class StartGameInputChecker : MonoBehaviour
     public Button buttonToClick;
 
     public GlobalCalculator globalCalculator;
+    public EquipmentManager equipmentManager;
 
     // Update is called once per frame
     public void startGameCheckForUsername()
@@ -26,6 +27,8 @@ public class StartGameInputChecker : MonoBehaviour
          DecimalResourceManager .AddDecimalResource(ref DecimalResourceManager.Planet0Water, 15);
 
          MainUI.SetActive(true);
+
+         equipmentManager.InitStartEquip();
 
          // force button click action to open the building menu that the button is set for
          buttonToClick.onClick.Invoke();
