@@ -11093,7 +11093,7 @@ GameObject:
   - component: {fileID: 206003857}
   - component: {fileID: 206003856}
   m_Layer: 5
-  m_Name: PlantsCountInventory
+  m_Name: CountInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53447,6 +53447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6735431f349f48e4d865490f3d032b32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryManager: {fileID: 1177101670}
 --- !u!4 &962185858
 Transform:
   m_ObjectHideFlags: 0
@@ -54738,7 +54739,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224815305970993650, guid: 16a4283f69b22db45844ef47cb062f7d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.99999994
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224815305970993650, guid: 16a4283f69b22db45844ef47cb062f7d, type: 3}
       propertyPath: m_AnchorMin.y
@@ -97390,7 +97391,7 @@ GameObject:
   - component: {fileID: 1799810577}
   - component: {fileID: 1799810576}
   m_Layer: 5
-  m_Name: WaterCountInventory
+  m_Name: CountInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

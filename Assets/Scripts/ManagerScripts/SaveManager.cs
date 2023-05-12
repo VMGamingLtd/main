@@ -6,11 +6,13 @@ using Newtonsoft.Json;
 public class SaveManager : MonoBehaviour
 {
 
-    private const string FileName = "PlayerPrefsData.json";
+    private const string FileName = "Savegame.json";
     private string filePath;
+    public InventoryManager inventoryManager;
 
     private class SaveDataModel
     {
+        public string title;
         public string username;
         public string password;
         public string email;
@@ -46,7 +48,16 @@ public class SaveManager : MonoBehaviour
         public int expPoints;
         public bool registeredUser;
         public float credits;
+        public string inventoryTitle;
+        public InventoryItemData[] inventoryObjects;
 
+    }
+
+    [System.Serializable]
+    public class InventoryItemData
+    {
+        public string itemName;
+        public int itemQuantity;
     }
     // Current save data
     private SaveDataModel currentSaveData;
@@ -71,8 +82,7 @@ public class SaveManager : MonoBehaviour
 
     public void SaveToJsonFile()
     {
-
-
+        currentSaveData.title = "Player info";
         currentSaveData.username = UserName.userName;
         currentSaveData.password = Password.password;
         currentSaveData.email = Email.email;
@@ -109,7 +119,42 @@ public class SaveManager : MonoBehaviour
         currentSaveData.registeredUser = CoroutineManager.registeredUser;
         currentSaveData.credits = Credits.credits;
 
+        currentSaveData.inventoryTitle = "Inventory";
 
+        // Create an array to store the inventory objects
+        currentSaveData.inventoryObjects = new InventoryItemData[inventoryManager.RawItems.Length];
+
+        // Populate the inventory objects
+        for (int i = 0; i < inventoryManager.RawItems.Length; i++)
+        {
+            GameObject itemGameObject = inventoryManager.RawItems[i];
+
+            // Create a new InventoryItemData object
+            InventoryItemData itemData = new InventoryItemData();
+
+            // Set the specific attributes of the item
+            itemData.itemName = itemGameObject.name;
+
+            // Retrieve the child GameObject with the TextMeshProUGUI component representing the quantity
+            GameObject quantityObject = itemGameObject.transform.Find("CountInventory").gameObject;
+
+            // Get the TextMeshProUGUI component from the child GameObject
+            TMPro.TextMeshProUGUI quantityText = quantityObject.GetComponent<TMPro.TextMeshProUGUI>();
+
+            // Parse the quantity text value to an integer and assign it to itemData.itemQuantity
+            int quantity;
+            if (int.TryParse(quantityText.text, out quantity))
+            {
+                itemData.itemQuantity = quantity;
+            }
+            else
+            {
+                itemData.itemQuantity = 0;
+            }
+
+            // Add the item data to the array
+            currentSaveData.inventoryObjects[i] = itemData;
+        }
 
         // Serialize the data to JSON
         string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented);

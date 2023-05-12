@@ -22,7 +22,6 @@ public class StartGameInputChecker : MonoBehaviour
          //initialize starting resources
          Credits.ResetCredits();
          Credits.AddCredits(42);
-         CurrentPopulationManager.AddCurrentPopulation(ref CurrentPopulationManager.Planet0CurrentPopulation, 12);
          DecimalResourceManager.AddDecimalResource(ref DecimalResourceManager.Planet0Oxygen, 20);
          DecimalResourceManager .AddDecimalResource(ref DecimalResourceManager.Planet0Water, 15);
 
