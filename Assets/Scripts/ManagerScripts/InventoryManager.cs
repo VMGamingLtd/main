@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System.Net.NetworkInformation;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -10,10 +9,37 @@ public class InventoryManager : MonoBehaviour
     public GameObject[] IntermediateItems;
     public GameObject[] AssembledItems;
     public GameObject[] UtilityItems;
+    public TextMeshProUGUI[] ItemCountText;
 
     public static string ShowItemTypes = "ALL";
 
     void OnEnable()
+    {
+        string showItemTypes = InventoryManager.ShowItemTypes;
+
+        if (showItemTypes == "ALL")
+        {
+            ShowAllItems();
+        }
+        else if (showItemTypes == "RAW")
+        {
+            ShowRawItems();
+        }
+        else if (showItemTypes == "INTERMEDIATE")
+        {
+            ShowIntermediateItems();
+        }
+        else if (showItemTypes == "ASSEMBLED")
+        {
+            ShowAssembledItems();
+        }
+        else if (showItemTypes == "UTILITY")
+        {
+            ShowUtilityItems();
+        }
+    }
+
+    public void InventoryCheckUp()
     {
         string showItemTypes = InventoryManager.ShowItemTypes;
 
@@ -220,6 +246,43 @@ public class InventoryManager : MonoBehaviour
             return count > 0;
         }
         return false;
+    }
+
+    public void AddToAssembledItems(GameObject newItem)
+    {
+        newItem.transform.SetParent(transform);
+        // Create a new array with increased size to accommodate the new item
+        GameObject[] newAssembledItems = new GameObject[AssembledItems.Length + 1];
+
+        // Copy existing items to the new array
+        for (int i = 0; i < AssembledItems.Length; i++)
+        {
+            newAssembledItems[i] = AssembledItems[i];
+        }
+
+        // Add the new item to the end of the new array
+        newAssembledItems[newAssembledItems.Length - 1] = newItem;
+
+        // Update the reference to the new array
+        AssembledItems = newAssembledItems;
+    }
+    public void AddToUtilityItems(GameObject newItem)
+    {
+        newItem.transform.SetParent(transform);
+        // Create a new array with increased size to accommodate the new item
+        GameObject[] newUtilityItems = new GameObject[UtilityItems.Length + 1];
+
+        // Copy existing items to the new array
+        for (int i = 0; i < UtilityItems.Length; i++)
+        {
+            newUtilityItems[i] = UtilityItems[i];
+        }
+
+        // Add the new item to the end of the new array
+        newUtilityItems[newUtilityItems.Length - 1] = newItem;
+
+        // Update the reference to the new array
+        UtilityItems = newUtilityItems;
     }
 
 }

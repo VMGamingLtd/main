@@ -46,7 +46,7 @@ public class GlobalCalculator : MonoBehaviour
                     saveManager.SaveToJsonFile();
                     StartCoroutine(rotateImage.RotateOverTime(0.5f));
                 }
-                if (minutes > 60)
+                if (minutes > 59)
                 {
                     minutes = 1;
                     hours++;

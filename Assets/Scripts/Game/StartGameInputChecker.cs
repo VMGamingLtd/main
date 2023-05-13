@@ -10,6 +10,7 @@ public class StartGameInputChecker : MonoBehaviour
     public Button buttonToClick;
 
     public GlobalCalculator globalCalculator;
+    public EquipmentManager equipmentManager;
 
     // Update is called once per frame
     public void startGameCheckForUsername()
@@ -21,11 +22,12 @@ public class StartGameInputChecker : MonoBehaviour
          //initialize starting resources
          Credits.ResetCredits();
          Credits.AddCredits(42);
-         CurrentPopulationManager.AddCurrentPopulation(ref CurrentPopulationManager.Planet0CurrentPopulation, 12);
          DecimalResourceManager.AddDecimalResource(ref DecimalResourceManager.Planet0Oxygen, 20);
          DecimalResourceManager .AddDecimalResource(ref DecimalResourceManager.Planet0Water, 15);
 
          MainUI.SetActive(true);
+
+         equipmentManager.InitStartEquip();
 
          // force button click action to open the building menu that the button is set for
          buttonToClick.onClick.Invoke();

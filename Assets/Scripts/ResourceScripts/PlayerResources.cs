@@ -16,10 +16,10 @@ public static class PlayerResources
     public static int Battery = 0;
     public static int OxygenTank = 0;
 
-    public static string AddCurrentResource(ref int currentResourceSet, int amount)
+    public static int AddCurrentResource(ref int currentResourceSet, int amount)
     {
         currentResourceSet += amount;
-        return currentResourceSet.ToString();
+        return currentResourceSet;
     }
 
     public static int ReduceCurrentResource(ref int currentResourceSet, int amount)
