@@ -85,12 +85,15 @@ public class CoroutineManager : MonoBehaviour
 
     IEnumerator WaitForLoadingBar () {
 
-        StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());
+        if (false)
+        {
+            StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());
+        }
         if (false)
         {
             StartCoroutine(Gaos.User.Manager.Guest.Login());
         }
-        if (true)
+        if (false)
         {
             StartCoroutine(Gaos.User.Manager.User.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
         }
