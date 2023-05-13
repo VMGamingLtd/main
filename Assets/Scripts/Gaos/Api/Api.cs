@@ -141,22 +141,27 @@ namespace Gaos.Api
                 this.IsResponseError = true;
                 this.IsResponseTimeout = wr.error.Contains("timeout");
 
-                string contenType = wr.GetResponseHeader("Content-Type");
-                if (contenType.Contains("json"))
+                string contentType = wr.GetResponseHeader("Content-Type");
+                if (contentType != null && contentType.Contains("json"))
                 {
                     this.ResponseJsonStr = wr.downloadHandler.text;
                 }
             }
             else
             {
-                string contenType = wr.GetResponseHeader("Content-Type");
-                if (!contenType.Contains("json"))
+                string contentType = wr.GetResponseHeader("Content-Type");
+                if (contentType != null && contentType.Contains("json"))
+                {
+                    this.ResponseJsonStr = wr.downloadHandler.text;
+                    this.IsResponseError = false;
+                }
+                else
                 {
                     Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR:  response content type is not json, url: {wr.url}");
                     this.IsResponseError = true;
+
                 }
-                this.ResponseJsonStr = wr.downloadHandler.text;
-                this.IsResponseError = false;
+
             }
 
 
@@ -251,7 +256,7 @@ namespace Gaos.Api
                 this.IsResponseTimeout = wr.error.Contains("timeout");
 
                 string contenType = wr.GetResponseHeader("Content-Type");
-                if (contenType.Contains("json"))
+                if (contenType != null && contenType.Contains("json"))
                 {
                     this.ResponseJsonStr = wr.downloadHandler.text;
                 }
@@ -259,7 +264,7 @@ namespace Gaos.Api
             else
             {
                 string contenType = wr.GetResponseHeader("Content-Type");
-                if (contenType.Contains("json"))
+                if (contenType != null && contenType.Contains("json"))
                 {
                     this.ResponseJsonStr = wr.downloadHandler.text;
                     this.IsResponseError = false;

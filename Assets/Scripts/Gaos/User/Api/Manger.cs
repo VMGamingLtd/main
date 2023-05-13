@@ -70,6 +70,7 @@ namespace Gaos.User.Manager
 
                 if (TryToLoginAgain == true)
                 {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
                     continue;
                 }
                 else
@@ -81,6 +82,97 @@ namespace Gaos.User.Manager
                     else
                     {
                         Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: guest not logged in");
+                    }
+                    break;
+                }
+            }
+        }
+
+    }
+
+    public class User
+    {
+        public readonly static string CLASS_NAME = typeof(User).Name;
+
+        public static bool TryToRegisterAgain = false;
+        public static Gaos.User.Api.RegisterResponse RegisterResponse = null;
+        public static bool IsRegistered = false;
+
+        private static IEnumerator Register_(string userName, string email, string password)
+        {
+            const string METHOD_NAME = "Register_()";
+
+
+            Gaos.User.Api.RegisterRequest request = new Gaos.User.Api.RegisterRequest();
+
+            request.userName = userName;
+            request.email = email;
+            request.password = password;
+
+            if (Gaos.Device.Manager.Registration.IsDeviceRegistered == true)
+            {
+                request.deviceId = Gaos.Device.Manager.Registration.DeviceRegisterResponse.deviceId;
+            }
+            else
+            {
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Device is not registered, cannot register");
+                TryToRegisterAgain = true;
+                yield break;
+            }
+
+            string requestJsonStr = JsonUtility.ToJson(request);
+
+            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/register", requestJsonStr);
+            yield return apiCall.Call();
+
+            if (apiCall.IsResponseTimeout == true)
+            {
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout registering user, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
+                TryToRegisterAgain = true;
+            }
+            else
+            {
+                TryToRegisterAgain = false;
+                if (apiCall.IsResponseError == true)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user");
+                }
+                else
+                {
+                    RegisterResponse = JsonUtility.FromJson<Gaos.User.Api.RegisterResponse>(apiCall.ResponseJsonStr);
+                    if (RegisterResponse.isError == true)
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.errorMessage}");
+                    }
+                    else
+                    {
+                        IsRegistered = true;
+                    }
+                }
+            }
+        }
+        public static IEnumerator Register(string userName, string email, string password)
+        {
+            const string METHOD_NAME = "Register()";
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: registering user ...");
+            while (true)
+            {
+                yield return Register_(userName, email, password);
+
+                if (TryToRegisterAgain == true)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
+                    continue;
+                }
+                else
+                {
+                    if (IsRegistered == true)
+                    {
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user registered");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not registered");
                     }
                     break;
                 }

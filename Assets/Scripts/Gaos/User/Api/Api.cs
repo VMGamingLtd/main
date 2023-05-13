@@ -17,4 +17,28 @@ namespace Gaos.User.Api
         public string jwt;
 
     }
+
+    public class RegisterRequest
+    {
+        public string userName;
+
+        public string email;
+
+        public string password;
+
+        public string passwordVerify;
+        public int deviceId;
+
+    }
+
+
+    public class RegisterResponse
+    {
+        public bool isError;
+
+        public string errorMessage;
+
+        public string jwt;
+    }
+
 }

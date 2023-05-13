@@ -72,6 +72,7 @@ namespace Gaos.Device.Manager
 
                 if (TryToRegisterAgain == true)
                 {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
                     continue;
                 }
                 else
