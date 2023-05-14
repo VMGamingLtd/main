@@ -41,4 +41,24 @@ namespace Gaos.User.Api
         public string jwt;
     }
 
+    public class LoginRequest
+    {
+        public string userName;
+
+        public string password;
+
+        public int deviceId;
+    }
+
+    public class LoginResponse
+    {
+        public bool isError;
+
+        public string errorMessage;
+
+
+        public string jwt;
+
+    }
+
 }

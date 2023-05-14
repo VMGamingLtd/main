@@ -91,11 +91,11 @@ public class CoroutineManager : MonoBehaviour
         }
         if (false)
         {
-            StartCoroutine(Gaos.User.Manager.Guest.Login());
+            StartCoroutine(Gaos.User.Manager.GuestLogin.Login());
         }
         if (false)
         {
-            StartCoroutine(Gaos.User.Manager.User.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
+            StartCoroutine(Gaos.User.Manager.UserRegister.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
         }
 
         bool registereduser = CoroutineManager.registeredUser;
