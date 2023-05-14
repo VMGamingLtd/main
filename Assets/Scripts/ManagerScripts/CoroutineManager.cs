@@ -88,6 +88,19 @@ public class CoroutineManager : MonoBehaviour
 
     IEnumerator WaitForLoadingBar () {
 
+        if (false)
+        {
+            StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());
+        }
+        if (false)
+        {
+            StartCoroutine(Gaos.User.Manager.Guest.Login());
+        }
+        if (false)
+        {
+            StartCoroutine(Gaos.User.Manager.User.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
+        }
+
         bool registereduser = CoroutineManager.registeredUser;
         globalCalculator.GameStarted = false;
         yield return new WaitForSeconds(2.0f);
