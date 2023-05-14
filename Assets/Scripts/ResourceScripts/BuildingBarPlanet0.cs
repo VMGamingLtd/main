@@ -2,46 +2,14 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using ItemManagement;
 
 public class BuildingBarPlanet0 : MonoBehaviour {
 
 
     public CoroutineManager coroutineManager;
     public Animation errorMessage;
-
-
-
-
-    public void StartWaterBottle()
-    {
-        int water = PlayerResources.Water;
-        if (CoroutineManager.AllCoroutineBooleans[3] == true)
-        {
-            coroutineManager.StartCoroutine("StopCollectWaterBottle");
-        }
-        else if (CoroutineManager.CheckForTrueValues())
-        {
-            if (water >= 20)
-            {
-                coroutineManager.StopRunningCoroutine();
-                CoroutineManager.AllCoroutineBooleans[3] = true;
-                coroutineManager.StartCoroutine("CollectWaterBottle");
-            }
-            else
-            {
-                StartCoroutine(errorCoroutine());
-            }
-        }
-        else if (water >= 20)
-        {
-            CoroutineManager.AllCoroutineBooleans[3] = true;
-            coroutineManager.StartCoroutine("CollectWaterBottle");
-        }
-        else
-        {
-            StartCoroutine(errorCoroutine());
-        }
-    }
+    public InventoryManager inventoryManager;
 
     public void StartCollectPlants()
     {
@@ -84,7 +52,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
 
     public void StartCollectBiofuel()
     {
-        int plants = PlayerResources.Plants;
+        int plants = inventoryManager.GetItemQuantity("Plants", "RAW");
         if (CoroutineManager.AllCoroutineBooleans[2] == true)
         {
             coroutineManager.StartCoroutine("StopCollectBiofuel");
@@ -112,10 +80,40 @@ public class BuildingBarPlanet0 : MonoBehaviour {
             StartCoroutine(errorCoroutine());
         }
     }
+    public void StartWaterBottle()
+    {
+        int water = inventoryManager.GetItemQuantity("Water", "RAW");
+        if (CoroutineManager.AllCoroutineBooleans[3] == true)
+        {
+            coroutineManager.StartCoroutine("StopCollectWaterBottle");
+        }
+        else if (CoroutineManager.CheckForTrueValues())
+        {
+            if (water >= 50)
+            {
+                coroutineManager.StopRunningCoroutine();
+                CoroutineManager.AllCoroutineBooleans[3] = true;
+                coroutineManager.StartCoroutine("CollectWaterBottle");
+            }
+            else
+            {
+                StartCoroutine(errorCoroutine());
+            }
+        }
+        else if (water >= 50)
+        {
+            CoroutineManager.AllCoroutineBooleans[3] = true;
+            coroutineManager.StartCoroutine("CollectWaterBottle");
+        }
+        else
+        {
+            StartCoroutine(errorCoroutine());
+        }
+    }
 
     public void StartCreateBattery()
     {
-        int biofuel = PlayerResources.Biofuel;
+        int biofuel = inventoryManager.GetItemQuantity("Biofuel", "INTERMEDIATE");
 
         if (biofuel >= 3)
         {

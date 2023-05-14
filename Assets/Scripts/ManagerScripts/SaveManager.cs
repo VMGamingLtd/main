@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
+using ItemManagement;
+using System.Linq;
+using System;
 
 public class SaveManager : MonoBehaviour
 {
@@ -40,24 +43,30 @@ public class SaveManager : MonoBehaviour
         public int hours;
         public int minutes;
         public int seconds;
-        public int plants;
-        public int water;
-        public int biofuel;
-        public int waterbottle;
-        public int battery;
         public int expPoints;
         public bool registeredUser;
         public float credits;
         public string inventoryTitle;
-        public InventoryItemData[] inventoryObjects;
-
+        public InventoryItemData[] rawInventoryObjects;
+        public InventoryItemData[] intermediateInventoryObjects;
+        public InventoryItemData[] assembledInventoryObjects;
+        public InventoryItemData[] utilityInventoryObjects;
     }
 
     [System.Serializable]
     public class InventoryItemData
     {
         public string itemName;
+        public string itemType;
+        public string itemQuality;
         public int itemQuantity;
+        public int OxygenTimer;
+
+        public bool ShouldSerializeOxygenTimer()
+        {
+            string[] excludedTypes = { "RAW", "INTERMEDIATE", "ASSEMBLED" };
+            return !excludedTypes.Any(type => itemType.Equals(type, StringComparison.OrdinalIgnoreCase));
+        }
     }
     // Current save data
     private SaveDataModel currentSaveData;
@@ -110,60 +119,85 @@ public class SaveManager : MonoBehaviour
         currentSaveData.playerWater = PlayerResources.PlayerWater;
         currentSaveData.playerEnergy = PlayerResources.PlayerEnergy;
         currentSaveData.playerHunger = PlayerResources.PlayerHunger;
-        currentSaveData.plants = PlayerResources.Plants;
-        currentSaveData.water = PlayerResources.Water;
-        currentSaveData.biofuel = PlayerResources.Biofuel;
-        currentSaveData.waterbottle = PlayerResources.WaterBottle;
-        currentSaveData.battery = PlayerResources.Battery;
         currentSaveData.expPoints = EXPPoints.expPoints;
         currentSaveData.registeredUser = CoroutineManager.registeredUser;
         currentSaveData.credits = Credits.credits;
 
         currentSaveData.inventoryTitle = "Inventory";
 
-        // Create an array to store the inventory objects
-        currentSaveData.inventoryObjects = new InventoryItemData[inventoryManager.RawItems.Length];
+        // Access the itemArrays dictionary through the inventoryManager reference
+        Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;
 
-        // Populate the inventory objects
-        for (int i = 0; i < inventoryManager.RawItems.Length; i++)
+        currentSaveData.rawInventoryObjects = new InventoryItemData[itemArrays["RAW"].Length];
+
+        for (int i = 0; i < itemArrays["RAW"].Length; i++)
         {
-            GameObject itemGameObject = inventoryManager.RawItems[i];
+            GameObject itemGameObject = itemArrays["RAW"][i];
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-            // Create a new InventoryItemData object
             InventoryItemData itemData = new InventoryItemData();
+            itemData.itemName = itemName;
+            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            itemData.itemType = itemDataComponent.itemType;
+            itemData.itemQuantity = itemDataComponent.itemQuantity;
+            itemData.itemQuality = itemDataComponent.itemQuality;
 
-            // Set the specific attributes of the item
-            itemData.itemName = itemGameObject.name;
-
-            // Retrieve the child GameObject with the TextMeshProUGUI component representing the quantity
-            GameObject quantityObject = itemGameObject.transform.Find("CountInventory").gameObject;
-
-            // Get the TextMeshProUGUI component from the child GameObject
-            TMPro.TextMeshProUGUI quantityText = quantityObject.GetComponent<TMPro.TextMeshProUGUI>();
-
-            // Parse the quantity text value to an integer and assign it to itemData.itemQuantity
-            int quantity;
-            if (int.TryParse(quantityText.text, out quantity))
-            {
-                itemData.itemQuantity = quantity;
-            }
-            else
-            {
-                itemData.itemQuantity = 0;
-            }
-
-            // Add the item data to the array
-            currentSaveData.inventoryObjects[i] = itemData;
+            currentSaveData.rawInventoryObjects[i] = itemData;
         }
 
-        // Serialize the data to JSON
-        string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented);
+        currentSaveData.intermediateInventoryObjects = new InventoryItemData[itemArrays["INTERMEDIATE"].Length];
 
-        // Write the JSON string to a file in the persistentDataPath
+        for (int i = 0; i < itemArrays["INTERMEDIATE"].Length; i++)
+        {
+            GameObject itemGameObject = itemArrays["INTERMEDIATE"][i];
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            InventoryItemData itemData = new InventoryItemData();
+            itemData.itemName = itemName;
+            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            itemData.itemType = itemDataComponent.itemType;
+            itemData.itemQuantity = itemDataComponent.itemQuantity;
+            itemData.itemQuality = itemDataComponent.itemQuality;
+
+            currentSaveData.intermediateInventoryObjects[i] = itemData;
+        }
+        currentSaveData.assembledInventoryObjects = new InventoryItemData[itemArrays["ASSEMBLED"].Length];
+
+        for (int i = 0; i < itemArrays["ASSEMBLED"].Length; i++)
+        {
+            GameObject itemGameObject = itemArrays["ASSEMBLED"][i];
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            InventoryItemData itemData = new InventoryItemData();
+            itemData.itemName = itemName;
+            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            itemData.itemType = itemDataComponent.itemType;
+            itemData.itemQuantity = itemDataComponent.itemQuantity;
+            itemData.itemQuality = itemDataComponent.itemQuality;
+
+            currentSaveData.assembledInventoryObjects[i] = itemData;
+        }
+        currentSaveData.utilityInventoryObjects = new InventoryItemData[itemArrays["UTILITY"].Length];
+
+        for (int i = 0; i < itemArrays["UTILITY"].Length; i++)
+        {
+            GameObject itemGameObject = itemArrays["UTILITY"][i];
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            InventoryItemData itemData = new InventoryItemData();
+            itemData.itemName = itemName;
+            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            itemData.itemType = itemDataComponent.itemType;
+            itemData.itemQuantity = itemDataComponent.itemQuantity;
+            itemData.itemQuality = itemDataComponent.itemQuality;
+            itemData.OxygenTimer = itemDataComponent.OxygenTimer;
+
+            currentSaveData.utilityInventoryObjects[i] = itemData;
+        }
+
+        string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented);
         File.WriteAllText(filePath, jsonString);
     }
-
-
 
     public void LoadFromJsonFile()
     {
@@ -178,7 +212,6 @@ public class SaveManager : MonoBehaviour
 
             // Update the variable values with the loaded data
             UserName.userName = loadedData.username;
-            PlayerResources.Plants = loadedData.plants;
             CoroutineManager.registeredUser = loadedData.registeredUser;
         }
         else
