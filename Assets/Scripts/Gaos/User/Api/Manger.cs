@@ -270,5 +270,25 @@ namespace Gaos.User.Manager
             }
         }
 
+        public static IEnumerator LoginWithWaitForRegistration(string userName, string password)
+        {
+            const string METHOD_NAME = "LoginWithWaitForRegistration()";
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: logging in user ...");
+            while (true)
+            {
+                if (UserRegister.IsRegistered == true)
+                {
+                    yield return Login(userName, password);
+                } 
+                else
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}:  loggin failed: user not registered");
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}:  retrying again ...");
+                    yield return new WaitForSeconds(2);
+
+                }
+            }
+        }
+
     }
 }

@@ -97,6 +97,11 @@ public class CoroutineManager : MonoBehaviour
         {
             StartCoroutine(Gaos.User.Manager.UserRegister.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
         }
+        if (false)
+        {
+            StartCoroutine(Gaos.User.Manager.UserRegister.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
+            StartCoroutine(Gaos.User.Manager.UserLogin.LoginWithWaitForRegistration("JozkoMrkvicka", "jozko22"));
+        }
 
         bool registereduser = CoroutineManager.registeredUser;
         globalCalculator.GameStarted = false;
