@@ -279,14 +279,18 @@ namespace Gaos.User.Manager
                 if (UserRegister.IsRegistered == true)
                 {
                     yield return Login(userName, password);
+                    if (IsLoggedIn == true)
+                    {
+                        break;
+                    }
                 } 
                 else
                 {
                     Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}:  loggin failed: user not registered");
                     Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}:  retrying again ...");
-                    yield return new WaitForSeconds(2);
 
                 }
+                yield return new WaitForSeconds(2);
             }
         }
 
