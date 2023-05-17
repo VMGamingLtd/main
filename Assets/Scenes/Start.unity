@@ -16271,6 +16271,7 @@ RectTransform:
   - {fileID: 1346052458}
   - {fileID: 1649383818}
   - {fileID: 1791961489}
+  - {fileID: 355118095}
   m_Father: {fileID: 2136191401}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -17432,6 +17433,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &355118094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 355118095}
+  m_Layer: 5
+  m_Name: HighestObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &355118095
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355118094}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 331405008}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &357171947
 GameObject:
   m_ObjectHideFlags: 0
@@ -20346,7 +20382,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &414525629
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22719,7 +22755,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &474451637
 RectTransform:
   m_ObjectHideFlags: 0
@@ -42085,11 +42121,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a327d06d4d44c64dafe5f02e072ad75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xOffset: -50
-  yOffset: -100
+  xOffset: -100
+  yOffset: 0
   canvasRect: {fileID: 2107315955}
-  horizontalPadding: -100
-  verticalPadding: 10
+  horizontalPadding: -200
+  verticalPadding: -100
   tooltipRect: {fileID: 753567474}
 --- !u!1 &754719212
 GameObject:
@@ -45527,14 +45563,13 @@ GameObject:
   - component: {fileID: 806501495}
   - component: {fileID: 806501497}
   - component: {fileID: 806501496}
-  - component: {fileID: 806501498}
   m_Layer: 5
   m_Name: ButtonIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &806501495
 RectTransform:
   m_ObjectHideFlags: 0
@@ -45592,27 +45627,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 806501494}
   m_CullTransparentMesh: 1
---- !u!114 &806501498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 806501494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d8c57b527d262742916d6f7117211cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isDragging: 0
-  highlightObjects:
-  - {fileID: 1525661546}
-  - {fileID: 1613020110}
-  placeholderObjects:
-  - {fileID: 1229881866}
-  - {fileID: 873852072}
-  inventoryManager: {fileID: 1177101670}
-  itemCreator: {fileID: 1361483257}
 --- !u!1 &810854729
 GameObject:
   m_ObjectHideFlags: 0
@@ -53899,12 +53913,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
-  highlightObjects:
-  - {fileID: 1525661546}
-  - {fileID: 1567247695}
-  placeholderObjects:
-  - {fileID: 1229881866}
-  - {fileID: 873852072}
+  highlightObjects: []
+  placeholderObjects: []
   inventoryManager: {fileID: 1177101670}
   itemCreator: {fileID: 0}
 --- !u!114 &977809534
@@ -54742,7 +54752,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224815305970993650, guid: 16a4283f69b22db45844ef47cb062f7d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.99999994
       objectReference: {fileID: 0}
     - target: {fileID: 224815305970993650, guid: 16a4283f69b22db45844ef47cb062f7d, type: 3}
       propertyPath: m_AnchorMin.y
@@ -55209,12 +55219,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
-  highlightObjects:
-  - {fileID: 1525661546}
-  - {fileID: 1079879158}
-  placeholderObjects:
-  - {fileID: 1229881866}
-  - {fileID: 873852072}
+  highlightObjects: []
+  placeholderObjects: []
   inventoryManager: {fileID: 1177101670}
   itemCreator: {fileID: 0}
 --- !u!114 &1006139194
@@ -55713,8 +55719,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 17.602886}
-  m_SizeDelta: {x: 0, y: -35.2057}
+  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1015878596
 MonoBehaviour:
@@ -58184,12 +58190,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
-  highlightObjects:
-  - {fileID: 1525661546}
-  - {fileID: 980870896}
-  placeholderObjects:
-  - {fileID: 1229881866}
-  - {fileID: 873852072}
+  highlightObjects: []
+  placeholderObjects: []
   inventoryManager: {fileID: 1177101670}
   itemCreator: {fileID: 0}
 --- !u!114 &1071779311
@@ -58587,12 +58589,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
-  highlightObjects:
-  - {fileID: 1525661546}
-  - {fileID: 1424088186}
-  placeholderObjects:
-  - {fileID: 1229881866}
-  - {fileID: 873852072}
+  highlightObjects: []
+  placeholderObjects: []
   inventoryManager: {fileID: 1177101670}
   itemCreator: {fileID: 0}
 --- !u!114 &1080411153
@@ -63463,7 +63461,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0.000061035156, y: 0}
-  m_SizeDelta: {x: -0.0001, y: -748.32404}
+  m_SizeDelta: {x: -0.0001, y: -819.2343}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1177101667
 MonoBehaviour:
@@ -63523,10 +63521,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ff9320504714e542b787b548bd17a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RawItems: []
-  IntermediateItems: []
-  AssembledItems: []
-  UtilityItems: []
   itemCreator: {fileID: 1361483257}
 --- !u!1 &1178616130
 GameObject:
@@ -69691,10 +69685,10 @@ RectTransform:
   m_Father: {fileID: 1525661547}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 17.603027}
-  m_SizeDelta: {x: 39.2214, y: 4.0153}
+  m_AnchoredPosition: {x: -0.00012207031, y: -434.16}
+  m_SizeDelta: {x: 39.2209, y: 907.54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1289248865
 MonoBehaviour:
@@ -73549,12 +73543,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
-  highlightObjects:
-  - {fileID: 1525661546}
-  - {fileID: 922661681}
-  placeholderObjects:
-  - {fileID: 1229881866}
-  - {fileID: 873852072}
+  highlightObjects: []
+  placeholderObjects: []
   inventoryManager: {fileID: 1177101670}
   itemCreator: {fileID: 0}
 --- !u!114 &1368321884
@@ -77804,12 +77794,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
-  highlightObjects:
-  - {fileID: 1525661546}
-  - {fileID: 1369646067579193916}
-  placeholderObjects:
-  - {fileID: 1229881866}
-  - {fileID: 873852072}
+  highlightObjects: []
+  placeholderObjects: []
   inventoryManager: {fileID: 1177101670}
   itemCreator: {fileID: 0}
 --- !u!114 &1451494374
@@ -78043,6 +78029,7 @@ GameObject:
   - component: {fileID: 1454681162}
   - component: {fileID: 1454681161}
   - component: {fileID: 1454681166}
+  - component: {fileID: 1454681167}
   m_Layer: 5
   m_Name: OxygenTank
   m_TagString: Untagged
@@ -78195,6 +78182,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipObjects: {fileID: 753567476}
+--- !u!114 &1454681167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1454681159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fc5715068fd9fa4a8f22414658f06cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightObject:
+  - {fileID: 1613020110}
+  - {fileID: 1525661546}
+  placeholderObjects:
+  - {fileID: 873852072}
+  highestObject: {fileID: 355118094}
 --- !u!1 &1455359992
 GameObject:
   m_ObjectHideFlags: 0
@@ -81633,8 +81638,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 19.544817}
+  m_SizeDelta: {x: 0, y: -39.0897}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1525661548
 CanvasRenderer:
@@ -94706,10 +94711,10 @@ RectTransform:
   m_Father: {fileID: 1124386558}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -20}
+  m_SizeDelta: {x: 0, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1764019527
 MonoBehaviour:
@@ -96400,7 +96405,7 @@ MonoBehaviour:
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 1001065866}
   m_HorizontalScrollbarVisibility: 0
-  m_VerticalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 1
   m_HorizontalScrollbarSpacing: 0
   m_VerticalScrollbarSpacing: 0
   m_OnValueChanged:
@@ -96937,12 +96942,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
-  highlightObjects:
-  - {fileID: 1525661546}
-  - {fileID: 129017784}
-  placeholderObjects:
-  - {fileID: 1229881866}
-  - {fileID: 873852072}
+  highlightObjects: []
+  placeholderObjects: []
   inventoryManager: {fileID: 1177101670}
   itemCreator: {fileID: 0}
 --- !u!114 &1791282829
@@ -109894,12 +109895,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
-  highlightObjects:
-  - {fileID: 1525661546}
-  - {fileID: 2110965955}
-  placeholderObjects:
-  - {fileID: 1229881866}
-  - {fileID: 873852072}
+  highlightObjects: []
+  placeholderObjects: []
   inventoryManager: {fileID: 1177101670}
   itemCreator: {fileID: 0}
 --- !u!114 &2050978546
@@ -111489,8 +111486,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 17.603027}
-  m_SizeDelta: {x: 39.2214, y: 4.0153}
+  m_AnchoredPosition: {x: 0, y: -1.9395142}
+  m_SizeDelta: {x: 39.2214, y: 43.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2095246696
 MonoBehaviour:

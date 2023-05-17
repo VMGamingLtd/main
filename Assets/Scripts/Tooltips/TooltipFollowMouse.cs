@@ -21,38 +21,42 @@ public class TooltipFollowMouse : MonoBehaviour
     {
         Vector2 mousePosition = Input.mousePosition;
         Vector2 localPoint;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, mousePosition, null, out localPoint);
 
+        // Convert the mouse position to local coordinates of the canvas
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, mousePosition, null, out localPoint);
 
         float tooltipWidth = tooltipRect.rect.width;
         float tooltipHeight = tooltipRect.rect.height;
+
         float xPosition = localPoint.x + xOffset;
         float yPosition = localPoint.y + yOffset;
 
-        // Check if tooltip is off the right edge of the screen
+        // Adjust the x position to keep the tooltip within the screen bounds
         if (xPosition + tooltipWidth + horizontalPadding > screenWidth)
         {
             xPosition = screenWidth - tooltipWidth - horizontalPadding;
         }
-
-        // Check if tooltip is off the left edge of the screen
-        if (xPosition - horizontalPadding < 0)
+        else if (xPosition - horizontalPadding < 0)
         {
             xPosition = horizontalPadding;
         }
 
-        // Check if tooltip is off the top edge of the screen
+        // Adjust the y position to keep the tooltip within the screen bounds
         if (yPosition + tooltipHeight + verticalPadding > screenHeight)
         {
             yPosition = screenHeight - tooltipHeight - verticalPadding;
         }
-
-        // Check if tooltip is off the bottom edge of the screen
-        if (yPosition - verticalPadding < 0)
+        else if (yPosition - verticalPadding < 0)
         {
             yPosition = verticalPadding;
         }
 
+        // Offset the tooltip position by the padding coordinates from the mouse cursor
+        xPosition += horizontalPadding;
+        yPosition -= verticalPadding;
+
+        // Set the tooltip position
         tooltipRect.localPosition = new Vector2(xPosition, yPosition);
     }
+
 }

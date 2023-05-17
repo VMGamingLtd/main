@@ -8,22 +8,19 @@ using System.Linq;
 public class InventoryManager : MonoBehaviour
 {
     public Dictionary<string, GameObject[]> itemArrays;
-    public GameObject[] RawItems;
-    public GameObject[] IntermediateItems;
-    public GameObject[] AssembledItems;
-    public GameObject[] UtilityItems;
     public ItemCreator itemCreator;
 
     public static string ShowItemTypes = "ALL";
 
     public void PopulateInventoryArrays()
     {
-        // Initialize the dictionary
-        itemArrays = new Dictionary<string, GameObject[]>();
-        itemArrays.Add("RAW", new GameObject[0]);
-        itemArrays.Add("INTERMEDIATE", new GameObject[0]);
-        itemArrays.Add("ASSEMBLED", new GameObject[0]);
-        itemArrays.Add("UTILITY", new GameObject[0]);
+        itemArrays = new Dictionary<string, GameObject[]>
+        {
+            { "RAW", new GameObject[0] },
+            { "INTERMEDIATE", new GameObject[0] },
+            { "ASSEMBLED", new GameObject[0] },
+            { "UTILITY", new GameObject[0] }
+        };
     }
     void OnEnable()
     {
@@ -265,103 +262,53 @@ public class InventoryManager : MonoBehaviour
     {
         InventoryManager.ShowItemTypes = "ALL";
 
-        foreach (GameObject rawItem in RawItems)
-        {
-            if (HasChildTextGreaterThanZero(rawItem))
-            {
-                rawItem.SetActive(true);
-            }
-        }
+        foreach (var kvp in itemArrays)
+    {
+        string itemType = kvp.Key;
+        GameObject[] itemArray = kvp.Value;
 
-        foreach (GameObject intermediateItem in IntermediateItems)
-        {
-            if (HasChildTextGreaterThanZero(intermediateItem))
-            {
-                intermediateItem.SetActive(true);
-            }
-        }
+        bool showItems = true;
 
-        foreach (GameObject assembledItem in AssembledItems)
+        foreach (GameObject item in itemArray)
         {
-            if (HasChildTextGreaterThanZero(assembledItem))
-            {
-                assembledItem.SetActive(true);
-            }
+            item.SetActive(showItems);
         }
-
-        foreach (GameObject utilityItem in UtilityItems)
-        {
-            if (HasChildTextGreaterThanZero(utilityItem))
-            {
-                utilityItem.SetActive(true);
-            }
-        }
+    }
     }
 
     public void ShowRawItems()
     {
         InventoryManager.ShowItemTypes = "RAW";
 
-        foreach (GameObject rawItem in RawItems)
+        foreach (var kvp in itemArrays)
         {
-            if (HasChildTextGreaterThanZero(rawItem))
-            {
-                rawItem.SetActive(true);
-            }
-        }
+            string itemType = kvp.Key;
+            GameObject[] itemArray = kvp.Value;
 
-        foreach (GameObject intermediateItem in IntermediateItems)
-        {
-            {
-                intermediateItem.SetActive(false);
-            }
-        }
+            bool showItems = itemType == "RAW";
 
-        foreach (GameObject assembledItem in AssembledItems)
-        {
+            foreach (GameObject item in itemArray)
             {
-                assembledItem.SetActive(false);
-            }
-        }
-
-        foreach (GameObject utilityItem in UtilityItems)
-        {
-            {
-                utilityItem.SetActive(false);
+                item.SetActive(showItems);
             }
         }
     }
+
 
     public void ShowIntermediateItems()
     {
         InventoryManager.ShowItemTypes = "INTERMEDIATE";
 
-        foreach (GameObject rawItem in RawItems)
+        foreach (var kvp in itemArrays)
         {
-            {
-                rawItem.SetActive(false);
-            }
-        }
+            string itemType = kvp.Key;
+            GameObject[] itemArray = kvp.Value;
 
-        foreach (GameObject intermediateItem in IntermediateItems)
-        {
-            if (HasChildTextGreaterThanZero(intermediateItem))
-            {
-                intermediateItem.SetActive(true);
-            }
-        }
+            bool showItems = itemType == "INTERMEDIATE";
 
-        foreach (GameObject assembledItem in AssembledItems)
-        {
+            foreach (GameObject item in itemArray)
             {
-                assembledItem.SetActive(false);
-            }
-        }
-
-        foreach (GameObject utilityItem in UtilityItems)
-        {
-            {
-                utilityItem.SetActive(false);
+                item.SetActive(showItems);
             }
         }
     }
@@ -370,32 +317,16 @@ public class InventoryManager : MonoBehaviour
     {
         InventoryManager.ShowItemTypes = "ASSEMBLED";
 
-        foreach (GameObject rawItem in RawItems)
+        foreach (var kvp in itemArrays)
         {
-            {
-                rawItem.SetActive(false);
-            }
-        }
+            string itemType = kvp.Key;
+            GameObject[] itemArray = kvp.Value;
 
-        foreach (GameObject intermediateItem in IntermediateItems)
-        {
-            {
-                intermediateItem.SetActive(false);
-            }
-        }
+            bool showItems = itemType == "ASSEMBLED";
 
-        foreach (GameObject assembledItem in AssembledItems)
-        {
-            if (HasChildTextGreaterThanZero(assembledItem))
+            foreach (GameObject item in itemArray)
             {
-                assembledItem.SetActive(true);
-            }
-        }
-
-        foreach (GameObject utilityItem in UtilityItems)
-        {
-            {
-                utilityItem.SetActive(false);
+                item.SetActive(showItems);
             }
         }
     }
@@ -404,81 +335,17 @@ public class InventoryManager : MonoBehaviour
     {
         InventoryManager.ShowItemTypes = "UTILITY";
 
-        foreach (GameObject rawItem in RawItems)
+        foreach (var kvp in itemArrays)
         {
-            {
-                rawItem.SetActive(false);
-            }
-        }
+            string itemType = kvp.Key;
+            GameObject[] itemArray = kvp.Value;
 
-        foreach (GameObject intermediateItem in IntermediateItems)
-        {
-            {
-                intermediateItem.SetActive(false);
-            }
-        }
+            bool showItems = itemType == "UTILITY";
 
-        foreach (GameObject assembledItem in AssembledItems)
-        {
+            foreach (GameObject item in itemArray)
             {
-                assembledItem.SetActive(false);
-            }
-        }
-
-        foreach (GameObject utilityItem in UtilityItems)
-        {
-            if (HasChildTextGreaterThanZero(utilityItem))
-            {
-                utilityItem.SetActive(true);
+                item.SetActive(showItems);
             }
         }
     }
-
-    private bool HasChildTextGreaterThanZero(GameObject parentObject)
-    {
-        TextMeshProUGUI childText = parentObject.GetComponentInChildren<TextMeshProUGUI>();
-        if (childText != null && int.TryParse(childText.text, out int count))
-        {
-            return count > 0;
-        }
-        return false;
-    }
-
-    public void AddToAssembledItems(GameObject newItem)
-    {
-        newItem.transform.SetParent(transform);
-        // Create a new array with increased size to accommodate the new item
-        GameObject[] newAssembledItems = new GameObject[AssembledItems.Length + 1];
-
-        // Copy existing items to the new array
-        for (int i = 0; i < AssembledItems.Length; i++)
-        {
-            newAssembledItems[i] = AssembledItems[i];
-        }
-
-        // Add the new item to the end of the new array
-        newAssembledItems[newAssembledItems.Length - 1] = newItem;
-
-        // Update the reference to the new array
-        AssembledItems = newAssembledItems;
-    }
-    public void AddToUtilityItems(GameObject newItem)
-    {
-        newItem.transform.SetParent(transform);
-        // Create a new array with increased size to accommodate the new item
-        GameObject[] newUtilityItems = new GameObject[UtilityItems.Length + 1];
-
-        // Copy existing items to the new array
-        for (int i = 0; i < UtilityItems.Length; i++)
-        {
-            newUtilityItems[i] = UtilityItems[i];
-        }
-
-        // Add the new item to the end of the new array
-        newUtilityItems[newUtilityItems.Length - 1] = newItem;
-
-        // Update the reference to the new array
-        UtilityItems = newUtilityItems;
-    }
-
 }

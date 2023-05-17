@@ -34,6 +34,14 @@ namespace ItemManagement
         {
             CreateItem(quantity, itemPrefabs[3], "INTERMEDIATE", "CONSUMABLE", itemPrefabs[3].name);
         }
+        public void CreateBattery(int quantity)
+        {
+            CreateItem(quantity, itemPrefabs[4], "ASSEMBLED", "COMMON", itemPrefabs[4].name);
+        }
+        public void CreateOxygenTanks(int quantity)
+        {
+            CreateItem(quantity, itemPrefabs[5], "UTILITY", "COMMON", itemPrefabs[5].name);
+        }
 
         private void CreateItem(int quantity, GameObject prefab, string itemType, string itemQuality, string prefabName)
         {
@@ -76,6 +84,11 @@ namespace ItemManagement
                 newItemData.itemType = itemType;
                 newItemData.itemQuality = itemQuality;
 
+                if (prefabName == "OxygenTank")
+                {
+                    newItemData.OxygenTimer = 1800;
+                }
+
                 // Add the new item to the itemArrays dictionary
                 inventoryManager.AddToItemArray(itemType, newItem);
 
@@ -84,106 +97,6 @@ namespace ItemManagement
                 if (newCountText != null)
                 {
                     newCountText.text = newItemData.itemQuantity.ToString();
-                }
-            }
-        }
-        public void CreateBattery(int quantity)
-        {
-            GameObject thisPrefab = itemPrefabs[4];
-            string prefabName = thisPrefab.name;
-
-            if (inventoryManager.itemArrays.TryGetValue(prefabName, out GameObject[] itemArray))
-            {
-                ItemData itemData = itemArray[0].GetComponent<ItemData>();
-                itemData.itemQuantity += quantity;
-
-                TextMeshProUGUI countText = itemArray[0].transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                if (countText != null)
-                {
-                    countText.text = itemData.itemQuantity.ToString();
-                }
-            }
-            else
-            {
-                GameObject newPlant = Instantiate(thisPrefab);
-                newPlant.transform.position = new Vector3(newPlant.transform.position.x, newPlant.transform.position.y, 0f);
-                string itemType = "ASSEMBLED";
-
-                ItemData itemData = newPlant.GetComponent<ItemData>();
-                if (itemData == null)
-                {
-                    itemData = newPlant.AddComponent<ItemData>();
-                }
-
-                if (quantity > 1)
-                {
-                    itemData.itemQuantity = quantity;
-                }
-                else
-                {
-                    itemData.itemQuantity = 1;
-                }
-
-                itemData.itemType = itemType;
-                itemData.itemQuality = "COMMON";
-
-                inventoryManager.AddToItemArray(itemType, newPlant);
-
-                TextMeshProUGUI countText = newPlant.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                if (countText != null)
-                {
-                    countText.text = itemData.itemQuantity.ToString();
-                }
-            }
-        }
-
-        public void CreateOxygenTanks(int quantity)
-        {
-            GameObject thisPrefab = itemPrefabs[5];
-            string prefabName = thisPrefab.name;
-
-            if (inventoryManager.itemArrays.TryGetValue(prefabName, out GameObject[] itemArray))
-            {
-                ItemData itemData = itemArray[0].GetComponent<ItemData>();
-                itemData.itemQuantity += quantity;
-
-                TextMeshProUGUI countText = itemArray[0].transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                if (countText != null)
-                {
-                    countText.text = itemData.itemQuantity.ToString();
-                }
-            }
-            else
-            {
-                GameObject newPlant = Instantiate(thisPrefab);
-                newPlant.transform.position = new Vector3(newPlant.transform.position.x, newPlant.transform.position.y, 0f);
-                string itemType = "UTILITY";
-
-                ItemData itemData = newPlant.GetComponent<ItemData>();
-                if (itemData == null)
-                {
-                    itemData = newPlant.AddComponent<ItemData>();
-                }
-
-                if (quantity > 1)
-                {
-                    itemData.itemQuantity = quantity;
-                }
-                else
-                {
-                    itemData.itemQuantity = 1;
-                }
-
-                itemData.itemType = itemType;
-                itemData.itemQuality = "COMMON";
-                itemData.OxygenTimer = 1800;
-
-                inventoryManager.AddToItemArray(itemType, newPlant);
-
-                TextMeshProUGUI countText = newPlant.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                if (countText != null)
-                {
-                    countText.text = itemData.itemQuantity.ToString();
                 }
             }
         }
