@@ -97,7 +97,7 @@ public class CoroutineManager : MonoBehaviour
         {
             StartCoroutine(Gaos.User.Manager.UserRegister.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
         }
-        if (true)
+        if (false)
         {
             StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());
             StartCoroutine(Gaos.User.Manager.UserRegister.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
