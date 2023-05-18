@@ -52,7 +52,7 @@ namespace Gaos.Api
 
     public class Configuration
     {
-        public static Configuration Config = new Configuration("https://localhost:7070");
+        public static Configuration Config = new Configuration("https://vmgaming.com/gaos");
 
         public string API_URL;
         public int RequestTimeoutSeconds = 10;
