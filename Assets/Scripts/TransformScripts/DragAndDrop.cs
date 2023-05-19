@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using ItemManagement;
 using System.Collections;
 
 public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
@@ -68,9 +69,6 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
             if (draggingObjectImage == "OxygenTank" && highlightedObjectName == "InventoryContent")
             {
-                PlayerResources.OxygenTank = PlayerResources.AddCurrentResource(ref PlayerResources.OxygenTank, 1);
-                inventoryManager.ItemCountText[5].text = PlayerResources.GetCurrentResource(ref PlayerResources.OxygenTank).ToString();
-
                 Transform emptyButton = draggingImage.transform.parent.Find("EmptyButton");
                 if (emptyButton != null)
                 {
@@ -81,7 +79,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
                 {
                     fullButton.gameObject.SetActive(false);
                 }
-                itemCreator.CreateOxygenTankItem();
+                itemCreator.CreateOxygenTanks(1);
                 inventoryManager.InventoryCheckUp();
             }
             else

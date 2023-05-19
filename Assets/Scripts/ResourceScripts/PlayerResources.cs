@@ -9,12 +9,6 @@ public static class PlayerResources
     public static int PlayerWater = 15;
     public static int PlayerEnergy = 4;
     public static int PlayerHunger = 23;
-    public static int Plants = 0;
-    public static int Water = 0;
-    public static int Biofuel = 0;
-    public static int WaterBottle = 0;
-    public static int Battery = 0;
-    public static int OxygenTank = 0;
 
     public static int AddCurrentResource(ref int currentResourceSet, int amount)
     {

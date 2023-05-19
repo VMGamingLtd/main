@@ -40,7 +40,7 @@ public class GlobalCalculator : MonoBehaviour
 
                 if (seconds > 59)
                 {
-                    seconds = 1;
+                    seconds = 0;
                     minutes++;
                     UpdatePlayerNeeds();
                     saveManager.SaveToJsonFile();
@@ -48,7 +48,7 @@ public class GlobalCalculator : MonoBehaviour
                 }
                 if (minutes > 59)
                 {
-                    minutes = 1;
+                    minutes = 0;
                     hours++;
                 }
                 UpdateEverySecond();

@@ -17,7 +17,6 @@ public class EquipmentManager : MonoBehaviour
     public Image EnergyImage;
     public Image OxygenImage;
 
-
     public void InitStartEquip()
     {
         slotEquipped[0] = false;
@@ -33,116 +32,83 @@ public class EquipmentManager : MonoBehaviour
 
     public void CheckForEquip()
     {
-    for (int i = 0; i < slotEquipped.Length; i++)
+        for (int i = 0; i < slotEquipped.Length; i++)
         {
             bool slotEquip = slotEquipped[i];
 
-            if (i == 0)
+            switch (i)
             {
-                if (slotEquip)
-                {
-                Debug.Log("Slot at index 0 is equipped.");
-                }
-                else
-                {
-                continue;
-                }
-            }
-            else if (i == 1)
-            {
-                if (slotEquip)
-                {
-                    Debug.Log("Slot at index 1 is equipped.");
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else if (i == 2)
-            {
-                if (slotEquip)
-                {
-                    Debug.Log("Slot at index 2 is equipped.");
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else if (i == 3)
-            {
-                if (slotEquip)
-                {
-                    Debug.Log("Slot at index 3 is equipped.");
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else if (i == 4)
-            {
-                if (slotEquip)
-                {
-                    Debug.Log("Slot at index 4 is equipped.");
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else if (i == 5)
-            {
-                if (slotEquip)
-                {
-                    Debug.Log("Slot at index 5 is equipped.");
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else if (i == 6)
-            {
-                if (slotEquip)
-                {
-                    Debug.Log("Slot at index 6 is equipped.");
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else if (i == 7)
-            {
-                if (slotEquip)
-                {
-                    Debug.Log("Slot at index 7 is equipped.");
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else if (i == 8)
-            {
-                if (slotEquip)
-                {
-                    string oxygenImage = OxygenImage.GetComponent<Image>().sprite.name;
-                    if (oxygenImage == "OxygenTank")
+                case 0:
+                    if (slotEquip)
                     {
-
+                        Debug.Log("Slot at index 0 is equipped.");
                     }
-                    Debug.Log("Slot at index 8 is equipped.");
-                }
-                else
-                {
                     break;
-                }
-            }
 
+                case 1:
+                    if (slotEquip)
+                    {
+                        Debug.Log("Slot at index 1 is equipped.");
+                    }
+                    break;
+
+                case 2:
+                    if (slotEquip)
+                    {
+                        Debug.Log("Slot at index 2 is equipped.");
+                    }
+                    break;
+
+                case 3:
+                    if (slotEquip)
+                    {
+                        Debug.Log("Slot at index 3 is equipped.");
+                    }
+                    break;
+
+                case 4:
+                    if (slotEquip)
+                    {
+                        Debug.Log("Slot at index 4 is equipped.");
+                    }
+                    break;
+
+                case 5:
+                    if (slotEquip)
+                    {
+                        Debug.Log("Slot at index 5 is equipped.");
+                    }
+                    break;
+
+                case 6:
+                    if (slotEquip)
+                    {
+                        Debug.Log("Slot at index 6 is equipped.");
+                    }
+                    break;
+
+                case 7:
+                    if (slotEquip)
+                    {
+                        Debug.Log("Slot at index 7 is equipped.");
+                    }
+                    break;
+
+                case 8:
+                    if (slotEquip)
+                    {
+                        string oxygenImage = OxygenImage.GetComponent<Image>().sprite.name;
+                        if (oxygenImage == "OxygenTank")
+                        {
+                            // Perform actions for OxygenTank equipped
+                        }
+                        Debug.Log("Slot at index 8 is equipped.");
+                    }
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
-
 }
