@@ -66,8 +66,18 @@ namespace Gaos.Device.Manager
         {
             const string METHOD_NAME = "RegisterDevice()";
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: registering device ...");
+
+            int maxTryCount = 20;
+
             while (true)
             {
+                --maxTryCount;
+                if (maxTryCount <= 0)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: max try count reached");
+                    break;
+                }
+
                 yield return RegisterDevice_();
 
                 if (TryToRegisterAgain == true)
@@ -77,16 +87,18 @@ namespace Gaos.Device.Manager
                 }
                 else
                 {
-                    if (IsDeviceRegistered == true)
-                    {
-                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: device registered");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
-                    }
                     break;
                 }
+            }
+
+            if (IsDeviceRegistered == true)
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: device registered");
+            }
+            else
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
+                throw new System.Exception($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
             }
         }
     }

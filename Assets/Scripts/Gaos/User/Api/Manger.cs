@@ -6,9 +6,9 @@ namespace Gaos.User.Manager
 {
     public class GuestLogin 
     {
-        public readonly static string CLASS_NAME = typeof(GuestLogin).Name;
-        public static bool TryToLoginAgain = false;
-        private static bool IsLoggedIn = false;
+        private readonly static string CLASS_NAME = typeof(GuestLogin).Name;
+        private static bool TryToLoginAgain = false;
+        public static bool IsLoggedIn = false;
 
         public static Gaos.User.Api.GuestLoginResponse GuestLoginResponse = null;
 
@@ -60,34 +60,53 @@ namespace Gaos.User.Manager
             }
         }
 
-        public static IEnumerator Login()
+        public delegate void OnGuestLoginComplete();
+
+        public static IEnumerator Login(OnGuestLoginComplete onComplete = null)
         {
             const string METHOD_NAME = "Login()";
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: logging in guest ...");
+
+            int maxTryCount = 5;
+
             while (true)
             {
+                --maxTryCount;
+                if (maxTryCount <= 0)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: max try count reached");
+                    break;
+                }
+
                 yield return Login_();
 
                 if (TryToLoginAgain == true)
                 {
                     Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
+                    yield return new WaitForSeconds(1);
                     continue;
                 }
                 else
                 {
-                    if (IsLoggedIn == true)
-                    {
-                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  guest logged in");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: guest not logged in");
-                    }
                     break;
                 }
             }
-        }
 
+            if (IsLoggedIn == true)
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  guest logged in");
+            }
+            else
+            {
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: guest not logged in");
+            }
+
+            if (onComplete != null)
+            {
+                onComplete();
+            }
+
+        }
     }
 
     public class UserRegister
