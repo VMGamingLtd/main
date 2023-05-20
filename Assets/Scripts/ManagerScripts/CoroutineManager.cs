@@ -107,7 +107,6 @@ public class CoroutineManager : MonoBehaviour
             StartCoroutine(Gaos.User.Manager.UserLogin.LoginWithWaitForRegistration("JozkoMrkvicka", "jozko22"));
         }
 
-        StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());
 
         bool registereduser = CoroutineManager.registeredUser;
         globalCalculator.GameStarted = false;

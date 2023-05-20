@@ -170,7 +170,10 @@ namespace Gaos.User.Manager
                 }
             }
         }
-        public static IEnumerator Register(string userName, string email, string password)
+
+        public delegate void OnUserRegisterComplete();
+
+        public static IEnumerator Register(string userName, string email, string password, OnUserRegisterComplete onUserRegisterComplete = null)
         {
             const string METHOD_NAME = "Register()";
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: registering user ...");
@@ -195,6 +198,11 @@ namespace Gaos.User.Manager
                     }
                     break;
                 }
+            }
+
+            if (onUserRegisterComplete != null)
+            {
+                onUserRegisterComplete();
             }
         }
 
@@ -261,7 +269,9 @@ namespace Gaos.User.Manager
             }
         }
 
-        public static IEnumerator Login(string userName, string password)
+        public delegate void OnUserLoginComplete();
+
+        public static IEnumerator Login(string userName, string password, OnUserLoginComplete onUserLoginComplete = null)
         {
             const string METHOD_NAME = "Login()";
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: logging in user ...");
@@ -286,6 +296,11 @@ namespace Gaos.User.Manager
                     }
                     break;
                 }
+            }
+
+            if (onUserLoginComplete != null)
+            {
+                onUserLoginComplete();
             }
         }
 

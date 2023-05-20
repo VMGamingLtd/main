@@ -42,22 +42,8 @@ public class GuestLogin : MonoBehaviour
             /*Guid uuid = Guid.NewGuid();
             Debug.Log("Generated UUID: " + uuid.ToString());*/
         }
-
-        StartCoroutine(Gaos.User.Manager.GuestLogin.Login(OnGuestLoginComplete));
-    }
-
-    public void OnGuestLoginComplete()
-    {
-        if (Gaos.User.Manager.GuestLogin.IsLoggedIn == true)
-        {
-            Debug.Log("Guest logged in");
-            UserName.userName = Gaos.User.Manager.GuestLogin.GuestLoginResponse.userName; 
-            StartCoroutine(coroutineManager.LoadSaveSlots());
-        }
-        else
-        {
-            throw new Exception("Guest login failed");
-        }
+        StartCoroutine(coroutineManager.LoadSaveSlots());
 
     }
+
 }
