@@ -10,7 +10,9 @@ namespace ItemManagement
             public int itemQuantity;
             public string itemType;
             public string itemQuality;
-            public int OxygenTimer;
+            public string OxygenTimer;
+            public string EnergyTimer;
+            public string WaterTimer;
         }
     public class ItemCreator : MonoBehaviour
     {
@@ -28,19 +30,23 @@ namespace ItemManagement
 
         public void CreateBiofuel(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[2], "INTERMEDIATE", "CONSUMABLE", itemPrefabs[2].name);
+            CreateItem(quantity, itemPrefabs[2], "PROCESSED", "CONSUMABLE", itemPrefabs[2].name);
         }
-        public void CreateWaterBottle(int quantity)
+        public void CreatePurifiedWater(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[3], "INTERMEDIATE", "CONSUMABLE", itemPrefabs[3].name);
+            CreateItem(quantity, itemPrefabs[3], "PROCESSED", "CONSUMABLE", itemPrefabs[3].name);
         }
         public void CreateBattery(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[4], "ASSEMBLED", "COMMON", itemPrefabs[4].name);
+            CreateItem(quantity, itemPrefabs[4], "ASSEMBLED", "BASIC", itemPrefabs[4].name);
         }
         public void CreateOxygenTanks(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[5], "UTILITY", "COMMON", itemPrefabs[5].name);
+            CreateItem(quantity, itemPrefabs[5], "ASSEMBLED", "BASIC", itemPrefabs[5].name);
+        }
+        public void CreateBatteryCore(int quantity)
+        {
+            CreateItem(quantity, itemPrefabs[6], "REFINED", "BASIC", itemPrefabs[6].name);
         }
 
         private void CreateItem(int quantity, GameObject prefab, string itemType, string itemQuality, string prefabName)
@@ -86,7 +92,15 @@ namespace ItemManagement
 
                 if (prefabName == "OxygenTank")
                 {
-                    newItemData.OxygenTimer = 1800;
+                    newItemData.OxygenTimer = "00:00:10:00";
+                }
+                else if (prefabName == "PurifiedWater")
+                {
+                    newItemData.WaterTimer = "00:00:10:00";
+                }
+                else if (prefabName == "Battery")
+                {
+                    newItemData.EnergyTimer = "00:00:05:00";
                 }
 
                 // Add the new item to the itemArrays dictionary

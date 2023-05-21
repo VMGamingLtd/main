@@ -5,6 +5,7 @@ using UnityEngine;
 public class TooltipObjects : MonoBehaviour
 {
     public GameObject PlanetIndex;
+    public GameObject CraftBattery;
     public GameObject Plants;
     public GameObject Water;
     public GameObject Biofuel;

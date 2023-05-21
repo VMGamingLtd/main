@@ -85,7 +85,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
         int water = inventoryManager.GetItemQuantity("Water", "RAW");
         if (CoroutineManager.AllCoroutineBooleans[3] == true)
         {
-            coroutineManager.StartCoroutine("StopCollectWaterBottle");
+            coroutineManager.StartCoroutine("StopCollectPurifiedWater");
         }
         else if (CoroutineManager.CheckForTrueValues())
         {
@@ -93,7 +93,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
             {
                 coroutineManager.StopRunningCoroutine();
                 CoroutineManager.AllCoroutineBooleans[3] = true;
-                coroutineManager.StartCoroutine("CollectWaterBottle");
+                coroutineManager.StartCoroutine("CollectPurifiedWater");
             }
             else
             {
@@ -103,7 +103,37 @@ public class BuildingBarPlanet0 : MonoBehaviour {
         else if (water >= 50)
         {
             CoroutineManager.AllCoroutineBooleans[3] = true;
-            coroutineManager.StartCoroutine("CollectWaterBottle");
+            coroutineManager.StartCoroutine("CollectPurifiedWater");
+        }
+        else
+        {
+            StartCoroutine(errorCoroutine());
+        }
+    }
+    public void StartCreateBatteryCore()
+    {
+        int biofuel = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED");
+        if (CoroutineManager.AllCoroutineBooleans[6] == true)
+        {
+            coroutineManager.StartCoroutine("StopCreateBatteryCore");
+        }
+        else if (CoroutineManager.CheckForTrueValues())
+        {
+            if (biofuel >= 4)
+            {
+                coroutineManager.StopRunningCoroutine();
+                CoroutineManager.AllCoroutineBooleans[6] = true;
+                coroutineManager.StartCoroutine("CreateBatteryCore");
+            }
+            else
+            {
+                StartCoroutine(errorCoroutine());
+            }
+        }
+        else if (biofuel >= 4)
+        {
+            CoroutineManager.AllCoroutineBooleans[6] = true;
+            coroutineManager.StartCoroutine("CreateBatteryCore");
         }
         else
         {
@@ -113,10 +143,29 @@ public class BuildingBarPlanet0 : MonoBehaviour {
 
     public void StartCreateBattery()
     {
-        int biofuel = inventoryManager.GetItemQuantity("Biofuel", "INTERMEDIATE");
+        int batteryCore = inventoryManager.GetItemQuantity("BatteryCore", "REFINED");
+        int biofuel = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED");
 
-        if (biofuel >= 3)
+        if (CoroutineManager.AllCoroutineBooleans[4] == true)
         {
+            coroutineManager.StartCoroutine("StopCreateBattery");
+        }
+        else if (CoroutineManager.CheckForTrueValues())
+        {
+            if (batteryCore >= 1 && biofuel >= 1)
+            {
+                coroutineManager.StopRunningCoroutine();
+                CoroutineManager.AllCoroutineBooleans[4] = true;
+                coroutineManager.StartCoroutine("CreateBattery");
+            }
+            else
+            {
+                StartCoroutine(errorCoroutine());
+            }
+        }
+        else if (batteryCore >= 1 && biofuel >= 1)
+        {
+            CoroutineManager.AllCoroutineBooleans[4] = true;
             coroutineManager.StartCoroutine("CreateBattery");
         }
         else

@@ -27,8 +27,9 @@ public class StartGameInputChecker : MonoBehaviour
         //initialize starting resources
         Credits.ResetCredits();
         Credits.AddCredits(42);
-        DecimalResourceManager.AddDecimalResource(ref DecimalResourceManager.Planet0Oxygen, 20);
-        DecimalResourceManager .AddDecimalResource(ref DecimalResourceManager.Planet0Water, 15);
+        PlayerResources.AddCurrentResourceTime(ref PlayerResources.PlayerWater, 0, 0, 5, 40);
+        PlayerResources.AddCurrentResourceTime(ref PlayerResources.PlayerHunger, 0, 0, 12, 35);
+        PlayerResources.AddCurrentResourceTime(ref PlayerResources.PlayerEnergy, 0, 0, 0, 0);
 
         MainUI.SetActive(true);
 

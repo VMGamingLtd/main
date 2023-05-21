@@ -1,113 +1,75 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+using ItemManagement;
 
 public class EquipmentManager : MonoBehaviour
 {
     public static bool[] slotEquipped = new bool[9];
 
-    public Image HelmetImage;
-    public Image SuitImage;
-    public Image ToolImage;
-    public Image LeftHandImage;
-    public Image BackpackImage;
-    public Image RightHandImage;
-    public Image DrillImage;
-    public Image EnergyImage;
-    public Image OxygenImage;
+    public GameObject HelmetSlot;
+    public GameObject SuitSlot;
+    public GameObject ToolSlot;
+    public GameObject LeftHandSlot;
+    public GameObject BackpackSlot;
+    public GameObject RightHandSlot;
+    public GameObject DrillSlot;
+    public GameObject EnergySlot;
+    public GameObject OxygenSlot;
 
     public void InitStartEquip()
     {
-        slotEquipped[0] = false;
-        slotEquipped[1] = false;
-        slotEquipped[2] = false;
-        slotEquipped[3] = false;
-        slotEquipped[4] = false;
-        slotEquipped[5] = false;
-        slotEquipped[6] = false;
-        slotEquipped[7] = false;
-        slotEquipped[8] = true;
+        for (int i = 0; i < slotEquipped.Length; i++)
+        {
+            slotEquipped[i] = false;
+        }
     }
 
     public void CheckForEquip()
     {
         for (int i = 0; i < slotEquipped.Length; i++)
         {
-            bool slotEquip = slotEquipped[i];
-
-            switch (i)
+            if (slotEquipped[i])
             {
-                case 0:
-                    if (slotEquip)
+                if (i == 7)
+                {
+                    Transform oxygenChild = OxygenSlot.transform.Cast<Transform>()
+                        .FirstOrDefault(child => child.name.Contains("(Clone)"));
+                    if (oxygenChild != null && oxygenChild.name == "Battery(Clone)")
                     {
-                        Debug.Log("Slot at index 0 is equipped.");
-                    }
-                    break;
-
-                case 1:
-                    if (slotEquip)
-                    {
-                        Debug.Log("Slot at index 1 is equipped.");
-                    }
-                    break;
-
-                case 2:
-                    if (slotEquip)
-                    {
-                        Debug.Log("Slot at index 2 is equipped.");
-                    }
-                    break;
-
-                case 3:
-                    if (slotEquip)
-                    {
-                        Debug.Log("Slot at index 3 is equipped.");
-                    }
-                    break;
-
-                case 4:
-                    if (slotEquip)
-                    {
-                        Debug.Log("Slot at index 4 is equipped.");
-                    }
-                    break;
-
-                case 5:
-                    if (slotEquip)
-                    {
-                        Debug.Log("Slot at index 5 is equipped.");
-                    }
-                    break;
-
-                case 6:
-                    if (slotEquip)
-                    {
-                        Debug.Log("Slot at index 6 is equipped.");
-                    }
-                    break;
-
-                case 7:
-                    if (slotEquip)
-                    {
-                        Debug.Log("Slot at index 7 is equipped.");
-                    }
-                    break;
-
-                case 8:
-                    if (slotEquip)
-                    {
-                        string oxygenImage = OxygenImage.GetComponent<Image>().sprite.name;
-                        if (oxygenImage == "OxygenTank")
+                        ItemData itemData = oxygenChild.GetComponent<ItemData>();
+                        if (itemData != null)
                         {
-                            // Perform actions for OxygenTank equipped
+                            string energyTimer = itemData.EnergyTimer;
+                            string[] timerParts = energyTimer.Split(':');
+                            int days = int.Parse(timerParts[0]);
+                            int hours = int.Parse(timerParts[1]);
+                            int minutes = int.Parse(timerParts[2]);
+                            int seconds = int.Parse(timerParts[3]);
+                            PlayerResources.AddCurrentResourceTime(ref PlayerResources.PlayerEnergy, days, hours, minutes, seconds);
                         }
-                        Debug.Log("Slot at index 8 is equipped.");
                     }
-                    break;
+                }
+                if (i == 8 && GlobalCalculator.isPlayerInBiologicalBiome == false)
+                {
+                    Transform oxygenChild = OxygenSlot.transform.Cast<Transform>()
+                        .FirstOrDefault(child => child.name.Contains("(Clone)"));
+                    if (oxygenChild != null && oxygenChild.name == "OxygenTank(Clone)")
+                    {
+                        ItemData itemData = oxygenChild.GetComponent<ItemData>();
+                        if (itemData != null)
+                        {
+                            string oxygenTimer = itemData.OxygenTimer;
+                            string[] timerParts = oxygenTimer.Split(':');
+                            int days = int.Parse(timerParts[0]);
+                            int hours = int.Parse(timerParts[1]);
+                            int minutes = int.Parse(timerParts[2]);
+                            int seconds = int.Parse(timerParts[3]);
+                            PlayerResources.AddCurrentResourceTime(ref PlayerResources.PlayerOxygen, days, hours, minutes, seconds);
+                        }
 
-                default:
-                    break;
+                    }
+                }
             }
         }
     }

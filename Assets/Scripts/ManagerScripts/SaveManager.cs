@@ -31,10 +31,10 @@ public class SaveManager : MonoBehaviour
         public int fossilFuelsPlanet0;
         public int rareElementsPlanet0;
         public int gemstonesPlanet0;
-        public int playerOxygen;
-        public int playerWater;
-        public int playerEnergy;
-        public int playerHunger;
+        public string playerOxygen;
+        public string playerWater;
+        public string playerEnergy;
+        public string playerHunger;
         public int playerLevel;
         public int playerCurrentExp;
         public int playerMaxExp;
@@ -45,12 +45,13 @@ public class SaveManager : MonoBehaviour
         public int seconds;
         public int expPoints;
         public bool registeredUser;
+        public bool isPlayerInBiologicalBiome;
         public float credits;
         public string inventoryTitle;
         public InventoryItemData[] rawInventoryObjects;
-        public InventoryItemData[] intermediateInventoryObjects;
+        public InventoryItemData[] processedInventoryObjects;
+        public InventoryItemData[] refinedInventoryObjects;
         public InventoryItemData[] assembledInventoryObjects;
-        public InventoryItemData[] utilityInventoryObjects;
     }
 
     [System.Serializable]
@@ -60,11 +61,13 @@ public class SaveManager : MonoBehaviour
         public string itemType;
         public string itemQuality;
         public int itemQuantity;
-        public int OxygenTimer;
+        public string OxygenTimer;
+        public string EnergyTimer;
+        public string WaterTimer;
 
         public bool ShouldSerializeOxygenTimer()
         {
-            string[] excludedTypes = { "RAW", "INTERMEDIATE", "ASSEMBLED" };
+            string[] excludedTypes = { "RAW", "PROCESSED", "REFINED" };
             return !excludedTypes.Any(type => itemType.Equals(type, StringComparison.OrdinalIgnoreCase));
         }
     }
@@ -121,6 +124,7 @@ public class SaveManager : MonoBehaviour
         currentSaveData.playerHunger = PlayerResources.PlayerHunger;
         currentSaveData.expPoints = EXPPoints.expPoints;
         currentSaveData.registeredUser = CoroutineManager.registeredUser;
+        currentSaveData.isPlayerInBiologicalBiome = GlobalCalculator.isPlayerInBiologicalBiome;
         currentSaveData.credits = Credits.credits;
 
         currentSaveData.inventoryTitle = "Inventory";
@@ -145,11 +149,28 @@ public class SaveManager : MonoBehaviour
             currentSaveData.rawInventoryObjects[i] = itemData;
         }
 
-        currentSaveData.intermediateInventoryObjects = new InventoryItemData[itemArrays["INTERMEDIATE"].Length];
+        currentSaveData.processedInventoryObjects = new InventoryItemData[itemArrays["PROCESSED"].Length];
 
-        for (int i = 0; i < itemArrays["INTERMEDIATE"].Length; i++)
+        for (int i = 0; i < itemArrays["PROCESSED"].Length; i++)
         {
-            GameObject itemGameObject = itemArrays["INTERMEDIATE"][i];
+            GameObject itemGameObject = itemArrays["PROCESSED"][i];
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            InventoryItemData itemData = new InventoryItemData();
+            itemData.itemName = itemName;
+            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            itemData.itemType = itemDataComponent.itemType;
+            itemData.itemQuantity = itemDataComponent.itemQuantity;
+            itemData.itemQuality = itemDataComponent.itemQuality;
+            itemData.OxygenTimer = itemDataComponent.WaterTimer;
+
+            currentSaveData.processedInventoryObjects[i] = itemData;
+        }
+        currentSaveData.refinedInventoryObjects = new InventoryItemData[itemArrays["REFINED"].Length];
+
+        for (int i = 0; i < itemArrays["REFINED"].Length; i++)
+        {
+            GameObject itemGameObject = itemArrays["REFINED"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
             InventoryItemData itemData = new InventoryItemData();
@@ -159,7 +180,7 @@ public class SaveManager : MonoBehaviour
             itemData.itemQuantity = itemDataComponent.itemQuantity;
             itemData.itemQuality = itemDataComponent.itemQuality;
 
-            currentSaveData.intermediateInventoryObjects[i] = itemData;
+            currentSaveData.refinedInventoryObjects[i] = itemData;
         }
         currentSaveData.assembledInventoryObjects = new InventoryItemData[itemArrays["ASSEMBLED"].Length];
 
@@ -174,25 +195,11 @@ public class SaveManager : MonoBehaviour
             itemData.itemType = itemDataComponent.itemType;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
             itemData.itemQuality = itemDataComponent.itemQuality;
+            itemData.OxygenTimer = itemDataComponent.OxygenTimer;
+            itemData.OxygenTimer = itemDataComponent.EnergyTimer;
+            itemData.OxygenTimer = itemDataComponent.WaterTimer;
 
             currentSaveData.assembledInventoryObjects[i] = itemData;
-        }
-        currentSaveData.utilityInventoryObjects = new InventoryItemData[itemArrays["UTILITY"].Length];
-
-        for (int i = 0; i < itemArrays["UTILITY"].Length; i++)
-        {
-            GameObject itemGameObject = itemArrays["UTILITY"][i];
-            string itemName = itemGameObject.name.Replace("(Clone)", "");
-
-            InventoryItemData itemData = new InventoryItemData();
-            itemData.itemName = itemName;
-            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
-            itemData.itemType = itemDataComponent.itemType;
-            itemData.itemQuantity = itemDataComponent.itemQuantity;
-            itemData.itemQuality = itemDataComponent.itemQuality;
-            itemData.OxygenTimer = itemDataComponent.OxygenTimer;
-
-            currentSaveData.utilityInventoryObjects[i] = itemData;
         }
 
         string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented);

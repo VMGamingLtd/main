@@ -14,6 +14,7 @@ public class TooltipFollowMouse : MonoBehaviour
 
     private void Awake()
     {
+        tooltipRect = GetComponent<RectTransform>();
         screenWidth = Screen.width;
         screenHeight = Screen.height;
     }
@@ -21,13 +22,10 @@ public class TooltipFollowMouse : MonoBehaviour
     {
         Vector2 mousePosition = Input.mousePosition;
         Vector2 localPoint;
-
-        // Convert the mouse position to local coordinates of the canvas
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, mousePosition, null, out localPoint);
 
         float tooltipWidth = tooltipRect.rect.width;
         float tooltipHeight = tooltipRect.rect.height;
-
         float xPosition = localPoint.x + xOffset;
         float yPosition = localPoint.y + yOffset;
 
@@ -53,7 +51,7 @@ public class TooltipFollowMouse : MonoBehaviour
 
         // Offset the tooltip position by the padding coordinates from the mouse cursor
         xPosition += horizontalPadding;
-        yPosition -= verticalPadding;
+        yPosition += verticalPadding;
 
         // Set the tooltip position
         tooltipRect.localPosition = new Vector2(xPosition, yPosition);
