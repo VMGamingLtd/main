@@ -43,7 +43,6 @@ public class SaveManager : MonoBehaviour
         public int hours;
         public int minutes;
         public int seconds;
-        public int expPoints;
         public bool registeredUser;
         public bool isPlayerInBiologicalBiome;
         public float credits;
@@ -122,7 +121,6 @@ public class SaveManager : MonoBehaviour
         currentSaveData.playerWater = PlayerResources.PlayerWater;
         currentSaveData.playerEnergy = PlayerResources.PlayerEnergy;
         currentSaveData.playerHunger = PlayerResources.PlayerHunger;
-        currentSaveData.expPoints = EXPPoints.expPoints;
         currentSaveData.registeredUser = CoroutineManager.registeredUser;
         currentSaveData.isPlayerInBiologicalBiome = GlobalCalculator.isPlayerInBiologicalBiome;
         currentSaveData.credits = Credits.credits;

@@ -197,6 +197,7 @@ public class CoroutineManager : MonoBehaviour
             Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
             int result = playerMaxExp * 2;
             Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+            maxExpText.text = result.ToString();
             Level.AddCurrentResource(ref Level.PlayerLevel, 1);
             levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
             Level.AddCurrentResource(ref Level.StatPoints, 5);
@@ -250,6 +251,7 @@ public class CoroutineManager : MonoBehaviour
             Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
             int result = playerMaxExp * 2;
             Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+            maxExpText.text = result.ToString();
             Level.AddCurrentResource(ref Level.PlayerLevel, 1);
             levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
             Level.AddCurrentResource(ref Level.StatPoints, 5);
@@ -319,6 +321,7 @@ public class CoroutineManager : MonoBehaviour
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
                 int result = playerMaxExp * 2;
                 Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+                maxExpText.text = result.ToString();
                 Level.AddCurrentResource(ref Level.PlayerLevel, 1);
                 levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
                 Level.AddCurrentResource(ref Level.StatPoints, 5);
@@ -400,6 +403,7 @@ public class CoroutineManager : MonoBehaviour
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
                 int result = playerMaxExp * 2;
                 Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+                maxExpText.text = result.ToString();
                 Level.AddCurrentResource(ref Level.PlayerLevel, 1);
                 levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
                 Level.AddCurrentResource(ref Level.StatPoints, 5);
@@ -483,6 +487,7 @@ public class CoroutineManager : MonoBehaviour
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
                 int result = playerMaxExp * 2;
                 Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+                maxExpText.text = result.ToString();
                 Level.AddCurrentResource(ref Level.PlayerLevel, 1);
                 levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
                 Level.AddCurrentResource(ref Level.StatPoints, 5);
@@ -561,7 +566,6 @@ public class CoroutineManager : MonoBehaviour
             itemCreator.CreateBattery(1);
             Level.AddCurrentResource(ref Level.PlayerCurrentExp, 10);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-
             int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
             int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
             float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
@@ -574,6 +578,7 @@ public class CoroutineManager : MonoBehaviour
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
                 int result = playerMaxExp * 2;
                 Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+                maxExpText.text = result.ToString();
                 Level.AddCurrentResource(ref Level.PlayerLevel, 1);
                 levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
                 Level.AddCurrentResource(ref Level.StatPoints, 5);

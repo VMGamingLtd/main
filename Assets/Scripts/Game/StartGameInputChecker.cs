@@ -20,11 +20,8 @@ public class StartGameInputChecker : MonoBehaviour
     {
         globalCalculator.GameStarted = true;
         NewGamePopup.SetActive(false);
-        EXPPoints.ResetPoints();
 
         inventoryManager.PopulateInventoryArrays();
-        itemCreator.CreateOxygenTanks(1);
-        itemCreator.CreateBattery(1);
         //initialize starting resources
         Credits.ResetCredits();
         Credits.AddCredits(42);

@@ -76,7 +76,6 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
             return;
 
         isDragging = false;
-        bool skipMoveUnderParent = false;
 
         foreach (GameObject obj in placeholderObjects)
         {
