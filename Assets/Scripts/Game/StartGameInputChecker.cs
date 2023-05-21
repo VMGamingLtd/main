@@ -24,6 +24,7 @@ public class StartGameInputChecker : MonoBehaviour
 
         inventoryManager.PopulateInventoryArrays();
         itemCreator.CreateOxygenTanks(1);
+        itemCreator.CreateBattery(1);
         //initialize starting resources
         Credits.ResetCredits();
         Credits.AddCredits(42);

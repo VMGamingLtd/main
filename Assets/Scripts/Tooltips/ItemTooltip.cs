@@ -55,13 +55,11 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             ItemData itemData = hoveredObject.GetComponentInParent<ItemData>();
             if (itemData != null)
             {
-                TextMeshProUGUI countdownText = tooltipObject.transform.Find("TopDisplay/Countdown/OxygenCountdownValue")?.GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI countdownText = tooltipObject.transform.Find("TopDisplay/Countdown/Value")?.GetComponent<TextMeshProUGUI>();
                 if (countdownText != null)
                 {
                     if (objectName == "OxygenTank")
                     {
-                        itemData.OxygenTimer = "00:00:10:00";
-
                         string[] timerParts = itemData.OxygenTimer.Split(':');
                         string formattedTimer = "";
 
@@ -95,8 +93,36 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                     }
                     else if (objectName == "Battery")
                     {
-                        string energyTimer = itemData.EnergyTimer.ToString();
-                        countdownText.text = energyTimer;
+                        string[] timerParts = itemData.EnergyTimer.Split(':');
+                        string formattedTimer = "";
+
+                        int days = int.Parse(timerParts[0]);
+                        int hours = int.Parse(timerParts[1]);
+                        int minutes = int.Parse(timerParts[2]);
+                        int seconds = int.Parse(timerParts[3]);
+
+                        if (days > 0)
+                        {
+                            formattedTimer += timerParts[0] + "d:";
+                        }
+                        if (hours > 0 || (days > 0 && hours == 0))
+                        {
+                            formattedTimer += timerParts[1] + "h:";
+                        }
+                        if (minutes > 0 || (days > 0 && hours == 0 && minutes == 0))
+                        {
+                            formattedTimer += timerParts[2] + "m:";
+                        }
+                        formattedTimer += timerParts[3] + "s";
+
+                        if (days > 0 || hours > 0 || minutes > 0)
+                        {
+                            countdownText.text = "<color=yellow>" + formattedTimer + "</color>";
+                        }
+                        else
+                        {
+                            countdownText.text = formattedTimer;
+                        }
                     }
                 }
             }

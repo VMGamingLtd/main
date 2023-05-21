@@ -15,6 +15,7 @@ public class GlobalCalculator : MonoBehaviour
     public static bool isPlayerInBiologicalBiome = true;
     public GameObject NoEnergy;
     private bool isEnergyImageVisible = false;
+    public EquipmentManager equipmentManager;
 
     public SaveManager saveManager;
 
@@ -96,6 +97,10 @@ public class GlobalCalculator : MonoBehaviour
             isEnergyImageVisible = false;
             NoEnergy.SetActive(false);
             PlayerResources.ReduceCurrentResourceTime(ref PlayerResources.PlayerEnergy, 0, 0, 0, 1);
+            if (EquipmentManager.slotEquipped[7] == true)
+            {
+                equipmentManager.ReduceEnergyTimer();
+            }
             PlayerNeeds[2].text = PlayerResources.GetCurrentResourceTime(PlayerResources.PlayerEnergy);
             PlayerNeeds[2].color = IsTimeBelowThreshold(PlayerResources.PlayerEnergy, 5) ? Color.yellow : Color.white;
         }

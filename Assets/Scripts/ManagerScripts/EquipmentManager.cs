@@ -33,11 +33,11 @@ public class EquipmentManager : MonoBehaviour
             {
                 if (i == 7)
                 {
-                    Transform oxygenChild = OxygenSlot.transform.Cast<Transform>()
+                    Transform targetChild = EnergySlot.transform.Cast<Transform>()
                         .FirstOrDefault(child => child.name.Contains("(Clone)"));
-                    if (oxygenChild != null && oxygenChild.name == "Battery(Clone)")
+                    if (targetChild != null && targetChild.name == "Battery(Clone)")
                     {
-                        ItemData itemData = oxygenChild.GetComponent<ItemData>();
+                        ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null)
                         {
                             string energyTimer = itemData.EnergyTimer;
@@ -52,11 +52,11 @@ public class EquipmentManager : MonoBehaviour
                 }
                 if (i == 8 && GlobalCalculator.isPlayerInBiologicalBiome == false)
                 {
-                    Transform oxygenChild = OxygenSlot.transform.Cast<Transform>()
+                    Transform targetChild = OxygenSlot.transform.Cast<Transform>()
                         .FirstOrDefault(child => child.name.Contains("(Clone)"));
-                    if (oxygenChild != null && oxygenChild.name == "OxygenTank(Clone)")
+                    if (targetChild != null && targetChild.name == "OxygenTank(Clone)")
                     {
-                        ItemData itemData = oxygenChild.GetComponent<ItemData>();
+                        ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null)
                         {
                             string oxygenTimer = itemData.OxygenTimer;
@@ -73,4 +73,47 @@ public class EquipmentManager : MonoBehaviour
             }
         }
     }
+    public void ReduceEnergyTimer()
+    {
+        foreach (Transform child in EnergySlot.transform)
+        {
+            if (child.name.Contains("(Clone)"))
+            {
+                ItemData itemData = child.GetComponent<ItemData>();
+                if (itemData != null)
+                {
+                    string energyTimer = itemData.EnergyTimer;
+                    string[] timerParts = energyTimer.Split(':');
+                    int days = int.Parse(timerParts[0]);
+                    int hours = int.Parse(timerParts[1]);
+                    int minutes = int.Parse(timerParts[2]);
+                    int seconds = int.Parse(timerParts[3]);
+                    seconds--; // Reduce the energyTimer by 1 second
+                    if (seconds < 0)
+                    {
+                        seconds = 59;
+                        minutes--;
+                        if (minutes < 0)
+                        {
+                            minutes = 59;
+                            hours--;
+                            if (hours < 0)
+                            {
+                                hours = 23;
+                                days--;
+                                if (days < 0)
+                                {
+                                    days = 0; // or handle negative days accordingly
+                                }
+                            }
+                        }
+                    }
+                    energyTimer = $"{days.ToString("00")}:{hours.ToString("00")}:{minutes.ToString("00")}:{seconds.ToString("00")}";
+                    itemData.EnergyTimer = energyTimer;
+                }
+            }
+        }
+    }
+
+
 }

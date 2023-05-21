@@ -12,20 +12,20 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     public GameObject highestObject;
     private GameObject previousHighlightObject;
     private string originalParentName;
+    private string draggedObjectName;
     private Transform emptyButton;
     public EquipmentManager equipmentManager;
     public MessageObjects messageObjects;
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        // Prevent click-through on UI elements
         eventData.pointerPressRaycast = eventData.pointerCurrentRaycast;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // Create a clone object and set up dragging
         originalParentName = transform.parent.name;
+        draggedObjectName = gameObject.name;
         if (originalParentName == "OxygenButton" || originalParentName == "EnergyButton" || originalParentName == "HelmetButton" ||
         originalParentName == "SuitButton" || originalParentName == "ToolButton" || originalParentName == "LeftHandButton" ||
         originalParentName == "BackpackButton" || originalParentName == "RightHandButton" || originalParentName == "DrillButton" ||
@@ -39,9 +39,25 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         cloneObject.GetComponent<CanvasGroup>().blocksRaycasts = false; // Allow raycasts to pass through the clone
 
         isDragging = true;
-        foreach (GameObject obj in placeholderObjects)
+        if (originalParentName != "INVENTORYMANAGER")
         {
-            obj.SetActive(true);
+            foreach (GameObject placeholderObject in placeholderObjects)
+            {
+                if (placeholderObject.name == "InventoryPlaceholder")
+                {
+                    placeholderObject.SetActive(true);
+                }
+            }
+        }
+        else
+        {
+            foreach (GameObject placeholderObject in placeholderObjects)
+            {
+                if (placeholderObject.name != "InventoryPlaceholder")
+                {
+                    placeholderObject.SetActive(true);
+                }
+            }
         }
     }
 
@@ -56,88 +72,112 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (isDragging)
+        if (!isDragging)
+            return;
+
+        isDragging = false;
+        bool skipMoveUnderParent = false;
+
+        foreach (GameObject obj in placeholderObjects)
         {
-            isDragging = false;
+            obj.SetActive(false);
+        }
 
-            foreach (GameObject obj in placeholderObjects)
-            {
-                obj.SetActive(false);
-            }
+        GameObject highlightObj = GetDroppedHighlightObject(eventData);
+        if (highlightObj != null)
+        {
+            RectTransform highlightRectTransform = highlightObj.GetComponent<RectTransform>();
+            RectTransform objectRectTransform = gameObject.GetComponent<RectTransform>();
 
-            // Check if the cloneObject is dropped onto any highlight object
-            foreach (GameObject obj2 in highlightObject)
+            if (highlightObj.name == "OxygenButton")
             {
-                RectTransform rectTransform = obj2.GetComponent<RectTransform>();
-                if (rectTransform != null && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, eventData.position, null))
+                if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "OxygenTank(Clone)" && GlobalCalculator.isPlayerInBiologicalBiome == false)
                 {
-                    if (obj2.name == "OxygenButton")
+                    EquipmentManager.slotEquipped[8] = true;
+                    Transform emptyButton = highlightObj.transform.Find("EmptyButton");
+                    Image emptyButtonImage = emptyButton?.GetComponent<Image>();
+                    if (emptyButtonImage != null)
                     {
-                        if (originalParentName == "INVENTORYMANAGER" && GlobalCalculator.isPlayerInBiologicalBiome == false)
-                        {
-                            EquipmentManager.slotEquipped[8] = true;
-                            Transform emptyButton = obj2.transform.Find("EmptyButton");
-                            Image emptyButtonImage = emptyButton.GetComponent<Image>();
-                            if (emptyButtonImage != null)
-                            {
-                                emptyButtonImage.enabled = false;
-                            }
-                            gameObject.transform.SetParent(obj2.transform);
-                            gameObject.transform.SetAsLastSibling();
-
-                            RectTransform buttonRectTransform = obj2.GetComponent<RectTransform>();
-                            RectTransform objectRectTransform = gameObject.GetComponent<RectTransform>();
-                            objectRectTransform.anchorMin = buttonRectTransform.anchorMin;
-                            objectRectTransform.anchorMax = buttonRectTransform.anchorMax;
-                            objectRectTransform.anchoredPosition = buttonRectTransform.anchoredPosition;
-                            objectRectTransform.sizeDelta = buttonRectTransform.sizeDelta;
-                            objectRectTransform.localScale = buttonRectTransform.localScale;
-                            objectRectTransform.rotation = buttonRectTransform.rotation;
-                            gameObject.transform.localPosition = Vector3.zero;
-
-                            equipmentManager.CheckForEquip();
-                        }
-                        else
-                        {
-                            Debug.Log("bingo");
-                            messageObjects.DisplayMessage("OxygenTankEquipFail");
-                        }
+                        emptyButtonImage.enabled = false;
                     }
-                    else if (obj2.name == "InventoryContent")
+                    objectRectTransform.SetParent(highlightRectTransform);
+                    objectRectTransform.SetAsLastSibling();
+                    objectRectTransform.localPosition = Vector3.zero;
+                    equipmentManager.CheckForEquip();
+                }
+                else
+                {
+                    messageObjects.DisplayMessage("OxygenTankEquipFail");
+                }
+            }
+            else if (highlightObj.name == "EnergyButton")
+            {
+                if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "Battery(Clone)")
+                {
+                    EquipmentManager.slotEquipped[7] = true;
+                    Transform emptyButton = highlightObj.transform.Find("EmptyButton");
+                    Image emptyButtonImage = emptyButton?.GetComponent<Image>();
+                    if (emptyButtonImage != null)
                     {
-                        if (originalParentName == "OxygenButton")
-                        {
-                            EquipmentManager.slotEquipped[8] = false;
-                            Image emptyButtonImage = emptyButton.GetComponent<Image>();
-                            if (emptyButtonImage != null)
-                            {
-                                emptyButtonImage.enabled = true;
-                            }
-
-                            Transform inventoryManagerObj = obj2.transform.Find("List/INVENTORYMANAGER");
-                            gameObject.transform.SetParent(inventoryManagerObj);
-                            gameObject.transform.SetAsLastSibling();
-
-                            RectTransform buttonRectTransform = obj2.GetComponent<RectTransform>();
-                            RectTransform objectRectTransform = gameObject.GetComponent<RectTransform>();
-                            objectRectTransform.anchorMin = buttonRectTransform.anchorMin;
-                            objectRectTransform.anchorMax = buttonRectTransform.anchorMax;
-                            objectRectTransform.anchoredPosition = buttonRectTransform.anchoredPosition;
-                            objectRectTransform.sizeDelta = buttonRectTransform.sizeDelta;
-                            objectRectTransform.localScale = buttonRectTransform.localScale;
-                            objectRectTransform.rotation = buttonRectTransform.rotation;
-                            gameObject.transform.localPosition = Vector3.zero;
-                        }
+                        emptyButtonImage.enabled = false;
                     }
-                    DeactivateHighlightObject();
-                    break;
+                    objectRectTransform.SetParent(highlightRectTransform);
+                    objectRectTransform.SetAsLastSibling();
+                    objectRectTransform.localPosition = Vector3.zero;
+                    equipmentManager.CheckForEquip();
+                }
+                else
+                {
+                    messageObjects.DisplayMessage("OxygenTankEquipFail");
+                }
+            }
+            else if (highlightObj.name == "InventoryContent")
+            {
+                if (originalParentName == "EnergyButton")
+                {
+                    EquipmentManager.slotEquipped[7] = false;
+                    Image emptyButtonImage = emptyButton?.GetComponent<Image>();
+                    if (emptyButtonImage != null)
+                    {
+                        emptyButtonImage.enabled = true;
+                    }
+                    Transform inventoryManagerObj = highlightObj.transform.Find("List/INVENTORYMANAGER");
+                    gameObject.transform.SetParent(inventoryManagerObj);
+                }
+                else if (originalParentName == "OxygenButton")
+                {
+                    EquipmentManager.slotEquipped[8] = false;
+                    Image emptyButtonImage = emptyButton?.GetComponent<Image>();
+                    if (emptyButtonImage != null)
+                    {
+                        emptyButtonImage.enabled = true;
+                    }
+                    Transform inventoryManagerObj = highlightObj.transform.Find("List/INVENTORYMANAGER");
+                    gameObject.transform.SetParent(inventoryManagerObj);
                 }
             }
 
-            Destroy(cloneObject);
-            previousHighlightObject = null;
+            DeactivateHighlightObject();
         }
+
+        Destroy(cloneObject);
+        previousHighlightObject = null;
     }
+
+    private GameObject GetDroppedHighlightObject(PointerEventData eventData)
+    {
+        foreach (GameObject obj2 in highlightObject)
+        {
+            RectTransform rectTransform = obj2.GetComponent<RectTransform>();
+            if (rectTransform != null && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, eventData.position, null))
+            {
+                return obj2;
+            }
+        }
+
+        return null;
+    }
+
 
     private void DeactivateHighlightObject()
     {
