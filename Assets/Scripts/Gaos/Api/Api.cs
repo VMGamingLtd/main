@@ -52,7 +52,8 @@ namespace Gaos.Api
 
     public class Configuration
     {
-        public static Configuration Config = new Configuration("https://vmgaming.com/gaos");
+        //public static Configuration Config = new Configuration("https://vmgaming.com/gaos");
+        public static Configuration Config = new Configuration($"{Gaos.Environment.Environment.GetEnvironment()["GAOS_URL"]}");
 
         public string API_URL;
         public int RequestTimeoutSeconds = 10;
@@ -314,14 +315,16 @@ namespace Gaos.Api
         {
             string METHOD = "Call()";
 
-            HttpPostJsonCall http = new HttpPostJsonCall($"{Configuration.Config.API_URL}/{this.UrlPath}", RequestJsonStr);
+            string url = $"{Configuration.Config.API_URL}/{this.UrlPath}";
+
+            HttpPostJsonCall http = new HttpPostJsonCall($"{url}", RequestJsonStr);
             http.SetConfig(this.Config);
 
             yield return http.Call();
 
             if (http.IsResponseError)
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {Configuration.Config.API_URL}{this.UrlPath}, {http.ResponseJsonStr}");
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {url}, {http.ResponseJsonStr}");
                 this.IsResponseError = true;
                 this.IsResponseTimeout = http.IsResponseTimeout;
             }
