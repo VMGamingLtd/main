@@ -8,9 +8,6 @@ namespace Michsky.UI.Shift
     [ExecuteInEditMode]
     public class MainPanelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [Header("Text")]
-        public bool useCustomText = false;
-        public string buttonText = "My Title";
 
         [Header("Icon")]
         public bool hasIcon = false;
@@ -30,13 +27,6 @@ namespace Michsky.UI.Shift
             if (buttonAnimator == null)
                 buttonAnimator = gameObject.GetComponent<Animator>();
 
-            if (useCustomText == false)
-            {
-                if (normalText != null) { normalText.text = buttonText; }
-                if (highlightedText != null) { highlightedText.text = buttonText; }
-                if (pressedText != null) { pressedText.text = buttonText; }
-            }
-
             if (hasIcon == true)
             {
                 if (normalIcon != null) { normalIcon.sprite = iconSprite; }
@@ -54,18 +44,18 @@ namespace Michsky.UI.Shift
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-#if !UNITY_ANDROID && !UNITY_IOS
-            if (!buttonAnimator.GetCurrentAnimatorStateInfo(0).IsName("Normal to Pressed"))
-                buttonAnimator.Play("Dissolve to Normal");
-#endif
+            #if !UNITY_ANDROID && !UNITY_IOS
+                        if (!buttonAnimator.GetCurrentAnimatorStateInfo(0).IsName("Normal to Pressed"))
+                            buttonAnimator.Play("Dissolve to Normal");
+            #endif
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-#if !UNITY_ANDROID && !UNITY_IOS
-            if (!buttonAnimator.GetCurrentAnimatorStateInfo(0).IsName("Normal to Pressed"))
-                buttonAnimator.Play("Normal to Dissolve");
-#endif
+            #if !UNITY_ANDROID && !UNITY_IOS
+                        if (!buttonAnimator.GetCurrentAnimatorStateInfo(0).IsName("Normal to Pressed"))
+                            buttonAnimator.Play("Normal to Dissolve");
+            #endif
         }
     }
 }

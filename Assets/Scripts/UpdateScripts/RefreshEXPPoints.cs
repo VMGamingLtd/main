@@ -10,7 +10,6 @@ public class RefreshEXPPoints : MonoBehaviour
     void Start()
     {
         textField = GetComponent<TextMeshProUGUI>();
-        textField.text = EXPPoints.expPoints.ToString();
     }
 
 }

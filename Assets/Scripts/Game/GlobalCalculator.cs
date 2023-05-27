@@ -7,10 +7,16 @@ using System;
 
 public class GlobalCalculator : MonoBehaviour
 {
+    public static int days = 0;
     public static int hours = 0;
     public static int minutes = 0;
     public static int seconds = 0;
     private float timer;
+    public static bool isPlayerInBiologicalBiome = true;
+    public GameObject NoEnergy;
+    private bool isEnergyImageVisible = false;
+    public EquipmentManager equipmentManager;
+    public InventoryManager inventoryManager;
 
     public SaveManager saveManager;
 
@@ -42,7 +48,6 @@ public class GlobalCalculator : MonoBehaviour
                 {
                     seconds = 0;
                     minutes++;
-                    UpdatePlayerNeeds();
                     saveManager.SaveToJsonFile();
                     StartCoroutine(rotateImage.RotateOverTime(0.5f));
                 }
@@ -51,94 +56,81 @@ public class GlobalCalculator : MonoBehaviour
                     minutes = 0;
                     hours++;
                 }
+                if (hours > 24)
+                {
+                    hours = 0;
+                    days++;
+                }
                 UpdateEverySecond();
+                inventoryManager.CheckCategoryButtons();
             }
         }
     }
 
     public void UpdateEverySecond()
     {
-        DateDisplay.text = $"{GlobalCalculator.hours.ToString("00")}:{GlobalCalculator.minutes.ToString("00")}:{GlobalCalculator.seconds.ToString("00")}";
-    }
+        DateDisplay.text = $"{GlobalCalculator.days.ToString("00")}:{GlobalCalculator.hours.ToString("00")}:{GlobalCalculator.minutes.ToString("00")}:{GlobalCalculator.seconds.ToString("00")}";
 
-    public void UpdatePlayerNeeds()
-    {
-        int currentOxygen = PlayerResources.ReduceCurrentResource(ref PlayerResources.PlayerOxygen, 3);
-        int currentWater = PlayerResources.ReduceCurrentResource(ref PlayerResources.PlayerWater, 3);
-        int currentEnergy = PlayerResources.ReduceCurrentResource(ref PlayerResources.PlayerEnergy, 3);
-        int currentHunger = PlayerResources.ReduceCurrentResource(ref PlayerResources.PlayerHunger, 3);
+        bool isAirBreathable = IsBreathableAir();
+        bool isMinutesBelowThreshold = IsTimeBelowThreshold(PlayerResources.PlayerOxygen, 5);
 
-        PlayerNeeds[0].text = $"{currentOxygen}%";
-        PlayerNeeds[1].text = $"{currentWater}%";
-        PlayerNeeds[2].text = $"{currentEnergy}%";
-        PlayerNeeds[3].text = $"{currentHunger}%";
+        if (!isAirBreathable)
+        {
+            if (PlayerResources.PlayerOxygen != "00:00:00:00")
+            {
+                PlayerResources.ReduceCurrentResourceTime(ref PlayerResources.PlayerOxygen, 0, 0, 0, 1);
+            }
+        }
 
+        if (PlayerResources.PlayerHunger != "00:00:00:00")
+        {
+            PlayerResources.ReduceCurrentResourceTime(ref PlayerResources.PlayerWater, 0, 0, 0, 1);
+        }
 
-
-        if (currentOxygen < 25)
+        if (PlayerResources.PlayerEnergy == "00:00:00:00")
         {
-            PlayerNeeds[0].color = Color.red;
-        }
-        else if (currentOxygen < 50)
-        {
-            PlayerNeeds[0].color = Color.yellow;
-        }
-        else if (currentOxygen < 75)
-        {
-            PlayerNeeds[0].color = Color.green;
-        }
-        else if (currentOxygen <= 100)
-        {
-            PlayerNeeds[0].color = Color.white;
-        }
-        if (currentWater < 25)
-        {
-            PlayerNeeds[1].color = Color.red;
-        }
-        else if (currentWater < 50)
-        {
-            PlayerNeeds[1].color = Color.yellow;
-        }
-        else if (currentWater < 75)
-        {
-            PlayerNeeds[1].color = Color.green;
-        }
-        else if (currentWater <= 100)
-        {
-            PlayerNeeds[1].color = Color.white;
-        }
-        if (currentEnergy < 25)
-        {
+            isEnergyImageVisible = !isEnergyImageVisible; // Toggle the visibility state
+            NoEnergy.SetActive(isEnergyImageVisible); // Set the visibility state
+            PlayerNeeds[2].text = "ERROR";
             PlayerNeeds[2].color = Color.red;
         }
-        else if (currentEnergy < 50)
+        else
         {
-            PlayerNeeds[2].color = Color.yellow;
+            isEnergyImageVisible = false;
+            NoEnergy.SetActive(false);
+            PlayerResources.ReduceCurrentResourceTime(ref PlayerResources.PlayerEnergy, 0, 0, 0, 1);
+            if (EquipmentManager.slotEquipped[7] == true)
+            {
+                equipmentManager.ReduceEnergyTimer();
+            }
+            PlayerNeeds[2].text = PlayerResources.GetCurrentResourceTime(PlayerResources.PlayerEnergy);
+            PlayerNeeds[2].color = IsTimeBelowThreshold(PlayerResources.PlayerEnergy, 5) ? Color.yellow : Color.white;
         }
-        else if (currentEnergy < 75)
+
+        if (PlayerResources.PlayerHunger != "00:00:00:00")
         {
-            PlayerNeeds[2].color = Color.green;
+            PlayerResources.ReduceCurrentResourceTime(ref PlayerResources.PlayerHunger, 0, 0, 0, 1);
         }
-        else if (currentEnergy <= 100)
-        {
-            PlayerNeeds[2].color = Color.white;
-        }
-        if (currentHunger < 25)
-        {
-            PlayerNeeds[3].color = Color.red;
-        }
-        else if (currentHunger < 50)
-        {
-            PlayerNeeds[3].color = Color.yellow;
-        }
-        else if (currentHunger < 75)
-        {
-            PlayerNeeds[3].color = Color.green;
-        }
-        else if (currentHunger <= 100)
-        {
-            PlayerNeeds[3].color = Color.white;
-        }
+
+        PlayerNeeds[0].color = isAirBreathable ? Color.green : (isMinutesBelowThreshold ? Color.red : Color.white);
+        PlayerNeeds[0].text = isAirBreathable ? "INFINITE" : PlayerResources.GetCurrentResourceTime(PlayerResources.PlayerOxygen);
+        PlayerNeeds[1].color = IsTimeBelowThreshold(PlayerResources.PlayerWater, 5) ? Color.yellow : PlayerNeeds[1].color;
+        PlayerNeeds[1].text = PlayerResources.GetCurrentResourceTime(PlayerResources.PlayerWater);
+        PlayerNeeds[3].color = IsTimeBelowThreshold(PlayerResources.PlayerHunger, 5) ? Color.yellow : PlayerNeeds[3].color;
+        PlayerNeeds[3].text = PlayerResources.GetCurrentResourceTime(PlayerResources.PlayerHunger);
+    }
+
+    private bool IsTimeBelowThreshold(string time, int minutesThreshold)
+    {
+        string[] timeParts = time.Split(':');
+        int minutes = int.Parse(timeParts[2]);
+
+        return minutes < minutesThreshold;
+    }
+
+    public bool IsBreathableAir()
+    {
+    return GlobalCalculator.isPlayerInBiologicalBiome;
     }
 }
 

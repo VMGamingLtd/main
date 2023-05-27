@@ -14,8 +14,8 @@ public class Password : MonoBehaviour
         myInputField.text = "";
     }
 
-    public void setPasswordFromText() 
+    public void setPasswordFromText()
     {
-        Password.password = NameText.text;
+        //Password.password = NameText.text;
     }
 }

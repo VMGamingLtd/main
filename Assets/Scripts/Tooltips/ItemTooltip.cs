@@ -20,52 +20,114 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {"Plants", tooltipObjects.Plants},
             {"Water", tooltipObjects.Water},
             {"Biofuel", tooltipObjects.Biofuel},
-            {"WaterBottle", tooltipObjects.WaterBottle},
+            {"PurifiedWater", tooltipObjects.WaterBottle},
             {"Battery", tooltipObjects.Battery},
-            {"OxygenTank", tooltipObjects.OxygenTank}
+            {"OxygenTank", tooltipObjects.OxygenTank},
+            {"CraftBattery", tooltipObjects.CraftBattery},
+            {"EngineeringSkill", tooltipObjects.EngineeringSkill}
         };
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         string objectName = eventData.pointerEnter.transform.name;
-        DisplayTooltip(objectName);
+        DisplayTooltip(objectName, eventData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        string objectName = eventData.pointerEnter.transform.name;
-        HideTooltip(objectName);
+        if (eventData != null)
+        {
+            string objectName = eventData.pointerEnter.transform.name;
+            HideTooltip(objectName);
+        }
+        else
+        {
+            HideAllTooltips();
+        }
     }
 
-    public void DisplayTooltip(string objectName)
+    public void DisplayTooltip(string objectName, PointerEventData eventData)
     {
+        GameObject hoveredObject = eventData.pointerEnter;
         if (tooltipMap.TryGetValue(objectName, out GameObject tooltipObject))
         {
             tooltipObject.SetActive(true);
-            if (objectName == "OxygenTank")
+            ItemData itemData = hoveredObject.GetComponentInParent<ItemData>();
+            if (itemData != null)
             {
-                ItemData itemData = tooltipObject.GetComponent<ItemData>();
-                if (itemData != null)
+                TextMeshProUGUI countdownText = tooltipObject.transform.Find("TopDisplay/Countdown/Value")?.GetComponent<TextMeshProUGUI>();
+                if (countdownText != null)
                 {
-                    TextMeshProUGUI countdownText = tooltipObject.transform.Find("TopDisplay/Countdown/OxygenCountdownValue")?.GetComponent<TextMeshProUGUI>();
-                    if (countdownText != null)
+                    if (objectName == "OxygenTank")
                     {
-                        int oxygenTimer = itemData.OxygenTimer;
-                        string timeFormat = FormatTime(oxygenTimer);
-                        countdownText.text = timeFormat;
+                        string[] timerParts = itemData.OxygenTimer.Split(':');
+                        string formattedTimer = "";
+
+                        int days = int.Parse(timerParts[0]);
+                        int hours = int.Parse(timerParts[1]);
+                        int minutes = int.Parse(timerParts[2]);
+                        int seconds = int.Parse(timerParts[3]);
+
+                        if (days > 0)
+                        {
+                            formattedTimer += timerParts[0] + "d:";
+                        }
+                        if (hours > 0 || (days > 0 && hours == 0))
+                        {
+                            formattedTimer += timerParts[1] + "h:";
+                        }
+                        if (minutes > 0 || (days > 0 && hours == 0 && minutes == 0))
+                        {
+                            formattedTimer += timerParts[2] + "m:";
+                        }
+                        formattedTimer += timerParts[3] + "s";
+
+                        if (days > 0 || hours > 0 || minutes > 0)
+                        {
+                            countdownText.text = "<color=yellow>" + formattedTimer + "</color>";
+                        }
+                        else
+                        {
+                            countdownText.text = formattedTimer;
+                        }
+                    }
+                    else if (objectName == "Battery")
+                    {
+                        string[] timerParts = itemData.EnergyTimer.Split(':');
+                        string formattedTimer = "";
+
+                        int days = int.Parse(timerParts[0]);
+                        int hours = int.Parse(timerParts[1]);
+                        int minutes = int.Parse(timerParts[2]);
+                        int seconds = int.Parse(timerParts[3]);
+
+                        if (days > 0)
+                        {
+                            formattedTimer += timerParts[0] + "d:";
+                        }
+                        if (hours > 0 || (days > 0 && hours == 0))
+                        {
+                            formattedTimer += timerParts[1] + "h:";
+                        }
+                        if (minutes > 0 || (days > 0 && hours == 0 && minutes == 0))
+                        {
+                            formattedTimer += timerParts[2] + "m:";
+                        }
+                        formattedTimer += timerParts[3] + "s";
+
+                        if (days > 0 || hours > 0 || minutes > 0)
+                        {
+                            countdownText.text = "<color=yellow>" + formattedTimer + "</color>";
+                        }
+                        else
+                        {
+                            countdownText.text = formattedTimer;
+                        }
                     }
                 }
             }
         }
-    }
-    private string FormatTime(int timeInSeconds)
-    {
-        int hours = timeInSeconds / 3600;
-        int minutes = (timeInSeconds % 3600) / 60;
-        int seconds = timeInSeconds % 60;
-
-        return string.Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
     }
 
     public void HideTooltip(string objectName)
@@ -73,6 +135,13 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (tooltipMap.TryGetValue(objectName, out GameObject tooltipObject))
         {
             tooltipObject.SetActive(false);
+        }
+    }
+    public void HideAllTooltips()
+    {
+        foreach (var kvp in tooltipMap)
+        {
+            kvp.Value.SetActive(false);
         }
     }
 }

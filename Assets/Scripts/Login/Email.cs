@@ -14,8 +14,8 @@ public class Email : MonoBehaviour
         myInputField.text = "";
     }
 
-    public void setEmailFromText() 
+    public void setEmailFromText()
     {
-        Email.email = NameText.text;
+        //Email.email = NameText.text;
     }
 }

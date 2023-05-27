@@ -17,6 +17,6 @@ public class UserName : MonoBehaviour
 
     public void setUserNameFromText()
     {
-        UserName.userName = NameText.text;
+        //UserName.userName = NameText.text;
     }
 }
