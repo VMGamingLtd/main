@@ -10,7 +10,7 @@ namespace Gaos.Environment
 
             if (envName == "Development")
             {
-                env.Add("GAOS_URL", "https://local.galacticodissey.space/gaos");
+                env.Add("GAOS_URL", "https://local.galacticodyssey.space/gaos");
             }
             else if (envName == "Test")
             {
@@ -28,7 +28,7 @@ namespace Gaos.Environment
 
         public static Dictionary<string, string> GetEnvironment()
         {
-            return Environment.GetEnvironment_("Test");
+            return Environment.GetEnvironment_("Development");
         }
 
     }
