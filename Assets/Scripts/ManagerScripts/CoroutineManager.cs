@@ -98,26 +98,7 @@ public class CoroutineManager : MonoBehaviour
     }
 
     IEnumerator WaitForLoadingBar () {
-        translationManager.PushTextsIntoFile();
-        if (false)
-        {
-            StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());
-        }
-        if (false)
-        {
-            StartCoroutine(Gaos.User.Manager.GuestLogin.Login());
-        }
-        if (false)
-        {
-            StartCoroutine(Gaos.User.Manager.UserRegister.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
-        }
-        if (false)
-        {
-            StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());
-            StartCoroutine(Gaos.User.Manager.UserRegister.Register("JozkoMrkvicka", "jozkomrkvicxka@foo.com", "jozko22"));
-            StartCoroutine(Gaos.User.Manager.UserLogin.LoginWithWaitForRegistration("JozkoMrkvicka", "jozko22"));
-        }
-
+        //translationManager.PushTextsIntoFile();
 
         bool registereduser = CoroutineManager.registeredUser;
         globalCalculator.GameStarted = false;

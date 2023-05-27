@@ -8,7 +8,10 @@ public class CustomSceneLoader : MonoBehaviour
 
     private void OnEnable()
     {
-        LoadSceneAsync();
+
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1000");
+        StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());
+        StartCoroutine(Gaos.User.Manager.GuestLogin.Login(OnGuestLoginComplete));
     }
     public void LoadSceneAsync()
     {
@@ -19,5 +22,21 @@ public class CustomSceneLoader : MonoBehaviour
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         yield return null;
+    }
+
+    public void OnGuestLoginComplete()
+    {
+        if (Gaos.User.Manager.GuestLogin.IsLoggedIn == true)
+        {
+            Debug.Log($"Guest logged in: {Gaos.User.Manager.GuestLogin.GuestLoginResponse.userName}");
+            UserName.userName = Gaos.User.Manager.GuestLogin.GuestLoginResponse.userName; 
+
+            LoadSceneAsync();
+        }
+        else
+        {
+            throw new System.Exception("Guest login failed");
+        }
+
     }
 }
