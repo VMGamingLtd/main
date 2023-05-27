@@ -10,7 +10,7 @@ namespace Gaos.Environment
 
             if (envName == "Development")
             {
-                env.Add("GAOS_URL", "https://vmgaming.com/gaos");
+                env.Add("GAOS_URL", "https://local.galacticodissey.space/gaos");
             }
             else if (envName == "Test")
             {
