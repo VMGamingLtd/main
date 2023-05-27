@@ -13,6 +13,11 @@ public class InventoryManager : MonoBehaviour
     public EquipmentManager equipmentManager;
 
     public static string ShowItemTypes = "ALL";
+    public GameObject All;
+    public GameObject Raw;
+    public GameObject Processed;
+    public GameObject Refined;
+    public GameObject Assembled;
 
     public void PopulateInventoryArrays()
     {
@@ -24,6 +29,166 @@ public class InventoryManager : MonoBehaviour
             { "ASSEMBLED", new GameObject[0] }
         };
     }
+
+    public void CheckCategoryButtons()
+    {
+        Raw.SetActive(itemArrays.ContainsKey("RAW") && itemArrays["RAW"].Length > 0);
+        Processed.SetActive(itemArrays.ContainsKey("PROCESSED") && itemArrays["PROCESSED"].Length > 0);
+        Refined.SetActive(itemArrays.ContainsKey("REFINED") && itemArrays["REFINED"].Length > 0);
+        Assembled.SetActive(itemArrays.ContainsKey("ASSEMBLED") && itemArrays["ASSEMBLED"].Length > 0);
+    }
+    public void AllCategoryAnimation()
+    {
+        Animator allAnimator = All.GetComponent<Animator>();
+        allAnimator.Play("Normal to Pressed");
+
+        bool isRawCategoryActive = Raw.activeSelf;
+        if (isRawCategoryActive)
+        {
+        Animator rawAnimator = Raw.GetComponent<Animator>();
+        rawAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isProcessedCategoryActive = Processed.activeSelf;
+        if (isProcessedCategoryActive)
+        {
+            Animator processedAnimator = Processed.GetComponent<Animator>();
+            processedAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isRefinedCategoryActive = Refined.activeSelf;
+        if (isRefinedCategoryActive)
+        {
+            Animator refinedAnimator = Refined.GetComponent<Animator>();
+            refinedAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isAssembledCategoryActive = Assembled.activeSelf;
+        if (isAssembledCategoryActive)
+        {
+            Animator assembledAnimator = Assembled.GetComponent<Animator>();
+            assembledAnimator.Play("Pressed to Dissolve");
+        }
+    }
+    public void RawCategoryAnimation()
+    {
+        Animator rawAnimator = Raw.GetComponent<Animator>();
+        rawAnimator.Play("Normal to Pressed");
+
+        Animator allAnimator = All.GetComponent<Animator>();
+        allAnimator.Play("Pressed to Dissolve");
+
+        bool isProcessedCategoryActive = Processed.activeSelf;
+        if (isProcessedCategoryActive)
+        {
+            Animator processedAnimator = Processed.GetComponent<Animator>();
+            processedAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isRefinedCategoryActive = Refined.activeSelf;
+        if (isRefinedCategoryActive)
+        {
+            Animator refinedAnimator = Refined.GetComponent<Animator>();
+            refinedAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isAssembledCategoryActive = Assembled.activeSelf;
+        if (isAssembledCategoryActive)
+        {
+            Animator assembledAnimator = Assembled.GetComponent<Animator>();
+            assembledAnimator.Play("Pressed to Dissolve");
+        }
+    }
+    public void ProcessedCategoryAnimation()
+    {
+        Animator processedAnimator = Processed.GetComponent<Animator>();
+        processedAnimator.Play("Normal to Pressed");
+
+        Animator allAnimator = All.GetComponent<Animator>();
+        allAnimator.Play("Pressed to Dissolve");
+
+        bool isRawCategoryActive = Raw.activeSelf;
+        if (isRawCategoryActive)
+        {
+            Animator rawAnimator = Raw.GetComponent<Animator>();
+            rawAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isRefinedCategoryActive = Refined.activeSelf;
+        if (isRefinedCategoryActive)
+        {
+            Animator refinedAnimator = Refined.GetComponent<Animator>();
+            refinedAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isAssembledCategoryActive = Assembled.activeSelf;
+        if (isAssembledCategoryActive)
+        {
+            Animator assembledAnimator = Assembled.GetComponent<Animator>();
+            assembledAnimator.Play("Pressed to Dissolve");
+        }
+    }
+    public void RefinedCategoryAnimation()
+    {
+        Animator refinedAnimator = Refined.GetComponent<Animator>();
+        refinedAnimator.Play("Normal to Pressed");
+
+        Animator allAnimator = All.GetComponent<Animator>();
+        allAnimator.Play("Pressed to Dissolve");
+
+        bool isRawCategoryActive = Raw.activeSelf;
+        if (isRawCategoryActive)
+        {
+            Animator rawAnimator = Raw.GetComponent<Animator>();
+            rawAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isProcessedCategoryActive = Processed.activeSelf;
+        if (isProcessedCategoryActive)
+        {
+            Animator processedAnimator = Processed.GetComponent<Animator>();
+            processedAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isAssembledCategoryActive = Assembled.activeSelf;
+        if (isAssembledCategoryActive)
+        {
+            Animator assembledAnimator = Assembled.GetComponent<Animator>();
+            assembledAnimator.Play("Pressed to Dissolve");
+        }
+    }
+    public void AssembledCategoryAnimation()
+    {
+        Animator assembledAnimator = Assembled.GetComponent<Animator>();
+        assembledAnimator.Play("Normal to Pressed");
+
+        Animator allAnimator = All.GetComponent<Animator>();
+        allAnimator.Play("Pressed to Dissolve");
+
+        bool isRawCategoryActive = Raw.activeSelf;
+        if (isRawCategoryActive)
+        {
+            Animator rawAnimator = Raw.GetComponent<Animator>();
+            rawAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isProcessedCategoryActive = Processed.activeSelf;
+        if (isProcessedCategoryActive)
+        {
+            Animator processedAnimator = Processed.GetComponent<Animator>();
+            processedAnimator.Play("Pressed to Dissolve");
+        }
+
+        bool isRefinedCategoryActive = Refined.activeSelf;
+        if (isRefinedCategoryActive)
+        {
+            Animator refinedAnimator = Refined.GetComponent<Animator>();
+            refinedAnimator.Play("Pressed to Dissolve");
+        }
+    }
+
+
+
     void OnEnable()
     {
         string showItemTypes = InventoryManager.ShowItemTypes;

@@ -34,7 +34,7 @@ public class TooltipFollowMouse : MonoBehaviour
         {
             xPosition = screenWidth - tooltipWidth - horizontalPadding;
         }
-        else if (xPosition - horizontalPadding < 0)
+        else if (xPosition - horizontalPadding < -300)
         {
             xPosition = horizontalPadding;
         }
@@ -44,7 +44,7 @@ public class TooltipFollowMouse : MonoBehaviour
         {
             yPosition = screenHeight - tooltipHeight - verticalPadding;
         }
-        else if (yPosition - verticalPadding < 0)
+        else if (yPosition - verticalPadding < -300)
         {
             yPosition = verticalPadding;
         }

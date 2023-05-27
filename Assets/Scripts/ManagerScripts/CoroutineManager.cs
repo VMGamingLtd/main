@@ -8,6 +8,7 @@ using TMPro;
 public class CoroutineManager : MonoBehaviour
 {
     public ItemCreator itemCreator;
+    public TranslationManager translationManager;
     public InventoryManager inventoryManager;
     public GlobalCalculator globalCalculator;
     public GameObject loadingBar;
@@ -97,7 +98,7 @@ public class CoroutineManager : MonoBehaviour
     }
 
     IEnumerator WaitForLoadingBar () {
-
+        translationManager.PushTextsIntoFile();
         if (false)
         {
             StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());

@@ -16,6 +16,7 @@ public class GlobalCalculator : MonoBehaviour
     public GameObject NoEnergy;
     private bool isEnergyImageVisible = false;
     public EquipmentManager equipmentManager;
+    public InventoryManager inventoryManager;
 
     public SaveManager saveManager;
 
@@ -61,6 +62,7 @@ public class GlobalCalculator : MonoBehaviour
                     days++;
                 }
                 UpdateEverySecond();
+                inventoryManager.CheckCategoryButtons();
             }
         }
     }

@@ -23,7 +23,8 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {"PurifiedWater", tooltipObjects.WaterBottle},
             {"Battery", tooltipObjects.Battery},
             {"OxygenTank", tooltipObjects.OxygenTank},
-            {"CraftBattery", tooltipObjects.CraftBattery}
+            {"CraftBattery", tooltipObjects.CraftBattery},
+            {"EngineeringSkill", tooltipObjects.EngineeringSkill}
         };
     }
 
