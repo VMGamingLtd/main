@@ -6,10 +6,10 @@ public class TooltipObjects : MonoBehaviour
 {
     public GameObject PlanetIndex;
     public GameObject CraftBattery;
-    public GameObject Plants;
-    public GameObject Water;
+    public GameObject FibrousLeaves;
+    public GameObject AlienWater;
     public GameObject Biofuel;
-    public GameObject WaterBottle;
+    public GameObject PurifiedWater;
     public GameObject Battery;
     public GameObject OxygenTank;
     public GameObject EngineeringSkill;

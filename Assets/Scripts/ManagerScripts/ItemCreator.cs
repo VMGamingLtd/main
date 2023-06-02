@@ -8,8 +8,9 @@ namespace ItemManagement
     public class ItemData : MonoBehaviour
         {
             public int itemQuantity;
+            public string itemProduct;
             public string itemType;
-            public string itemQuality;
+            public string itemClass;
             public string OxygenTimer;
             public string EnergyTimer;
             public string WaterTimer;
@@ -20,39 +21,37 @@ namespace ItemManagement
         public InventoryManager inventoryManager;
         public void CreatePlants(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[0], "RAW", "RESOURCE", itemPrefabs[0].name);
+            CreateItem(quantity, itemPrefabs[0], "BASIC", "PLANTS", "CLASS-F", itemPrefabs[0].name);
         }
-
         public void CreateWater(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[1], "RAW", "RESOURCE", itemPrefabs[1].name);
+            CreateItem(quantity, itemPrefabs[1], "BASIC", "LIQUID", "CLASS-F", itemPrefabs[1].name);
         }
-
         public void CreateBiofuel(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[2], "PROCESSED", "CONSUMABLE", itemPrefabs[2].name);
+            CreateItem(quantity, itemPrefabs[2], "PROCESSED", "LIQUID", "CLASS-F", itemPrefabs[2].name);
         }
         public void CreatePurifiedWater(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[3], "PROCESSED", "CONSUMABLE", itemPrefabs[3].name);
+            CreateItem(quantity, itemPrefabs[3], "PROCESSED", "LIQUID", "CLASS-F", itemPrefabs[3].name);
         }
         public void CreateBattery(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[4], "ASSEMBLED", "BASIC", itemPrefabs[4].name);
+            CreateItem(quantity, itemPrefabs[4], "ASSEMBLED", "ENERGY", "CLASS-F", itemPrefabs[4].name);
         }
         public void CreateOxygenTanks(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[5], "ASSEMBLED", "BASIC", itemPrefabs[5].name);
+            CreateItem(quantity, itemPrefabs[5], "ASSEMBLED", "OXYGEN", "CLASS-F", itemPrefabs[5].name);
         }
         public void CreateBatteryCore(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[6], "REFINED", "BASIC", itemPrefabs[6].name);
+            CreateItem(quantity, itemPrefabs[6], "REFINED", "ENERGY", "CLASS-F", itemPrefabs[6].name);
         }
 
-        private void CreateItem(int quantity, GameObject prefab, string itemType, string itemQuality, string prefabName)
+        private void CreateItem(int quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)
         {
             bool itemFound = false;
-            if (inventoryManager.itemArrays.TryGetValue(itemType, out GameObject[] itemArray) && itemArray.Length > 0)
+            if (inventoryManager.itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray) && itemArray.Length > 0)
             {
                 foreach (GameObject item in itemArray)
                 {
@@ -87,8 +86,9 @@ namespace ItemManagement
                 }
 
                 newItemData.itemQuantity = quantity;
+                newItemData.itemProduct = itemProduct;
                 newItemData.itemType = itemType;
-                newItemData.itemQuality = itemQuality;
+                newItemData.itemClass = itemClass;
 
                 if (prefabName == "OxygenTank")
                 {
@@ -104,7 +104,7 @@ namespace ItemManagement
                 }
 
                 // Add the new item to the itemArrays dictionary
-                inventoryManager.AddToItemArray(itemType, newItem);
+                inventoryManager.AddToItemArray(itemProduct, newItem);
 
                 // Update the CountInventory text
                 TextMeshProUGUI newCountText = newItem.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();

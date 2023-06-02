@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
 using ItemManagement;
+using RecipeManagement;
 using System.Linq;
 using System;
 
@@ -12,6 +13,7 @@ public class SaveManager : MonoBehaviour
     private const string FileName = "Savegame.json";
     private string filePath;
     public InventoryManager inventoryManager;
+    public RecipeManager recipeManager;
 
     private class SaveDataModel
     {
@@ -19,7 +21,12 @@ public class SaveManager : MonoBehaviour
         public string username;
         public string password;
         public string email;
+        public string showItemProducts;
+        public string showRecipeProducts;
         public string showItemTypes;
+        public string showRecipeTypes;
+        public string showItemClass;
+        public string showRecipeClass;
         public string planet0Name;
         public int atmospherePlanet0;
         public int agriLandPlanet0;
@@ -47,10 +54,15 @@ public class SaveManager : MonoBehaviour
         public bool isPlayerInBiologicalBiome;
         public float credits;
         public string inventoryTitle;
-        public InventoryItemData[] rawInventoryObjects;
+        public InventoryItemData[] basicInventoryObjects;
         public InventoryItemData[] processedInventoryObjects;
         public InventoryItemData[] refinedInventoryObjects;
         public InventoryItemData[] assembledInventoryObjects;
+        public string recipeTitle;
+        public RecipeData[] basicRecipeObjects;
+        public RecipeData[] processedRecipeObjects;
+        public RecipeData[] refinedRecipeObjects;
+        public RecipeData[] assembledRecipeObjects;
     }
 
     [System.Serializable]
@@ -58,7 +70,8 @@ public class SaveManager : MonoBehaviour
     {
         public string itemName;
         public string itemType;
-        public string itemQuality;
+        public string itemClass;
+        public string itemProduct;
         public int itemQuantity;
         public string OxygenTimer;
         public string EnergyTimer;
@@ -66,9 +79,16 @@ public class SaveManager : MonoBehaviour
 
         public bool ShouldSerializeOxygenTimer()
         {
-            string[] excludedTypes = { "RAW", "PROCESSED", "REFINED" };
+            string[] excludedTypes = { "BASIC", "PROCESSED", "REFINED" };
             return !excludedTypes.Any(type => itemType.Equals(type, StringComparison.OrdinalIgnoreCase));
         }
+    }
+    public class RecipeData
+    {
+        public string itemName;
+        public string itemType;
+        public string itemClass;
+        public string itemProduct;
     }
     // Current save data
     private SaveDataModel currentSaveData;
@@ -97,7 +117,12 @@ public class SaveManager : MonoBehaviour
         currentSaveData.username = UserName.userName;
         currentSaveData.password = Password.password;
         currentSaveData.email = Email.email;
+        currentSaveData.showItemProducts = InventoryManager.ShowItemProducts;
+        currentSaveData.showRecipeProducts = RecipeManager.ShowRecipeProducts;
         currentSaveData.showItemTypes = InventoryManager.ShowItemTypes;
+        currentSaveData.showRecipeTypes = RecipeManager.ShowRecipeTypes;
+        currentSaveData.showItemClass = InventoryManager.ShowItemClass;
+        currentSaveData.showRecipeClass = RecipeManager.ShowRecipeClass;
         currentSaveData.planet0Name = Planet0Name.planet0Name;
         currentSaveData.atmospherePlanet0 = Planet0Buildings.AtmospherePlanet0;
         currentSaveData.agriLandPlanet0 = Planet0Buildings.AgriLandPlanet0;
@@ -130,21 +155,22 @@ public class SaveManager : MonoBehaviour
         // Access the itemArrays dictionary through the inventoryManager reference
         Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;
 
-        currentSaveData.rawInventoryObjects = new InventoryItemData[itemArrays["RAW"].Length];
+        currentSaveData.basicInventoryObjects = new InventoryItemData[itemArrays["BASIC"].Length];
 
-        for (int i = 0; i < itemArrays["RAW"].Length; i++)
+        for (int i = 0; i < itemArrays["BASIC"].Length; i++)
         {
-            GameObject itemGameObject = itemArrays["RAW"][i];
+            GameObject itemGameObject = itemArrays["BASIC"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
             InventoryItemData itemData = new InventoryItemData();
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemData.itemType = itemDataComponent.itemType;
+            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemClass = itemDataComponent.itemClass;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
-            itemData.itemQuality = itemDataComponent.itemQuality;
 
-            currentSaveData.rawInventoryObjects[i] = itemData;
+            currentSaveData.basicInventoryObjects[i] = itemData;
         }
 
         currentSaveData.processedInventoryObjects = new InventoryItemData[itemArrays["PROCESSED"].Length];
@@ -158,8 +184,9 @@ public class SaveManager : MonoBehaviour
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemData.itemType = itemDataComponent.itemType;
+            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemClass = itemDataComponent.itemClass;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
-            itemData.itemQuality = itemDataComponent.itemQuality;
             itemData.OxygenTimer = itemDataComponent.WaterTimer;
 
             currentSaveData.processedInventoryObjects[i] = itemData;
@@ -175,8 +202,9 @@ public class SaveManager : MonoBehaviour
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemData.itemType = itemDataComponent.itemType;
+            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemClass = itemDataComponent.itemClass;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
-            itemData.itemQuality = itemDataComponent.itemQuality;
 
             currentSaveData.refinedInventoryObjects[i] = itemData;
         }
@@ -191,13 +219,84 @@ public class SaveManager : MonoBehaviour
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemData.itemType = itemDataComponent.itemType;
+            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemClass = itemDataComponent.itemClass;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
-            itemData.itemQuality = itemDataComponent.itemQuality;
             itemData.OxygenTimer = itemDataComponent.OxygenTimer;
             itemData.OxygenTimer = itemDataComponent.EnergyTimer;
             itemData.OxygenTimer = itemDataComponent.WaterTimer;
 
             currentSaveData.assembledInventoryObjects[i] = itemData;
+        }
+        currentSaveData.recipeTitle = "Recipes";
+
+        // Access the itemArrays dictionary through the inventoryManager reference
+        Dictionary<string, GameObject[]> itemRecipeArrays = recipeManager.itemRecipeArrays;
+
+        currentSaveData.basicRecipeObjects = new RecipeData[itemRecipeArrays["BASIC"].Length];
+
+        for (int i = 0; i < itemRecipeArrays["BASIC"].Length; i++)
+        {
+            GameObject itemGameObject = itemRecipeArrays["BASIC"][i];
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            RecipeData itemData = new RecipeData();
+            itemData.itemName = itemName;
+            RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
+            itemData.itemType = itemDataComponent.itemType;
+            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemClass = itemDataComponent.itemClass;
+
+            currentSaveData.basicRecipeObjects[i] = itemData;
+        }
+
+        currentSaveData.processedRecipeObjects = new RecipeData[itemRecipeArrays["PROCESSED"].Length];
+
+        for (int i = 0; i < itemRecipeArrays["PROCESSED"].Length; i++)
+        {
+            GameObject itemGameObject = itemRecipeArrays["PROCESSED"][i];
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            RecipeData itemData = new RecipeData();
+            itemData.itemName = itemName;
+            RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
+            itemData.itemType = itemDataComponent.itemType;
+            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemClass = itemDataComponent.itemClass;
+
+            currentSaveData.processedRecipeObjects[i] = itemData;
+        }
+        currentSaveData.refinedRecipeObjects = new RecipeData[itemRecipeArrays["REFINED"].Length];
+
+        for (int i = 0; i < itemRecipeArrays["REFINED"].Length; i++)
+        {
+            GameObject itemGameObject = itemRecipeArrays["REFINED"][i];
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            RecipeData itemData = new RecipeData();
+            itemData.itemName = itemName;
+            RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
+            itemData.itemType = itemDataComponent.itemType;
+            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemClass = itemDataComponent.itemClass;
+
+            currentSaveData.refinedRecipeObjects[i] = itemData;
+        }
+        currentSaveData.assembledRecipeObjects = new RecipeData[itemRecipeArrays["ASSEMBLED"].Length];
+
+        for (int i = 0; i < itemRecipeArrays["ASSEMBLED"].Length; i++)
+        {
+            GameObject itemGameObject = itemRecipeArrays["ASSEMBLED"][i];
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            RecipeData itemData = new RecipeData();
+            itemData.itemName = itemName;
+            RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
+            itemData.itemType = itemDataComponent.itemType;
+            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemClass = itemDataComponent.itemClass;
+
+            currentSaveData.assembledRecipeObjects[i] = itemData;
         }
 
         string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented);
