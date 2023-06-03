@@ -5,15 +5,15 @@ using System.Runtime.InteropServices;
 
 namespace Gaos.Websocket
 {
-    public class WebSocketClientJs: MonoBehaviour
+    public class WebSocketClientJs: MonoBehaviour, Gaos.Websocket.IWebSocketClient
     {
         public readonly static string CLASS_NAME = typeof(WebSocketClientJs).Name;
 
-        public static Queue<string> MessagesOutbound = new Queue<string>();
-        public static Queue<string> MessagesInbound = new Queue<string>();
+        private Queue<string> MessagesOutbound = new Queue<string>();
+        private Queue<string> MessagesInbound = new Queue<string>();
 
-        private static int Ws;
-        private static bool IsConnected = false;
+        private int Ws;
+        private bool IsConnected = false;
 
         [DllImport("__Internal")]
         private static extern int WebSocketCreate(string url);
@@ -33,31 +33,40 @@ namespace Gaos.Websocket
         [DllImport("__Internal")]
         private static extern void WebSocketSend(int ws, string data);
 
-        private static void OnOpen()
+        private void OnOpen()
         {
             IsConnected = true;
         }
 
-        private static void OnClose()
+        private void OnClose()
         {
             IsConnected = false;
             Open();
         }
 
-        private static void OnError(string errorStr)
+        private void OnError(string errorStr)
         {
             const string METHOD_NAME = "OnError()";
             Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {errorStr}");
         }
 
-        private static void OnMessage(string data)
+        private void OnMessage(string data)
         {
             MessagesInbound.Enqueue(data);
         }
 
-        public static void Open()
+        public Queue<string> GetMessagesOutbound()
         {
-            const string METHOD_NAME = "Open()";
+            return MessagesOutbound;
+        }
+        public Queue<string> GetMessagesInbound()
+        {
+            return MessagesInbound;
+        }
+
+
+        public void Open()
+        {
             string url = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
             Ws = WebSocketCreate(url);
 
@@ -67,14 +76,15 @@ namespace Gaos.Websocket
             WebSocketOnMessage(Ws, "OnMessage");
         }
 
-        public static void Init()
+        public void Send(string data)
         {
-            Open();
+            MessagesOutbound.Enqueue(data);
         }
 
-        public static IEnumerator StartSending()
+
+        public IEnumerator StartProcessing()
         {
-            const string METHOD_NAME = "StartSending()";
+            const string METHOD_NAME = "StartProcessing()";
             const int MAX_RETRY_COUNT = 5;
 
             int retryCount = 0;
@@ -86,7 +96,7 @@ namespace Gaos.Websocket
                     if (MessagesOutbound.Count > 0)
                     {
                         string message = MessagesOutbound.Peek();
-                        Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: Sending message: {message}");
+                        Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket sending message: {message}");
                         try
                         {
                             WebSocketSend(Ws, message);
@@ -95,11 +105,11 @@ namespace Gaos.Websocket
                         }
                         catch (System.Exception e)
                         {
-                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: Sending message: {message}: {e.Message}");
+                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {e.Message}");
                             ++retryCount;
                             if (retryCount > MAX_RETRY_COUNT)
                             {
-                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: Sending message: {message}: MAX_RETRY_COUNT reached, will not try again");
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: MAX_RETRY_COUNT reached, will not try again");
                                 MessagesOutbound.Dequeue();
                                 retryCount = 0;
                             }
