@@ -3,25 +3,33 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using ItemManagement;
+using RecipeManagement;
 
 public class StartGameInputChecker : MonoBehaviour
 {
     public ItemCreator itemCreator;
     public InventoryManager inventoryManager;
+    public RecipeManager recipeManager;
+    public RecipeCreator recipeCreator;
     public GameObject NewGamePopup;
     public GameObject MainUI;
     public Button buttonToClick;
-
-    public GlobalCalculator globalCalculator;
     public EquipmentManager equipmentManager;
 
     // Update is called once per frame
     public void startGameCheckForUsername()
     {
-        globalCalculator.GameStarted = true;
+        GlobalCalculator.GameStarted = true;
         NewGamePopup.SetActive(false);
 
         inventoryManager.PopulateInventoryArrays();
+        recipeManager.PopulateInventoryArrays();
+        recipeCreator.CreatePlantsRecipe();
+        recipeCreator.CreateBiofuelRecipe();
+        recipeCreator.CreateBatteryCoreRecipe();
+        recipeCreator.CreateBatteryRecipe();
+        itemCreator.CreateBattery(1);
+
         //initialize starting resources
         Credits.ResetCredits();
         Credits.AddCredits(42);

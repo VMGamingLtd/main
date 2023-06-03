@@ -25,7 +25,7 @@ public class GlobalCalculator : MonoBehaviour
     public RotateImage rotateImage;
     public TextMeshProUGUI[] PlayerNeeds;
 
-    public bool GameStarted = false;
+    public static bool GameStarted = false;
 
     private const float delayTime = 1f;
 
@@ -36,7 +36,7 @@ public class GlobalCalculator : MonoBehaviour
 
     void Update()
     {
-        if (GameStarted == true)
+        if (GlobalCalculator.GameStarted == true)
         {
             timer += Time.deltaTime;
             if (timer >= delayTime)
@@ -62,7 +62,6 @@ public class GlobalCalculator : MonoBehaviour
                     days++;
                 }
                 UpdateEverySecond();
-                inventoryManager.CheckCategoryButtons();
             }
         }
     }

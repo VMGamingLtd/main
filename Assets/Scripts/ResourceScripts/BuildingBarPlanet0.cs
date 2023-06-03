@@ -52,7 +52,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
 
     public void StartCollectBiofuel()
     {
-        int plants = inventoryManager.GetItemQuantity("Plants", "RAW");
+        int plants = inventoryManager.GetItemQuantity("FibrousLeaves", "BASIC");
         if (CoroutineManager.AllCoroutineBooleans[2] == true)
         {
             coroutineManager.StartCoroutine("StopCollectBiofuel");
@@ -82,7 +82,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
     }
     public void StartWaterBottle()
     {
-        int water = inventoryManager.GetItemQuantity("Water", "RAW");
+        int water = inventoryManager.GetItemQuantity("AlienWater", "BASIC");
         if (CoroutineManager.AllCoroutineBooleans[3] == true)
         {
             coroutineManager.StartCoroutine("StopCollectPurifiedWater");

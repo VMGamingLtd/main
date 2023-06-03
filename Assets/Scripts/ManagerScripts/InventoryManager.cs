@@ -12,219 +12,29 @@ public class InventoryManager : MonoBehaviour
     public ItemCreator itemCreator;
     public EquipmentManager equipmentManager;
 
+    public static string ShowItemProducts = "ALL";
     public static string ShowItemTypes = "ALL";
-    public GameObject All;
-    public GameObject Raw;
-    public GameObject Processed;
-    public GameObject Refined;
-    public GameObject Assembled;
-
+    public static string ShowItemClass = "ALL";
     public void PopulateInventoryArrays()
     {
         itemArrays = new Dictionary<string, GameObject[]>
         {
-            { "RAW", new GameObject[0] },
+            { "BASIC", new GameObject[0] },
             { "PROCESSED", new GameObject[0] },
             { "REFINED", new GameObject[0] },
             { "ASSEMBLED", new GameObject[0] }
         };
     }
-
-    public void CheckCategoryButtons()
-    {
-        Raw.SetActive(itemArrays.ContainsKey("RAW") && itemArrays["RAW"].Length > 0);
-        Processed.SetActive(itemArrays.ContainsKey("PROCESSED") && itemArrays["PROCESSED"].Length > 0);
-        Refined.SetActive(itemArrays.ContainsKey("REFINED") && itemArrays["REFINED"].Length > 0);
-        Assembled.SetActive(itemArrays.ContainsKey("ASSEMBLED") && itemArrays["ASSEMBLED"].Length > 0);
-    }
-    public void AllCategoryAnimation()
-    {
-        Animator allAnimator = All.GetComponent<Animator>();
-        allAnimator.Play("Normal to Pressed");
-
-        bool isRawCategoryActive = Raw.activeSelf;
-        if (isRawCategoryActive)
-        {
-        Animator rawAnimator = Raw.GetComponent<Animator>();
-        rawAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isProcessedCategoryActive = Processed.activeSelf;
-        if (isProcessedCategoryActive)
-        {
-            Animator processedAnimator = Processed.GetComponent<Animator>();
-            processedAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isRefinedCategoryActive = Refined.activeSelf;
-        if (isRefinedCategoryActive)
-        {
-            Animator refinedAnimator = Refined.GetComponent<Animator>();
-            refinedAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isAssembledCategoryActive = Assembled.activeSelf;
-        if (isAssembledCategoryActive)
-        {
-            Animator assembledAnimator = Assembled.GetComponent<Animator>();
-            assembledAnimator.Play("Pressed to Dissolve");
-        }
-    }
-    public void RawCategoryAnimation()
-    {
-        Animator rawAnimator = Raw.GetComponent<Animator>();
-        rawAnimator.Play("Normal to Pressed");
-
-        Animator allAnimator = All.GetComponent<Animator>();
-        allAnimator.Play("Pressed to Dissolve");
-
-        bool isProcessedCategoryActive = Processed.activeSelf;
-        if (isProcessedCategoryActive)
-        {
-            Animator processedAnimator = Processed.GetComponent<Animator>();
-            processedAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isRefinedCategoryActive = Refined.activeSelf;
-        if (isRefinedCategoryActive)
-        {
-            Animator refinedAnimator = Refined.GetComponent<Animator>();
-            refinedAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isAssembledCategoryActive = Assembled.activeSelf;
-        if (isAssembledCategoryActive)
-        {
-            Animator assembledAnimator = Assembled.GetComponent<Animator>();
-            assembledAnimator.Play("Pressed to Dissolve");
-        }
-    }
-    public void ProcessedCategoryAnimation()
-    {
-        Animator processedAnimator = Processed.GetComponent<Animator>();
-        processedAnimator.Play("Normal to Pressed");
-
-        Animator allAnimator = All.GetComponent<Animator>();
-        allAnimator.Play("Pressed to Dissolve");
-
-        bool isRawCategoryActive = Raw.activeSelf;
-        if (isRawCategoryActive)
-        {
-            Animator rawAnimator = Raw.GetComponent<Animator>();
-            rawAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isRefinedCategoryActive = Refined.activeSelf;
-        if (isRefinedCategoryActive)
-        {
-            Animator refinedAnimator = Refined.GetComponent<Animator>();
-            refinedAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isAssembledCategoryActive = Assembled.activeSelf;
-        if (isAssembledCategoryActive)
-        {
-            Animator assembledAnimator = Assembled.GetComponent<Animator>();
-            assembledAnimator.Play("Pressed to Dissolve");
-        }
-    }
-    public void RefinedCategoryAnimation()
-    {
-        Animator refinedAnimator = Refined.GetComponent<Animator>();
-        refinedAnimator.Play("Normal to Pressed");
-
-        Animator allAnimator = All.GetComponent<Animator>();
-        allAnimator.Play("Pressed to Dissolve");
-
-        bool isRawCategoryActive = Raw.activeSelf;
-        if (isRawCategoryActive)
-        {
-            Animator rawAnimator = Raw.GetComponent<Animator>();
-            rawAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isProcessedCategoryActive = Processed.activeSelf;
-        if (isProcessedCategoryActive)
-        {
-            Animator processedAnimator = Processed.GetComponent<Animator>();
-            processedAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isAssembledCategoryActive = Assembled.activeSelf;
-        if (isAssembledCategoryActive)
-        {
-            Animator assembledAnimator = Assembled.GetComponent<Animator>();
-            assembledAnimator.Play("Pressed to Dissolve");
-        }
-    }
-    public void AssembledCategoryAnimation()
-    {
-        Animator assembledAnimator = Assembled.GetComponent<Animator>();
-        assembledAnimator.Play("Normal to Pressed");
-
-        Animator allAnimator = All.GetComponent<Animator>();
-        allAnimator.Play("Pressed to Dissolve");
-
-        bool isRawCategoryActive = Raw.activeSelf;
-        if (isRawCategoryActive)
-        {
-            Animator rawAnimator = Raw.GetComponent<Animator>();
-            rawAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isProcessedCategoryActive = Processed.activeSelf;
-        if (isProcessedCategoryActive)
-        {
-            Animator processedAnimator = Processed.GetComponent<Animator>();
-            processedAnimator.Play("Pressed to Dissolve");
-        }
-
-        bool isRefinedCategoryActive = Refined.activeSelf;
-        if (isRefinedCategoryActive)
-        {
-            Animator refinedAnimator = Refined.GetComponent<Animator>();
-            refinedAnimator.Play("Pressed to Dissolve");
-        }
-    }
-
-
-
-    void OnEnable()
-    {
-        string showItemTypes = InventoryManager.ShowItemTypes;
-
-        if (showItemTypes == "ALL")
-        {
-            ShowAllItems();
-        }
-        else if (showItemTypes == "RAW")
-        {
-            ShowRawItems();
-        }
-        else if (showItemTypes == "PROCESSED")
-        {
-            ShowProcessedItems();
-        }
-        else if (showItemTypes == "REFINED")
-        {
-            ShowRefinedItems();
-        }
-        else if (showItemTypes == "ASSEMBLED")
-        {
-            ShowAssembledItems();
-        }
-    }
-
-    public void AddToItemArray(string itemType, GameObject item)
+    public void AddToItemArray(string itemProduct, GameObject item)
     {
         item.transform.SetParent(transform);
         // Check if the item type already exists in the itemArrays dictionary
-        if (itemArrays.ContainsKey(itemType))
+        if (itemArrays.ContainsKey(itemProduct))
         {
             // Update the existing item
 
             // Get the existing array of items for the item type
-            GameObject[] itemArray = itemArrays[itemType];
+            GameObject[] itemArray = itemArrays[itemProduct];
 
             // Create a new array with increased length to accommodate the new item
             GameObject[] newArray = new GameObject[itemArray.Length + 1];
@@ -236,7 +46,7 @@ public class InventoryManager : MonoBehaviour
             newArray[newArray.Length - 1] = item;
 
             // Update the itemArray reference in the dictionary
-            itemArrays[itemType] = newArray;
+            itemArrays[itemProduct] = newArray;
         }
         else
         {
@@ -246,7 +56,7 @@ public class InventoryManager : MonoBehaviour
             GameObject[] itemArray = new GameObject[] { item };
 
             // Add the item array to the dictionary with the item type as the key
-            itemArrays.Add(itemType, itemArray);
+            itemArrays.Add(itemProduct, itemArray);
         }
 
         // Get or add the ItemData component to the item
@@ -257,13 +67,13 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void RemoveFromItemArray(string itemType, GameObject item)
+    public void RemoveFromItemArray(string itemProduct, GameObject item)
     {
         // Check if the item type exists in the itemArrays dictionary
-        if (itemArrays.ContainsKey(itemType))
+        if (itemArrays.ContainsKey(itemProduct))
         {
             // Get the array of items for the item type
-            GameObject[] itemArray = itemArrays[itemType];
+            GameObject[] itemArray = itemArrays[itemProduct];
 
             // Find the index of the item in the array
             int index = Array.IndexOf(itemArray, item);
@@ -280,7 +90,7 @@ public class InventoryManager : MonoBehaviour
                 Array.Copy(itemArray, index + 1, newArray, index, itemArray.Length - index - 1);
 
                 // Update the itemArray reference in the dictionary
-                itemArrays[itemType] = newArray;
+                itemArrays[itemProduct] = newArray;
             }
             else
             {
@@ -318,9 +128,9 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public bool CheckItemQuantity(string prefabName, string itemType, int quantityThreshold)
+    public bool CheckItemQuantity(string prefabName, string itemProduct, int quantityThreshold)
     {
-        if (itemArrays.TryGetValue(itemType, out GameObject[] itemArray))
+        if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
         {
             foreach (GameObject item in itemArray)
             {
@@ -338,9 +148,9 @@ public class InventoryManager : MonoBehaviour
 
         return false;
     }
-    public int GetItemQuantity(string prefabName, string itemType)
+    public int GetItemQuantity(string prefabName, string itemProduct)
     {
-        if (itemArrays.TryGetValue(itemType, out GameObject[] foundItemArray))
+        if (itemArrays.TryGetValue(itemProduct, out GameObject[] foundItemArray))
         {
             foreach (GameObject item in foundItemArray)
             {
@@ -357,9 +167,9 @@ public class InventoryManager : MonoBehaviour
 
         return 0;
     }
-    public void AddItemQuantity(string prefabName, string itemType, int quantity) // changes quantity of already instantiated product if it doesn't exist, creates new one
+    public void AddItemQuantity(string prefabName, string itemProduct, int quantity) // changes quantity of already instantiated product if it doesn't exist, creates new one
     {
-        if (itemArrays.TryGetValue(itemType, out GameObject[] itemArray))
+        if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
         {
             foreach (GameObject itemPrefab in itemArray)
             {
@@ -378,11 +188,11 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
-        if (prefabName == "Plants")
+        if (prefabName == "FibrousLeaves")
         {
             itemCreator.CreatePlants(quantity);
         }
-        else if (prefabName == "Water")
+        else if (prefabName == "AlienWater")
         {
             itemCreator.CreateWater(quantity);
         }
@@ -403,9 +213,9 @@ public class InventoryManager : MonoBehaviour
             itemCreator.CreateBatteryCore(quantity);
         }
     }
-    public void ReduceItemQuantity(string prefabName, string itemType, int quantity)
+    public void ReduceItemQuantity(string prefabName, string itemProduct, int quantity)
     {
-        if (itemArrays.TryGetValue(itemType, out GameObject[] itemArray))
+        if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
         {
             foreach (GameObject itemPrefab in itemArray)
             {
@@ -423,7 +233,7 @@ public class InventoryManager : MonoBehaviour
                     // Ensure the item quantity doesn't go below zero
                     if (itemData.itemQuantity <= 0)
                     {
-                        itemArrays[itemType] = itemArrays[itemType].Where(item => item != itemPrefab).ToArray();
+                        itemArrays[itemProduct] = itemArrays[itemProduct].Where(item => item != itemPrefab).ToArray();
                         Destroy(itemPrefab);
                     }
 
@@ -432,121 +242,31 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
-
-
-    public void InventoryCheckUp()
+    public void ShowFilteredItems()
     {
-        string showItemTypes = InventoryManager.ShowItemTypes;
-
-        if (showItemTypes == "ALL")
-        {
-            ShowAllItems();
-        }
-        else if (showItemTypes == "RAW")
-        {
-            ShowRawItems();
-        }
-        else if (showItemTypes == "PROCESSED")
-        {
-            ShowProcessedItems();
-        }
-        else if (showItemTypes == "REFINED")
-        {
-            ShowRefinedItems();
-        }
-        else if (showItemTypes == "ASSEMBLED")
-        {
-            ShowAssembledItems();
-        }
+        ShowItems(InventoryManager.ShowItemProducts, InventoryManager.ShowItemTypes, InventoryManager.ShowItemClass);
     }
-
-    public void ShowAllItems()
+    public void ShowItems(string itemProduct, string itemType, string itemClass)
     {
-        InventoryManager.ShowItemTypes = "ALL";
-
-        foreach (var kvp in itemArrays)
-    {
-        string itemType = kvp.Key;
-        GameObject[] itemArray = kvp.Value;
-
-        bool showItems = true;
-
-        foreach (GameObject item in itemArray)
-        {
-            item.SetActive(showItems);
-        }
-    }
-    }
-
-    public void ShowRawItems()
-    {
-        InventoryManager.ShowItemTypes = "RAW";
+        bool showAllProducts = itemProduct == "ALL";
+        bool showAllTypes = itemType == "ALL";
+        bool showAllClasses = itemClass == "ALL";
 
         foreach (var kvp in itemArrays)
         {
-            string itemType = kvp.Key;
+            string product = kvp.Key;
             GameObject[] itemArray = kvp.Value;
-
-            bool showItems = itemType == "RAW";
 
             foreach (GameObject item in itemArray)
             {
-                item.SetActive(showItems);
-            }
-        }
-    }
+                ItemData itemData = item.GetComponent<ItemData>();
 
+                bool showItem =
+                    (showAllProducts || itemProduct == itemData.itemProduct) &&
+                    (showAllTypes || itemType == itemData.itemType) &&
+                    (showAllClasses || itemClass == itemData.itemClass);
 
-    public void ShowProcessedItems()
-    {
-        InventoryManager.ShowItemTypes = "PROCESSED";
-
-        foreach (var kvp in itemArrays)
-        {
-            string itemType = kvp.Key;
-            GameObject[] itemArray = kvp.Value;
-
-            bool showItems = itemType == "PROCESSED";
-
-            foreach (GameObject item in itemArray)
-            {
-                item.SetActive(showItems);
-            }
-        }
-    }
-
-    public void ShowRefinedItems()
-    {
-        InventoryManager.ShowItemTypes = "REFINED";
-
-        foreach (var kvp in itemArrays)
-        {
-            string itemType = kvp.Key;
-            GameObject[] itemArray = kvp.Value;
-
-            bool showItems = itemType == "REFINED";
-
-            foreach (GameObject item in itemArray)
-            {
-                item.SetActive(showItems);
-            }
-        }
-    }
-
-    public void ShowAssembledItems()
-    {
-        InventoryManager.ShowItemTypes = "ASSEMBLED";
-
-        foreach (var kvp in itemArrays)
-        {
-            string itemType = kvp.Key;
-            GameObject[] itemArray = kvp.Value;
-
-            bool showItems = itemType == "ASSEMBLED";
-
-            foreach (GameObject item in itemArray)
-            {
-                item.SetActive(showItems);
+                item.SetActive(showItem);
             }
         }
     }

@@ -141,7 +141,17 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
                         emptyButtonImage.enabled = true;
                     }
                     Transform inventoryManagerObj = highlightObj.transform.Find("List/INVENTORYMANAGER");
+                    GameObject noEnergyObjects = GameObject.Find("NoEnergyObjects");
                     gameObject.transform.SetParent(inventoryManagerObj);
+                    PlayerResources.PlayerEnergy = "00:00:00:00";
+                    if (noEnergyObjects != null)
+                    {
+                        ActivateObjects activateScript = noEnergyObjects.GetComponent<ActivateObjects>();
+                        if (activateScript != null)
+                        {
+                            activateScript.ActivateAllObjects();
+                        }
+                    }
                 }
                 else if (originalParentName == "OxygenButton")
                 {

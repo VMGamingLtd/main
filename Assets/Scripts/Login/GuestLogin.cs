@@ -13,18 +13,18 @@ public class GuestLogin : MonoBehaviour
 
     void OnEnable()
     {
-        bool gameStarted = globalCalculator.GameStarted;
+        bool gameStarted = GlobalCalculator.GameStarted;
 
         if (gameStarted == false)
         {
             myObject.SetActive(true);
         }
-        else 
-        { 
+        else
+        {
             myObject.SetActive(false);
         }
 
-        
+
     }
 
     public void OnButtonClick()
