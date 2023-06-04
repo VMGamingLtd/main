@@ -56,6 +56,9 @@ namespace Gaos.User.Api
 
         public string errorMessage;
 
+        public int userId;
+
+        public bool isGuest;
 
         public string jwt;
 
