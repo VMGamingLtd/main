@@ -11,10 +11,12 @@ namespace Gaos.Environment
             if (envName == "Development")
             {
                 env.Add("GAOS_URL", "https://local.galacticodyssey.space/gaos");
+                env.Add("GAOS_WS", "wss://local.galacticodyssey.space/gaos/ws");
             }
             else if (envName == "Test")
             {
                 env.Add("GAOS_URL", "https://test.galacticodyssey.space/gaos");
+                env.Add("GAOS_WS", "wss://test.galacticodyssey.space/gaos/ws");
 
             }
             else
