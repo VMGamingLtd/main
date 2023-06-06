@@ -10,6 +10,7 @@ public class TooltipObjects : MonoBehaviour
     public GameObject AlienWater;
     public GameObject Biofuel;
     public GameObject PurifiedWater;
+    public GameObject BatteryCore;
     public GameObject Battery;
     public GameObject OxygenTank;
     public GameObject EngineeringSkill;

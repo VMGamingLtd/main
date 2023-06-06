@@ -21,6 +21,7 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {"AlienWater", tooltipObjects.AlienWater},
             {"Biofuel", tooltipObjects.Biofuel},
             {"PurifiedWater", tooltipObjects.PurifiedWater},
+            {"BatteryCore", tooltipObjects.BatteryCore},
             {"Battery", tooltipObjects.Battery},
             {"OxygenTank", tooltipObjects.OxygenTank},
             {"CraftBattery", tooltipObjects.CraftBattery},
