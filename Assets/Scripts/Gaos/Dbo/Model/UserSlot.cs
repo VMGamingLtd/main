@@ -1,14 +1,15 @@
-﻿namespace gaos.Dbo.Model
+﻿#pragma warning disable 8632
+namespace gaos.Dbo.Model
 {
     public class UserSlot
     {
-        public int Id { get; set; }
+        public int Id;
 
-        public int UserId { get; set; }
-        public User? User { get; set; }
+        public int UserId;
+        public User? User;
 
-        public int SlotId { get; set; }
-        public Slot? Slot { get; set; }
+        public int SlotId;
+        public Slot? Slot;
 
     }
 }

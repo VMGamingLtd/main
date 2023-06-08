@@ -1,8 +1,9 @@
-﻿namespace gaos.Dbo.Model
+﻿#pragma warning disable 8632
+namespace gaos.Dbo.Model
 {
     public class InventoryItemDataKind
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
+        public int Id;
+        public string? Name;
     }
 }

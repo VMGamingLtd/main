@@ -1,4 +1,5 @@
-﻿namespace gaos.Dbo.Model
+﻿#pragma warning disable 8632
+namespace gaos.Dbo.Model
 {
     /*
     public enum PlatformType
@@ -13,16 +14,16 @@
 
     public class Device
     {
-        public int Id { get; set; }
-        public string? Identification { get; set; }
+        public int Id;
+        public string? Identification;
 
-        public string? PlatformType { get; set; }
+        public string? PlatformType;
 
-        public int? BuildVersionId { get; set; }
-        public BuildVersion? BuildVersion { get; set; }
+        public int? BuildVersionId;
+        public BuildVersion? BuildVersion;
 
-        public string? BuildVersionReported { get; set; }
+        public string? BuildVersionReported;
 
-        public DateTime RegisteredAt { get; set; }
+        public System.DateTime RegisteredAt;
     }
 }
