@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-namespace Gaos.Device.Manager
+namespace Gaos.Device.Device
 {
     public class Registration
     {
@@ -9,7 +9,7 @@ namespace Gaos.Device.Manager
 
         public static bool? IsDeviceRegistered = false;
 
-        public static Gaos.Device.Api.DeviceRegisterResponse DeviceRegisterResponse = null;
+        public static Gaos.Routes.Model.DeviceJson.DeviceRegisterResponse DeviceRegisterResponse = null;
 
         private static bool TryToRegisterAgain = false;
 
@@ -49,10 +49,10 @@ namespace Gaos.Device.Manager
                 }
                 else
                 {
-                    DeviceRegisterResponse = JsonUtility.FromJson<Gaos.Device.Api.DeviceRegisterResponse>(apiCall.ResponseJsonStr);
-                    if (DeviceRegisterResponse.isError == true)
+                    DeviceRegisterResponse = JsonUtility.FromJson<Gaos.Routes.Model.DeviceJson.DeviceRegisterResponse>(apiCall.ResponseJsonStr);
+                    if (DeviceRegisterResponse.IsError == true)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device: {DeviceRegisterResponse.errorMessage}");
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device: {DeviceRegisterResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -93,6 +93,7 @@ namespace Gaos.Device.Manager
 
             if (IsDeviceRegistered == true)
             {
+                Gaos.Context.Device.SetDeviceId(DeviceRegisterResponse.DeviceId);
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: device registered");
             }
             else
