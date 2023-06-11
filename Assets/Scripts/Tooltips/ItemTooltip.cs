@@ -17,6 +17,8 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         tooltipMap = new Dictionary<string, GameObject>
         {
             {"PlanetIndex", tooltipObjects.PlanetIndex},
+            {"LevelInfo", tooltipObjects.LevelInfo},
+            {"FriendsPanel", tooltipObjects.FriendsPanel},
             {"FibrousLeaves", tooltipObjects.FibrousLeaves},
             {"AlienWater", tooltipObjects.AlienWater},
             {"Biofuel", tooltipObjects.Biofuel},

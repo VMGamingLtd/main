@@ -15,6 +15,7 @@ public class CoroutineManager : MonoBehaviour
     public GameObject saveSlots;
     public GameObject loginMenu;
     public GameObject newGamePopup;
+    public GameObject levelUpObject;
     private TextMeshProUGUI textObject;
 
     public TextMeshProUGUI levelText;
@@ -109,7 +110,22 @@ public class CoroutineManager : MonoBehaviour
 
     IEnumerator ResetNewGame () {
         textObject = this.loadingBar.transform.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-        textObject.text = "INITIALIZING GAME...";
+        SystemLanguage systemLanguage = Application.systemLanguage;
+        switch (systemLanguage)
+        {
+            case SystemLanguage.Russian:
+                textObject.text = "ИНИЦИАЛИЗАЦИЯ ИГРЫ...";
+                break;
+            case SystemLanguage.Chinese:
+                textObject.text = "游戏初始化中...";
+                break;
+            case SystemLanguage.Slovak:
+                textObject.text = "INICIALIZÁCIA HRY...";
+                break;
+            default: // English by default
+                textObject.text = "INITIALIZING GAME...";
+                break;
+        }
         newGamePopup.SetActive(true);
         yield return new WaitForSeconds(1.5f);
         newGamePopup.GetComponent<Michsky.UI.Shift.ModalWindowManager>().ModalWindowIn();
@@ -172,6 +188,7 @@ public class CoroutineManager : MonoBehaviour
 
         if (playerCurrentExp >= playerMaxExp)
         {
+            levelUpObject.SetActive(true);
             ExpBar.fillAmount = 0f;
             currentExpText.text = "0";
             Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -229,6 +246,7 @@ public class CoroutineManager : MonoBehaviour
 
         if (playerCurrentExp >= playerMaxExp)
         {
+            levelUpObject.SetActive(true);
             ExpBar.fillAmount = 0f;
             currentExpText.text = "0";
             Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -302,6 +320,7 @@ public class CoroutineManager : MonoBehaviour
 
             if (playerCurrentExp >= playerMaxExp)
             {
+                levelUpObject.SetActive(true);
                 ExpBar.fillAmount = 0f;
                 currentExpText.text = "0";
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -387,6 +406,7 @@ public class CoroutineManager : MonoBehaviour
 
             if (playerCurrentExp >= playerMaxExp)
             {
+                levelUpObject.SetActive(true);
                 ExpBar.fillAmount = 0f;
                 currentExpText.text = "0";
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -474,6 +494,7 @@ public class CoroutineManager : MonoBehaviour
 
             if (playerCurrentExp >= playerMaxExp)
             {
+                levelUpObject.SetActive(true);
                 ExpBar.fillAmount = 0f;
                 currentExpText.text = "0";
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -568,6 +589,7 @@ public class CoroutineManager : MonoBehaviour
 
             if (playerCurrentExp >= playerMaxExp)
             {
+                levelUpObject.SetActive(true);
                 ExpBar.fillAmount = 0f;
                 currentExpText.text = "0";
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);

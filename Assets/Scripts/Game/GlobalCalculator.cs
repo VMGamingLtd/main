@@ -129,7 +129,7 @@ public class GlobalCalculator : MonoBehaviour
 
     public bool IsBreathableAir()
     {
-    return GlobalCalculator.isPlayerInBiologicalBiome;
+        return GlobalCalculator.isPlayerInBiologicalBiome;
     }
 }
 
