@@ -186,6 +186,9 @@ namespace Gaos.Api
                 if (contenType != null && contenType.Contains("json"))
                 {
                     this.ResponseJsonStr = wr.downloadHandler.text;
+                    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                    Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ResponseJsonStr: " + this.ResponseJsonStr);
+                    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                     this.IsResponseError = false;
 
                 }

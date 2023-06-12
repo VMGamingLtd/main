@@ -12,7 +12,7 @@ namespace Gaos.GameData
 
         public delegate void OnUserGameDataGetComplete(UserGameDataGetResponse response);
 
-        private static IEnumerator Get(int slotId, OnUserGameDataGetComplete onUserGameDataGetComplete)
+        public static IEnumerator Get(int slotId, OnUserGameDataGetComplete onUserGameDataGetComplete)
         {
             const string METHOD_NAME = "Get()";
 
@@ -47,7 +47,7 @@ namespace Gaos.GameData
 
         public delegate void OnUserGameDataSaveComplete(UserGameDataSaveResponse response);
 
-        private static IEnumerator Save(int slotId, Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete)
+        public static IEnumerator Save(int slotId, Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete)
         {
             const string METHOD_NAME = "Save()";
 
