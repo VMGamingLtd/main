@@ -2,6 +2,8 @@ using Gaos.Routes.Model.GameDataJson;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+
 
 namespace Gaos.GameData
 {
@@ -10,9 +12,9 @@ namespace Gaos.GameData
         private readonly static string CLASS_NAME = typeof(UserGameDataGet).Name;
 
 
-        public delegate void OnUserGameDataGetComplete(UserGameDataGetResponse response);
+        public delegate void OnUserGameDataGetComplete(UserGameDataGetResponse response, object obj = null);
 
-        public static IEnumerator Get(int slotId, OnUserGameDataGetComplete onUserGameDataGetComplete)
+        public static IEnumerator Get(int slotId, OnUserGameDataGetComplete onUserGameDataGetComplete, object obj = null)
         {
             const string METHOD_NAME = "Get()";
 
@@ -33,8 +35,8 @@ namespace Gaos.GameData
             } 
             else
             {
-                Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response = JsonUtility.FromJson<Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse>(apiCall.ResponseJsonStr);
-                onUserGameDataGetComplete(response);
+                Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse>(apiCall.ResponseJsonStr);
+                onUserGameDataGetComplete(response, obj);
             }
 
         }
@@ -45,16 +47,16 @@ namespace Gaos.GameData
         private readonly static string CLASS_NAME = typeof(UserGameDataSave).Name;
 
 
-        public delegate void OnUserGameDataSaveComplete(UserGameDataSaveResponse response);
+        public delegate void OnUserGameDataSaveComplete(UserGameDataSaveResponse response, object obj = null);
 
-        public static IEnumerator Save(int slotId, Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete)
+        public static IEnumerator Save(int slotId, Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete, object obj = null)
         {
             const string METHOD_NAME = "Save()";
 
             request.UserId = Gaos.Context.Authentication.GetUserId();
             request.SlotId = slotId;
 
-            string requestJsonStr = JsonUtility.ToJson(request);
+            string requestJsonStr = JsonConvert.SerializeObject(request);
 
             Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/gameData/userGameDataSave", requestJsonStr);
             yield return apiCall.Call();
@@ -67,8 +69,8 @@ namespace Gaos.GameData
             } 
             else
             {
-                Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response = JsonUtility.FromJson<Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse>(apiCall.ResponseJsonStr);
-                onUserGameDataSaveComplete(response);
+                Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse>(apiCall.ResponseJsonStr);
+                onUserGameDataSaveComplete(response, obj);
             }
 
         }

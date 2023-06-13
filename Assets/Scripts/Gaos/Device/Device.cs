@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Newtonsoft.Json;
 
 namespace Gaos.Device.Device
 {
@@ -25,12 +26,12 @@ namespace Gaos.Device.Device
         {
             const string METHOD_NAME = "RegisterDevice_()";
 
-            Gaos.Device.Api.DeviceRegisterRequest request = new Gaos.Device.Api.DeviceRegisterRequest();
-            request.identification = SystemInfo.deviceUniqueIdentifier;
-            request.platformType = GetPlatformType();
-            request.buildVersion = Application.version;
+            Gaos.Routes.Model.DeviceJson.DeviceRegisterRequest request = new Gaos.Routes.Model.DeviceJson.DeviceRegisterRequest();
+            request.Identification = SystemInfo.deviceUniqueIdentifier;
+            request.PlatformType = GetPlatformType();
+            request.BuildVersion = Application.version;
 
-            string requestJsonStr = JsonUtility.ToJson(request);
+            string requestJsonStr = JsonConvert.SerializeObject(request);
 
             Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("device/register", requestJsonStr);
             yield return apiCall.Call();
@@ -49,7 +50,7 @@ namespace Gaos.Device.Device
                 }
                 else
                 {
-                    DeviceRegisterResponse = JsonUtility.FromJson<Gaos.Routes.Model.DeviceJson.DeviceRegisterResponse>(apiCall.ResponseJsonStr);
+                    DeviceRegisterResponse =  JsonConvert.DeserializeObject<Gaos.Routes.Model.DeviceJson.DeviceRegisterResponse>(apiCall.ResponseJsonStr);
                     if (DeviceRegisterResponse.IsError == true)
                     {
                         Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device: {DeviceRegisterResponse.ErrorMessage}");
