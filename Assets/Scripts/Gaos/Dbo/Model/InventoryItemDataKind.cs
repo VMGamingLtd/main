@@ -3,7 +3,7 @@ namespace Gaos.Dbo.Model
 {
     enum InventoryItemDataKindEnum
     {
-        BasicInventoryObjects,
+        BasicInventoryObjects = 1,
         ProcessedInventoryObjects,
         RefinedInventoryObjects,
         AssembledInventoryObjects,

@@ -3,7 +3,7 @@ namespace Gaos.Dbo.Model
 {
     enum RecipeDataKindEnum
     {
-        BasicRecipeObjects,
+        BasicRecipeObjects = 1,
         ProcessedRecipeObjects,
         RefinedRecipeObjects,
         AssembledRecipeObjects,
