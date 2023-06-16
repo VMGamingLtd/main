@@ -10,6 +10,8 @@ public class BuildingBarPlanet0 : MonoBehaviour {
     public CoroutineManager coroutineManager;
     public Animation errorMessage;
     public InventoryManager inventoryManager;
+    private Transform errorObjectTransform;
+
 
     public void StartCollectPlants()
     {
@@ -143,7 +145,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
 
     public void StartCreateBattery()
     {
-        int batteryCore = inventoryManager.GetItemQuantity("BatteryCore", "REFINED");
+        int batteryCore = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED");
         int biofuel = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED");
 
         if (CoroutineManager.AllCoroutineBooleans[4] == true)
@@ -171,6 +173,18 @@ public class BuildingBarPlanet0 : MonoBehaviour {
         else
         {
             StartCoroutine(errorCoroutine());
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (errorMessage.isPlaying)
+        {
+            Transform errorObjectTransform = transform.Find("ErrorImage");
+            if (errorObjectTransform != null)
+            {
+                errorObjectTransform.gameObject.SetActive(false);
+            }
         }
     }
 

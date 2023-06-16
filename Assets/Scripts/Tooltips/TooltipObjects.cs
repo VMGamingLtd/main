@@ -8,6 +8,8 @@ public class TooltipObjects : MonoBehaviour
     public GameObject LevelInfo;
     public GameObject FriendsPanel;
     public GameObject CraftBattery;
+    public GameObject CraftAndUseWater;
+    public GameObject BuildBase;
     public GameObject FibrousLeaves;
     public GameObject AlienWater;
     public GameObject Biofuel;

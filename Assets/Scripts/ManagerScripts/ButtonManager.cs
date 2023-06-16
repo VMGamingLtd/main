@@ -1,0 +1,15 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ButtonManager : MonoBehaviour
+{
+    public GameObject BaseButton;
+    void OnEnable()
+    {
+        if (GoalManager.secondGoal == true)
+        {
+            BaseButton.SetActive(true);
+        }
+    }
+}

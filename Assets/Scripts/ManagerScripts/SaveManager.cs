@@ -28,6 +28,8 @@ public class SaveManager : MonoBehaviour
         public string showItemClass;
         public string showRecipeClass;
         public string planet0Name;
+        public string planet0Weather;
+        public int planet0UV;
         public int atmospherePlanet0;
         public int agriLandPlanet0;
         public int forestsPlanet0;
@@ -51,17 +53,20 @@ public class SaveManager : MonoBehaviour
         public int minutes;
         public int seconds;
         public bool registeredUser;
+        public bool firstGoal;
+        public bool secondGoal;
+        public bool thirdGoal;
         public bool isPlayerInBiologicalBiome;
         public float credits;
         public string inventoryTitle;
         public InventoryItemData[] basicInventoryObjects;
         public InventoryItemData[] processedInventoryObjects;
-        public InventoryItemData[] refinedInventoryObjects;
+        public InventoryItemData[] enhancedInventoryObjects;
         public InventoryItemData[] assembledInventoryObjects;
         public string recipeTitle;
         public RecipeData[] basicRecipeObjects;
         public RecipeData[] processedRecipeObjects;
-        public RecipeData[] refinedRecipeObjects;
+        public RecipeData[] enhancedRecipeObjects;
         public RecipeData[] assembledRecipeObjects;
     }
 
@@ -79,7 +84,7 @@ public class SaveManager : MonoBehaviour
 
         public bool ShouldSerializeOxygenTimer()
         {
-            string[] excludedTypes = { "BASIC", "PROCESSED", "REFINED" };
+            string[] excludedTypes = { "BASIC", "PROCESSED", "ENHANCED" };
             return !excludedTypes.Any(type => itemType.Equals(type, StringComparison.OrdinalIgnoreCase));
         }
     }
@@ -125,6 +130,8 @@ public class SaveManager : MonoBehaviour
         currentSaveData.showRecipeClass = RecipeManager.ShowRecipeClass;
         currentSaveData.planet0Name = Planet0Name.planet0Name;
         currentSaveData.atmospherePlanet0 = Planet0Buildings.AtmospherePlanet0;
+        currentSaveData.planet0UV = WeatherManager.planet0UV;
+        currentSaveData.planet0Weather = WeatherManager.planet0Weather;
         currentSaveData.agriLandPlanet0 = Planet0Buildings.AgriLandPlanet0;
         currentSaveData.forestsPlanet0 = Planet0Buildings.ForestsPlanet0;
         currentSaveData.waterPlanet0 = Planet0Buildings.WaterPlanet0;
@@ -147,6 +154,9 @@ public class SaveManager : MonoBehaviour
         currentSaveData.playerEnergy = PlayerResources.PlayerEnergy;
         currentSaveData.playerHunger = PlayerResources.PlayerHunger;
         currentSaveData.registeredUser = CoroutineManager.registeredUser;
+        currentSaveData.firstGoal = GoalManager.firstGoal;
+        currentSaveData.firstGoal = GoalManager.secondGoal;
+        currentSaveData.firstGoal = GoalManager.thirdGoal;
         currentSaveData.isPlayerInBiologicalBiome = GlobalCalculator.isPlayerInBiologicalBiome;
         currentSaveData.credits = Credits.credits;
 
@@ -191,11 +201,11 @@ public class SaveManager : MonoBehaviour
 
             currentSaveData.processedInventoryObjects[i] = itemData;
         }
-        currentSaveData.refinedInventoryObjects = new InventoryItemData[itemArrays["REFINED"].Length];
+        currentSaveData.enhancedInventoryObjects = new InventoryItemData[itemArrays["ENHANCED"].Length];
 
-        for (int i = 0; i < itemArrays["REFINED"].Length; i++)
+        for (int i = 0; i < itemArrays["ENHANCED"].Length; i++)
         {
-            GameObject itemGameObject = itemArrays["REFINED"][i];
+            GameObject itemGameObject = itemArrays["ENHANCED"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
             InventoryItemData itemData = new InventoryItemData();
@@ -206,7 +216,7 @@ public class SaveManager : MonoBehaviour
             itemData.itemClass = itemDataComponent.itemClass;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
 
-            currentSaveData.refinedInventoryObjects[i] = itemData;
+            currentSaveData.enhancedInventoryObjects[i] = itemData;
         }
         currentSaveData.assembledInventoryObjects = new InventoryItemData[itemArrays["ASSEMBLED"].Length];
 
@@ -266,11 +276,11 @@ public class SaveManager : MonoBehaviour
 
             currentSaveData.processedRecipeObjects[i] = itemData;
         }
-        currentSaveData.refinedRecipeObjects = new RecipeData[itemRecipeArrays["REFINED"].Length];
+        currentSaveData.enhancedRecipeObjects = new RecipeData[itemRecipeArrays["ENHANCED"].Length];
 
-        for (int i = 0; i < itemRecipeArrays["REFINED"].Length; i++)
+        for (int i = 0; i < itemRecipeArrays["ENHANCED"].Length; i++)
         {
-            GameObject itemGameObject = itemRecipeArrays["REFINED"][i];
+            GameObject itemGameObject = itemRecipeArrays["ENHANCED"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
             RecipeData itemData = new RecipeData();
@@ -280,7 +290,7 @@ public class SaveManager : MonoBehaviour
             itemData.itemProduct = itemDataComponent.itemProduct;
             itemData.itemClass = itemDataComponent.itemClass;
 
-            currentSaveData.refinedRecipeObjects[i] = itemData;
+            currentSaveData.enhancedRecipeObjects[i] = itemData;
         }
         currentSaveData.assembledRecipeObjects = new RecipeData[itemRecipeArrays["ASSEMBLED"].Length];
 

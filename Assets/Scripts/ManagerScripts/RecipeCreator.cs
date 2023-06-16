@@ -41,7 +41,7 @@ namespace RecipeManagement
         }
         public void CreateBatteryCoreRecipe()
         {
-            CreateRecipe(recipePrefabs[6], "REFINED", "ENERGY", "CLASS-F", recipePrefabs[6].name);
+            CreateRecipe(recipePrefabs[6], "ENHANCED", "ENERGY", "CLASS-F", recipePrefabs[6].name);
         }
 
         private void CreateRecipe(GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)

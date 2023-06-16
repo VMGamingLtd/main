@@ -84,22 +84,22 @@ public class InventoryProducts : MonoBehaviour
                     return "Všetky veci";
                 }
                 break;
-            case "RAW":
+            case "BASIC":
                 if (language == SystemLanguage.English)
                 {
-                    return "Raw";
+                    return "Basic";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Сырые";
+                    return "Основные";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "原始产品";
+                    return "基础产品";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Surové";
+                    return "Základné";
                 }
                 break;
             case "PROCESSED":
@@ -120,22 +120,22 @@ public class InventoryProducts : MonoBehaviour
                     return "Spracované";
                 }
                 break;
-            case "REFINED":
+            case "ENHANCED":
                 if (language == SystemLanguage.English)
                 {
-                    return "Refined";
+                    return "Enhanced";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Отрефинированные";
+                    return "Улучшенные";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "精制产品";
+                    return "强化产品";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Opracované";
+                    return "Upravené";
                 }
                 break;
             case "ASSEMBLED":
@@ -185,11 +185,11 @@ public class InventoryProducts : MonoBehaviour
             case "Spracované":
                 InventoryManager.ShowItemProducts = "PROCESSED";
                 break;
-            case "Refined":
-            case "Отрефинированные":
-            case "精制产品":
-            case "Opracované":
-                InventoryManager.ShowItemProducts = "REFINED";
+            case "Enhanced":
+            case "Улучшенные":
+            case "强化产品":
+            case "Upravené":
+                InventoryManager.ShowItemProducts = "ENHANCED";
                 break;
             case "Assembled":
             case "Собранные":

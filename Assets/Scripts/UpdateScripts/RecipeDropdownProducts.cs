@@ -13,9 +13,9 @@ public class RecipeDropdownProducts : MonoBehaviour
         // Add options to the dropdown
         dropdown.options.Clear();
         dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString("ALL")));
-        dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString("RAW")));
+        dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString("BASIC")));
         dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString("PROCESSED")));
-        dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString("REFINED")));
+        dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString("ENHANCED")));
         dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString("ASSEMBLED")));
 
         // Set the default value of the dropdown
@@ -85,22 +85,22 @@ public class RecipeDropdownProducts : MonoBehaviour
                     return "Spracovaný";
                 }
                 break;
-            case "REFINED":
+            case "ENHANCED":
                 if (language == SystemLanguage.English)
                 {
-                    return "Refined";
+                    return "Enhanced";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Отрефинированные";
+                    return "Улучшенный";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "精制产品";
+                    return "强化产品";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Opracovaný";
+                    return "Upravený";
                 }
                 break;
             case "ASSEMBLED":
@@ -140,7 +140,7 @@ public class RecipeDropdownProducts : MonoBehaviour
                 RecipeManager.ShowRecipeProducts = "PROCESSED";
                 break;
             case 3:
-                RecipeManager.ShowRecipeProducts = "REFINED";
+                RecipeManager.ShowRecipeProducts = "ENHANCED";
                 break;
             case 4:
                 RecipeManager.ShowRecipeProducts = "ASSEMBLED";

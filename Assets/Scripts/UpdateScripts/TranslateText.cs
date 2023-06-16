@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class TranslateText : MonoBehaviour
 {
+    [TextArea(3, 10)]
     public string EnglishText;
+    [TextArea(3, 10)]
     public string RussianText;
+    [TextArea(3, 10)]
     public string ChineseText;
+    [TextArea(3, 10)]
     public string SlovakText;
+
     private TextMeshProUGUI myText;
 
     void Awake()
@@ -33,5 +37,4 @@ public class TranslateText : MonoBehaviour
             myText.text = SlovakText;
         }
     }
-
 }
