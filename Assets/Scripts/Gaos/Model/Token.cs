@@ -15,6 +15,8 @@ namespace Gaos.Model.Token
         public string Sub;
         public long Exp;
 
+        public int UserId;
+
         public UserType UserType;
 
         public int DeviceId;
