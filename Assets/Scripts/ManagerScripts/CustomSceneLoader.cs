@@ -15,6 +15,7 @@ public class CustomSceneLoader : MonoBehaviour
         {
             Ws.Open();
             StartCoroutine(Ws.StartProcessing());
+            Ws.GetInboundQueue().Enqueue("ping");
         }
 
         StartCoroutine(Gaos.Device.Device.Registration.RegisterDevice());
@@ -39,7 +40,10 @@ public class CustomSceneLoader : MonoBehaviour
             UserName.userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
 
             //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            SaveManager.TestSaveGameDataOnServer(this);
+            if (true)
+            {
+                SaveManager.TestSaveGameDataOnServer(this);
+            }
             //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
             LoadSceneAsync();
