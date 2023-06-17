@@ -14,12 +14,12 @@ namespace Gaos.Routes.Model.GameDataJson
 
         public Gaos.Dbo.Model.InventoryItemData[]? BasicInventoryObjects;
         public Gaos.Dbo.Model.InventoryItemData[]? ProcessedInventoryObjects;
-        public Gaos.Dbo.Model.InventoryItemData[]? RefinedInventoryObjects;
+        public Gaos.Dbo.Model.InventoryItemData[]? EnhancedInventoryObjects;
         public Gaos.Dbo.Model.InventoryItemData[]? AssembledInventoryObjects;
 
         public Gaos.Dbo.Model.RecipeData[]? BasicRecipeObjects;
         public Gaos.Dbo.Model.RecipeData[]? ProcessedRecipeObjects;
-        public Gaos.Dbo.Model.RecipeData[]? RefinedRecipeObjects;
+        public Gaos.Dbo.Model.RecipeData[]? EnhancedRecipeObjects;
         public Gaos.Dbo.Model.RecipeData[]? AssembledRecipeObjects;
     }
 }

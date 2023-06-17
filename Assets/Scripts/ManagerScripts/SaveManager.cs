@@ -353,10 +353,10 @@ public class SaveManager : MonoBehaviour
         saveDataModel.processedInventoryObjects[0].itemQuantity = 2;
         saveDataModel.processedInventoryObjects[0].itemProduct = "hammer2";
 
-        saveDataModel.refinedInventoryObjects = new InventoryItemData[1];
-        saveDataModel.refinedInventoryObjects[0] = new InventoryItemData();
-        saveDataModel.refinedInventoryObjects[0].itemQuantity = 3;
-        saveDataModel.refinedInventoryObjects[0].itemProduct = "hammer3";
+        saveDataModel.enhancedInventoryObjects = new InventoryItemData[1];
+        saveDataModel.enhancedInventoryObjects[0] = new InventoryItemData();
+        saveDataModel.enhancedInventoryObjects[0].itemQuantity = 3;
+        saveDataModel.enhancedInventoryObjects[0].itemProduct = "hammer3";
 
         saveDataModel.assembledInventoryObjects = new InventoryItemData[1];
         saveDataModel.assembledInventoryObjects[0] = new InventoryItemData();
@@ -373,9 +373,9 @@ public class SaveManager : MonoBehaviour
         saveDataModel.processedRecipeObjects[0] = new RecipeData();
         saveDataModel.processedRecipeObjects[0].itemProduct = "product2";
 
-        saveDataModel.refinedRecipeObjects = new RecipeData[1];
-        saveDataModel.refinedRecipeObjects[0] = new RecipeData();
-        saveDataModel.refinedRecipeObjects[0].itemProduct = "product3";
+        saveDataModel.enhancedRecipeObjects = new RecipeData[1];
+        saveDataModel.enhancedRecipeObjects[0] = new RecipeData();
+        saveDataModel.enhancedRecipeObjects[0].itemProduct = "product3";
 
         saveDataModel.assembledRecipeObjects = new RecipeData[1];
         saveDataModel.assembledRecipeObjects[0] = new RecipeData();
@@ -406,8 +406,8 @@ public class SaveManager : MonoBehaviour
 
         userGameDataSaveRequest.RefinedInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
         userGameDataSaveRequest.RefinedInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
-        userGameDataSaveRequest.RefinedInventoryObjects[0].ItemQuantity = saveDataModel.refinedInventoryObjects[0].itemQuantity;
-        userGameDataSaveRequest.RefinedInventoryObjects[0].ItemProduct = saveDataModel.refinedInventoryObjects[0].itemProduct;
+        userGameDataSaveRequest.RefinedInventoryObjects[0].ItemQuantity = saveDataModel.enhancedInventoryObjects[0].itemQuantity;
+        userGameDataSaveRequest.RefinedInventoryObjects[0].ItemProduct = saveDataModel.enhancedInventoryObjects[0].itemProduct;
 
         userGameDataSaveRequest.AssembledInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
         userGameDataSaveRequest.AssembledInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
@@ -427,7 +427,7 @@ public class SaveManager : MonoBehaviour
 
         userGameDataSaveRequest.RefinedRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
         userGameDataSaveRequest.RefinedRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
-        userGameDataSaveRequest.RefinedRecipeObjects[0].ItemProduct = saveDataModel.refinedRecipeObjects[0].itemProduct;
+        userGameDataSaveRequest.RefinedRecipeObjects[0].ItemProduct = saveDataModel.enhancedRecipeObjects[0].itemProduct;
 
         userGameDataSaveRequest.AssembledRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
         userGameDataSaveRequest.AssembledRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
