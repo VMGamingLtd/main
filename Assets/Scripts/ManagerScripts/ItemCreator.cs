@@ -45,7 +45,7 @@ namespace ItemManagement
         }
         public void CreateBatteryCore(int quantity)
         {
-            CreateItem(quantity, itemPrefabs[6], "REFINED", "ENERGY", "CLASS-F", itemPrefabs[6].name);
+            CreateItem(quantity, itemPrefabs[6], "ENHANCED", "ENERGY", "CLASS-F", itemPrefabs[6].name);
         }
 
         private void CreateItem(int quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)

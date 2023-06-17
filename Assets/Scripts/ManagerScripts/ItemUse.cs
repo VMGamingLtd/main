@@ -6,6 +6,7 @@ using TMPro;
 public class ItemUse : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private GameObject itemObject;
+    public UnlockManager unlockManager;
     public Animation addAnimation;
     private bool isPointerDown = false;
     public InventoryManager inventoryManager;
@@ -14,9 +15,12 @@ public class ItemUse : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            itemObject = eventData.pointerEnter.gameObject.transform.parent.gameObject;
-            isPointerDown = true;
-            StartCoroutine(SingleClickRoutine(itemObject));
+            if (eventData.pointerEnter != null && eventData.pointerEnter.transform.parent != null)
+            {
+                itemObject = eventData.pointerEnter.transform.parent.gameObject;
+                isPointerDown = true;
+                StartCoroutine(SingleClickRoutine(itemObject));
+            }
         }
     }
 
@@ -43,6 +47,10 @@ public class ItemUse : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
                     if (itemName == "PurifiedWater(Clone)")
                     {
+                        if (GoalManager.secondGoal == false)
+                        {
+                            unlockManager.StartFeature();
+                        }
                         ItemTooltip tooltip = itemObject.GetComponent<ItemTooltip>();
                         tooltip.OnPointerExit(null);
                         addAnimation.Play("AddPlayerNeed");

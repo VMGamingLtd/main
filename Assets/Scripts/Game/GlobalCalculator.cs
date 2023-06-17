@@ -19,6 +19,7 @@ public class GlobalCalculator : MonoBehaviour
     public InventoryManager inventoryManager;
 
     public SaveManager saveManager;
+    public WeatherManager weatherManager;
 
     // current date display
     public TextMeshProUGUI DateDisplay;
@@ -28,6 +29,7 @@ public class GlobalCalculator : MonoBehaviour
     public static bool GameStarted = false;
 
     private const float delayTime = 1f;
+    public TextMeshProUGUI timeText;
 
     void Start()
     {
@@ -49,6 +51,7 @@ public class GlobalCalculator : MonoBehaviour
                     seconds = 0;
                     minutes++;
                     saveManager.SaveToJsonFile();
+                    weatherManager.SetUVAmount();
                     StartCoroutine(rotateImage.RotateOverTime(0.5f));
                 }
                 if (minutes > 59)
@@ -68,7 +71,10 @@ public class GlobalCalculator : MonoBehaviour
 
     public void UpdateEverySecond()
     {
-        DateDisplay.text = $"{GlobalCalculator.days.ToString("00")}:{GlobalCalculator.hours.ToString("00")}:{GlobalCalculator.minutes.ToString("00")}:{GlobalCalculator.seconds.ToString("00")}";
+        //DateDisplay.text = $"{GlobalCalculator.days.ToString("00")}:{GlobalCalculator.hours.ToString("00")}:{GlobalCalculator.minutes.ToString("00")}:{GlobalCalculator.seconds.ToString("00")}";
+        System.DateTime currentTime = System.DateTime.Now;
+        string timeString = currentTime.ToString("HH:mm:ss");
+        timeText.text = timeString;
 
         bool isAirBreathable = IsBreathableAir();
         bool isMinutesBelowThreshold = IsTimeBelowThreshold(PlayerResources.PlayerOxygen, 5);
@@ -129,7 +135,7 @@ public class GlobalCalculator : MonoBehaviour
 
     public bool IsBreathableAir()
     {
-    return GlobalCalculator.isPlayerInBiologicalBiome;
+        return GlobalCalculator.isPlayerInBiologicalBiome;
     }
 }
 

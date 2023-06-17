@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ItemManagement;
+using RecipeManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,13 +9,17 @@ using TMPro;
 public class CoroutineManager : MonoBehaviour
 {
     public ItemCreator itemCreator;
+    public RecipeCreator recipeCreator;
+    public GoalManager goalManager;
     public TranslationManager translationManager;
     public InventoryManager inventoryManager;
     public GameObject RecipeList;
     public GameObject loadingBar;
+    public GameObject goalGenerator;
     public GameObject saveSlots;
     public GameObject loginMenu;
     public GameObject newGamePopup;
+    public GameObject levelUpObject;
     private TextMeshProUGUI textObject;
 
     public TextMeshProUGUI levelText;
@@ -26,7 +31,6 @@ public class CoroutineManager : MonoBehaviour
 
     // data for server
     public static bool registeredUser = false;
-
     public static bool[] AllCoroutineBooleans = new bool[10];
     public static int IndexNumber;
 
@@ -109,7 +113,22 @@ public class CoroutineManager : MonoBehaviour
 
     IEnumerator ResetNewGame () {
         textObject = this.loadingBar.transform.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-        textObject.text = "INITIALIZING GAME...";
+        SystemLanguage systemLanguage = Application.systemLanguage;
+        switch (systemLanguage)
+        {
+            case SystemLanguage.Russian:
+                textObject.text = "ИНИЦИАЛИЗАЦИЯ ИГРЫ...";
+                break;
+            case SystemLanguage.Chinese:
+                textObject.text = "游戏初始化中...";
+                break;
+            case SystemLanguage.Slovak:
+                textObject.text = "INICIALIZÁCIA HRY...";
+                break;
+            default: // English by default
+                textObject.text = "INITIALIZING GAME...";
+                break;
+        }
         newGamePopup.SetActive(true);
         yield return new WaitForSeconds(1.5f);
         newGamePopup.GetComponent<Michsky.UI.Shift.ModalWindowManager>().ModalWindowIn();
@@ -172,6 +191,7 @@ public class CoroutineManager : MonoBehaviour
 
         if (playerCurrentExp >= playerMaxExp)
         {
+            levelUpObject.SetActive(true);
             ExpBar.fillAmount = 0f;
             currentExpText.text = "0";
             Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -229,6 +249,7 @@ public class CoroutineManager : MonoBehaviour
 
         if (playerCurrentExp >= playerMaxExp)
         {
+            levelUpObject.SetActive(true);
             ExpBar.fillAmount = 0f;
             currentExpText.text = "0";
             Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -293,7 +314,7 @@ public class CoroutineManager : MonoBehaviour
             imageToFill.fillAmount = 0f;
             itemCreator.CreateBiofuel(1);
 
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 5);
+            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 2);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
             int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
             int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
@@ -302,6 +323,7 @@ public class CoroutineManager : MonoBehaviour
 
             if (playerCurrentExp >= playerMaxExp)
             {
+                levelUpObject.SetActive(true);
                 ExpBar.fillAmount = 0f;
                 currentExpText.text = "0";
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -310,7 +332,7 @@ public class CoroutineManager : MonoBehaviour
                 maxExpText.text = result.ToString();
                 Level.AddCurrentResource(ref Level.PlayerLevel, 1);
                 levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
-                Level.AddCurrentResource(ref Level.StatPoints, 5);
+                Level.AddCurrentResource(ref Level.StatPoints, 1);
                 Level.AddCurrentResource(ref Level.SkillPoints, 1);
                 statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
                 skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
@@ -377,7 +399,7 @@ public class CoroutineManager : MonoBehaviour
                 yield return null;
             }
             itemCreator.CreatePurifiedWater(1);
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 5);
+            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 2);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
 
             int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
@@ -387,6 +409,7 @@ public class CoroutineManager : MonoBehaviour
 
             if (playerCurrentExp >= playerMaxExp)
             {
+                levelUpObject.SetActive(true);
                 ExpBar.fillAmount = 0f;
                 currentExpText.text = "0";
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -395,7 +418,7 @@ public class CoroutineManager : MonoBehaviour
                 maxExpText.text = result.ToString();
                 Level.AddCurrentResource(ref Level.PlayerLevel, 1);
                 levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
-                Level.AddCurrentResource(ref Level.StatPoints, 5);
+                Level.AddCurrentResource(ref Level.StatPoints, 1);
                 Level.AddCurrentResource(ref Level.SkillPoints, 1);
                 statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
                 skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
@@ -464,7 +487,7 @@ public class CoroutineManager : MonoBehaviour
             }
 
             itemCreator.CreateBatteryCore(1);
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 8);
+            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 3);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
 
             int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
@@ -474,6 +497,7 @@ public class CoroutineManager : MonoBehaviour
 
             if (playerCurrentExp >= playerMaxExp)
             {
+                levelUpObject.SetActive(true);
                 ExpBar.fillAmount = 0f;
                 currentExpText.text = "0";
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -482,7 +506,7 @@ public class CoroutineManager : MonoBehaviour
                 maxExpText.text = result.ToString();
                 Level.AddCurrentResource(ref Level.PlayerLevel, 1);
                 levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
-                Level.AddCurrentResource(ref Level.StatPoints, 5);
+                Level.AddCurrentResource(ref Level.StatPoints, 1);
                 Level.AddCurrentResource(ref Level.SkillPoints, 1);
                 statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
                 skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
@@ -490,7 +514,7 @@ public class CoroutineManager : MonoBehaviour
 
             imageToFill.fillAmount = 0f;
 
-            string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "REFINED").ToString();
+            string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED").ToString();
 
             for (int i = 0; i < batteryCoreTexts.Length; i++)
             {
@@ -524,7 +548,7 @@ public class CoroutineManager : MonoBehaviour
     public IEnumerator CreateBattery()
     {
         bool isBiofuelQuantityMet = inventoryManager.CheckItemQuantity("Biofuel", "PROCESSED", 1);
-        bool isBatteryCoreQuantityMet = inventoryManager.CheckItemQuantity("BatteryCore", "REFINED", 1);
+        bool isBatteryCoreQuantityMet = inventoryManager.CheckItemQuantity("BatteryCore", "ENHANCED", 1);
         bool isQuantityMet = isBatteryCoreQuantityMet && isBiofuelQuantityMet;
         if (isQuantityMet)
         {
@@ -535,10 +559,10 @@ public class CoroutineManager : MonoBehaviour
             GameObject fillBarObject = RecipeList.transform.Find("BatteryRecipe(Clone)/FillBckg/FillBar").gameObject;
             imageToFill = fillBarObject.GetComponent<Image>();
 
-            inventoryManager.ReduceItemQuantity("BatteryCore", "REFINED", 1);
+            inventoryManager.ReduceItemQuantity("BatteryCore", "ENHANCED", 1);
             inventoryManager.ReduceItemQuantity("Biofuel", "PROCESSED", 1);
 
-            string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "REFINED").ToString();
+            string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED").ToString();
             string currentBiofuelResource = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED").ToString();
 
             for (int i = 0; i < batteryCoreTexts.Length; i++)
@@ -559,7 +583,7 @@ public class CoroutineManager : MonoBehaviour
             }
 
             itemCreator.CreateBattery(1);
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 10);
+            Level.AddCurrentResource(ref Level.PlayerCurrentExp, 4);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
             int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
             int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
@@ -568,6 +592,7 @@ public class CoroutineManager : MonoBehaviour
 
             if (playerCurrentExp >= playerMaxExp)
             {
+                levelUpObject.SetActive(true);
                 ExpBar.fillAmount = 0f;
                 currentExpText.text = "0";
                 Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
@@ -576,21 +601,32 @@ public class CoroutineManager : MonoBehaviour
                 maxExpText.text = result.ToString();
                 Level.AddCurrentResource(ref Level.PlayerLevel, 1);
                 levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
-                Level.AddCurrentResource(ref Level.StatPoints, 5);
+                Level.AddCurrentResource(ref Level.StatPoints, 1);
                 Level.AddCurrentResource(ref Level.SkillPoints, 1);
                 statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
                 skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
             }
-
             imageToFill.fillAmount = 0f;
-
             string currentBatteryResource = inventoryManager.GetItemQuantity("Battery", "ASSEMBLED").ToString();
-
             for (int i = 0; i < batteryTexts.Length; i++)
             {
                 batteryTexts[i].text = currentBatteryResource;
             }
             StartCoroutine("CreateBattery");
+
+            if (GoalManager.firstGoal == false)
+            {
+                Animation animation = goalGenerator.GetComponent<Animation>();
+                if (animation != null)
+                {
+                    animation.Play("Success");
+                    yield return new WaitForSeconds(1f);
+                    recipeCreator.CreateWaterRecipe();
+                    recipeCreator.CreatePurifiedWaterRecipe();
+                    goalManager.ChangeGoal("CraftAndUseWater");
+                    animation.Play("Idle");
+                }
+            }
         }
         else
         {
@@ -601,10 +637,10 @@ public class CoroutineManager : MonoBehaviour
     {
         StopCoroutine("CreateBattery");
         CoroutineManager.AllCoroutineBooleans[4] = false;
-        inventoryManager.AddItemQuantity("BatteryCore", "REFINED", 1);
+        inventoryManager.AddItemQuantity("BatteryCore", "ENHANCED", 1);
         inventoryManager.AddItemQuantity("Biofuel", "PROCESSED", 1);
 
-        string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "REFINED").ToString();
+        string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED").ToString();
         string currentBiofuelResource = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED").ToString();
 
         for (int i = 0; i < batteryCoreTexts.Length; i++)

@@ -22,7 +22,7 @@ public class RecipeManager : MonoBehaviour
         {
             { "BASIC", new GameObject[0] },
             { "PROCESSED", new GameObject[0] },
-            { "REFINED", new GameObject[0] },
+            { "ENHANCED", new GameObject[0] },
             { "ASSEMBLED", new GameObject[0] }
         };
     }

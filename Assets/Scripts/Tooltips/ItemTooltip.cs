@@ -17,13 +17,18 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         tooltipMap = new Dictionary<string, GameObject>
         {
             {"PlanetIndex", tooltipObjects.PlanetIndex},
+            {"LevelInfo", tooltipObjects.LevelInfo},
+            {"FriendsPanel", tooltipObjects.FriendsPanel},
             {"FibrousLeaves", tooltipObjects.FibrousLeaves},
             {"AlienWater", tooltipObjects.AlienWater},
             {"Biofuel", tooltipObjects.Biofuel},
             {"PurifiedWater", tooltipObjects.PurifiedWater},
+            {"BatteryCore", tooltipObjects.BatteryCore},
             {"Battery", tooltipObjects.Battery},
             {"OxygenTank", tooltipObjects.OxygenTank},
             {"CraftBattery", tooltipObjects.CraftBattery},
+            {"CraftAndUseWater", tooltipObjects.CraftAndUseWater},
+            {"BuildBase", tooltipObjects.BuildBase},
             {"EngineeringSkill", tooltipObjects.EngineeringSkill}
         };
     }
