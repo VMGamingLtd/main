@@ -11,10 +11,11 @@ public class CustomSceneLoader : MonoBehaviour
     private void OnEnable()
     {
 
-        if (false)
+        if (true)
         {
             StartCoroutine(Gaos.Device.Device.Registration.RegisterDevice());
-            StartCoroutine(Gaos.User.User.GuestLogin.Login(OnGuestLoginComplete));
+            LoadSceneAsync();
+            //StartCoroutine(Gaos.User.User.GuestLogin.Login(OnGuestLoginComplete));
         }
         else
         {
