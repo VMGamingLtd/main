@@ -15,10 +15,19 @@ public class CustomSceneLoader : MonoBehaviour
         {
             Ws.Open();
             StartCoroutine(Ws.StartProcessing());
+            Ws.GetInboundQueue().Enqueue("ping");
         }
 
-        StartCoroutine(Gaos.Device.Manager.Registration.RegisterDevice());
-        StartCoroutine(Gaos.User.Manager.GuestLogin.Login(OnGuestLoginComplete));
+        if (false)
+        {
+            StartCoroutine(Gaos.Device.Device.Registration.RegisterDevice());
+            StartCoroutine(Gaos.User.User.GuestLogin.Login(OnGuestLoginComplete));
+        }
+        else
+        {
+            LoadSceneAsync();
+
+        }
     }
     public void LoadSceneAsync()
     {
@@ -33,10 +42,17 @@ public class CustomSceneLoader : MonoBehaviour
 
     public void OnGuestLoginComplete()
     {
-        if (Gaos.User.Manager.GuestLogin.IsLoggedIn == true)
+        if (Gaos.User.User.GuestLogin.IsLoggedIn == true)
         {
-            Debug.Log($"Guest logged in: {Gaos.User.Manager.GuestLogin.GuestLoginResponse.userName}");
-            UserName.userName = Gaos.User.Manager.GuestLogin.GuestLoginResponse.userName; 
+            Debug.Log($"Guest logged in: {Gaos.User.User.GuestLogin.GuestLoginResponse.UserName}");
+            UserName.userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
+
+            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            if (false)
+            {
+                SaveManager.TestSaveGameDataOnServer(this);
+            }
+            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
             LoadSceneAsync();
         }

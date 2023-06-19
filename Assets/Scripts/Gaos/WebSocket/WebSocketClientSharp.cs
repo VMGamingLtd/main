@@ -26,11 +26,11 @@ namespace Gaos.Websocket
 
         }
 
-        public Queue<string> GetMessagesOutbound()
+        public Queue<string> GetOutboundQueue()
         {
             return MessagesOutbound;
         }
-        public Queue<string> GetMessagesInbound()
+        public Queue<string> GetInboundQueue()
         {
             return MessagesInbound;
         }

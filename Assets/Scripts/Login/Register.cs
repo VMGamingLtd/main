@@ -44,8 +44,8 @@ public class Register : MonoBehaviour
 
     private IEnumerator RegisterUser() 
     { 
-        yield return new WaitUntil(() => Gaos.Device.Manager.Registration.IsDeviceRegistered == true);
-        StartCoroutine(Gaos.User.Manager.UserRegister.Register(EmailInputField.text, UserNameInputField.text, PasswordInputField.text, OnUserRegisterComplete));
+        yield return new WaitUntil(() => Gaos.Device.Device.Registration.IsDeviceRegistered == true);
+        StartCoroutine(Gaos.User.User.UserRegister.Register(EmailInputField.text, UserNameInputField.text, PasswordInputField.text, OnUserRegisterComplete));
 
 
     }
@@ -53,8 +53,8 @@ public class Register : MonoBehaviour
     {
         const string METHOD_NAME = "OnUserRegisterComplete()";
 
-        if (Gaos.User.Manager.UserRegister.IsRegistered == true) {
-            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User registered: {Gaos.User.Manager.UserRegister.RegisterResponse.jwt}");
+        if (Gaos.User.User.UserRegister.IsRegistered == true) {
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User registered: {Gaos.User.User.UserRegister.RegisterResponse.Jwt}");
         } 
         else
         {

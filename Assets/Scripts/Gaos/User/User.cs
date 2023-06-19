@@ -1,8 +1,9 @@
 
 using UnityEngine;
 using System.Collections;
+using Newtonsoft.Json;
 
-namespace Gaos.User.Manager
+namespace Gaos.User.User
 {
     public class GuestLogin 
     {
@@ -10,16 +11,17 @@ namespace Gaos.User.Manager
         private static bool TryToLoginAgain = false;
         public static bool IsLoggedIn = false;
 
-        public static Gaos.User.Api.GuestLoginResponse GuestLoginResponse = null;
+        //public static Gaos.User.Api.GuestLoginResponse GuestLoginResponse = null;
+        public static Gaos.Routes.Model.UserJson.GuestLoginResponse GuestLoginResponse = null;
 
         private static IEnumerator Login_()
         {
             const string METHOD_NAME = "Login_()";
 
-            Gaos.User.Api.GuestLoginRequest request = new Gaos.User.Api.GuestLoginRequest();
-            if (Gaos.Device.Manager.Registration.IsDeviceRegistered == true)
+            Gaos.Routes.Model.UserJson.GuestLoginRequest request = new Gaos.Routes.Model.UserJson.GuestLoginRequest();
+            if (Gaos.Device.Device.Registration.IsDeviceRegistered == true)
             {
-                request.deviceId = Gaos.Device.Manager.Registration.DeviceRegisterResponse.deviceId;
+                request.DeviceId = (int)Gaos.Device.Device.Registration.DeviceRegisterResponse.DeviceId;
             }
             else
             {
@@ -28,7 +30,7 @@ namespace Gaos.User.Manager
                 yield break;
             }
 
-            string requestJsonStr = JsonUtility.ToJson(request);
+            string requestJsonStr = JsonConvert.SerializeObject(request);
 
             Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/guestLogin", requestJsonStr);
             yield return apiCall.Call();
@@ -47,10 +49,10 @@ namespace Gaos.User.Manager
                 }
                 else
                 {
-                    GuestLoginResponse = JsonUtility.FromJson<Gaos.User.Api.GuestLoginResponse>(apiCall.ResponseJsonStr);
-                    if (GuestLoginResponse.isError == true)
+                    GuestLoginResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.GuestLoginResponse>(apiCall.ResponseJsonStr);
+                    if (GuestLoginResponse.IsError == true)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest: {GuestLoginResponse.errorMessage}");
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest: {GuestLoginResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -95,6 +97,8 @@ namespace Gaos.User.Manager
             if (IsLoggedIn == true)
             {
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  guest logged in");
+                Gaos.Context.Authentication.SetJWT(GuestLoginResponse.Jwt);
+                Gaos.Context.Authentication.SetUserId(GuestLoginResponse.UserId);
             }
             else
             {
@@ -114,7 +118,7 @@ namespace Gaos.User.Manager
         public readonly static string CLASS_NAME = typeof(UserRegister).Name;
 
         public static bool TryToRegisterAgain = false;
-        public static Gaos.User.Api.RegisterResponse RegisterResponse = null;
+        public static Gaos.Routes.Model.UserJson.RegisterResponse  RegisterResponse = null;
         public static bool IsRegistered = false;
 
         private static IEnumerator Register_(string userName, string email, string password)
@@ -122,15 +126,15 @@ namespace Gaos.User.Manager
             const string METHOD_NAME = "Register_()";
 
 
-            Gaos.User.Api.RegisterRequest request = new Gaos.User.Api.RegisterRequest();
+            Gaos.Routes.Model.UserJson.RegisterRequest request = new Gaos.Routes.Model.UserJson.RegisterRequest();
 
-            request.userName = userName;
-            request.email = email;
-            request.password = password;
+            request.UserName = userName;
+            request.Email = email;
+            request.Password = password;
 
-            if (Gaos.Device.Manager.Registration.IsDeviceRegistered == true)
+            if (Gaos.Device.Device.Registration.IsDeviceRegistered == true)
             {
-                request.deviceId = Gaos.Device.Manager.Registration.DeviceRegisterResponse.deviceId;
+                request.DeviceId = (int)Gaos.Device.Device.Registration.DeviceRegisterResponse.DeviceId;
             }
             else
             {
@@ -139,7 +143,7 @@ namespace Gaos.User.Manager
                 yield break;
             }
 
-            string requestJsonStr = JsonUtility.ToJson(request);
+            string requestJsonStr = JsonConvert.SerializeObject(request);
 
             Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/register", requestJsonStr);
             yield return apiCall.Call();
@@ -158,10 +162,10 @@ namespace Gaos.User.Manager
                 }
                 else
                 {
-                    RegisterResponse = JsonUtility.FromJson<Gaos.User.Api.RegisterResponse>(apiCall.ResponseJsonStr);
-                    if (RegisterResponse.isError == true)
+                    RegisterResponse = JsonUtility.FromJson<Gaos.Routes.Model.UserJson.RegisterResponse>(apiCall.ResponseJsonStr);
+                    if (RegisterResponse.IsError == true)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.errorMessage}");
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -213,7 +217,7 @@ namespace Gaos.User.Manager
         public readonly static string CLASS_NAME = typeof(UserLogin).Name;
 
         public static bool TryToLoginAgain = false;
-        public static Gaos.User.Api.LoginResponse LoginResponse = null;
+        public static Gaos.Routes.Model.UserJson.LoginResponse LoginResponse = null;
         public static bool IsLoggedIn = false;
 
         private static IEnumerator Login_(string userName, string password)
@@ -221,14 +225,14 @@ namespace Gaos.User.Manager
             const string METHOD_NAME = "Login_()";
 
 
-            Gaos.User.Api.LoginRequest request = new Gaos.User.Api.LoginRequest();
+            Gaos.Routes.Model.UserJson.LoginRequest request = new Gaos.Routes.Model.UserJson.LoginRequest();
 
-            request.userName = userName;
-            request.password = password;
+            request.UserName = userName;
+            request.Password = password;
 
-            if (Gaos.Device.Manager.Registration.IsDeviceRegistered == true)
+            if (Gaos.Device.Device.Registration.IsDeviceRegistered == true)
             {
-                request.deviceId = Gaos.Device.Manager.Registration.DeviceRegisterResponse.deviceId;
+                request.DeviceId = (int)Gaos.Device.Device.Registration.DeviceRegisterResponse.DeviceId;
             }
             else
             {
@@ -237,7 +241,7 @@ namespace Gaos.User.Manager
                 yield break;
             }
 
-            string requestJsonStr = JsonUtility.ToJson(request);
+            string requestJsonStr = JsonConvert.SerializeObject(request);
 
             Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/login", requestJsonStr);
             yield return apiCall.Call();
@@ -256,10 +260,10 @@ namespace Gaos.User.Manager
                 }
                 else
                 {
-                    LoginResponse = JsonUtility.FromJson<Gaos.User.Api.LoginResponse>(apiCall.ResponseJsonStr);
-                    if (LoginResponse.isError == true)
+                    LoginResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.LoginResponse>(apiCall.ResponseJsonStr);
+                    if (LoginResponse.IsError == true)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.errorMessage}");
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -289,6 +293,7 @@ namespace Gaos.User.Manager
                     if (IsLoggedIn == true)
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user logged in");
+                        Gaos.Context.Authentication.SetJWT(LoginResponse.Jwt);
                     }
                     else
                     {

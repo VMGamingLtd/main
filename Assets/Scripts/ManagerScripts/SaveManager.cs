@@ -15,7 +15,7 @@ public class SaveManager : MonoBehaviour
     public InventoryManager inventoryManager;
     public RecipeManager recipeManager;
 
-    private class SaveDataModel
+    public class SaveDataModel
     {
         public string title;
         public string username;
@@ -332,6 +332,123 @@ public class SaveManager : MonoBehaviour
         {
             Debug.LogError("JsonManager: Failed to load user data. File not found.");
         }
+
+    }
+
+    public static void TestSaveGameDataOnServer(MonoBehaviour mb)
+    {
+        SaveDataModel saveDataModel = new SaveDataModel();
+        saveDataModel.username = "Jozko Mrkvicka";
+        saveDataModel.title = "captain";
+        saveDataModel.rocksPlanet0 = 10;
+        
+        saveDataModel.basicInventoryObjects = new InventoryItemData[1];
+        saveDataModel.basicInventoryObjects[0] = new InventoryItemData();
+        saveDataModel.basicInventoryObjects[0].itemQuantity = 1;
+        saveDataModel.basicInventoryObjects[0].itemProduct = "hammer";
+
+
+        saveDataModel.processedInventoryObjects = new InventoryItemData[1];
+        saveDataModel.processedInventoryObjects[0] = new InventoryItemData();
+        saveDataModel.processedInventoryObjects[0].itemQuantity = 2;
+        saveDataModel.processedInventoryObjects[0].itemProduct = "hammer2";
+
+        saveDataModel.enhancedInventoryObjects = new InventoryItemData[1];
+        saveDataModel.enhancedInventoryObjects[0] = new InventoryItemData();
+        saveDataModel.enhancedInventoryObjects[0].itemQuantity = 3;
+        saveDataModel.enhancedInventoryObjects[0].itemProduct = "hammer3";
+
+        saveDataModel.assembledInventoryObjects = new InventoryItemData[1];
+        saveDataModel.assembledInventoryObjects[0] = new InventoryItemData();
+        saveDataModel.assembledInventoryObjects[0].itemQuantity = 4;
+        saveDataModel.assembledInventoryObjects[0].itemProduct = "hammer4";
+
+        saveDataModel.recipeTitle = "Recipe1";
+
+        saveDataModel.basicRecipeObjects = new RecipeData[1];
+        saveDataModel.basicRecipeObjects[0] = new RecipeData();
+        saveDataModel.basicRecipeObjects[0].itemProduct = "product1";
+
+        saveDataModel.processedRecipeObjects = new RecipeData[1];
+        saveDataModel.processedRecipeObjects[0] = new RecipeData();
+        saveDataModel.processedRecipeObjects[0].itemProduct = "product2";
+
+        saveDataModel.enhancedRecipeObjects = new RecipeData[1];
+        saveDataModel.enhancedRecipeObjects[0] = new RecipeData();
+        saveDataModel.enhancedRecipeObjects[0].itemProduct = "product3";
+
+        saveDataModel.assembledRecipeObjects = new RecipeData[1];
+        saveDataModel.assembledRecipeObjects[0] = new RecipeData();
+        saveDataModel.assembledRecipeObjects[0].itemProduct = "product4";
+
+
+
+
+        Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest userGameDataSaveRequest= new Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest();
+
+        userGameDataSaveRequest.UserId = Gaos.Context.Authentication.GetUserId();
+        userGameDataSaveRequest.SlotId = 1;
+        userGameDataSaveRequest.GameData = new Gaos.Dbo.Model.GameData();
+        userGameDataSaveRequest.GameData.Username = saveDataModel.username;
+        userGameDataSaveRequest.GameData.Title = saveDataModel.title;
+        userGameDataSaveRequest.GameData.RocksPlanet0 = saveDataModel.rocksPlanet0;
+
+
+        userGameDataSaveRequest.BasicInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
+        userGameDataSaveRequest.BasicInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
+        userGameDataSaveRequest.BasicInventoryObjects[0].ItemQuantity = saveDataModel.basicInventoryObjects[0].itemQuantity;
+        userGameDataSaveRequest.BasicInventoryObjects[0].ItemProduct = saveDataModel.basicInventoryObjects[0].itemProduct;
+
+        userGameDataSaveRequest.ProcessedInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
+        userGameDataSaveRequest.ProcessedInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
+        userGameDataSaveRequest.ProcessedInventoryObjects[0].ItemQuantity = saveDataModel.processedInventoryObjects[0].itemQuantity;
+        userGameDataSaveRequest.ProcessedInventoryObjects[0].ItemProduct = saveDataModel.processedInventoryObjects[0].itemProduct;
+
+        userGameDataSaveRequest.RefinedInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
+        userGameDataSaveRequest.RefinedInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
+        userGameDataSaveRequest.RefinedInventoryObjects[0].ItemQuantity = saveDataModel.enhancedInventoryObjects[0].itemQuantity;
+        userGameDataSaveRequest.RefinedInventoryObjects[0].ItemProduct = saveDataModel.enhancedInventoryObjects[0].itemProduct;
+
+        userGameDataSaveRequest.AssembledInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
+        userGameDataSaveRequest.AssembledInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
+        userGameDataSaveRequest.AssembledInventoryObjects[0].ItemQuantity = saveDataModel.assembledInventoryObjects[0].itemQuantity;
+        userGameDataSaveRequest.AssembledInventoryObjects[0].ItemProduct = saveDataModel.assembledInventoryObjects[0].itemProduct;
+
+        userGameDataSaveRequest.GameData.RecipeTitle = saveDataModel.recipeTitle;
+
+
+        userGameDataSaveRequest.BasicRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
+        userGameDataSaveRequest.BasicRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
+        userGameDataSaveRequest.BasicRecipeObjects[0].ItemProduct = saveDataModel.basicRecipeObjects[0].itemProduct;
+
+        userGameDataSaveRequest.ProcessedRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
+        userGameDataSaveRequest.ProcessedRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
+        userGameDataSaveRequest.ProcessedRecipeObjects[0].ItemProduct = saveDataModel.processedRecipeObjects[0].itemProduct;
+
+        userGameDataSaveRequest.RefinedRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
+        userGameDataSaveRequest.RefinedRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
+        userGameDataSaveRequest.RefinedRecipeObjects[0].ItemProduct = saveDataModel.enhancedRecipeObjects[0].itemProduct;
+
+        userGameDataSaveRequest.AssembledRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
+        userGameDataSaveRequest.AssembledRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
+        userGameDataSaveRequest.AssembledRecipeObjects[0].ItemProduct = saveDataModel.assembledRecipeObjects[0].itemProduct;
+
+        mb.StartCoroutine(Gaos.GameData.UserGameDataSave.Save(1,userGameDataSaveRequest, OnUserGameDataSaveComplete, mb));
+
+    }
+
+    public static void OnUserGameDataSaveComplete(Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response, object mb)
+    {
+        string responseString = JsonConvert.SerializeObject(response);
+        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000: OnUserGameDataSaveComplete(): {responseString}");
+
+
+        ((MonoBehaviour)mb).StartCoroutine(Gaos.GameData.UserGameDataGet.Get(1,OnUserGameDataGetComplete, mb));
+    }
+    public static void OnUserGameDataGetComplete(Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response, object obj)
+    {
+        string responseString = JsonConvert.SerializeObject(response);
+        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3100: OnUserGameDataGetComplete(): {responseString}");
 
     }
 }

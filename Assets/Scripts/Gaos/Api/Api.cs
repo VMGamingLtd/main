@@ -50,6 +50,22 @@ namespace Gaos.Api
         
     }
 
+    public class Common
+    {
+        public static void SetGaosHeaders(UnityWebRequest wr)
+        {
+            string jwt = Gaos.Context.Authentication.GetJWT();
+            if (jwt != null && jwt.Trim() != "")
+            {
+                wr.SetRequestHeader("Authorization", $"Bearer {jwt}");
+            }
+            wr.SetRequestHeader("X-Gao-DeviceId", $"{Gaos.Context.Device.GetDeviceId()}");
+            wr.SetRequestHeader("X-Gao-DeviceIdentification", $"{SystemInfo.deviceUniqueIdentifier}");
+            wr.SetRequestHeader("X-Gao-DeviceIdentification", $"{Application.platform.ToString()}");
+
+        }
+    }
+
     public class Configuration
     {
         //public static Configuration Config = new Configuration("https://vmgaming.com/gaos");
@@ -74,106 +90,6 @@ namespace Gaos.Api
             return cfg;
         }
 
-
-    }
-
-    public class HttpGetJsonCall
-    {
-        private static readonly string CLASS_NAME = "HttpGetJsonCall";
-        private string Url;
-        private UnityWebRequest LastWebRequest;
-        private UrlQuery Query;
-
-        public string ResponseJsonStr;
-        public bool IsResponseError = false;
-        public bool IsResponseTimeout = false;
-
-
-        private Configuration Config = Configuration.Config.clone();
-
-
-        HttpGetJsonCall(string url)
-        {
-            this.Url = url;
-            this.Query = new UrlQuery();
-        }
-        public void AddQueryParam(string key, string val)
-        {
-            this.Query.Add(key, val);
-        }
-
-        private UnityWebRequest makeWebRequest()
-        {
-            var wr = new UnityWebRequest();
-
-            string url;
-            if (this.Query.Count > 0)
-            {
-                url = $"{this.Url}?{this.Query.ToString()}";
-            }
-            else
-            {
-                url = $"{this.Url}";
-            }
-            wr.url = url;
-
-            wr.method = UnityWebRequest.kHttpVerbGET;
-            wr.downloadHandler = new DownloadHandlerBuffer();
-
-            wr.useHttpContinue = false;
-            wr.redirectLimit = 0;
-            wr.timeout = this.Config.RequestTimeoutSeconds;
-
-            return wr;
-        }
-
-        private IEnumerator Call_()
-        {
-            string METHOD = "Call_()";
-
-            var wr = this.makeWebRequest();
-            this.LastWebRequest = wr;
-
-            yield return wr.SendWebRequest();
-
-            if (wr.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
-                this.IsResponseError = true;
-                this.IsResponseTimeout = wr.error.Contains("timeout");
-
-                string contentType = wr.GetResponseHeader("Content-Type");
-                if (contentType != null && contentType.Contains("json"))
-                {
-                    this.ResponseJsonStr = wr.downloadHandler.text;
-                }
-            }
-            else
-            {
-                string contentType = wr.GetResponseHeader("Content-Type");
-                if (contentType != null && contentType.Contains("json"))
-                {
-                    this.ResponseJsonStr = wr.downloadHandler.text;
-                    this.IsResponseError = false;
-                }
-                else
-                {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR:  response content type is not json, url: {wr.url}");
-                    this.IsResponseError = true;
-
-                }
-
-            }
-
-
-        }
-
-        public IEnumerator Call()
-        {
-            var requestRetryCount = this.Config.RequestRetryCount;
-            var requestRetryDelaySeconds = this.Config.RequestRetryDelaySeconds;
-            yield return this.Call_();
-        }
 
     }
 
@@ -219,6 +135,8 @@ namespace Gaos.Api
                 url = $"{this.Url}";
             }
             wr.url = url;
+
+            Common.SetGaosHeaders(wr);
 
             Byte[] payload = Encoding.UTF8.GetBytes(this.RequestJsonStr);
             UploadHandler uploadHandler = new UploadHandlerRaw(payload);
@@ -268,6 +186,9 @@ namespace Gaos.Api
                 if (contenType != null && contenType.Contains("json"))
                 {
                     this.ResponseJsonStr = wr.downloadHandler.text;
+                    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                    Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ResponseJsonStr: " + this.ResponseJsonStr);
+                    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                     this.IsResponseError = false;
 
                 }
@@ -332,10 +253,12 @@ namespace Gaos.Api
             {
                 this.ResponseJsonStr = http.ResponseJsonStr;
                 this.IsResponseError = false;
+                this.IsResponseTimeout = http.IsResponseTimeout;
             }
 
         }
     }
+
 
 
 }

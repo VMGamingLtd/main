@@ -31,14 +31,14 @@ public class Login : MonoBehaviour
     private IEnumerator LoginUser()
     {
         Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000");
-        yield return new WaitUntil(() => Gaos.Device.Manager.Registration.IsDeviceRegistered == true);
-        StartCoroutine(Gaos.User.Manager.UserLogin.Login( UserNameInputField.text, PasswordInputField.text, OnUserLoginComplete));
+        yield return new WaitUntil(() => Gaos.Device.Device.Registration.IsDeviceRegistered == true);
+        StartCoroutine(Gaos.User.User.UserLogin.Login( UserNameInputField.text, PasswordInputField.text, OnUserLoginComplete));
     }
 
     private void OnUserLoginComplete()
     {
         const string METHOD_NAME = "OnUserLoginComplete()";
-        if (Gaos.User.Manager.UserLogin.IsLoggedIn)
+        if (Gaos.User.User.UserLogin.IsLoggedIn)
         {
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User login successful");
         }
