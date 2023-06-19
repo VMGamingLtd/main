@@ -28,7 +28,6 @@ public class AlphaPingPong : MonoBehaviour
 
         if (normalizedTime >= 1f)
         {
-            Debug.Log("going back");
             currentTime = 0f;
             float tempValue = InitialValue;
             InitialValue = EndValue;
