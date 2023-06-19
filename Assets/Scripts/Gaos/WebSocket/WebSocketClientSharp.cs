@@ -2,10 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace Gaos.Websocket
+namespace Gaos.WebSocket
 {
 
-    public class WebSocketClientSharp:  Gaos.Websocket.IWebSocketClient
+    public class WebSocketClientSharp:  Gaos.WebSocket.IWebSocketClient
     {
         public readonly static string CLASS_NAME = typeof(WebSocketClientSharp).Name;
 
@@ -78,7 +78,6 @@ namespace Gaos.Websocket
                 Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket closed");
                 IsConnected = false;
 
-                WebSocket.Connect();
             };
 
             WebSocket.Connect();

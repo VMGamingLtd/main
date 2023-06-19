@@ -47,6 +47,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] batteryCoreTexts;
     public TextMeshProUGUI[] planetStatsTexts;
 
+    public static Gaos.WebSocket.IWebSocketClient Ws =  Gaos.WebSocket.WebSocketClientFactory.makeWebSocketClient();
+
     public void OnEnable()
     {
         if (StartNewGame.loadingNewGame == false){
@@ -54,6 +56,13 @@ public class CoroutineManager : MonoBehaviour
         }
         else if (StartNewGame.loadingNewGame == true) {
             StartCoroutine(ResetNewGame());
+        }
+
+        if (false)
+        {
+            Ws.Open();
+            StartCoroutine(Ws.StartProcessing());
+            Ws.GetOutboundQueue().Enqueue("ping");
         }
     }
 
@@ -656,4 +665,5 @@ public class CoroutineManager : MonoBehaviour
         imageToFill.fillAmount = 0f;
         yield return null;
     }
+
 }

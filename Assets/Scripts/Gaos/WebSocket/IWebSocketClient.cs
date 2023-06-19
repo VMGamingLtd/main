@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 
-namespace Gaos.Websocket
+namespace Gaos.WebSocket
 {
     public interface IWebSocketClient
     {

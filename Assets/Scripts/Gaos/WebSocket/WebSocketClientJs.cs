@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-namespace Gaos.Websocket
+namespace Gaos.WebSocket
 {
-    public class WebSocketClientJs: MonoBehaviour, Gaos.Websocket.IWebSocketClient
+    public class WebSocketClientJs: MonoBehaviour, Gaos.WebSocket.IWebSocketClient
     {
         public readonly static string CLASS_NAME = typeof(WebSocketClientJs).Name;
 
@@ -41,7 +41,6 @@ namespace Gaos.Websocket
         private void OnClose()
         {
             IsConnected = false;
-            Open();
         }
 
         private void OnError(string errorStr)

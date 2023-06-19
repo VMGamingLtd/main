@@ -5,18 +5,11 @@ using System.Collections;
 public class CustomSceneLoader : MonoBehaviour
 {
     public string sceneName;
-    public static Gaos.Websocket.WebSocketClientSharp Ws = new Gaos.Websocket.WebSocketClientSharp();
+    public static Gaos.WebSocket.WebSocketClientSharp Ws = new Gaos.WebSocket.WebSocketClientSharp();
 
 
     private void OnEnable()
     {
-
-        if (false)
-        {
-            Ws.Open();
-            StartCoroutine(Ws.StartProcessing());
-            Ws.GetInboundQueue().Enqueue("ping");
-        }
 
         if (false)
         {
