@@ -17,6 +17,11 @@ public class DaylightSemicircle : MonoBehaviour
         StartCoroutine(UpdateSunIconPosition());
         StartCoroutine(UpdateFillAmount());
     }
+    public void RunAllCoroutines()
+    {
+        StartCoroutine(UpdateSunIconPosition());
+        StartCoroutine(UpdateFillAmount());
+    }
 
     private IEnumerator UpdateSunIconPosition()
     {
