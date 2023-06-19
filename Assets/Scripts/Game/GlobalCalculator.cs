@@ -20,6 +20,7 @@ public class GlobalCalculator : MonoBehaviour
 
     public SaveManager saveManager;
     public WeatherManager weatherManager;
+    public DaylightSemicircle daylightSemicircle;
 
     // current date display
     public TextMeshProUGUI DateDisplay;
@@ -53,6 +54,7 @@ public class GlobalCalculator : MonoBehaviour
                     saveManager.SaveToJsonFile();
                     weatherManager.SetUVAmount();
                     StartCoroutine(rotateImage.RotateOverTime(0.5f));
+                    daylightSemicircle.RunAllCoroutines();
                 }
                 if (minutes > 59)
                 {
