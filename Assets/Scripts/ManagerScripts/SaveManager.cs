@@ -40,6 +40,7 @@ public class SaveManager : MonoBehaviour
         public int fossilFuelsPlanet0;
         public int rareElementsPlanet0;
         public int gemstonesPlanet0;
+        public string planet0WindStatus;
         public string playerOxygen;
         public string playerWater;
         public string playerEnergy;
@@ -130,6 +131,7 @@ public class SaveManager : MonoBehaviour
         currentSaveData.showRecipeClass = RecipeManager.ShowRecipeClass;
         currentSaveData.planet0Name = Planet0Name.planet0Name;
         currentSaveData.atmospherePlanet0 = Planet0Buildings.AtmospherePlanet0;
+        currentSaveData.planet0WindStatus = WindManager.Planet0WindStatus;
         currentSaveData.planet0UV = WeatherManager.planet0UV;
         currentSaveData.planet0Weather = WeatherManager.planet0Weather;
         currentSaveData.agriLandPlanet0 = Planet0Buildings.AgriLandPlanet0;
@@ -341,7 +343,7 @@ public class SaveManager : MonoBehaviour
         saveDataModel.username = "Jozko Mrkvicka";
         saveDataModel.title = "captain";
         saveDataModel.rocksPlanet0 = 10;
-        
+
         saveDataModel.basicInventoryObjects = new InventoryItemData[1];
         saveDataModel.basicInventoryObjects[0] = new InventoryItemData();
         saveDataModel.basicInventoryObjects[0].itemQuantity = 1;
