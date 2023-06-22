@@ -47,7 +47,6 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] batteryCoreTexts;
     public TextMeshProUGUI[] planetStatsTexts;
 
-    public static Gaos.WebSocket.IWebSocketClient Ws =  Gaos.WebSocket.WebSocketClientFactory.makeWebSocketClient();
 
     public void OnEnable()
     {
@@ -58,12 +57,14 @@ public class CoroutineManager : MonoBehaviour
             StartCoroutine(ResetNewGame());
         }
 
+        /*
         if (false)
         {
             Ws.Open();
             StartCoroutine(Ws.StartProcessing());
             Ws.GetOutboundQueue().Enqueue("ping");
         }
+        */
     }
 
     public void StopRunningCoroutine()
