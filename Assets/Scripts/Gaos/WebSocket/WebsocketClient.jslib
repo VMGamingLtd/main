@@ -65,6 +65,6 @@ mergeInto(LibraryManager.library, {
 
   WebSocketOnMessage: GAO_WebSocketOnMessage,
 
-  WebSockeSend: GAO_WebSockeSend,
+  WebSockeSend: GAO_WebSocketSend,
 
 });
