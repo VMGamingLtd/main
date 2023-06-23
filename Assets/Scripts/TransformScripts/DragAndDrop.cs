@@ -16,6 +16,9 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     private Transform emptyButton;
     public EquipmentManager equipmentManager;
     public MessageObjects messageObjects;
+    public AudioSource audioSource;
+    public AudioClip audioClip;
+
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -124,6 +127,11 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
                     objectRectTransform.SetAsLastSibling();
                     objectRectTransform.localPosition = Vector3.zero;
                     equipmentManager.CheckForEquip();
+                    if (audioClip != null && audioSource != null)
+                    {
+                        Debug.Log("bingo");
+                        audioSource.PlayOneShot(audioClip);
+                    }
                 }
                 else
                 {
