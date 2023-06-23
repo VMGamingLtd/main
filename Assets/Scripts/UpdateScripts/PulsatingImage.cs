@@ -25,10 +25,6 @@ public class PulsatingImage : MonoBehaviour
         {
             if (targetObject.activeSelf)
             {
-                return;
-            }
-            else
-            {
                 timer += Time.deltaTime * pulseSpeed;
                 float currentAlpha = Mathf.Lerp(minAlpha, maxAlpha, Mathf.Sin(timer));
                 Color currentColor = originalColor;

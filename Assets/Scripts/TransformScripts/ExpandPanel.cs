@@ -7,8 +7,8 @@ public class ExpandPanel : MonoBehaviour
     public float targetWidth = 0f;
     public float expandDuration = 0.5f;
     public float currentWidth;
-    public GameObject objectToDeactivate;
-    public GameObject objectToActivate;
+    public GameObject[] objectsToDeactivate;
+    public GameObject[] objectsToActivate;
 
     public void StartExpand()
     {
@@ -18,6 +18,14 @@ public class ExpandPanel : MonoBehaviour
     public IEnumerator ExpandWidthCoroutine()
     {
         float timer = 0f;
+
+        if (objectsToDeactivate != null)
+        {
+            foreach (GameObject obj in objectsToDeactivate)
+            {
+                obj.SetActive(false);
+            }
+        }
 
         while (timer < expandDuration)
         {
@@ -34,13 +42,12 @@ public class ExpandPanel : MonoBehaviour
         // Set the final width
         rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, targetWidth);
 
-        if (objectToDeactivate != null)
+        if (objectsToActivate != null)
         {
-            objectToDeactivate.SetActive(false);
-        }
-        if (objectToActivate != null)
-        {
-            objectToActivate.SetActive(true);
+            foreach (GameObject obj in objectsToActivate)
+            {
+                obj.SetActive(true);
+            }
         }
     }
 }
