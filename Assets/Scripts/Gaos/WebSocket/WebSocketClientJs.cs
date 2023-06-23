@@ -33,23 +33,23 @@ namespace Gaos.WebSocket
         [DllImport("__Internal")]
         private static extern void WebSocketSend(int ws, string data);
 
-        private void OnOpen()
+        public void OnOpen()
         {
             IsConnected = true;
         }
 
-        private void OnClose()
+        public void OnClose()
         {
             IsConnected = false;
         }
 
-        private void OnError(string errorStr)
+        public void OnError(string errorStr)
         {
             const string METHOD_NAME = "OnError()";
             Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {errorStr}");
         }
 
-        private void OnMessage(string data)
+        public void OnMessage(string data)
         {
             MessagesInbound.Enqueue(data);
         }

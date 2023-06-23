@@ -5,7 +5,7 @@ using System.Collections;
 namespace Gaos.WebSocket
 {
 
-    public class WebSocketClientSharp:  Gaos.WebSocket.IWebSocketClient
+    public class WebSocketClientSharp:  MonoBehaviour, Gaos.WebSocket.IWebSocketClient
     {
         public readonly static string CLASS_NAME = typeof(WebSocketClientSharp).Name;
 
