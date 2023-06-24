@@ -12,9 +12,9 @@ namespace Gaos.GameData
         private readonly static string CLASS_NAME = typeof(UserGameDataGet).Name;
 
 
-        public delegate void OnUserGameDataGetComplete(UserGameDataGetResponse response, object obj = null);
+        public delegate void OnUserGameDataGetComplete(UserGameDataGetResponse response);
 
-        public static IEnumerator Get(int slotId, OnUserGameDataGetComplete onUserGameDataGetComplete, object obj = null)
+        public static IEnumerator Get(int slotId, OnUserGameDataGetComplete onUserGameDataGetComplete)
         {
             const string METHOD_NAME = "Get()";
 
@@ -36,7 +36,7 @@ namespace Gaos.GameData
             else
             {
                 Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse>(apiCall.ResponseJsonStr);
-                onUserGameDataGetComplete(response, obj);
+                onUserGameDataGetComplete(response);
             }
 
         }
@@ -47,9 +47,9 @@ namespace Gaos.GameData
         private readonly static string CLASS_NAME = typeof(UserGameDataSave).Name;
 
 
-        public delegate void OnUserGameDataSaveComplete(UserGameDataSaveResponse response, object obj = null);
+        public delegate void OnUserGameDataSaveComplete(UserGameDataSaveResponse response);
 
-        public static IEnumerator Save(int slotId, Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete, object obj = null)
+        public static IEnumerator Save(int slotId, Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete)
         {
             const string METHOD_NAME = "Save()";
 
@@ -70,7 +70,7 @@ namespace Gaos.GameData
             else
             {
                 Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse>(apiCall.ResponseJsonStr);
-                onUserGameDataSaveComplete(response, obj);
+                onUserGameDataSaveComplete(response);
             }
 
         }

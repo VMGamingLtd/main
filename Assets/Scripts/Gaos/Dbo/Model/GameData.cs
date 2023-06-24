@@ -21,6 +21,9 @@ namespace Gaos.Dbo.Model
         public string? ShowRecipeClass;
         public string? Planet0Name;
         public int AtmospherePlanet0;
+        public string? Planet0WindStatus;
+        public int Planet0UV;
+        public string? Planet0Weather;
         public int AgriLandPlanet0;
         public int ForestsPlanet0;
         public int WaterPlanet0;
@@ -43,9 +46,11 @@ namespace Gaos.Dbo.Model
         public int Minutes;
         public int Seconds;
         public bool RegisteredUser;
+        public bool FirstGoal;
+        public bool SecondGoal;
+        public bool ThirdGoal;
         public bool IsPlayerInBiologicalBiome;
         public float Credits;
-        public string? InventoryTitle;
         public string? RecipeTitle;
     }
 }

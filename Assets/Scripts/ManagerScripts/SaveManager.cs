@@ -119,7 +119,6 @@ public class SaveManager : MonoBehaviour
 
     public void SaveToJsonFile()
     {
-        currentSaveData.title = "Player info";
         currentSaveData.username = UserName.userName;
         currentSaveData.password = Password.password;
         currentSaveData.email = Email.email;
@@ -162,8 +161,6 @@ public class SaveManager : MonoBehaviour
         currentSaveData.isPlayerInBiologicalBiome = GlobalCalculator.isPlayerInBiologicalBiome;
         currentSaveData.credits = Credits.credits;
 
-        currentSaveData.inventoryTitle = "Inventory";
-
         // Access the itemArrays dictionary through the inventoryManager reference
         Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;
 
@@ -199,7 +196,7 @@ public class SaveManager : MonoBehaviour
             itemData.itemProduct = itemDataComponent.itemProduct;
             itemData.itemClass = itemDataComponent.itemClass;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
-            itemData.OxygenTimer = itemDataComponent.WaterTimer;
+            itemData.WaterTimer = itemDataComponent.WaterTimer;
 
             currentSaveData.processedInventoryObjects[i] = itemData;
         }
@@ -235,12 +232,11 @@ public class SaveManager : MonoBehaviour
             itemData.itemClass = itemDataComponent.itemClass;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
             itemData.OxygenTimer = itemDataComponent.OxygenTimer;
-            itemData.OxygenTimer = itemDataComponent.EnergyTimer;
-            itemData.OxygenTimer = itemDataComponent.WaterTimer;
+            itemData.EnergyTimer = itemDataComponent.EnergyTimer;
+            itemData.WaterTimer = itemDataComponent.WaterTimer;
 
             currentSaveData.assembledInventoryObjects[i] = itemData;
         }
-        currentSaveData.recipeTitle = "Recipes";
 
         // Access the itemArrays dictionary through the inventoryManager reference
         Dictionary<string, GameObject[]> itemRecipeArrays = recipeManager.itemRecipeArrays;
@@ -337,117 +333,213 @@ public class SaveManager : MonoBehaviour
 
     }
 
-    public static void TestSaveGameDataOnServer(MonoBehaviour mb)
+    public void TestSaveGameDataOnServer()
     {
-        SaveDataModel saveDataModel = new SaveDataModel();
-        saveDataModel.username = "Jozko Mrkvicka";
-        saveDataModel.title = "captain";
-        saveDataModel.rocksPlanet0 = 10;
+        int slotId = 1;
 
-        saveDataModel.basicInventoryObjects = new InventoryItemData[1];
-        saveDataModel.basicInventoryObjects[0] = new InventoryItemData();
-        saveDataModel.basicInventoryObjects[0].itemQuantity = 1;
-        saveDataModel.basicInventoryObjects[0].itemProduct = "hammer";
-
-
-        saveDataModel.processedInventoryObjects = new InventoryItemData[1];
-        saveDataModel.processedInventoryObjects[0] = new InventoryItemData();
-        saveDataModel.processedInventoryObjects[0].itemQuantity = 2;
-        saveDataModel.processedInventoryObjects[0].itemProduct = "hammer2";
-
-        saveDataModel.enhancedInventoryObjects = new InventoryItemData[1];
-        saveDataModel.enhancedInventoryObjects[0] = new InventoryItemData();
-        saveDataModel.enhancedInventoryObjects[0].itemQuantity = 3;
-        saveDataModel.enhancedInventoryObjects[0].itemProduct = "hammer3";
-
-        saveDataModel.assembledInventoryObjects = new InventoryItemData[1];
-        saveDataModel.assembledInventoryObjects[0] = new InventoryItemData();
-        saveDataModel.assembledInventoryObjects[0].itemQuantity = 4;
-        saveDataModel.assembledInventoryObjects[0].itemProduct = "hammer4";
-
-        saveDataModel.recipeTitle = "Recipe1";
-
-        saveDataModel.basicRecipeObjects = new RecipeData[1];
-        saveDataModel.basicRecipeObjects[0] = new RecipeData();
-        saveDataModel.basicRecipeObjects[0].itemProduct = "product1";
-
-        saveDataModel.processedRecipeObjects = new RecipeData[1];
-        saveDataModel.processedRecipeObjects[0] = new RecipeData();
-        saveDataModel.processedRecipeObjects[0].itemProduct = "product2";
-
-        saveDataModel.enhancedRecipeObjects = new RecipeData[1];
-        saveDataModel.enhancedRecipeObjects[0] = new RecipeData();
-        saveDataModel.enhancedRecipeObjects[0].itemProduct = "product3";
-
-        saveDataModel.assembledRecipeObjects = new RecipeData[1];
-        saveDataModel.assembledRecipeObjects[0] = new RecipeData();
-        saveDataModel.assembledRecipeObjects[0].itemProduct = "product4";
-
-
-
+        // fill in game data
 
         Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest userGameDataSaveRequest= new Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest();
 
         userGameDataSaveRequest.UserId = Gaos.Context.Authentication.GetUserId();
-        userGameDataSaveRequest.SlotId = 1;
+        userGameDataSaveRequest.SlotId = slotId;
         userGameDataSaveRequest.GameData = new Gaos.Dbo.Model.GameData();
-        userGameDataSaveRequest.GameData.Username = saveDataModel.username;
-        userGameDataSaveRequest.GameData.Title = saveDataModel.title;
-        userGameDataSaveRequest.GameData.RocksPlanet0 = saveDataModel.rocksPlanet0;
+        userGameDataSaveRequest.GameData.Username = UserName.userName;
+        userGameDataSaveRequest.GameData.Password = Password.password;
+        userGameDataSaveRequest.GameData.Email = Email.email;
+        userGameDataSaveRequest.GameData.ShowItemProducts = InventoryManager.ShowItemProducts;
+        userGameDataSaveRequest.GameData.ShowRecipeProducts = RecipeManager.ShowRecipeProducts;
+        userGameDataSaveRequest.GameData.ShowItemTypes = InventoryManager.ShowItemTypes;
+        userGameDataSaveRequest.GameData.ShowRecipeTypes = RecipeManager.ShowRecipeTypes;
+        userGameDataSaveRequest.GameData.ShowItemClass = InventoryManager.ShowItemClass;
+        userGameDataSaveRequest.GameData.ShowRecipeClass = RecipeManager.ShowRecipeClass;
+        userGameDataSaveRequest.GameData.Planet0Name = Planet0Name.planet0Name;
+        userGameDataSaveRequest.GameData.AtmospherePlanet0 = Planet0Buildings.AtmospherePlanet0;
+        userGameDataSaveRequest.GameData.Planet0WindStatus = WindManager.Planet0WindStatus; // string
+        userGameDataSaveRequest.GameData.Planet0UV = WeatherManager.planet0UV; // int
+        userGameDataSaveRequest.GameData.Planet0Weather = WeatherManager.planet0Weather; // string
+        userGameDataSaveRequest.GameData.AgriLandPlanet0 = Planet0Buildings.AgriLandPlanet0;
+        userGameDataSaveRequest.GameData.ForestsPlanet0 = Planet0Buildings.ForestsPlanet0;
+        userGameDataSaveRequest.GameData.WaterPlanet0 = Planet0Buildings.WaterPlanet0;
+        userGameDataSaveRequest.GameData.FisheriesPlanet0 = Planet0Buildings.FisheriesPlanet0;
+        userGameDataSaveRequest.GameData.MineralsPlanet0 = Planet0Buildings.MineralsPlanet0;
+        userGameDataSaveRequest.GameData.RocksPlanet0 = Planet0Buildings.RocksPlanet0;
+        userGameDataSaveRequest.GameData.FossilFuelsPlanet0 = Planet0Buildings.FossilFuelsPlanet0;
+        userGameDataSaveRequest.GameData.RareElementsPlanet0 = Planet0Buildings.RareElementsPlanet0;
+        userGameDataSaveRequest.GameData.GemstonesPlanet0 = Planet0Buildings.GemstonesPlanet0;
+        userGameDataSaveRequest.GameData.PlayerLevel = Level.PlayerLevel;
+        userGameDataSaveRequest.GameData.PlayerCurrentExp = Level.PlayerCurrentExp;
+        userGameDataSaveRequest.GameData.PlayerMaxExp = Level.PlayerMaxExp;
+        userGameDataSaveRequest.GameData.SkillPoints = Level.SkillPoints;
+        userGameDataSaveRequest.GameData.StatPoints = Level.StatPoints;
+        userGameDataSaveRequest.GameData.Hours = GlobalCalculator.hours;
+        userGameDataSaveRequest.GameData.Minutes = GlobalCalculator.minutes;
+        userGameDataSaveRequest.GameData.Seconds = GlobalCalculator.seconds;
+        userGameDataSaveRequest.GameData.PlayerOxygen = PlayerResources.PlayerOxygen;
+        userGameDataSaveRequest.GameData.PlayerWater = PlayerResources.PlayerWater;
+        userGameDataSaveRequest.GameData.PlayerEnergy = PlayerResources.PlayerEnergy;
+        userGameDataSaveRequest.GameData.PlayerHunger = PlayerResources.PlayerHunger;
+        userGameDataSaveRequest.GameData.RegisteredUser = CoroutineManager.registeredUser;
+        userGameDataSaveRequest.GameData.FirstGoal = GoalManager.firstGoal; // bool
+        userGameDataSaveRequest.GameData.SecondGoal = GoalManager.secondGoal; // bool
+        userGameDataSaveRequest.GameData.ThirdGoal = GoalManager.thirdGoal; // bool
+        userGameDataSaveRequest.GameData.IsPlayerInBiologicalBiome = GlobalCalculator.isPlayerInBiologicalBiome;
+        userGameDataSaveRequest.GameData.Credits = Credits.credits;
+
+        // fill in inventories
+
+        Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;
+
+        userGameDataSaveRequest.BasicInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[itemArrays["BASIC"].Length];
+
+        for (int i = 0; i < itemArrays["BASIC"].Length; i++)
+        {
+            GameObject itemGameObject = itemArrays["BASIC"][i];
+            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
 
 
-        userGameDataSaveRequest.BasicInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
-        userGameDataSaveRequest.BasicInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
-        userGameDataSaveRequest.BasicInventoryObjects[0].ItemQuantity = saveDataModel.basicInventoryObjects[0].itemQuantity;
-        userGameDataSaveRequest.BasicInventoryObjects[0].ItemProduct = saveDataModel.basicInventoryObjects[0].itemProduct;
+            userGameDataSaveRequest.BasicInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
-        userGameDataSaveRequest.ProcessedInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
-        userGameDataSaveRequest.ProcessedInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
-        userGameDataSaveRequest.ProcessedInventoryObjects[0].ItemQuantity = saveDataModel.processedInventoryObjects[0].itemQuantity;
-        userGameDataSaveRequest.ProcessedInventoryObjects[0].ItemProduct = saveDataModel.processedInventoryObjects[0].itemProduct;
+            userGameDataSaveRequest.BasicInventoryObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.BasicInventoryObjects[i].ItemType = itemDataComponent.itemType;
+            userGameDataSaveRequest.BasicInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
+            userGameDataSaveRequest.BasicInventoryObjects[i].ItemClass = itemDataComponent.itemClass;
+            userGameDataSaveRequest.BasicInventoryObjects[i].ItemQuantity =itemDataComponent.itemQuantity;
+        }
 
-        userGameDataSaveRequest.RefinedInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
-        userGameDataSaveRequest.RefinedInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
-        userGameDataSaveRequest.RefinedInventoryObjects[0].ItemQuantity = saveDataModel.enhancedInventoryObjects[0].itemQuantity;
-        userGameDataSaveRequest.RefinedInventoryObjects[0].ItemProduct = saveDataModel.enhancedInventoryObjects[0].itemProduct;
+        userGameDataSaveRequest.ProcessedInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[itemArrays["PROCESSED"].Length];
 
-        userGameDataSaveRequest.AssembledInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[1];
-        userGameDataSaveRequest.AssembledInventoryObjects[0] = new Gaos.Dbo.Model.InventoryItemData();
-        userGameDataSaveRequest.AssembledInventoryObjects[0].ItemQuantity = saveDataModel.assembledInventoryObjects[0].itemQuantity;
-        userGameDataSaveRequest.AssembledInventoryObjects[0].ItemProduct = saveDataModel.assembledInventoryObjects[0].itemProduct;
+        for (int i = 0; i < itemArrays["PROCESSED"].Length; i++)
+        {
+            GameObject itemGameObject = itemArrays["PROCESSED"][i];
+            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-        userGameDataSaveRequest.GameData.RecipeTitle = saveDataModel.recipeTitle;
+            userGameDataSaveRequest.ProcessedInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
+
+            userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemType = itemDataComponent.itemType;
+            userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
+            userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemClass = itemDataComponent.itemClass;
+            userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemQuantity =itemDataComponent.itemQuantity;
+            userGameDataSaveRequest.BasicInventoryObjects[i].OxygenTimer = itemDataComponent.OxygenTimer;
+        }
+
+        userGameDataSaveRequest.EnhancedInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[itemArrays["ENHANCED"].Length];
+
+        for (int i = 0; i < itemArrays["ENHANCED"].Length; i++)
+        {
+
+            GameObject itemGameObject = itemArrays["ENHANCED"][i];
+            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemType = itemDataComponent.itemType;
+            userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
+            userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemClass = itemDataComponent.itemClass;
+            userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemQuantity =itemDataComponent.itemQuantity;
+        }
+
+        userGameDataSaveRequest.AssembledInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[itemArrays["ASSEMBLED"].Length];
+
+        for (int i = 0; i < itemArrays["ASSEMBLED"].Length; i++)
+        {
+            GameObject itemGameObject = itemArrays["ASSEMBLED"][i];
+            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            userGameDataSaveRequest.AssembledInventoryObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].ItemType = itemDataComponent.itemType;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].ItemClass = itemDataComponent.itemClass;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].ItemQuantity =itemDataComponent.itemQuantity;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].OxygenTimer = itemDataComponent.OxygenTimer;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].WaterTimer = itemDataComponent.WaterTimer;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].EnergyTimer = itemDataComponent.EnergyTimer;
+        }
+        // recipeTitle treba vyhodit!
+        //userGameDataSaveRequest.GameData.RecipeTitle = saveDataModel.recipeTitle;
 
 
-        userGameDataSaveRequest.BasicRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
-        userGameDataSaveRequest.BasicRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
-        userGameDataSaveRequest.BasicRecipeObjects[0].ItemProduct = saveDataModel.basicRecipeObjects[0].itemProduct;
+        // fill in recipes
 
-        userGameDataSaveRequest.ProcessedRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
-        userGameDataSaveRequest.ProcessedRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
-        userGameDataSaveRequest.ProcessedRecipeObjects[0].ItemProduct = saveDataModel.processedRecipeObjects[0].itemProduct;
+        Dictionary<string, GameObject[]> itemRecipeArrays = recipeManager.itemRecipeArrays;
 
-        userGameDataSaveRequest.RefinedRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
-        userGameDataSaveRequest.RefinedRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
-        userGameDataSaveRequest.RefinedRecipeObjects[0].ItemProduct = saveDataModel.enhancedRecipeObjects[0].itemProduct;
+        userGameDataSaveRequest.BasicRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemRecipeArrays["BASIC"].Length];
 
-        userGameDataSaveRequest.AssembledRecipeObjects = new Gaos.Dbo.Model.RecipeData[1];
-        userGameDataSaveRequest.AssembledRecipeObjects[0] = new Gaos.Dbo.Model.RecipeData();
-        userGameDataSaveRequest.AssembledRecipeObjects[0].ItemProduct = saveDataModel.assembledRecipeObjects[0].itemProduct;
+        for (int i = 0; i < itemRecipeArrays["BASIC"].Length; i++)
+        {
+            GameObject itemGameObject = itemRecipeArrays["BASIC"][i];
+            RecipeData itemData = itemGameObject.GetComponent<RecipeData>();
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-        mb.StartCoroutine(Gaos.GameData.UserGameDataSave.Save(1,userGameDataSaveRequest, OnUserGameDataSaveComplete, mb));
+            userGameDataSaveRequest.BasicRecipeObjects[i] = new Gaos.Dbo.Model.RecipeData();
+            userGameDataSaveRequest.BasicRecipeObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.BasicRecipeObjects[i].ItemType = itemData.itemType;
+            userGameDataSaveRequest.BasicRecipeObjects[i].ItemProduct = itemData.itemProduct;
+            userGameDataSaveRequest.BasicRecipeObjects[i].ItemClass = itemData.itemClass;
+        }
+
+        userGameDataSaveRequest.ProcessedRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemArrays["PROCESSED"].Length];
+
+        for (int i = 0; i < itemRecipeArrays["PROCESSED"].Length; i++)
+        {
+            GameObject itemGameObject = itemRecipeArrays["PROCESSED"][i];
+            RecipeData itemData = itemGameObject.GetComponent<RecipeData>();
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            userGameDataSaveRequest.ProcessedRecipeObjects[i] = new Gaos.Dbo.Model.RecipeData();
+            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemName = itemData.itemName;
+            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemType = itemData.itemType;
+            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemProduct = itemData.itemProduct;
+            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemClass = itemData.itemClass;
+        }
+
+        userGameDataSaveRequest.EnhancedRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemArrays["ENHANCED"].Length];
+
+        for (int i = 0; i < itemRecipeArrays["ENHANCED"].Length; i++)
+        {
+            GameObject itemGameObject = itemRecipeArrays["ENHANCED"][i];
+            RecipeData itemData = itemGameObject.GetComponent<RecipeData>();
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            userGameDataSaveRequest.EnhancedRecipeObjects[i] = new Gaos.Dbo.Model.RecipeData();
+            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemType = itemData.itemType;
+            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemProduct = itemData.itemProduct;
+            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemClass = itemData.itemClass;
+        }
+
+        userGameDataSaveRequest.AssembledRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemArrays["ASSEMBLED"].Length];
+
+        for (int i = 0; i < itemRecipeArrays["ASSEMBLED"].Length; i++)
+        {
+            GameObject itemGameObject = itemRecipeArrays["ENHANCED"][i];
+            RecipeData itemData = itemGameObject.GetComponent<RecipeData>();
+            string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            userGameDataSaveRequest.AssembledRecipeObjects[i] = new Gaos.Dbo.Model.RecipeData();
+            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemType = itemData.itemType;
+            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemProduct = itemData.itemProduct;
+            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemClass = itemData.itemClass;
+        }
+
+        StartCoroutine(Gaos.GameData.UserGameDataSave.Save(slotId, userGameDataSaveRequest, OnUserGameDataSaveComplete));
 
     }
 
-    public static void OnUserGameDataSaveComplete(Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response, object mb)
+    public  void OnUserGameDataSaveComplete(Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response)
     {
         string responseString = JsonConvert.SerializeObject(response);
         Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000: OnUserGameDataSaveComplete(): {responseString}");
 
 
-        ((MonoBehaviour)mb).StartCoroutine(Gaos.GameData.UserGameDataGet.Get(1,OnUserGameDataGetComplete, mb));
+        StartCoroutine(Gaos.GameData.UserGameDataGet.Get(1,OnUserGameDataGetComplete));
     }
-    public static void OnUserGameDataGetComplete(Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response, object obj)
+    public static void OnUserGameDataGetComplete(Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response)
     {
         string responseString = JsonConvert.SerializeObject(response);
         Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3100: OnUserGameDataGetComplete(): {responseString}");

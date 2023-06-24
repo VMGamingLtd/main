@@ -33,13 +33,6 @@ public class CustomSceneLoader : MonoBehaviour
             Debug.Log($"Guest logged in: {Gaos.User.User.GuestLogin.GuestLoginResponse.UserName}");
             UserName.userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
 
-            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            if (false)
-            {
-                SaveManager.TestSaveGameDataOnServer(this);
-            }
-            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
             LoadSceneAsync();
         }
         else

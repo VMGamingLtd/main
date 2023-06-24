@@ -15,9 +15,9 @@ namespace Gaos.Dbo.Model
         public string? ItemClass;
         public string? ItemProduct;
         public int? ItemQuantity;
-        public string? OxygenTime;
-        public string? EnergyTime;
-        public string? WaterTime;
+        public string? OxygenTimer;
+        public string? EnergyTimer;
+        public string? WaterTimer;
 
     }
 }
