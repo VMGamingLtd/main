@@ -17,6 +17,7 @@ namespace Gaos.WebSocket
 
         public string WsUrl = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
 
+
         private enum SslProtocolsHack
         {
             Tls = 192,

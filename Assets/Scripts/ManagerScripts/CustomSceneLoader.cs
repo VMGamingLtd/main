@@ -5,7 +5,6 @@ using System.Collections;
 public class CustomSceneLoader : MonoBehaviour
 {
     public string sceneName;
-    public static Gaos.WebSocket.WebSocketClientSharp Ws = new Gaos.WebSocket.WebSocketClientSharp();
 
 
     private void OnEnable()

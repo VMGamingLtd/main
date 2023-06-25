@@ -14,6 +14,8 @@ namespace Gaos.User.User
         //public static Gaos.User.Api.GuestLoginResponse GuestLoginResponse = null;
         public static Gaos.Routes.Model.UserJson.GuestLoginResponse GuestLoginResponse = null;
 
+        private static bool IS_PROFILE_HTTP_CALLS =  Gaos.Environment.Environment.GetEnvironment()["IS_PROFILE_HTTP_CALLS"] == "true";
+
         private static IEnumerator Login_()
         {
             const string METHOD_NAME = "Login_()";
@@ -25,7 +27,7 @@ namespace Gaos.User.User
             }
             else
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Device is not registered, cannot login");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Device is not registered, cannot login");
                 TryToLoginAgain = true;
                 yield break;
             }
@@ -37,7 +39,7 @@ namespace Gaos.User.User
 
             if (apiCall.IsResponseTimeout == true)
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout logging in guest, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout logging in guest, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
                 TryToLoginAgain = true;
             }
             else
@@ -45,14 +47,14 @@ namespace Gaos.User.User
                 TryToLoginAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest");
                 }
                 else
                 {
                     GuestLoginResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.GuestLoginResponse>(apiCall.ResponseJsonStr);
                     if (GuestLoginResponse.IsError == true)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest: {GuestLoginResponse.ErrorMessage}");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest: {GuestLoginResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -67,6 +69,13 @@ namespace Gaos.User.User
         public static IEnumerator Login(OnGuestLoginComplete onComplete = null)
         {
             const string METHOD_NAME = "Login()";
+
+            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+            if (IS_PROFILE_HTTP_CALLS)
+            {
+                stopWatch.Start();
+            }
+
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: logging in guest ...");
 
             int maxTryCount = 5;
@@ -76,7 +85,7 @@ namespace Gaos.User.User
                 --maxTryCount;
                 if (maxTryCount <= 0)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: max try count reached");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: max try count reached");
                     break;
                 }
 
@@ -84,7 +93,7 @@ namespace Gaos.User.User
 
                 if (TryToLoginAgain == true)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
                     yield return new WaitForSeconds(1);
                     continue;
                 }
@@ -96,13 +105,23 @@ namespace Gaos.User.User
 
             if (IsLoggedIn == true)
             {
+                if (IS_PROFILE_HTTP_CALLS)
+                {
+                    stopWatch.Stop();
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
+                }
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  guest logged in");
                 Gaos.Context.Authentication.SetJWT(GuestLoginResponse.Jwt);
                 Gaos.Context.Authentication.SetUserId(GuestLoginResponse.UserId);
             }
             else
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: guest not logged in");
+                if (IS_PROFILE_HTTP_CALLS)
+                {
+                    stopWatch.Stop();
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
+                }
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: guest not logged in");
             }
 
             if (onComplete != null)
@@ -121,10 +140,11 @@ namespace Gaos.User.User
         public static Gaos.Routes.Model.UserJson.RegisterResponse  RegisterResponse = null;
         public static bool IsRegistered = false;
 
+        private static bool IS_PROFILE_HTTP_CALLS =  Gaos.Environment.Environment.GetEnvironment()["IS_PROFILE_HTTP_CALLS"] == "true";
+
         private static IEnumerator Register_(string userName, string email, string password)
         {
             const string METHOD_NAME = "Register_()";
-
 
             Gaos.Routes.Model.UserJson.RegisterRequest request = new Gaos.Routes.Model.UserJson.RegisterRequest();
 
@@ -138,7 +158,7 @@ namespace Gaos.User.User
             }
             else
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Device is not registered, cannot register");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Device is not registered, cannot register");
                 TryToRegisterAgain = true;
                 yield break;
             }
@@ -150,7 +170,7 @@ namespace Gaos.User.User
 
             if (apiCall.IsResponseTimeout == true)
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout registering user, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout registering user, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
                 TryToRegisterAgain = true;
             }
             else
@@ -158,14 +178,14 @@ namespace Gaos.User.User
                 TryToRegisterAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user");
                 }
                 else
                 {
                     RegisterResponse = JsonUtility.FromJson<Gaos.Routes.Model.UserJson.RegisterResponse>(apiCall.ResponseJsonStr);
                     if (RegisterResponse.IsError == true)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.ErrorMessage}");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -180,25 +200,43 @@ namespace Gaos.User.User
         public static IEnumerator Register(string userName, string email, string password, OnUserRegisterComplete onUserRegisterComplete = null)
         {
             const string METHOD_NAME = "Register()";
+
+            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+            if (IS_PROFILE_HTTP_CALLS)
+            {
+                stopWatch.Start();
+            }
+
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: registering user ...");
+
             while (true)
             {
                 yield return Register_(userName, email, password);
 
                 if (TryToRegisterAgain == true)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
                     continue;
                 }
                 else
                 {
                     if (IsRegistered == true)
                     {
+                        if (IS_PROFILE_HTTP_CALLS)
+                        {
+                            stopWatch.Stop();
+                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
+                        }
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user registered");
                     }
                     else
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not registered");
+                        if (IS_PROFILE_HTTP_CALLS)
+                        {
+                            stopWatch.Stop();
+                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
+                        }
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not registered");
                     }
                     break;
                 }
@@ -236,7 +274,7 @@ namespace Gaos.User.User
             }
             else
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Device is not registered, cannot login");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Device is not registered, cannot login");
                 TryToLoginAgain = true;
                 yield break;
             }
@@ -248,7 +286,7 @@ namespace Gaos.User.User
 
             if (apiCall.IsResponseTimeout == true)
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout logging in user, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout logging in user, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
                 TryToLoginAgain = true;
             }
             else
@@ -256,14 +294,14 @@ namespace Gaos.User.User
                 TryToLoginAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user");
                 }
                 else
                 {
                     LoginResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.LoginResponse>(apiCall.ResponseJsonStr);
                     if (LoginResponse.IsError == true)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.ErrorMessage}");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -285,7 +323,7 @@ namespace Gaos.User.User
 
                 if (TryToLoginAgain == true)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
                     continue;
                 }
                 else
@@ -297,7 +335,7 @@ namespace Gaos.User.User
                     }
                     else
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not logged in");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not logged in");
                     }
                     break;
                 }
@@ -325,8 +363,8 @@ namespace Gaos.User.User
                 } 
                 else
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}:  loggin failed: user not registered");
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}:  retrying again ...");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  loggin failed: user not registered");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  retrying again ...");
 
                 }
                 yield return new WaitForSeconds(2);

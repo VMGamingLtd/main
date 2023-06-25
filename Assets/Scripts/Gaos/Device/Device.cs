@@ -14,6 +14,8 @@ namespace Gaos.Device.Device
 
         private static bool TryToRegisterAgain = false;
 
+        private static bool IS_PROFILE_HTTP_CALLS =  Gaos.Environment.Environment.GetEnvironment()["IS_PROFILE_HTTP_CALLS"] == "true";
+
 
         private static string GetPlatformType()
         {
@@ -38,7 +40,7 @@ namespace Gaos.Device.Device
 
             if (apiCall.IsResponseTimeout == true)
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout registering device, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Timeout registering device, will try again in {apiCall.Config.RequestTimeoutSeconds} seconds");
                 TryToRegisterAgain = true;
             }
             else
@@ -46,14 +48,14 @@ namespace Gaos.Device.Device
                 TryToRegisterAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device");
                 }
                 else
                 {
                     DeviceRegisterResponse =  JsonConvert.DeserializeObject<Gaos.Routes.Model.DeviceJson.DeviceRegisterResponse>(apiCall.ResponseJsonStr);
                     if (DeviceRegisterResponse.IsError == true)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device: {DeviceRegisterResponse.ErrorMessage}");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device: {DeviceRegisterResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -66,6 +68,13 @@ namespace Gaos.Device.Device
         public static IEnumerator RegisterDevice()
         {
             const string METHOD_NAME = "RegisterDevice()";
+
+            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+            if (IS_PROFILE_HTTP_CALLS)
+            {
+                stopWatch.Start();
+            }
+
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: registering device ...");
 
             int maxTryCount = 20;
@@ -75,7 +84,7 @@ namespace Gaos.Device.Device
                 --maxTryCount;
                 if (maxTryCount <= 0)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: max try count reached");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: max try count reached");
                     break;
                 }
 
@@ -83,7 +92,7 @@ namespace Gaos.Device.Device
 
                 if (TryToRegisterAgain == true)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: trying again ...");
                     continue;
                 }
                 else
@@ -95,10 +104,20 @@ namespace Gaos.Device.Device
             if (IsDeviceRegistered == true)
             {
                 Gaos.Context.Device.SetDeviceId(DeviceRegisterResponse.DeviceId);
+                if (IS_PROFILE_HTTP_CALLS)
+                {
+                    stopWatch.Stop();
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
+                }
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: device registered");
             }
             else
             {
+                if (IS_PROFILE_HTTP_CALLS)
+                {
+                    stopWatch.Stop();
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
+                }
                 Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
                 throw new System.Exception($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
             }

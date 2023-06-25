@@ -51,7 +51,7 @@ public class GlobalCalculator : MonoBehaviour
                 {
                     seconds = 0;
                     minutes++;
-                    //saveManager.TestSaveGameDataOnServer();
+                    saveManager.TestSaveGameDataOnServer();
                     weatherManager.SetUVAmount();
                     StartCoroutine(rotateImage.RotateOverTime(0.5f));
                     daylightSemicircle.RunAllCoroutines();

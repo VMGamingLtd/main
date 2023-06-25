@@ -423,7 +423,7 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemClass = itemDataComponent.itemClass;
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemQuantity =itemDataComponent.itemQuantity;
-            userGameDataSaveRequest.BasicInventoryObjects[i].OxygenTimer = itemDataComponent.OxygenTimer;
+            userGameDataSaveRequest.ProcessedInventoryObjects[i].OxygenTimer = itemDataComponent.OxygenTimer;
         }
 
         userGameDataSaveRequest.EnhancedInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[itemArrays["ENHANCED"].Length];
@@ -434,6 +434,8 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemArrays["ENHANCED"][i];
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            userGameDataSaveRequest.EnhancedInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemName = itemName;
             userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemType = itemDataComponent.itemType;
@@ -449,6 +451,8 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemArrays["ASSEMBLED"][i];
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             string itemName = itemGameObject.name.Replace("(Clone)", "");
+
+            userGameDataSaveRequest.AssembledInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemName = itemName;
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemType = itemDataComponent.itemType;
@@ -472,59 +476,63 @@ public class SaveManager : MonoBehaviour
         for (int i = 0; i < itemRecipeArrays["BASIC"].Length; i++)
         {
             GameObject itemGameObject = itemRecipeArrays["BASIC"][i];
-            RecipeData itemData = itemGameObject.GetComponent<RecipeData>();
+            RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
             userGameDataSaveRequest.BasicRecipeObjects[i] = new Gaos.Dbo.Model.RecipeData();
+
             userGameDataSaveRequest.BasicRecipeObjects[i].ItemName = itemName;
-            userGameDataSaveRequest.BasicRecipeObjects[i].ItemType = itemData.itemType;
-            userGameDataSaveRequest.BasicRecipeObjects[i].ItemProduct = itemData.itemProduct;
-            userGameDataSaveRequest.BasicRecipeObjects[i].ItemClass = itemData.itemClass;
+            userGameDataSaveRequest.BasicRecipeObjects[i].ItemType = itemDataComponent.itemType;
+            userGameDataSaveRequest.BasicRecipeObjects[i].ItemProduct = itemDataComponent.itemProduct;
+            userGameDataSaveRequest.BasicRecipeObjects[i].ItemClass = itemDataComponent.itemClass;
         }
 
-        userGameDataSaveRequest.ProcessedRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemArrays["PROCESSED"].Length];
+        userGameDataSaveRequest.ProcessedRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemRecipeArrays["PROCESSED"].Length];
 
         for (int i = 0; i < itemRecipeArrays["PROCESSED"].Length; i++)
         {
             GameObject itemGameObject = itemRecipeArrays["PROCESSED"][i];
-            RecipeData itemData = itemGameObject.GetComponent<RecipeData>();
+            RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
             userGameDataSaveRequest.ProcessedRecipeObjects[i] = new Gaos.Dbo.Model.RecipeData();
-            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemName = itemData.itemName;
-            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemType = itemData.itemType;
-            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemProduct = itemData.itemProduct;
-            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemClass = itemData.itemClass;
+
+            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemType = itemDataComponent.itemType;
+            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemProduct = itemDataComponent.itemProduct;
+            userGameDataSaveRequest.ProcessedRecipeObjects[i].ItemClass = itemDataComponent.itemClass;
         }
 
-        userGameDataSaveRequest.EnhancedRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemArrays["ENHANCED"].Length];
+        userGameDataSaveRequest.EnhancedRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemRecipeArrays["ENHANCED"].Length];
 
         for (int i = 0; i < itemRecipeArrays["ENHANCED"].Length; i++)
         {
             GameObject itemGameObject = itemRecipeArrays["ENHANCED"][i];
-            RecipeData itemData = itemGameObject.GetComponent<RecipeData>();
+            RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
             userGameDataSaveRequest.EnhancedRecipeObjects[i] = new Gaos.Dbo.Model.RecipeData();
+
             userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemName = itemName;
-            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemType = itemData.itemType;
-            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemProduct = itemData.itemProduct;
-            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemClass = itemData.itemClass;
+            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemType = itemDataComponent.itemType;
+            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemProduct = itemDataComponent.itemProduct;
+            userGameDataSaveRequest.EnhancedRecipeObjects[i].ItemClass = itemDataComponent.itemClass;
         }
 
-        userGameDataSaveRequest.AssembledRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemArrays["ASSEMBLED"].Length];
+        userGameDataSaveRequest.AssembledRecipeObjects = new Gaos.Dbo.Model.RecipeData[itemRecipeArrays["ASSEMBLED"].Length];
 
         for (int i = 0; i < itemRecipeArrays["ASSEMBLED"].Length; i++)
         {
             GameObject itemGameObject = itemRecipeArrays["ENHANCED"][i];
-            RecipeData itemData = itemGameObject.GetComponent<RecipeData>();
+            RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
             userGameDataSaveRequest.AssembledRecipeObjects[i] = new Gaos.Dbo.Model.RecipeData();
+
             userGameDataSaveRequest.AssembledRecipeObjects[i].ItemName = itemName;
-            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemType = itemData.itemType;
-            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemProduct = itemData.itemProduct;
-            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemClass = itemData.itemClass;
+            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemType = itemDataComponent.itemType;
+            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemProduct = itemDataComponent.itemProduct;
+            userGameDataSaveRequest.AssembledRecipeObjects[i].ItemClass = itemDataComponent.itemClass;
         }
 
         StartCoroutine(Gaos.GameData.UserGameDataSave.Save(slotId, userGameDataSaveRequest, OnUserGameDataSaveComplete));

@@ -170,7 +170,7 @@ namespace Gaos.Api
 
             if (wr.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
+                Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
                 this.IsResponseError = true;
                 this.IsResponseTimeout = wr.error.Contains("timeout");
 
@@ -186,15 +186,12 @@ namespace Gaos.Api
                 if (contenType != null && contenType.Contains("json"))
                 {
                     this.ResponseJsonStr = wr.downloadHandler.text;
-                    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                    Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ResponseJsonStr: " + this.ResponseJsonStr);
-                    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                     this.IsResponseError = false;
 
                 }
                 else
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: response content type is not json, url: {wr.url}");
+                    Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: response content type is not json, url: {wr.url}");
                     this.IsResponseError = true;
                 }
             }
@@ -245,7 +242,7 @@ namespace Gaos.Api
 
             if (http.IsResponseError)
             {
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {url}, {http.ResponseJsonStr}");
+                Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {url}, {http.ResponseJsonStr}");
                 this.IsResponseError = true;
                 this.IsResponseTimeout = http.IsResponseTimeout;
             }
