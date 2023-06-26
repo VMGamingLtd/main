@@ -29,21 +29,7 @@ public class GuestLogin : MonoBehaviour
 
     public void OnButtonClick()
     {
-        if (false)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            char[] shuffledChars = chars.OrderBy(c => Random.value).ToArray();
-
-            UserName.userName = new string(Enumerable.Range(0, 10)
-              .Select(i => shuffledChars[Random.Range(0, shuffledChars.Length)]).ToArray());
-
-            StartCoroutine(coroutineManager.LoadSaveSlots());
-
-            /*Guid uuid = Guid.NewGuid();
-            Debug.Log("Generated UUID: " + uuid.ToString());*/
-        }
         StartCoroutine(coroutineManager.LoadSaveSlots());
-
     }
 
 }
