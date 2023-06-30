@@ -1,0 +1,26 @@
+ManifestFileVersion: 0
+CRC: 3442637116
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e7e0c48e0c3be6f4b0ae3bf4efa9932b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 383a36dc5aa85f32e951c7bb02b6ef09
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 26331e86673e3a641a867b44a8c5729f, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/AssetBundlesSrcs/MyBundle1/picture.jpg
+- Assets/AssetBundlesSrcs/MyBundle1/WebsocketClient.prefab
+Dependencies: []
