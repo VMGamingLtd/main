@@ -95,7 +95,7 @@ namespace Gaos.Api
 
     public class HttpPostJsonCall
     {
-        private static readonly string CLASS_NAME = "HttpPostJsonCall";
+        public readonly static string CLASS_NAME = typeof(HttpPostJsonCall).Name;
         private string Url;
         private string RequestJsonStr;
         private UnityWebRequest LastWebRequest;

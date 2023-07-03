@@ -11,14 +11,17 @@ function GAO_WebSocketCreate(GAOS_WS) {
 }
 
 function GAO_WebSocketOnOpen(ws, fnName) {
+  fnName = Pointer_stringify(fnName);
   console.log('@@@@@@@@@@@@@@@@@@@@@ cp 3020: GAO_WebSocketOnOpen: ' + ws);
   window.GAO_WEB_SOCKETS[ws].addEventListener('open', function (event) {
     console.info('websocket opend');
+  console.log('@@@@@@@@@@@@@@@@@@@@@ cp 3030: ' + fnName);
     window.unityInstance.SendMessage('WebSocketClientJs', fnName);
   })
 }
 
 function GAO_WebSocketOnClose(ws, fnName) {
+  fnName = Pointer_stringify(fnName);
   window.GAO_WEB_SOCKETS[ws].addEventListener('close', function (event) {
     console.info('websocket closed');
     window.unityInstance.SendMessage('WebSocketClientJs', fnName);
@@ -26,6 +29,7 @@ function GAO_WebSocketOnClose(ws, fnName) {
 }
 
 function GAO_WebSocketOnError(ws, fnName, errorStr) {
+  fnName = Pointer_stringify(fnName);
   window.GAO_WEB_SOCKETS[ws].addEventListener('error', function (event) {
     console.error('websocket error:', err);
     window.unityInstance.SendMessage('WebSocketClientJs', fnName, event.data.toString());
@@ -33,9 +37,10 @@ function GAO_WebSocketOnError(ws, fnName, errorStr) {
 }
 
 function GAO_WebSocketOnMessage(ws, fnName) {
+  fnName = Pointer_stringify(fnName);
   window.GAO_WEB_SOCKETS[ws].addEventListener('message', function (event) {
     if (typeof event.data === 'string') {
-      window.unityInstance.SendMessage('WebSocketClientJs', fnname, event.data);
+      window.unityInstance.SendMessage('WebSocketClientJs', fnName, event.data);
     } else if (event.data instanceof ArrayBuffer || event.data instanceof Blob) {
       console.error('websocket - received binary data, binary data not supported');
     } else {
@@ -45,10 +50,12 @@ function GAO_WebSocketOnMessage(ws, fnName) {
 }
 
 function GAO_WebSocketSend(ws, data) {
+  data = Pointer_stringify(data);
   if (typeof data !== 'string') {
-    console.error('websocket - only string data supported');
+    console.error('GAO_WebSocketSend(): websocket - only string data supported');
     throw new Error('only string data supported')
   }
+  console.info('websocket send: ' + data);
   var str = Pointer_stringify(data)
   window.GAO_WEB_SOCKETS[ws].send(str);
 }
@@ -65,6 +72,6 @@ mergeInto(LibraryManager.library, {
 
   WebSocketOnMessage: GAO_WebSocketOnMessage,
 
-  WebSockeSend: GAO_WebSocketSend,
+  WebSocketSend: GAO_WebSocketSend,
 
 });

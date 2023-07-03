@@ -51,6 +51,8 @@ namespace Gaos.WebSocket
 
         public void OnMessage(string data)
         {
+            const string METHOD_NAME = "StartProcessing()";
+            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2000: received data: {data}");
             MessagesInbound.Enqueue(data);
         }
 
@@ -95,9 +97,9 @@ namespace Gaos.WebSocket
                     if (MessagesOutbound.Count > 0)
                     {
                         string message = MessagesOutbound.Peek();
-                        Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket sending message: {message}");
                         try
                         {
+                            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1000: sen data: {message}");
                             WebSocketSend(Ws, message);
                             MessagesOutbound.Dequeue();
                             retryCount = 0;

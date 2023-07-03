@@ -14,8 +14,6 @@ namespace Gaos.User.User
         //public static Gaos.User.Api.GuestLoginResponse GuestLoginResponse = null;
         public static Gaos.Routes.Model.UserJson.GuestLoginResponse GuestLoginResponse = null;
 
-        private static bool IS_PROFILE_HTTP_CALLS =  Gaos.Environment.Environment.GetEnvironment()["IS_PROFILE_HTTP_CALLS"] == "true";
-
         private static IEnumerator Login_()
         {
             const string METHOD_NAME = "Login_()";
@@ -71,10 +69,6 @@ namespace Gaos.User.User
             const string METHOD_NAME = "Login()";
 
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-            if (IS_PROFILE_HTTP_CALLS)
-            {
-                stopWatch.Start();
-            }
 
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: logging in guest ...");
 
@@ -105,22 +99,12 @@ namespace Gaos.User.User
 
             if (IsLoggedIn == true)
             {
-                if (IS_PROFILE_HTTP_CALLS)
-                {
-                    stopWatch.Stop();
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
-                }
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  guest logged in");
                 Gaos.Context.Authentication.SetJWT(GuestLoginResponse.Jwt);
                 Gaos.Context.Authentication.SetUserId(GuestLoginResponse.UserId);
             }
             else
             {
-                if (IS_PROFILE_HTTP_CALLS)
-                {
-                    stopWatch.Stop();
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
-                }
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: guest not logged in");
             }
 
@@ -140,7 +124,6 @@ namespace Gaos.User.User
         public static Gaos.Routes.Model.UserJson.RegisterResponse  RegisterResponse = null;
         public static bool IsRegistered = false;
 
-        private static bool IS_PROFILE_HTTP_CALLS =  Gaos.Environment.Environment.GetEnvironment()["IS_PROFILE_HTTP_CALLS"] == "true";
 
         private static IEnumerator Register_(string userName, string email, string password)
         {
@@ -202,10 +185,6 @@ namespace Gaos.User.User
             const string METHOD_NAME = "Register()";
 
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-            if (IS_PROFILE_HTTP_CALLS)
-            {
-                stopWatch.Start();
-            }
 
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: registering user ...");
 
@@ -222,20 +201,10 @@ namespace Gaos.User.User
                 {
                     if (IsRegistered == true)
                     {
-                        if (IS_PROFILE_HTTP_CALLS)
-                        {
-                            stopWatch.Stop();
-                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
-                        }
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user registered");
                     }
                     else
                     {
-                        if (IS_PROFILE_HTTP_CALLS)
-                        {
-                            stopWatch.Stop();
-                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: execution time: {stopWatch.ElapsedMilliseconds} ms");
-                        }
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not registered");
                     }
                     break;
