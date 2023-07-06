@@ -7,9 +7,7 @@ namespace BuildingManagement
 {
     public class BuildingItemData : MonoBehaviour
         {
-            public string itemProduct;
             public string itemType;
-            public string itemClass;
         }
     public class BuildingCreator : MonoBehaviour
     {
@@ -18,18 +16,18 @@ namespace BuildingManagement
         public BuildingManager buildingManager;
         public void CreateSteamGenerator()
         {
-            CreateBuilding(buildingPrefabs[0], "BASIC", "ENERGY", "CLASS-F", buildingPrefabs[0].name, newItemParent);
+            CreateBuilding(buildingPrefabs[0], "ENERGY", buildingPrefabs[0].name, newItemParent);
         }
         public void CreatePlantField()
         {
-            CreateBuilding(buildingPrefabs[1], "BASIC", "PLANTS", "CLASS-F", buildingPrefabs[1].name, newItemParent);
+            CreateBuilding(buildingPrefabs[1], "PLANTS", buildingPrefabs[1].name, newItemParent);
         }
         public void CreateWaterWell()
         {
-            CreateBuilding(buildingPrefabs[2], "PROCESSED", "LIQUID", "CLASS-F", buildingPrefabs[2].name, newItemParent);
+            CreateBuilding(buildingPrefabs[2], "LIQUID", buildingPrefabs[2].name, newItemParent);
         }
 
-        private void CreateBuilding(GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, GameObject parentObject)
+        private void CreateBuilding(GameObject prefab, string itemType, string prefabName, GameObject parentObject)
         {
             GameObject newItem = Instantiate(prefab, parentObject.transform.position, parentObject.transform.rotation);
 
@@ -40,10 +38,8 @@ namespace BuildingManagement
             {
                 newItemData = newItem.AddComponent<BuildingItemData>();
             }
-            newItemData.itemProduct = itemProduct;
             newItemData.itemType = itemType;
-            newItemData.itemClass = itemClass;
-            buildingManager.AddToItemArray(itemProduct, newItem);
+            buildingManager.AddToItemArray(itemType, newItem);
         }
     }
 }
