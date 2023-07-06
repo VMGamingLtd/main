@@ -11,9 +11,10 @@ public class BuildingManager : MonoBehaviour
     public Dictionary<string, GameObject[]> buildingArrays;
     public BuildingCreator buildingCreator;
 
-    public static string ShowBuildingProducts = "ALL";
+    public static string ShowBuildingCategories = "ALL";
     public static string ShowBuildingTypes = "ALL";
     public static string ShowBuildingClass = "ALL";
+    public static bool isDraggingBuilding = false;
 
     public void PopulateBuildingArrays()
     {
@@ -27,7 +28,7 @@ public class BuildingManager : MonoBehaviour
     }
     void OnEnable()
     {
-        ShowItems(BuildingManager.ShowBuildingProducts, BuildingManager.ShowBuildingTypes, BuildingManager.ShowBuildingClass);
+        ShowItems(BuildingManager.ShowBuildingCategories, BuildingManager.ShowBuildingTypes, BuildingManager.ShowBuildingClass);
     }
 
     public void AddToItemArray(string itemProduct, GameObject item)
@@ -55,8 +56,6 @@ public class BuildingManager : MonoBehaviour
         }
         else
         {
-            // Add the item to the buildingArrays dictionary
-
             // Create a new array with a single item
             GameObject[] itemArray = new GameObject[] { item };
 
@@ -101,7 +100,7 @@ public class BuildingManager : MonoBehaviour
     }
     public void ShowFilteredItems()
     {
-        ShowItems(BuildingManager.ShowBuildingProducts, BuildingManager.ShowBuildingTypes, BuildingManager.ShowBuildingClass);
+        ShowItems(BuildingManager.ShowBuildingCategories, BuildingManager.ShowBuildingTypes, BuildingManager.ShowBuildingClass);
     }
     public void ShowItems(string itemProduct, string itemType, string itemClass)
     {

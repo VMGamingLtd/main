@@ -9,6 +9,7 @@ public class StartGameInputChecker : MonoBehaviour
 {
     public ItemCreator itemCreator;
     public InventoryManager inventoryManager;
+    public BuildingManager buildingManager;
     public RecipeManager recipeManager;
     public RecipeCreator recipeCreator;
     public GameObject NewGamePopup;
@@ -23,6 +24,7 @@ public class StartGameInputChecker : MonoBehaviour
         NewGamePopup.SetActive(false);
 
         inventoryManager.PopulateInventoryArrays();
+        buildingManager.PopulateBuildingArrays();
         recipeManager.PopulateInventoryArrays();
         recipeCreator.CreatePlantsRecipe();
         recipeCreator.CreateBiofuelRecipe();

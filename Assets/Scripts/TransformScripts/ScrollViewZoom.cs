@@ -8,22 +8,26 @@ public class ScrollViewZoom : MonoBehaviour
     public float moveSpeed = 10f;
     public float minZoom = 0.5f;
     public float maxZoom = 2f;
+    private bool isDragging = false;
+
 
     private float initialDistance;
     private Vector3 initialScale;
     private Vector2 initialPosition;
 
-    private bool isDragging = false;
 
     private void Update()
     {
-        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        if (!BuildingManager.isDraggingBuilding)
         {
-            HandleMobileInput();
-        }
-        else
-        {
-            HandlePCInput();
+            if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                HandleMobileInput();
+            }
+            else
+            {
+                HandlePCInput();
+            }
         }
     }
     private void SetInitialPosition()
