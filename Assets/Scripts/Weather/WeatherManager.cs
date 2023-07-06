@@ -41,8 +41,11 @@ public class WeatherManager : MonoBehaviour
 
     public void SetUVAmount()
     {
-        float fillAmount = Mathf.Clamp01(planet0UV / maxPlanet0UV);
-        StartCoroutine(FillOverTime(fillAmount));
+        if (ButtonManager.MenuButtonTypeOn == "Production")
+        {
+            float fillAmount = Mathf.Clamp01(planet0UV / maxPlanet0UV);
+            StartCoroutine(FillOverTime(fillAmount));
+        }
     }
     public void IncreaseUVAmount(int PlanetUV)
     {

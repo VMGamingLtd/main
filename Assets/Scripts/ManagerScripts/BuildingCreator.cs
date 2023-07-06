@@ -14,27 +14,27 @@ namespace BuildingManagement
     public class BuildingCreator : MonoBehaviour
     {
         public GameObject[] buildingPrefabs;
+        public GameObject newItemParent;
         public BuildingManager buildingManager;
-        public void CreatePowerGenerator()
+        public void CreateSteamGenerator()
         {
-            CreateBuilding(buildingPrefabs[0], "BASIC", "ENERGY", "CLASS-F", buildingPrefabs[0].name);
+            CreateBuilding(buildingPrefabs[0], "BASIC", "ENERGY", "CLASS-F", buildingPrefabs[0].name, newItemParent);
         }
         public void CreatePlantField()
         {
-            CreateBuilding(buildingPrefabs[1], "BASIC", "PLANTS", "CLASS-F", buildingPrefabs[1].name);
+            CreateBuilding(buildingPrefabs[1], "BASIC", "PLANTS", "CLASS-F", buildingPrefabs[1].name, newItemParent);
         }
         public void CreateWaterWell()
         {
-            CreateBuilding(buildingPrefabs[2], "PROCESSED", "LIQUID", "CLASS-F", buildingPrefabs[2].name);
+            CreateBuilding(buildingPrefabs[2], "PROCESSED", "LIQUID", "CLASS-F", buildingPrefabs[2].name, newItemParent);
         }
 
-        private void CreateBuilding(GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)
+        private void CreateBuilding(GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, GameObject parentObject)
         {
-            // Create the item once and set the initial quantity
-            GameObject newItem = Instantiate(prefab);
-            newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+            GameObject newItem = Instantiate(prefab, parentObject.transform.position, parentObject.transform.rotation);
 
-            // Get or add the ItemData component to the new item
+
+            // ItemData component to the new item
             BuildingItemData newItemData = newItem.GetComponent<BuildingItemData>();
             if (newItemData == null)
             {

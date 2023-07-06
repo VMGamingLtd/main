@@ -45,6 +45,7 @@ public class SaveManager : MonoBehaviour
         public string playerWater;
         public string playerEnergy;
         public string playerHunger;
+        public string MenuButtonTypeOn;
         public int playerLevel;
         public int playerCurrentExp;
         public int playerMaxExp;
@@ -58,6 +59,7 @@ public class SaveManager : MonoBehaviour
         public bool secondGoal;
         public bool thirdGoal;
         public bool isPlayerInBiologicalBiome;
+        public bool isDraggingBuilding;
         public float credits;
         public string inventoryTitle;
         public InventoryItemData[] basicInventoryObjects;
@@ -160,6 +162,8 @@ public class SaveManager : MonoBehaviour
         currentSaveData.firstGoal = GoalManager.thirdGoal;
         currentSaveData.isPlayerInBiologicalBiome = GlobalCalculator.isPlayerInBiologicalBiome;
         currentSaveData.credits = Credits.credits;
+        currentSaveData.MenuButtonTypeOn = ButtonManager.MenuButtonTypeOn;
+        currentSaveData.isDraggingBuilding = BuildingManager.isDraggingBuilding;
 
         // Access the itemArrays dictionary through the inventoryManager reference
         Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;
@@ -385,6 +389,8 @@ public class SaveManager : MonoBehaviour
         userGameDataSaveRequest.GameData.ThirdGoal = GoalManager.thirdGoal; // bool
         userGameDataSaveRequest.GameData.IsPlayerInBiologicalBiome = GlobalCalculator.isPlayerInBiologicalBiome;
         userGameDataSaveRequest.GameData.Credits = Credits.credits;
+        //userGameDataSaveRequest.GameData.MenuButtonTypeOn = ButtonManager.MenuButtonTypeOn; //new variable
+        //userGameDataSaveRequest.GameData.isDraggingBuilding = BuildingManager.isDraggingBuilding; //new variable
 
         // fill in inventories
 
@@ -523,7 +529,7 @@ public class SaveManager : MonoBehaviour
 
         for (int i = 0; i < itemRecipeArrays["ASSEMBLED"].Length; i++)
         {
-            GameObject itemGameObject = itemRecipeArrays["ENHANCED"][i];
+            GameObject itemGameObject = itemRecipeArrays["ASSEMBLED"][i];
             RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
