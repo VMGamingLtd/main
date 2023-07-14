@@ -23,6 +23,7 @@ public class TooltipObjects : MonoBehaviour
     public GameObject ProgrammingSkill;
     public GameObject BiologySkill;
     public GameObject PsychologySkill;
+    public GameObject BiofuelGenerator;
 
 
 }

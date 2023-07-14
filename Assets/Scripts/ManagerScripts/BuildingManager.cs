@@ -10,11 +10,10 @@ public class BuildingManager : MonoBehaviour
 {
     public Dictionary<string, GameObject[]> buildingArrays;
     public BuildingCreator buildingCreator;
-
-    public static string ShowBuildingCategories = "ALL";
     public static string ShowBuildingTypes = "ALL";
-    public static string ShowBuildingClass = "ALL";
     public static bool isDraggingBuilding = false;
+    public InventoryManager inventoryManagerRef;
+    public CoroutineManager coroutineManagerRef;
 
     public void PopulateBuildingArrays()
     {
@@ -28,19 +27,19 @@ public class BuildingManager : MonoBehaviour
     }
     void OnEnable()
     {
-        ShowItems(BuildingManager.ShowBuildingCategories, BuildingManager.ShowBuildingTypes, BuildingManager.ShowBuildingClass);
+        ShowItems(BuildingManager.ShowBuildingTypes);
     }
 
-    public void AddToItemArray(string itemProduct, GameObject item)
+    public void AddToItemArray(string itemType, GameObject item)
     {
         item.transform.SetParent(transform);
         // Check if the item type already exists in the buildingArrays dictionary
-        if (buildingArrays.ContainsKey(itemProduct))
+        if (buildingArrays.ContainsKey(itemType))
         {
             // Update the existing item
 
             // Get the existing array of items for the item type
-            GameObject[] itemArray = buildingArrays[itemProduct];
+            GameObject[] itemArray = buildingArrays[itemType];
 
             // Create a new array with increased length to accommodate the new item
             GameObject[] newArray = new GameObject[itemArray.Length + 1];
@@ -52,7 +51,7 @@ public class BuildingManager : MonoBehaviour
             newArray[newArray.Length - 1] = item;
 
             // Update the itemArray reference in the dictionary
-            buildingArrays[itemProduct] = newArray;
+            buildingArrays[itemType] = newArray;
         }
         else
         {
@@ -60,24 +59,17 @@ public class BuildingManager : MonoBehaviour
             GameObject[] itemArray = new GameObject[] { item };
 
             // Add the item array to the dictionary with the item type as the key
-            buildingArrays.Add(itemProduct, itemArray);
-        }
-
-        // Get or add the ItemData component to the item
-        BuildingItemData itemData = item.GetComponent<BuildingItemData>();
-        if (itemData == null)
-        {
-            itemData = item.AddComponent<BuildingItemData>();
+            buildingArrays.Add(itemType, itemArray);
         }
     }
 
-    public void RemoveFromItemArray(string itemProduct, GameObject item)
+    public void RemoveFromItemArray(string itemType, GameObject item)
     {
         // Check if the item type exists in the buildingArrays dictionary
-        if (buildingArrays.ContainsKey(itemProduct))
+        if (buildingArrays.ContainsKey(itemType))
         {
             // Get the array of items for the item type
-            GameObject[] itemArray = buildingArrays[itemProduct];
+            GameObject[] itemArray = buildingArrays[itemType];
 
             // Find the index of the item in the array
             int index = Array.IndexOf(itemArray, item);
@@ -94,19 +86,17 @@ public class BuildingManager : MonoBehaviour
                 Array.Copy(itemArray, index + 1, newArray, index, itemArray.Length - index - 1);
 
                 // Update the itemArray reference in the dictionary
-                buildingArrays[itemProduct] = newArray;
+                buildingArrays[itemType] = newArray;
             }
         }
     }
     public void ShowFilteredItems()
     {
-        ShowItems(BuildingManager.ShowBuildingCategories, BuildingManager.ShowBuildingTypes, BuildingManager.ShowBuildingClass);
+        ShowItems(BuildingManager.ShowBuildingTypes);
     }
-    public void ShowItems(string itemProduct, string itemType, string itemClass)
+    public void ShowItems(string itemType)
     {
-        bool showAllProducts = itemProduct == "ALL";
         bool showAllTypes = itemType == "ALL";
-        bool showAllClasses = itemClass == "ALL";
 
         foreach (var kvp in buildingArrays)
         {
@@ -118,9 +108,7 @@ public class BuildingManager : MonoBehaviour
                 BuildingItemData itemData = item.GetComponent<BuildingItemData>();
 
                 bool showItem =
-                    (showAllProducts || itemProduct == itemData.itemProduct) &&
-                    (showAllTypes || itemType == itemData.itemType) &&
-                    (showAllClasses || itemClass == itemData.itemClass);
+                    (showAllTypes || itemType == itemData.itemType);
 
                 item.SetActive(showItem);
             }

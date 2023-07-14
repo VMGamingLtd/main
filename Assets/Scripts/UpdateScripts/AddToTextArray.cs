@@ -7,7 +7,7 @@ public class AddToTextArray : MonoBehaviour
     public string targetVariableName;
     private TextMeshProUGUI myText;
 
-    private void Start()
+    private void Awake()
     {
         myText = GetComponent<TextMeshProUGUI>();
         CoroutineManager manager = coroutineManager.GetComponent<CoroutineManager>();

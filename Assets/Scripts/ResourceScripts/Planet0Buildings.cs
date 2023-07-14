@@ -20,6 +20,8 @@ public static class Planet0Buildings
     public static int HousingUnityPlanet0 = 0;
     public static int OxygenGeneratorPlanet0 = 0;
     public static int AtmosphericCondenserPlanet0 = 0;
+    public static int Planet0CurrentElectricity = 0;
+    public static int Planet0MaxElectricity = 0;
 
     public static string AddBuildingCount(ref int buildingName, int amount)
     {

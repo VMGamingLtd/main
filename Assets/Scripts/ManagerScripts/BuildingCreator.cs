@@ -6,44 +6,40 @@ using TMPro;
 namespace BuildingManagement
 {
     public class BuildingItemData : MonoBehaviour
-        {
-            public string itemProduct;
-            public string itemType;
-            public string itemClass;
-        }
+    {
+        public string itemType;
+        public Vector3 buildingPosition;
+        public string consumedItem;
+        public string consumedItemQuality;
+        public int consumedQuantity;
+        public float consumedTime;
+    }
     public class BuildingCreator : MonoBehaviour
     {
         public GameObject[] buildingPrefabs;
         public GameObject newItemParent;
         public BuildingManager buildingManager;
-        public void CreateSteamGenerator()
-        {
-            CreateBuilding(buildingPrefabs[0], "BASIC", "ENERGY", "CLASS-F", buildingPrefabs[0].name, newItemParent);
-        }
-        public void CreatePlantField()
-        {
-            CreateBuilding(buildingPrefabs[1], "BASIC", "PLANTS", "CLASS-F", buildingPrefabs[1].name, newItemParent);
-        }
-        public void CreateWaterWell()
-        {
-            CreateBuilding(buildingPrefabs[2], "PROCESSED", "LIQUID", "CLASS-F", buildingPrefabs[2].name, newItemParent);
-        }
+        private BuildingItemData itemData;
 
-        private void CreateBuilding(GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, GameObject parentObject)
+        public void CreateBuilding(GameObject draggedObject, string itemType)
         {
-            GameObject newItem = Instantiate(prefab, parentObject.transform.position, parentObject.transform.rotation);
+            itemData = draggedObject.AddComponent<BuildingItemData>();
+            itemData.itemType = itemType;
+            itemData.buildingPosition = draggedObject.GetComponent<RectTransform>().anchoredPosition3D;
 
-
-            // ItemData component to the new item
-            BuildingItemData newItemData = newItem.GetComponent<BuildingItemData>();
-            if (newItemData == null)
+            if (draggedObject.name == "BiofuelGenerator(Clone)")
             {
-                newItemData = newItem.AddComponent<BuildingItemData>();
+                itemData.consumedItem = "Biofuel";
+                itemData.consumedItemQuality = "PROCESSED";
+                itemData.consumedQuantity = 1;
+                itemData.consumedTime = 10;
             }
-            newItemData.itemProduct = itemProduct;
-            newItemData.itemType = itemType;
-            newItemData.itemClass = itemClass;
-            buildingManager.AddToItemArray(itemProduct, newItem);
+
+            // Add the item to the building manager's item array
+            buildingManager.AddToItemArray(itemType, draggedObject);
+
+            // Adding this class will start corotuine on the building object itself
+            draggedObject.AddComponent<BuildingCycles>();
         }
     }
 }

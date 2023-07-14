@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
+using BuildingManagement;
 
 public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -11,6 +12,7 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     private GameObject draggedObject;
     private RectTransform buildingAreaRectTransform;
     private Image buildingAreaImage;
+    public BuildingCreator buildingCreator;
 
     private void Awake()
     {
@@ -45,7 +47,7 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
             {
                 animation.Play("BuildingSpawn");
             }
-            StartCoroutine(AttachDragAndDropBuildingsWithDelay());
+            StartCoroutine(AttachDragAndDropBuildingsWithDelay(draggedObject));
         }
         else
         {
@@ -63,9 +65,33 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
 
         return boundsRect.Contains(localPoint);
     }
-    private IEnumerator AttachDragAndDropBuildingsWithDelay()
+    public IEnumerator AttachDragAndDropBuildingsWithDelay(GameObject draggedObject)
     {
         yield return new WaitForSeconds(0.5f);
         draggedObject.AddComponent<DragAndDropBuildings>();
+
+        // add the object into buildingArray and with BuildingDataItem component
+        string objectName = draggedObject.transform.name.Replace("(Clone)", "");
+        switch (objectName)
+        {
+            case "WaterPump":
+                buildingCreator.CreateBuilding(draggedObject, "LIQUID");
+                break;
+            case "PlantField":
+                buildingCreator.CreateBuilding(draggedObject, "PLANTS");
+                break;
+            case "Boiler":
+                buildingCreator.CreateBuilding(draggedObject, "LIQUID");
+                break;
+            case "SteamGenerator":
+                buildingCreator.CreateBuilding(draggedObject, "ENERGY");
+                break;
+            case "BiofuelGenerator":
+                buildingCreator.CreateBuilding(draggedObject, "ENERGY");
+                break;
+            default:
+                Debug.LogWarning("Unknown building type: " + objectName);
+                break;
+        }
     }
 }
