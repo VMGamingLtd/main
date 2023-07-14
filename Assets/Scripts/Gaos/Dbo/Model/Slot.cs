@@ -7,5 +7,7 @@ namespace Gaos.Dbo.Model
         public int Id;
         public string? Name;
 
+        public int OwnerId;
+
     }
 }

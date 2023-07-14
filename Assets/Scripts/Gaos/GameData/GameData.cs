@@ -18,8 +18,6 @@ namespace Gaos.GameData
         {
             const string METHOD_NAME = "Get()";
 
-            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-
             Gaos.Routes.Model.GameDataJson.UserGameDataGetRequest request = new Gaos.Routes.Model.GameDataJson.UserGameDataGetRequest();
             request.UserId = Gaos.Context.Authentication.GetUserId();
             request.SlotId = slotId;
@@ -55,7 +53,6 @@ namespace Gaos.GameData
         public static IEnumerator Save(int slotId, Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete)
         {
             const string METHOD_NAME = "Save()";
-            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
 
             request.UserId = Gaos.Context.Authentication.GetUserId();
             request.SlotId = slotId;

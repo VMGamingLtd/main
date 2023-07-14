@@ -51,6 +51,5 @@ namespace Gaos.Dbo.Model
         public bool ThirdGoal;
         public bool IsPlayerInBiologicalBiome;
         public float Credits;
-        public string? RecipeTitle;
     }
 }
