@@ -12,6 +12,8 @@ public class BuildingManager : MonoBehaviour
     public BuildingCreator buildingCreator;
     public static string ShowBuildingTypes = "ALL";
     public static bool isDraggingBuilding = false;
+    public InventoryManager inventoryManagerRef;
+    public CoroutineManager coroutineManagerRef;
 
     public void PopulateBuildingArrays()
     {
@@ -58,13 +60,6 @@ public class BuildingManager : MonoBehaviour
 
             // Add the item array to the dictionary with the item type as the key
             buildingArrays.Add(itemType, itemArray);
-        }
-
-        // Get or add the ItemData component to the item
-        BuildingItemData itemData = item.GetComponent<BuildingItemData>();
-        if (itemData == null)
-        {
-            itemData = item.AddComponent<BuildingItemData>();
         }
     }
 

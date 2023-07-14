@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using BuildingManagement;
 
 public class DragAndDropBuildings : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private RectTransform rectTransform;
     private Image objectImage;
     private Animation objAnimation;
+    private BuildingItemData initialItemData;
 
     private void Awake()
     {
@@ -17,6 +19,7 @@ public class DragAndDropBuildings : MonoBehaviour, IDragHandler, IBeginDragHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         objectImage.color = Color.yellow;
+        BuildingItemData itemData = eventData.pointerEnter.GetComponent<BuildingItemData>();
     }
     public void OnPointerExit(PointerEventData eventData)
     {
@@ -49,6 +52,6 @@ public class DragAndDropBuildings : MonoBehaviour, IDragHandler, IBeginDragHandl
             objAnimation.Play("BuildingSpawn");
         }
         BuildingManager.isDraggingBuilding = false;
-    }
 
+    }
 }

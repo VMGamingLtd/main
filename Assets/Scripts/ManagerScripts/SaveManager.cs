@@ -14,6 +14,7 @@ public class SaveManager : MonoBehaviour
     private string filePath;
     public InventoryManager inventoryManager;
     public RecipeManager recipeManager;
+    private SaveDataModel currentSaveData;
 
     public class SaveDataModel
     {
@@ -54,6 +55,8 @@ public class SaveManager : MonoBehaviour
         public int hours;
         public int minutes;
         public int seconds;
+        public int Planet0CurrentElectricity;
+        public int Planet0MaxElectricity;
         public bool registeredUser;
         public bool firstGoal;
         public bool secondGoal;
@@ -73,7 +76,6 @@ public class SaveManager : MonoBehaviour
         public RecipeData[] assembledRecipeObjects;
     }
 
-    [System.Serializable]
     public class InventoryItemData
     {
         public string itemName;
@@ -98,8 +100,6 @@ public class SaveManager : MonoBehaviour
         public string itemClass;
         public string itemProduct;
     }
-    // Current save data
-    private SaveDataModel currentSaveData;
 
     private void Start()
     {
@@ -164,6 +164,8 @@ public class SaveManager : MonoBehaviour
         currentSaveData.credits = Credits.credits;
         currentSaveData.MenuButtonTypeOn = ButtonManager.MenuButtonTypeOn;
         currentSaveData.isDraggingBuilding = BuildingManager.isDraggingBuilding;
+        currentSaveData.Planet0MaxElectricity = Planet0Buildings.Planet0CurrentElectricity;
+        currentSaveData.Planet0MaxElectricity = Planet0Buildings.Planet0MaxElectricity;
 
         // Access the itemArrays dictionary through the inventoryManager reference
         Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;
@@ -391,6 +393,8 @@ public class SaveManager : MonoBehaviour
         userGameDataSaveRequest.GameData.Credits = Credits.credits;
         //userGameDataSaveRequest.GameData.MenuButtonTypeOn = ButtonManager.MenuButtonTypeOn; //new variable
         //userGameDataSaveRequest.GameData.isDraggingBuilding = BuildingManager.isDraggingBuilding; //new variable
+        //userGameDataSaveRequest.GameData.Planet0MaxElectricity = Planet0Buildings.Planet0CurrentElectricity; //new variable
+        //userGameDataSaveRequest.GameData.Planet0MaxElectricity = Planet0Buildings.Planet0MaxElectricity; //new variable
 
         // fill in inventories
 

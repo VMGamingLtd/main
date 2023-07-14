@@ -29,7 +29,8 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {"CraftBattery", tooltipObjects.CraftBattery},
             {"CraftAndUseWater", tooltipObjects.CraftAndUseWater},
             {"BuildBase", tooltipObjects.BuildBase},
-            {"EngineeringSkill", tooltipObjects.EngineeringSkill}
+            {"EngineeringSkill", tooltipObjects.EngineeringSkill},
+            {"BiofuelGenerator", tooltipObjects.BiofuelGenerator}
         };
     }
 
