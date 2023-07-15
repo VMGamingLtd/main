@@ -53,7 +53,7 @@ class SimpleFriendDataSource : IDataSource<FriendModel>
 
     public SimpleFriendDataSource(IFilter<FriendModel> filter = null)
     {
-        this.Friends = new FriendModel[8]
+        this.Friends = new FriendModel[13]
         {
             new FriendModel { UserName = "Anderson", Status = "Online" },
             new FriendModel { UserName = "Bennett", Status = "Offline" },
@@ -63,13 +63,11 @@ class SimpleFriendDataSource : IDataSource<FriendModel>
             new FriendModel { UserName = "Foster", Status = "Offline" },
             new FriendModel { UserName = "Garcia", Status = "Online" },
             new FriendModel { UserName = "Harrison", Status = "Online" },
-            /*
             new FriendModel { UserName = "Johnson", Status = "Online" },
             new FriendModel { UserName = "Mitchell_1", Status = "Online" },
             new FriendModel { UserName = "Mitchell_2", Status = "Online" },
             new FriendModel { UserName = "Mitchell_3", Status = "Online" },
             new FriendModel { UserName = "Mitchell_4", Status = "Online" },
-            */
         };
         this.Filter = filter;
     }
@@ -125,14 +123,12 @@ public class FriendsManager : MonoBehaviour
 
     public void AddFriend(FriendModel friend)
     {
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1100: AddFriend() - {friend.UserName}");
-        Instantiate(FriendsButton, List);
-        Transform childObject_friendUsername = FriendsButton.transform.Find("Info/FriendUsername");
+        GameObject clonedButton = Instantiate(FriendsButton, List);
+        Transform childObject_friendUsername = clonedButton.transform.Find("Info/FriendUsername");
         TextMeshProUGUI friendUsername = childObject_friendUsername.GetComponent<TextMeshProUGUI>();
         friendUsername.text = friend.UserName;
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1200: AddFriend() - friendUsername.text: {friendUsername.text}");
 
-        Transform childObject_friendStatus = FriendsButton.transform.Find("Info/Status");
+        Transform childObject_friendStatus = clonedButton.transform.Find("Info/Status");
         TextMeshProUGUI friendStatus = childObject_friendStatus.GetComponent<TextMeshProUGUI>();
         friendStatus.text = friend.Status;
     }
@@ -147,7 +143,6 @@ public class FriendsManager : MonoBehaviour
 
     public void DisplayFriends()
     {
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1000: DisplayFriends() - start");
         RemoveAllFriends();
 
         FriendModel[] friends = DataSource.GetData();
@@ -155,27 +150,26 @@ public class FriendsManager : MonoBehaviour
         {
             AddFriend(friend);
         }
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1500: DisplayFriends() - end");
     }
 
     public void Search(string search)
     {
-        //Filter.SetSearchSubstring(search);
-        //DisplayFriends();
+        Filter.SetSearchSubstring(search);
+        DisplayFriends();
     }
 
     public void OnEnable()
     {
-        //Filter.SetSearchSubstring(null);
+        Filter.SetSearchSubstring(null);
         DisplayFriends();
 
-        //SearchTextBox.onValueChanged.AddListener(OnSearchTextBoxChange);
+        SearchTextBox.onValueChanged.AddListener(OnSearchTextBoxChange);
     }
 
     public void OnSearchTextBoxChange(string text)
     { 
-        //Filter.SetSearchSubstring(text);
-        //DisplayFriends();
+        Filter.SetSearchSubstring(text);
+        DisplayFriends();
     }
 
 
