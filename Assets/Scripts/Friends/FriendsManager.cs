@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine.Events;
 using Cysharp.Threading.Tasks;
 
-namespace Gao.Friends
+namespace Friends
 {
     public class FriendModel
     {
@@ -15,7 +15,8 @@ namespace Gao.Friends
 
     public class FriendsManager : MonoBehaviour
     {
-        private static int MAX_SCROLL_LIST_LINES_CPUNT = 100;
+        //private static int MAX_SCROLL_LIST_LINES_CPUNT = 100;
+        private static int MAX_SCROLL_LIST_LINES_CPUNT = 10;
 
         public GameObject FriendsButton;
         public Transform List; // scroll list containing friends buttons
@@ -59,12 +60,6 @@ namespace Gao.Friends
 
             for (int i = 0; i < response.Users.Length; i++)
             {
-                // linit maximal number of users to be desplayed
-                if (i + 1 == MAX_SCROLL_LIST_LINES_CPUNT)
-                {
-                    // TODO: maake backend return no more than MAX_SCROLL_LIST_LINES_CPUNT users
-                    break;
-                }
 
                 // fill in friends array
                 AllUsers[++LastIndexAllUsers] = new FriendModel {
@@ -72,6 +67,13 @@ namespace Gao.Friends
                     // TODO: get status
                     Status = "online",
                 };
+
+                // linit maximal number of users to be desplayed
+                if (i + 1 == MAX_SCROLL_LIST_LINES_CPUNT)
+                {
+                    // TODO: maake backend return no more than MAX_SCROLL_LIST_LINES_CPUNT users
+                    break;
+                }
             }
 
         }
