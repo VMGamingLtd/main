@@ -203,46 +203,55 @@ namespace Gaos.Api
         public async UniTask<PostResponse> CallAsync()
         {
             string METHOD = "CallAsync()";
-            var wr = this.makeWebRequest();
-            this.LastWebRequest = wr;
-
-            await wr.SendWebRequest();
-
-            if (wr.result != UnityWebRequest.Result.Success)
+            UnityWebRequest wr;
+            try
             {
-                Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
-                this.IsResponseError = true;
-                this.IsResponseTimeout = wr.error.Contains("timeout");
+                wr = this.makeWebRequest();
+                this.LastWebRequest = wr;
 
-                string contenType = wr.GetResponseHeader("Content-Type");
-                if (contenType != null && contenType.Contains("json"))
-                {
-                    this.ResponseJsonStr = wr.downloadHandler.text;
-                }
+                await wr.SendWebRequest();
 
-            }
-            else
-            {
-                string contenType = wr.GetResponseHeader("Content-Type");
-                if (contenType != null && contenType.Contains("json"))
+                if (wr.result != UnityWebRequest.Result.Success)
                 {
-                    this.ResponseJsonStr = wr.downloadHandler.text;
-                    this.IsResponseError = false;
+                    Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
+                    this.IsResponseError = true;
+                    this.IsResponseTimeout = wr.error.Contains("timeout");
+
+                    string contenType = wr.GetResponseHeader("Content-Type");
+                    if (contenType != null && contenType.Contains("json"))
+                    {
+                        this.ResponseJsonStr = wr.downloadHandler.text;
+                    }
 
                 }
                 else
                 {
-                    Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: response content type is not json, url: {wr.url}");
-                    this.IsResponseError = true;
-                }
-            }
+                    string contenType = wr.GetResponseHeader("Content-Type");
+                    if (contenType != null && contenType.Contains("json"))
+                    {
+                        this.ResponseJsonStr = wr.downloadHandler.text;
+                        this.IsResponseError = false;
 
-            return new PostResponse()
+                    }
+                    else
+                    {
+                        Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: response content type is not json, url: {wr.url}");
+                        this.IsResponseError = true;
+                    }
+                }
+
+                return new PostResponse()
+                {
+                    ResponseJsonStr = this.ResponseJsonStr,
+                    IsResponseError = this.IsResponseError,
+                    IsResponseTimeout = this.IsResponseTimeout
+                };
+            }
+            catch (Exception ex)
             {
-                ResponseJsonStr = this.ResponseJsonStr,
-                IsResponseError = this.IsResponseError,
-                IsResponseTimeout = this.IsResponseTimeout
-            };
+                Debug.LogError($"{CLASS_NAME}:{METHOD}: ERROR: {ex.Message}, url: {this.Url}");
+                throw ex;
+            }
 
         }
 

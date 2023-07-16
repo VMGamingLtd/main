@@ -37,19 +37,29 @@ namespace Gaos.Friends.Friends
 
         public static async UniTask<Gaos.Routes.Model.FriendsJson.GetUsersListResponse> CallAsync()
         {
-            Gaos.Routes.Model.FriendsJson.GetUsersListRequest request = new Gaos.Routes.Model.FriendsJson.GetUsersListRequest();
-            string requestJsonStr = JsonUtility.ToJson(request);
-            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getUsersList", requestJsonStr);
-            await apiCall.CallAsync();
-            if (apiCall.IsResponseError)
+            const string METHOD_NAME = "CallAsync()";
+            try
             {
-                Debug.LogError($"ERROR: error getting users list");
-                return null;
-            } 
-            else
+
+                Gaos.Routes.Model.FriendsJson.GetUsersListRequest request = new Gaos.Routes.Model.FriendsJson.GetUsersListRequest();
+                string requestJsonStr = JsonUtility.ToJson(request);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getUsersList", requestJsonStr);
+                await apiCall.CallAsync();
+                if (apiCall.IsResponseError)
+                {
+                    Debug.LogError($"ERROR: error getting users list");
+                    return null;
+                }
+                else
+                {
+                    Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetUsersListResponse>(apiCall.ResponseJsonStr);
+                    return response;
+                }
+            }
+            catch (System.Exception ex)
             {
-                Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetUsersListResponse>(apiCall.ResponseJsonStr);
-                return response;
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {ex.Message}");
+                throw ex;
             }
         }
 
