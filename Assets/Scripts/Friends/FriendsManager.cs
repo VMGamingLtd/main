@@ -84,6 +84,7 @@ namespace Friends
             while (n > 0)
             {
                 GameObject friendsButton = Instantiate(FriendsButton, List);
+                friendsButton.transform.position = Vector3.zero;
                 friendsButton.SetActive(false);
                 AllFriendsButtons[++LastIndexAllFriendsButtons] = friendsButton;
                 --n;
