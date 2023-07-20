@@ -29,8 +29,11 @@ public class ChatOpener : MonoBehaviour
             Debug.LogWarning("Info/FriendUsername object not found in parent.");
         }
     }
+
+    /*
     public void GetTargetUsername()
     {
         //return messageList.targetUsername;
     }
+    */
 }

@@ -7,7 +7,8 @@ namespace Gaos.Routes.Model.ChatRoomJson
     public class ReadMessagesBackwardsRequest
     {
         public int ChatRoomId;
-        public int? LastMessageId;
+        public int LastMessageId;
+        public int Count;
 
 
     }

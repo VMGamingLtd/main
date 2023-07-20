@@ -4,11 +4,8 @@ using System.Collections.Generic;
 namespace Gaos.Routes.Model.ChatRoomJson
 {
     [System.Serializable]
-    public class ReadMessagesRequest
+    public class ExistsChatRoomRequest
     {
-        public int ChatRoomId;
-        public int LastMessageId;
-        public int Count;
-
+        public string? ChatRoomName;
     }
 }
