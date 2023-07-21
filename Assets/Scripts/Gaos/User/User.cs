@@ -102,6 +102,7 @@ namespace Gaos.User.User
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  guest logged in");
                 Gaos.Context.Authentication.SetJWT(GuestLoginResponse.Jwt);
                 Gaos.Context.Authentication.SetUserId(GuestLoginResponse.UserId);
+                Gaos.Context.Authentication.SetUserName(GuestLoginResponse.UserName);
             }
             else
             {
@@ -301,6 +302,8 @@ namespace Gaos.User.User
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user logged in");
                         Gaos.Context.Authentication.SetJWT(LoginResponse.Jwt);
+                        Gaos.Context.Authentication.SetUserId(LoginResponse.UserId);
+                        Gaos.Context.Authentication.SetUserName(LoginResponse.UserName);
                     }
                     else
                     {

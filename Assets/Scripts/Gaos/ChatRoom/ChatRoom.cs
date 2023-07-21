@@ -178,4 +178,39 @@ namespace Gaos.ChatRoom.ChatRoom
         }
 
     }
+
+    public class WriteMessage
+    {
+        public readonly static string CLASS_NAME = typeof(WriteMessage).Name;
+        public static async UniTask<Gaos.Routes.Model.ChatRoomJson.WriteMessageResponse> CallAsync(int chatRoomId, string message)
+        {
+            const string METHOD_NAME = "CallAsync()";
+            try
+            {
+
+                Gaos.Routes.Model.ChatRoomJson.WriteMessageRequest request = new Gaos.Routes.Model.ChatRoomJson.WriteMessageRequest();
+                request.ChatRoomId = chatRoomId;
+                request.Message = message;
+                string requestJsonStr = JsonUtility.ToJson(request);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/chatRoom/writeMessages", requestJsonStr);
+                await apiCall.CallAsync();
+                if (apiCall.IsResponseError)
+                {
+                    Debug.LogError($"ERROR: error calling writeMessages");
+                    throw new System.Exception("error calling writeMessages");
+                }
+                else
+                {
+                    Gaos.Routes.Model.ChatRoomJson.WriteMessageResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.ChatRoomJson.WriteMessageResponse>(apiCall.ResponseJsonStr);
+                    return response;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {ex.Message}");
+                throw ex;
+            }
+        }
+
+    }
 }

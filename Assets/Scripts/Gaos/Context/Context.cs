@@ -10,6 +10,7 @@ namespace Gaos.Context
     {
         private static string JWT = null;
         private static int UserId = -1;
+        private static string UserName;
         public static void SetJWT(string jwt)
         { 
             JWT = jwt;
@@ -28,6 +29,16 @@ namespace Gaos.Context
         public static int GetUserId() 
         {
             return UserId;
+        }
+
+        public static void SetUserName(string userName)
+        {
+            UserName = userName;
+        }
+
+        public static string GetUserName()
+        {
+            return UserName;
         }
     }
 

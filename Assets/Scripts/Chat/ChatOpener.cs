@@ -1,39 +1,42 @@
 using UnityEngine;
 using TMPro;
 
-public class ChatOpener : MonoBehaviour
+namespace Chat
 {
-    public MessageList messageList;
-
-    public void OpenChatWithUser()
+    public class ChatOpener : MonoBehaviour
     {
-        Transform parent = transform.parent;
-        Transform usernameObject = parent.Find("Info/FriendUsername");
+        public MessageList messageList;
 
-        if (usernameObject != null)
+        public void OpenChatWithUser()
         {
-            TextMeshProUGUI usernameText = usernameObject.GetComponent<TextMeshProUGUI>();
+            Transform parent = transform.parent;
+            Transform usernameObject = parent.Find("Info/FriendUsername");
 
-            if (usernameText != null)
+            if (usernameObject != null)
             {
-                messageList.targetUsername = usernameText.text;
-                Debug.Log("Opened chat with user: " + messageList.targetUsername);
+                TextMeshProUGUI usernameText = usernameObject.GetComponent<TextMeshProUGUI>();
+
+                if (usernameText != null)
+                {
+                    messageList.FriendUsername = usernameText.text;
+                    Debug.Log("Opened chat with user: " + messageList.FriendUsername);
+                }
+                else
+                {
+                    Debug.LogWarning("FriendUsername object does not have TextMeshProUGUI component.");
+                }
             }
             else
             {
-                Debug.LogWarning("FriendUsername object does not have TextMeshProUGUI component.");
+                Debug.LogWarning("Info/FriendUsername object not found in parent.");
             }
         }
-        else
-        {
-            Debug.LogWarning("Info/FriendUsername object not found in parent.");
-        }
-    }
 
-    /*
-    public void GetTargetUsername()
-    {
-        //return messageList.targetUsername;
+        /*
+        public void GetTargetUsername()
+        {
+            //return messageList.targetUsername;
+        }
+        */
     }
-    */
 }
