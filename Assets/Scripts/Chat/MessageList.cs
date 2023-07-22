@@ -1,1005 +1,223 @@
+﻿
 using UnityEngine;
 using TMPro;
+using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 
-public class MessageList : MonoBehaviour
+
+namespace Chat
 {
-    public GameObject chatMessageTemplate;
-    public TMP_InputField typeMessageInput;
-    public string targetUsername;
-
-    public Message[] messageHistory;
-    private int messageIndex;
-
-    private void Start()
+    public class MessageModel
     {
-        messageHistory = new Message[50];
-        messageIndex = 0;
+        public Gaos.Routes.Model.ChatRoomJson.ResponseMessage message;
     }
 
-    public void CreateMessage(string content)
+    public class MessageList : MonoBehaviour
     {
-        if (!string.IsNullOrEmpty(content))
+        private static int MAX_SCROLL_LIST_LINES_COUNT = 1000;
+        private static int MAX_MESSAGE_COUNT_TO_PULL = 5;
+
+        public GameObject chatMessageTemplate;
+        public TMP_InputField typeMessageInput;
+
+        private LinkedList<MessageModel> AllMessages = new LinkedList<MessageModel>();
+
+        private GameObject[] AllMessageLines = new GameObject[MAX_SCROLL_LIST_LINES_COUNT]; // all friends buttons in the scroll list
+        private int LastIndexAllMessageLines = -1;
+
+        public int ChatRoomId = -1;
+        public string ChatRoomName;
+
+        private bool IsFinished = false;
+
+        public string FriendUsername;
+
+        private void AllocateMessageLines()
         {
-            if (messageIndex >= 50)
+            int n = AllMessages.Count - (LastIndexAllMessageLines + 1);
+            while (n > 0)
             {
-                messageIndex = 0;
+                // Create a new message line object as a child of the current object
+                GameObject messageLine = Instantiate(chatMessageTemplate, transform);
+                messageLine.transform.position = Vector3.zero;
+                messageLine.SetActive(false);
+                AllMessageLines[++LastIndexAllMessageLines] = messageLine;
+                --n;
             }
-            if (ContainsSwearWords(content))
+        }
+
+        private void TrimAllMessages()
+        {
+            if (AllMessages.Count > MAX_SCROLL_LIST_LINES_COUNT)
             {
-                content = CensorSwearWords(content);
+                int n = AllMessages.Count - MAX_SCROLL_LIST_LINES_COUNT;
+                while (n > 0)
+                {
+                    AllMessages.RemoveFirst();
+                    --n;
+                }
             }
-            if (chatMessageTemplate != null)
+
+        }
+
+        private void DisplayAllMessages() // display all messages in the scroll list
+        {
+            TrimAllMessages();
+            AllocateMessageLines(); 
+
+            int i = 0;
+            foreach (Chat.MessageModel messageModel in AllMessages)
             {
-                // Create a new message object as a child of the current object
-                GameObject newMessageObject = Instantiate(chatMessageTemplate, transform);
+                GameObject messageLine = AllMessageLines[i++];
+                messageLine.SetActive(true);
 
-                // Reset the local position of the new message object
-                RectTransform newMessageTransform = newMessageObject.GetComponent<RectTransform>();
-                newMessageTransform.localPosition = Vector3.zero;
+                Message message = messageLine.GetComponent<Chat.Message>();
+                //messageLine.GetComponent<ChatMessage>().SetMessage(messageModel.message);
 
-                Message messageComponent = newMessageObject.GetComponent<Message>();
+                message.dateText.text = messageModel.message.CreatedAt.ToString();
+                message.usernameText.text = messageModel.message.UserName;
+                message.messageText.text = messageModel.message.Message;
+            }
 
-                if (messageComponent != null)
+            for(; i <= LastIndexAllMessageLines; i++)
+            {
+                GameObject messageLine = AllMessageLines[i];
+                messageLine.SetActive(false);
+            }
+        }
+
+        private int GetLastMessageIdx()
+        {
+            return AllMessages.Count - 1;
+        }
+
+        private async UniTask readLastMessages()
+        {
+            int lastMessageIdx;
+            if (AllMessages.Count  >  0)
+            {
+                lastMessageIdx = AllMessages.Last.Value.message.MessageId;
+                Gaos.Routes.Model.ChatRoomJson.ReadMessagesResponse response = await Gaos.ChatRoom.ChatRoom.ReadMessages.CallAsync(ChatRoomId, lastMessageIdx, MAX_MESSAGE_COUNT_TO_PULL);
+                for (var i = 0; i < response.Messages.Length; i++)
                 {
-                    string currentDate = System.DateTime.Now.ToString();
-                    messageComponent.SetContent(currentDate, targetUsername, content);
-                    messageHistory[messageIndex] = messageComponent;
-                    messageIndex++;
+                    var message = response.Messages[i];
+                    MessageModel messageModel = new MessageModel();
+                    messageModel.message = message;
+                    AllMessages.AddLast(messageModel);
                 }
-                else
-                {
-                    Debug.LogWarning("ChatMessageTemplate does not have the Message component attached.");
-                }
+                TrimAllMessages();
             }
             else
             {
-                Debug.LogWarning("ChatMessageTemplate is not assigned.");
+                Gaos.Routes.Model.ChatRoomJson.ReadMessagesBackwardsResponse response = await Gaos.ChatRoom.ChatRoom.ReadMessagesBackwards.CallAsync(ChatRoomId, -1, MAX_MESSAGE_COUNT_TO_PULL);
+                for (var i = 0; i < response.Messages.Length; i++)
+                {
+                    var message = response.Messages[i];
+                    MessageModel messageModel = new MessageModel();
+                    messageModel.message = message;
+                    AllMessages.AddFirst(messageModel);
+                }
+
             }
 
-            typeMessageInput.text = string.Empty;
-
-            // Print the latest message
-            Message latestMessage = messageHistory[messageIndex - 1];
-            Debug.Log("Content: " + latestMessage.messageText);
         }
-    }
-    private bool ContainsSwearWords(string message)
-    {
-        foreach (string swearWord in swearWords)
+
+        private async UniTask readPreviousMessages()
         {
-            if (message.ToLower().Contains(swearWord.ToLower()))
+            if (AllMessages.Count > 0 && AllMessages.Count < MAX_SCROLL_LIST_LINES_COUNT)
             {
-                return true;
+                int firstMessageIdx = AllMessages.First.Value.message.MessageId;
+                Gaos.Routes.Model.ChatRoomJson.ReadMessagesBackwardsResponse response = await Gaos.ChatRoom.ChatRoom.ReadMessagesBackwards.CallAsync(ChatRoomId, firstMessageIdx, MAX_MESSAGE_COUNT_TO_PULL);
+                for (var i = 0; i < response.Messages.Length; i++)
+                {
+                    var message = response.Messages[i];
+                    MessageModel messageModel = new MessageModel();
+                    messageModel.message = message;
+                    AllMessages.AddFirst(messageModel);
+                }
+                TrimAllMessages();
+            }
+
+        }
+
+
+        private System.Threading.CancellationTokenSource ReadMessagesLoopWaitCancellationTokenSource;  
+
+
+
+        private async UniTaskVoid ReadMessagesLoop()
+        {
+            await EnsureChatRoomExists();
+
+            ReadMessagesLoopWaitCancellationTokenSource = new System.Threading.CancellationTokenSource();
+            while (true)
+            {
+                try
+                {
+                    await UniTask.Delay(System.TimeSpan.FromSeconds(5), ignoreTimeScale: false, PlayerLoopTiming.Update, ReadMessagesLoopWaitCancellationTokenSource.Token);
+                }
+                catch (System.OperationCanceledException)
+                {
+                    if (IsFinished)
+                    {
+                        break;
+                    }
+                }
+
+                int cnt = AllMessages.Count;
+                await readLastMessages();
+                if (IsFinished)
+                {
+                    break;
+                }
+                if (cnt != AllMessages.Count)
+                {
+                    DisplayAllMessages();
+                }
+
+                if (AllMessages.Count  < MAX_SCROLL_LIST_LINES_COUNT)
+                {
+                    cnt = AllMessages.Count;
+                    await readPreviousMessages();
+                    if (IsFinished)
+                    {
+                        break;
+                    }
+                    if (cnt != AllMessages.Count)
+                    {
+                        DisplayAllMessages();
+                    }
+
+                }
             }
         }
-        return false;
-    }
-    private string CensorSwearWords(string message)
-    {
-        foreach (string swearWord in swearWords)
+
+        private string MakeChatRoomName()
         {
-            string censorString = new string('*', swearWord.Length);
-            message = message.Replace(swearWord, censorString);
+            string name = $"Friends_{Gaos.Context.Authentication.GetUserName()}_{FriendUsername}";
+            return name;
+
         }
-        return message;
+
+        private async UniTask EnsureChatRoomExists()
+        {
+            if (ChatRoomId == -1)
+            {
+                ChatRoomName = MakeChatRoomName();
+                Gaos.Routes.Model.ChatRoomJson.CreateChatRoomResponse response = await Gaos.ChatRoom.ChatRoom.CreateChatRoom.CallAsync(ChatRoomName);
+                ChatRoomId = response.ChatRoomId;
+            }
+        }
+
+        private void  OnEnable()
+        {
+            ReadMessagesLoop().Forget();
+
+        }
+        private void  OnDisable()
+        {
+            IsFinished = true;
+            ReadMessagesLoopWaitCancellationTokenSource.Cancel();
+        }
     }
-    string[] swearWords = new string[]
-    {
-        "anal",
-        "analannie",
-        "analsex",
-        "anus",
-        "arse",
-        "arsehole",
-        "ass",
-        "assbagger",
-        "assblaster",
-        "assclown",
-        "asscowboy",
-        "asses",
-        "assfuck",
-        "assfucker",
-        "asshat",
-        "asshole",
-        "assholes",
-        "asshore",
-        "assjockey",
-        "asskiss",
-        "asskisser",
-        "assklown",
-        "asslick",
-        "asslicker",
-        "asslover",
-        "assman",
-        "assmonkey",
-        "assmunch",
-        "assmuncher",
-        "asspacker",
-        "asspirate",
-        "asspuppies",
-        "assranger",
-        "asswhore",
-        "asswipe",
-        "backdoorman",
-        "badfuck",
-        "balllicker",
-        "ballsack",
-        "barelylegal",
-        "barface",
-        "barfface",
-        "bastard" ,
-        "beastality",
-        "beastial",
-        "beastiality",
-        "beatoff",
-        "beat-off",
-        "beatyourmeat",
-        "bestiality",
-        "biatch",
-        "bigass",
-        "bigbastard",
-        "bigbutt",
-        "bitch",
-        "bitcher",
-        "bitches",
-        "bitchez",
-        "bitchin",
-        "bitching",
-        "bitchslap",
-        "bitchy",
-        "biteme",
-        "blowjob",
-        "bohunk",
-        "bollick",
-        "bollock",
-        "bondage",
-        "boner",
-        "boob",
-        "boobies",
-        "boobs",
-        "booby",
-        "boody",
-        "boong",
-        "boonga",
-        "boonie",
-        "booty",
-        "bootycall",
-        "bountybar",
-        "breastjob",
-        "breastlover",
-        "breastman",
-        "brothel",
-        "bugger",
-        "buggered",
-        "buggery",
-        "bullcrap",
-        "bulldike",
-        "bulldyke",
-        "bullshit",
-        "bumblefuck",
-        "bumfuck",
-        "bunga",
-        "bunghole",
-        "butchbabes",
-        "butchdike",
-        "butchdyke",
-        "butt",
-        "buttbang",
-        "butt-bang",
-        "buttface",
-        "buttfuck",
-        "butt-fuck",
-        "buttfucker",
-        "butt-fucker",
-        "buttfuckers",
-        "butt-fuckers",
-        "butthead",
-        "buttman",
-        "buttmunch",
-        "buttmuncher",
-        "buttpirate",
-        "buttplug",
-        "buttstain",
-        "byatch",
-        "cacker",
-        "cameljockey",
-        "cameltoe",
-        "carpetmuncher",
-        "cherrypopper",
-        "chickslick",
-        "clamdigger",
-        "clamdiver",
-        "clit",
-        "clitoris",
-        "clogwog",
-        "cocaine",
-        "cock",
-        "cockblock",
-        "cockblocker",
-        "cockcowboy",
-        "cockfight",
-        "cockhead",
-        "cockknob",
-        "cocklicker",
-        "cocklover",
-        "cocknob",
-        "cockqueen",
-        "cockrider",
-        "cocksman",
-        "cocksmith",
-        "cocksmoker",
-        "cocksucer",
-        "cocksuck" ,
-        "cocksucked" ,
-        "cocksucker",
-        "cocksucking",
-        "cocktease",
-        "coitus",
-        "condom",
-        "copulate",
-        "cornhole",
-        "crackpipe",
-        "crackwhore",
-        "crack-whore",
-        "crapola",
-        "crapper",
-        "crotchjockey",
-        "crotchmonkey",
-        "crotchrot",
-        "cum",
-        "cumbubble",
-        "cumfest",
-        "cumjockey",
-        "cumm",
-        "cummer",
-        "cumming",
-        "cumquat",
-        "cumqueen",
-        "cumshot",
-        "cunilingus",
-        "cunillingus",
-        "cunn",
-        "cunnilingus",
-        "cunntt",
-        "cunt",
-        "cunteyed",
-        "cuntfuck",
-        "cuntfucker",
-        "cuntlick" ,
-        "cuntlicker" ,
-        "cuntlicking" ,
-        "cuntsucker",
-        "cybersex",
-        "cyberslimer",
-        "darkie",
-        "darky",
-        "datnigga",
-        "deapthroat",
-        "deepthroat",
-        "dick",
-        "dickbrain",
-        "dickforbrains",
-        "dickhead",
-        "dickless",
-        "dicklick",
-        "dicklicker",
-        "dickman",
-        "dickwad",
-        "dickweed",
-        "diddle",
-        "dike",
-        "dildo",
-        "dingleberry",
-        "dipshit",
-        "dipstick",
-        "dixiedike",
-        "dixiedyke",
-        "doggiestyle",
-        "doggystyle",
-        "dragqueen",
-        "dragqween",
-        "dripdick",
-        "dumb",
-        "dumbass",
-        "dumbbitch",
-        "dumbfuck",
-        "dyefly",
-        "dyke",
-        "easyslut",
-        "eatballs",
-        "eatme",
-        "eatpussy",
-        "ejaculate",
-        "ejaculated",
-        "ejaculating" ,
-        "ejaculation",
-        "erection",
-        "facefucker",
-        "faeces",
-        "fag",
-        "fagging",
-        "faggot",
-        "fagot",
-        "fannyfucker",
-        "fastfuck",
-        "fatah",
-        "fatass",
-        "fatfuck",
-        "fatfucker",
-        "fatso",
-        "fckcum",
-        "feces",
-        "fingerfood",
-        "fingerfuck" ,
-        "fingerfucked" ,
-        "fingerfucker" ,
-        "fingerfuckers",
-        "fingerfucking" ,
-        "fistfuck",
-        "fistfucked" ,
-        "fistfucker" ,
-        "fistfucking" ,
-        "fisting",
-        "flange",
-        "flasher",
-        "flatulence",
-        "floo",
-        "flydie",
-        "flydye",
-        "fondle",
-        "footaction",
-        "footfuck",
-        "footfucker",
-        "footlicker",
-        "footstar",
-        "fore",
-        "foreskin",
-        "forni",
-        "fornicate",
-        "foursome",
-        "freakfuck",
-        "freakyfucker",
-        "freefuck",
-        "fucck",
-        "fuck",
-        "fucka",
-        "fuckable",
-        "fuckbag",
-        "fuckbuddy",
-        "fucked",
-        "fuckedup",
-        "fucker",
-        "fuckers",
-        "fuckface",
-        "fuckfest",
-        "fuckfreak",
-        "fuckfriend",
-        "fuckhead",
-        "fuckher",
-        "fuckin",
-        "fuckina",
-        "fucking",
-        "fuckingbitch",
-        "fuckinnuts",
-        "fuckinright",
-        "fuckit",
-        "fuckknob",
-        "fuckme" ,
-        "fuckmehard",
-        "fuckmonkey",
-        "fuckoff",
-        "fuckpig",
-        "fucks",
-        "fucktard",
-        "fuckwhore",
-        "fuckyou",
-        "fudgepacker",
-        "fugly",
-        "funfuck",
-        "fuuck",
-        "gangbang",
-        "gangbanged" ,
-        "gangbanger",
-        "gatorbait",
-        "gaymuthafuckinwhore",
-        "gaysex" ,
-        "genital",
-        "getiton",
-        "givehead",
-        "glazeddonut",
-        "godammit",
-        "goddamit",
-        "goddammit",
-        "goddamn",
-        "goddamned",
-        "goddamnes",
-        "goddamnit",
-        "goddamnmuthafucker",
-        "goldenshower",
-        "gonorrehea",
-        "gotohell",
-        "goy",
-        "goyim",
-        "gringo",
-        "grostulation",
-        "gyp",
-        "gypo",
-        "gypp",
-        "gyppie",
-        "gyppo",
-        "gyppy",
-        "handjob",
-        "hardon",
-        "headfuck",
-        "heeb",
-        "henhouse",
-        "heroin",
-        "hindoo",
-        "hitler",
-        "hitlerism",
-        "hitlerist",
-        "hoes",
-        "holestuffer",
-        "homo",
-        "homobangers",
-        "hooker",
-        "hookers",
-        "hooters",
-        "horny",
-        "horseshit",
-        "hotdamn",
-        "hotpussy",
-        "hottotrot",
-        "husky",
-        "hussy",
-        "hustler",
-        "hymen",
-        "hymie",
-        "iblowu",
-        "idiot",
-        "incest",
-        "insest",
-        "intercourse",
-        "interracial",
-        "intheass",
-        "inthebuff",
-        "jackass",
-        "jackoff",
-        "jackshit",
-        "jerkoff",
-        "jiga",
-        "jigaboo",
-        "jigg",
-        "jigga",
-        "jiggabo",
-        "jigger" ,
-        "jiggy",
-        "jihad",
-        "jijjiboo",
-        "jimfish",
-        "jism",
-        "jiz" ,
-        "jizim",
-        "jizjuice",
-        "jizm" ,
-        "jizz",
-        "jizzim",
-        "jizzum",
-        "joint",
-        "juggalo",
-        "jugs",
-        "junglebunny",
-        "kigger",
-        "kissass",
-        "kkk",
-        "kotex",
-        "kraut",
-        "kum",
-        "kumbubble",
-        "kumbullbe",
-        "kummer",
-        "kumming",
-        "kumquat",
-        "kums",
-        "kunilingus",
-        "kunnilingus",
-        "kunt",
-        "lactate",
-        "laid",
-        "lapdance",
-        "lesbain",
-        "lesbayn",
-        "lesbian",
-        "lesbin",
-        "lesbo",
-        "lezbe",
-        "lezbefriends",
-        "lezbo",
-        "licker",
-        "lickme",
-        "limpdick",
-        "livesex",
-        "looser",
-        "loser",
-        "lovebone",
-        "lovejuice",
-        "lsd",
-        "lubejob",
-        "luckycammeltoe",
-        "macaca",
-        "mams",
-        "manhater",
-        "manpaste",
-        "marijuana",
-        "mastabate",
-        "mastabater",
-        "masterbate",
-        "masterblaster",
-        "mastrabator",
-        "masturbate",
-        "masturbating",
-        "mattressprincess",
-        "meatbeatter",
-        "meatrack",
-        "meth",
-        "mgger",
-        "mggor",
-        "mickeyfinn",
-        "mideast",
-        "milf",
-        "mofo",
-        "moky",
-        "mooncricket",
-        "moron",
-        "moslem",
-        "mosshead",
-        "mothafuck",
-        "mothafucka",
-        "mothafuckaz",
-        "mothafucked" ,
-        "mothafucker",
-        "mothafuckin",
-        "mothafucking" ,
-        "mothafuckings",
-        "motherfuck",
-        "motherfucked",
-        "motherfucker",
-        "motherfuckin",
-        "motherfucking",
-        "motherfuckings",
-        "motherlovebone",
-        "muff",
-        "muffdive",
-        "muffdiver",
-        "muffindiver",
-        "mufflikcer",
-        "mulatto",
-        "muncher",
-        "naked",
-        "narcotic",
-        "nastybitch",
-        "nastyho",
-        "nastyslut",
-        "nastywhore",
-        "nazi",
-        "negro",
-        "negroes",
-        "negroid",
-        "negro's",
-        "nigg",
-        "nigga",
-        "niggah",
-        "niggaracci",
-        "niggard",
-        "niggarded",
-        "niggarding",
-        "niggardliness",
-        "niggardliness's",
-        "niggardly",
-        "niggards",
-        "niggard's",
-        "niggaz",
-        "nigger",
-        "niggerhead",
-        "niggerhole",
-        "niggers",
-        "nigger's",
-        "niggle",
-        "niggled",
-        "niggles",
-        "niggling",
-        "nigglings",
-        "niggor",
-        "niggur",
-        "niglet",
-        "nignog",
-        "nigr",
-        "nigra",
-        "nigre",
-        "nipple",
-        "nipplering",
-        "nittit",
-        "nlgger",
-        "nlggor",
-        "nofuckingway",
-        "nook",
-        "nookey",
-        "nookie",
-        "nude",
-        "nudger",
-        "nutfucker",
-        "nymph",
-        "ontherag",
-        "oral",
-        "orga",
-        "orgasim" ,
-        "orgasm",
-        "orgies",
-        "orgy",
-        "osama",
-        "paki",
-        "palesimian",
-        "payo",
-        "pearlnecklace",
-        "pecker",
-        "peckerwood",
-        "peehole",
-        "pee-pee",
-        "peepshow",
-        "peepshpw",
-        "peni5",
-        "penile",
-        "penis",
-        "penises",
-        "penthouse",
-        "phonesex",
-        "phuk",
-        "phuked",
-        "phuking",
-        "phukked",
-        "phukking",
-        "phungky",
-        "phuq",
-        "pi55",
-        "piker",
-        "pimp",
-        "pimped",
-        "pimper",
-        "pimpjuic",
-        "pimpjuice",
-        "pimpsimp",
-        "pindick",
-        "pisser",
-        "pisses" ,
-        "pisshead",
-        "pissin" ,
-        "pissing",
-        "pissoff" ,
-        "playboy",
-        "playgirl",
-        "pocha",
-        "pocho",
-        "pom",
-        "pommie",
-        "pommy",
-        "poo",
-        "poon",
-        "poontang",
-        "poop",
-        "pooper",
-        "pooperscooper",
-        "pooping",
-        "poorwhitetrash",
-        "popimp",
-        "porchmonkey",
-        "porn",
-        "pornflick",
-        "pornking",
-        "porno",
-        "pornography",
-        "pornprincess",
-        "pric",
-        "prick",
-        "prickhead",
-        "prostitute",
-        "pu55i",
-        "pu55y",
-        "pubiclice",
-        "pud",
-        "pudboy",
-        "pudd",
-        "puddboy",
-        "puntang",
-        "purinapricness",
-        "puss",
-        "pussie",
-        "pussies",
-        "pussy",
-        "pussycat",
-        "pussyeater",
-        "pussyfucker",
-        "pussylicker",
-        "pussylips",
-        "pussylover",
-        "pussypounder",
-        "pusy",
-        "quashie",
-        "queef",
-        "queer",
-        "quim",
-        "ra8s",
-        "raghead",
-        "rape",
-        "raped",
-        "raper",
-        "rapist",
-        "rectum",
-        "reefer",
-        "reestie",
-        "rentafuck",
-        "rere",
-        "retard",
-        "retarded",
-        "ribbed",
-        "rigger",
-        "rimjob",
-        "rimming",
-        "roundeye",
-        "rump",
-        "russki",
-        "russkie",
-        "sadis",
-        "sadom",
-        "samckdaddy",
-        "sandm",
-        "sandnigger",
-        "satan",
-        "scag",
-        "scallywag",
-        "scat",
-        "schlong",
-        "screw",
-        "screwyou",
-        "scrotum",
-        "scum",
-        "semen",
-        "seppo",
-        "sex",
-        "sexed",
-        "sexfarm",
-        "sexhound",
-        "sexhouse",
-        "sexing",
-        "sexkitten",
-        "sexpot",
-        "sexslave",
-        "sextogo",
-        "sextoy",
-        "sextoys",
-        "sexual",
-        "sexually",
-        "sexwhore",
-        "sexymoma",
-        "sexy-slim",
-        "shag",
-        "shaggin",
-        "shagging",
-        "shat",
-        "shav",
-        "shawtypimp",
-        "sheeney",
-        "shhit",
-        "shinola",
-        "shit",
-        "shitcan",
-        "shitdick",
-        "shite",
-        "shiteater",
-        "shited",
-        "shitface",
-        "shitfaced",
-        "shitfit",
-        "shitforbrains",
-        "shitfuck",
-        "shitfucker",
-        "shitfull",
-        "shithapens",
-        "shithappens",
-        "shithead",
-        "shithouse",
-        "shiting",
-        "shitlist",
-        "shitola",
-        "shitoutofluck",
-        "shits",
-        "shitstain",
-        "shitted",
-        "shitter",
-        "shitting",
-        "shitty" ,
-        "shortfuck",
-        "sissy",
-        "sixsixsix",
-        "sixtynine",
-        "sixtyniner",
-        "skank",
-        "skankbitch",
-        "skankfuck",
-        "skankwhore",
-        "skanky",
-        "skankybitch",
-        "skankywhore",
-        "skinflute",
-        "skum",
-        "skumbag",
-        "slant",
-        "slanteye",
-        "slapper",
-        "slaughter",
-        "slavedriver",
-        "sleezebag",
-        "sleezeball",
-        "slideitin",
-        "slimeball",
-        "slimebucket",
-        "slopehead",
-        "slopey",
-        "slopy",
-        "slut",
-        "sluts",
-        "slutt",
-        "slutting",
-        "slutty",
-        "slutwear",
-        "slutwhore",
-        "smackthemonkey",
-        "smut",
-        "snatch",
-        "snatchpatch",
-        "snigger",
-        "sniggered",
-        "sniggering",
-        "sniggers",
-        "snigger's",
-        "snot",
-        "snownigger",
-        "sodomite",
-        "sonofabitch",
-        "sonofbitch",
-        "sooty",
-        "spaghettibender",
-        "spaghettinigger",
-        "spank",
-        "spankthemonkey",
-        "sperm",
-        "spermacide",
-        "spermbag",
-        "spermhearder",
-        "spermherder",
-        "spic",
-        "spick",
-        "spig",
-        "spigotty",
-        "spik",
-        "splittail",
-        "spooge",
-        "spreadeagle",
-        "spunk",
-        "spunky",
-        "stiffy",
-        "strapon",
-        "stringer",
-        "stripclub",
-        "stroking",
-        "stupid",
-        "stupidfuck",
-        "stupidfucker",
-        "suck",
-        "suckdick",
-        "sucker",
-        "suckme",
-        "suckmyass",
-        "suckmydick",
-        "suckmytit",
-        "suckoff",
-        "swallower",
-        "swastika",
-        "syphilis",
-        "tang",
-        "tarbaby",
-        "terrorist",
-        "teste",
-        "testicle",
-        "testicles",
-        "thicklips",
-        "threesome",
-        "timbernigger",
-        "tit",
-        "titbitnipply",
-        "titfuck",
-        "titfucker",
-        "titfuckin",
-        "titjob",
-        "titlicker",
-        "titlover",
-        "tits",
-        "tittie",
-        "titties",
-        "titty",
-        "tongethruster",
-        "tonguethrust",
-        "tonguetramp",
-        "tosser",
-        "towelhead",
-        "trailertrash",
-        "trannie",
-        "tranny",
-        "transexual",
-        "transsexual",
-        "transvestite",
-        "trisexual",
-        "trojan",
-        "trots",
-        "tuckahoe",
-        "tunneloflove",
-        "turd",
-        "twat",
-        "twink",
-        "twinkie",
-        "twobitwhore",
-        "unfuckable",
-        "uptheass",
-        "upthebutt",
-        "usama",
-        "uterus",
-        "vagina",
-        "vaginal",
-        "vietcong",
-        "virgin",
-        "virginbreaker",
-        "vulva",
-        "wab",
-        "wank",
-        "wanker",
-        "wanking",
-        "waysted",
-        "weapon",
-        "weenie",
-        "weewee",
-        "welcher",
-        "welfare",
-        "wetb",
-        "wetback",
-        "wetspot",
-        "whacker",
-        "whash",
-        "whigger",
-        "whiskey",
-        "whiskeydick",
-        "whiskydick",
-        "whit",
-        "whitenigger",
-        "whites",
-        "whitetrash",
-        "whitey",
-        "whiz",
-        "whop",
-        "whore",
-        "whorefucker",
-        "whorehouse",
-        "wigger",
-        "willie",
-        "williewanker",
-        "willy",
-        "wog",
-        "wop",
-        "wuss",
-        "wuzzie",
-        "xtc",
-        "xxx",
-        "yankee",
-        "yellowman",
-        "zigabo",
-        "zipperhead"
-    };
 }
