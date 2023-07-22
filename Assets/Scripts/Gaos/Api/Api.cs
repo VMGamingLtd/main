@@ -294,15 +294,11 @@ namespace Gaos.Api
             if (http.IsResponseError)
             {
                 Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {url}, {http.ResponseJsonStr}");
-                this.IsResponseError = true;
-                this.IsResponseTimeout = http.IsResponseTimeout;
             }
-            else
-            {
-                this.ResponseJsonStr = http.ResponseJsonStr;
-                this.IsResponseError = false;
-                this.IsResponseTimeout = http.IsResponseTimeout;
-            }
+
+            this.ResponseJsonStr = http.ResponseJsonStr;
+            this.IsResponseError = http.IsResponseError;
+            this.IsResponseTimeout = http.IsResponseTimeout;
 
         }
 
@@ -320,15 +316,11 @@ namespace Gaos.Api
             if (http.IsResponseError)
             {
                 Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {url}, {http.ResponseJsonStr}");
-                this.IsResponseError = true;
-                this.IsResponseTimeout = http.IsResponseTimeout;
             }
-            else
-            {
-                this.ResponseJsonStr = http.ResponseJsonStr;
-                this.IsResponseError = false;
-                this.IsResponseTimeout = http.IsResponseTimeout;
-            }
+
+            this.ResponseJsonStr = http.ResponseJsonStr;
+            this.IsResponseError = http.IsResponseError;
+            this.IsResponseTimeout = http.IsResponseTimeout;
 
             return new PostResponse()
             {

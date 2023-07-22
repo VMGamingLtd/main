@@ -36,6 +36,12 @@ namespace Gaos.GameData
             else
             {
                 Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse>(apiCall.ResponseJsonStr);
+                if (response.IsError == true)
+                {
+                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting game data: {response.ErrorMessage}");
+                    onUserGameDataGetComplete(null);
+                    yield break;
+                }   
                 onUserGameDataGetComplete(response);
             }
 
@@ -71,6 +77,12 @@ namespace Gaos.GameData
             else
             {
                 Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse>(apiCall.ResponseJsonStr);
+                if (response.IsError == true)
+                {
+                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error saving game data: {response.ErrorMessage}");
+                    onUserGameDataSaveComplete(null);
+                    yield break;
+                }
                 onUserGameDataSaveComplete(response);
             }
 

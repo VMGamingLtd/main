@@ -1,8 +1,6 @@
 using UnityEngine;
 using TMPro;
 
-namespace Chat
-{
     public class Message : MonoBehaviour
     {
         public TMP_Text dateText;
@@ -16,4 +14,3 @@ namespace Chat
             messageText.text = message;
         }
     }
-}

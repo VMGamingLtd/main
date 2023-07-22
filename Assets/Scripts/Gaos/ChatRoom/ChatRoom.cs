@@ -28,6 +28,11 @@ namespace Gaos.ChatRoom.ChatRoom
                 else
                 {
                     Gaos.Routes.Model.ChatRoomJson.ExistsChatRoomResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.ChatRoomJson.ExistsChatRoomResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error calling existsChatRoom: {response.ErrorMessage}");
+                        throw new System.Exception($"error calling existsChatRoom: {response.ErrorMessage}");
+                    }
                     return response;
                 }
             }
@@ -63,6 +68,11 @@ namespace Gaos.ChatRoom.ChatRoom
                 else
                 {
                     Gaos.Routes.Model.ChatRoomJson.CreateChatRoomResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.ChatRoomJson.CreateChatRoomResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error calling createChatRoom: {response.ErrorMessage}");
+                        throw new System.Exception($"error calling createChatRoom: {response.ErrorMessage}");
+                    }
                     return response;
                 }
             }
@@ -131,6 +141,11 @@ namespace Gaos.ChatRoom.ChatRoom
                 else
                 {
                     Gaos.Routes.Model.ChatRoomJson.ReadMessagesResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.ChatRoomJson.ReadMessagesResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error calling readMessages: {response.ErrorMessage}");
+                        throw new System.Exception($"error calling readMessages: {response.ErrorMessage}");
+                    }
                     return response;
                 }
             }
@@ -167,6 +182,11 @@ namespace Gaos.ChatRoom.ChatRoom
                 else
                 {
                     Gaos.Routes.Model.ChatRoomJson.ReadMessagesBackwardsResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.ChatRoomJson.ReadMessagesBackwardsResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error calling readMessagesBackwards: {response.ErrorMessage}");
+                        throw new System.Exception($"error calling readMessagesBackwards: {response.ErrorMessage}");
+                    }
                     return response;
                 }
             }
@@ -192,7 +212,7 @@ namespace Gaos.ChatRoom.ChatRoom
                 request.ChatRoomId = chatRoomId;
                 request.Message = message;
                 string requestJsonStr = JsonUtility.ToJson(request);
-                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/chatRoom/writeMessages", requestJsonStr);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/chatRoom/writeMessage", requestJsonStr);
                 await apiCall.CallAsync();
                 if (apiCall.IsResponseError)
                 {
@@ -202,6 +222,11 @@ namespace Gaos.ChatRoom.ChatRoom
                 else
                 {
                     Gaos.Routes.Model.ChatRoomJson.WriteMessageResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.ChatRoomJson.WriteMessageResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error calling writeMessages: {response.ErrorMessage}");
+                        throw new System.Exception($"error calling writeMessages: {response.ErrorMessage}");
+                    }
                     return response;
                 }
             }

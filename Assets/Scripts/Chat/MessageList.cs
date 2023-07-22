@@ -25,12 +25,27 @@ namespace Chat
         private GameObject[] AllMessageLines = new GameObject[MAX_SCROLL_LIST_LINES_COUNT]; // all friends buttons in the scroll list
         private int LastIndexAllMessageLines = -1;
 
-        public int ChatRoomId = -1;
-        public string ChatRoomName;
+        private int ChatRoomId = -1;
+        private string ChatRoomName;
 
         private bool IsFinished = false;
 
-        public string FriendUsername;
+        private string FriendUsername;
+        public GameObject FriendListButton;
+
+        public void SetFriendUserName(string username)
+        {
+            FriendUsername = username;
+
+            Transform nicknameObject = FriendListButton.transform.Find("Info/Nickname");
+            TextMeshProUGUI nicknameObjectTMP = nicknameObject.GetComponent<TextMeshProUGUI>();
+            nicknameObjectTMP.text = FriendUsername;
+        }
+
+        public int GetChatRoomId()
+        {
+            return ChatRoomId;
+        }
 
         private void AllocateMessageLines()
         {
@@ -71,7 +86,7 @@ namespace Chat
                 GameObject messageLine = AllMessageLines[i++];
                 messageLine.SetActive(true);
 
-                Message message = messageLine.GetComponent<Chat.Message>();
+                Message message = messageLine.GetComponent<Message>();
                 //messageLine.GetComponent<ChatMessage>().SetMessage(messageModel.message);
 
                 message.dateText.text = messageModel.message.CreatedAt.ToString();
@@ -93,10 +108,9 @@ namespace Chat
 
         private async UniTask readLastMessages()
         {
-            int lastMessageIdx;
             if (AllMessages.Count  >  0)
             {
-                lastMessageIdx = AllMessages.Last.Value.message.MessageId;
+                int lastMessageIdx = AllMessages.Last.Value.message.MessageId;
                 Gaos.Routes.Model.ChatRoomJson.ReadMessagesResponse response = await Gaos.ChatRoom.ChatRoom.ReadMessages.CallAsync(ChatRoomId, lastMessageIdx, MAX_MESSAGE_COUNT_TO_PULL);
                 for (var i = 0; i < response.Messages.Length; i++)
                 {
@@ -110,7 +124,7 @@ namespace Chat
             else
             {
                 Gaos.Routes.Model.ChatRoomJson.ReadMessagesBackwardsResponse response = await Gaos.ChatRoom.ChatRoom.ReadMessagesBackwards.CallAsync(ChatRoomId, -1, MAX_MESSAGE_COUNT_TO_PULL);
-                for (var i = 0; i < response.Messages.Length; i++)
+                for (var i = response.Messages.Length -1; i >= 0; i--)
                 {
                     var message = response.Messages[i];
                     MessageModel messageModel = new MessageModel();
@@ -143,6 +157,14 @@ namespace Chat
 
         private System.Threading.CancellationTokenSource ReadMessagesLoopWaitCancellationTokenSource;  
 
+        public void WakeupReadMessagesLoop()
+        {
+            if (ReadMessagesLoopWaitCancellationTokenSource != null)
+            {
+                ReadMessagesLoopWaitCancellationTokenSource.Cancel();
+            }
+        }
+
 
 
         private async UniTaskVoid ReadMessagesLoop()
@@ -152,6 +174,50 @@ namespace Chat
             ReadMessagesLoopWaitCancellationTokenSource = new System.Threading.CancellationTokenSource();
             while (true)
             {
+
+                // read last messages
+                int cntBefore = AllMessages.Count;
+                int firstMessageIdBefore = AllMessages.Count > 0 ? AllMessages.First.Value.message.MessageId : -1;
+                await readLastMessages();
+                if (IsFinished)
+                {
+                    break;
+                }
+                int cntAfter = AllMessages.Count;
+                int firstMessageIdAfter = AllMessages.Count > 0 ? AllMessages.First.Value.message.MessageId : -1;
+                if (cntBefore != cntAfter)
+                {
+                    DisplayAllMessages();
+                }
+                else if (firstMessageIdBefore != firstMessageIdAfter)
+                {
+                    DisplayAllMessages();
+                }
+
+                // read previous messages
+                if (AllMessages.Count  < MAX_SCROLL_LIST_LINES_COUNT)
+                {
+                    cntBefore = AllMessages.Count;
+                    firstMessageIdBefore = AllMessages.Count > 0 ? AllMessages.First.Value.message.MessageId : -1;
+                    await readPreviousMessages();
+                    if (IsFinished)
+                    {
+                        break;
+                    }
+                    cntAfter = AllMessages.Count;
+                    firstMessageIdAfter = AllMessages.Count > 0 ? AllMessages.First.Value.message.MessageId : -1;
+                    if (cntBefore != cntAfter)
+                    {
+                        DisplayAllMessages();
+                    }
+                    else if (firstMessageIdBefore != firstMessageIdAfter)
+                    {
+                        DisplayAllMessages();
+                    }
+
+                }
+
+                // sleep
                 try
                 {
                     await UniTask.Delay(System.TimeSpan.FromSeconds(5), ignoreTimeScale: false, PlayerLoopTiming.Update, ReadMessagesLoopWaitCancellationTokenSource.Token);
@@ -162,32 +228,6 @@ namespace Chat
                     {
                         break;
                     }
-                }
-
-                int cnt = AllMessages.Count;
-                await readLastMessages();
-                if (IsFinished)
-                {
-                    break;
-                }
-                if (cnt != AllMessages.Count)
-                {
-                    DisplayAllMessages();
-                }
-
-                if (AllMessages.Count  < MAX_SCROLL_LIST_LINES_COUNT)
-                {
-                    cnt = AllMessages.Count;
-                    await readPreviousMessages();
-                    if (IsFinished)
-                    {
-                        break;
-                    }
-                    if (cnt != AllMessages.Count)
-                    {
-                        DisplayAllMessages();
-                    }
-
                 }
             }
         }
@@ -201,23 +241,26 @@ namespace Chat
 
         private async UniTask EnsureChatRoomExists()
         {
-            if (ChatRoomId == -1)
+            int previousChatRoomId = ChatRoomId;
+            ChatRoomName = MakeChatRoomName();
+            ChatRoomId = await Gaos.ChatRoom.ChatRoom.EnsureChatRoomExists.CallAsync(ChatRoomName);
+            if (ChatRoomId != previousChatRoomId)
             {
-                ChatRoomName = MakeChatRoomName();
-                Gaos.Routes.Model.ChatRoomJson.CreateChatRoomResponse response = await Gaos.ChatRoom.ChatRoom.CreateChatRoom.CallAsync(ChatRoomName);
-                ChatRoomId = response.ChatRoomId;
+                AllMessages.Clear();
+                DisplayAllMessages();
             }
         }
 
         private void  OnEnable()
         {
+            IsFinished = false;
             ReadMessagesLoop().Forget();
 
         }
         private void  OnDisable()
         {
             IsFinished = true;
-            ReadMessagesLoopWaitCancellationTokenSource.Cancel();
+            WakeupReadMessagesLoop();
         }
     }
 }

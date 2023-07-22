@@ -29,7 +29,8 @@ namespace Chat
         private async UniTaskVoid SendChatMessage(string messageContent)
         {
             // Send the message to the server
-            await Gaos.ChatRoom.ChatRoom.WriteMessage.CallAsync(messageList.ChatRoomId, messageContent);
+            await Gaos.ChatRoom.ChatRoom.WriteMessage.CallAsync(messageList.GetChatRoomId(), messageContent);
+            messageList.WakeupReadMessagesLoop();
         }
 
     }

@@ -31,6 +31,12 @@ namespace Gaos.Friends.Friends
             else
             {
                 Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetUsersListResponse>(apiCall.ResponseJsonStr);
+                if (response.IsError == true)
+                {
+                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting users list: {response.ErrorMessage}");
+                    onComplete(null);
+                    yield break;
+                }
                 onComplete(response);
             }
         }
@@ -53,6 +59,11 @@ namespace Gaos.Friends.Friends
                 else
                 {
                     Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetUsersListResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting users list: {response.ErrorMessage}");
+                        throw new System.Exception($"ERROR: error getting users list: {response.ErrorMessage}");
+                    }
                     return response;
                 }
             }
