@@ -169,6 +169,7 @@ namespace Chat
 
         private async UniTaskVoid ReadMessagesLoop()
         {
+            Debug.Log("ReadMessagesLoop: starting"); //@@@@@@@@@@@@@@@@@@
             await EnsureChatRoomExists();
 
             ReadMessagesLoopWaitCancellationTokenSource = new System.Threading.CancellationTokenSource();
@@ -181,6 +182,7 @@ namespace Chat
                 await readLastMessages();
                 if (IsFinished)
                 {
+                    Debug.Log("ReadMessagesLoop: IsFinished"); //@@@@@@@@@@@@@@@@@@
                     break;
                 }
                 int cntAfter = AllMessages.Count;
@@ -202,6 +204,7 @@ namespace Chat
                     await readPreviousMessages();
                     if (IsFinished)
                     {
+                        Debug.Log("ReadMessagesLoop: IsFinished"); //@@@@@@@@@@@@@@@@@@
                         break;
                     }
                     cntAfter = AllMessages.Count;
@@ -224,8 +227,10 @@ namespace Chat
                 }
                 catch (System.OperationCanceledException)
                 {
+                    Debug.Log("ReadMessagesLoop: OperationCanceledException"); //@@@@@@@@@@@@@@@@@@
                     if (IsFinished)
                     {
+                        Debug.Log("ReadMessagesLoop: IsFinished"); //@@@@@@@@@@@@@@@@@@
                         break;
                     }
                 }
@@ -242,8 +247,11 @@ namespace Chat
         private async UniTask EnsureChatRoomExists()
         {
             int previousChatRoomId = ChatRoomId;
+            Debug.Log($"EnsureChatRoomExists(): previousChatRoomId: {previousChatRoomId}"); //@@@@@@@@@@@@@@@@@@
             ChatRoomName = MakeChatRoomName();
+            Debug.Log($"EnsureChatRoomExists(): ChatRoomName: {ChatRoomName}"); //@@@@@@@@@@@@@@@@@@
             ChatRoomId = await Gaos.ChatRoom.ChatRoom.EnsureChatRoomExists.CallAsync(ChatRoomName);
+            Debug.Log($"EnsureChatRoomExists(): ChatRoomId: {ChatRoomId}"); //@@@@@@@@@@@@@@@@@@
             if (ChatRoomId != previousChatRoomId)
             {
                 AllMessages.Clear();
@@ -253,12 +261,14 @@ namespace Chat
 
         private void  OnEnable()
         {
+            Debug.Log("OnEnable()"); //@@@@@@@@@@@@@@@@@@
             IsFinished = false;
             ReadMessagesLoop().Forget();
 
         }
         private void  OnDisable()
         {
+            Debug.Log("OnDisable()"); //@@@@@@@@@@@@@@@@@@
             IsFinished = true;
             WakeupReadMessagesLoop();
         }

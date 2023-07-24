@@ -96,7 +96,7 @@ namespace Gaos.ChatRoom.ChatRoom
             {
                 Gaos.Routes.Model.ChatRoomJson.ExistsChatRoomResponse existsChatRoomResponse = await ExistsChatRoom.CallAsync(chatRoomName);
 
-                if (existsChatRoomResponse == null)
+                if (existsChatRoomResponse.IsExists == false)
                 {
                     // Create new chat room
                     Gaos.Routes.Model.ChatRoomJson.CreateChatRoomResponse createChatRoomResponse = await CreateChatRoom.CallAsync(chatRoomName);
