@@ -1,36 +1,43 @@
 using UnityEngine;
 using TMPro;
 
-public class ChatOpener : MonoBehaviour
+namespace Chat
 {
-    public MessageList messageList;
-
-    public void OpenChatWithUser()
+    public class ChatOpener : MonoBehaviour
     {
-        Transform parent = transform.parent;
-        Transform usernameObject = parent.Find("Info/FriendUsername");
+        public MessageList messageList;
 
-        if (usernameObject != null)
+        public void OpenChatWithUser()
         {
-            TextMeshProUGUI usernameText = usernameObject.GetComponent<TextMeshProUGUI>();
+            Transform parent = transform.parent;
+            Transform usernameObject = parent.Find("Info/FriendUsername");
 
-            if (usernameText != null)
+            if (usernameObject != null)
             {
-                messageList.targetUsername = usernameText.text;
-                Debug.Log("Opened chat with user: " + messageList.targetUsername);
+                TextMeshProUGUI usernameText = usernameObject.GetComponent<TextMeshProUGUI>();
+
+                if (usernameText != null)
+                {
+                    string userName = usernameText.text;
+                    messageList.SetFriendUserName(userName);
+                    Debug.Log("Opened chat with user: " + userName);
+                }
+                else
+                {
+                    Debug.LogWarning("FriendUsername object does not have TextMeshProUGUI component.");
+                }
             }
             else
             {
-                Debug.LogWarning("FriendUsername object does not have TextMeshProUGUI component.");
+                Debug.LogWarning("Info/FriendUsername object not found in parent.");
             }
         }
-        else
+
+        /*
+        public void GetTargetUsername()
         {
-            Debug.LogWarning("Info/FriendUsername object not found in parent.");
+            //return messageList.targetUsername;
         }
-    }
-    public string GetTargetUsername()
-    {
-        return messageList.targetUsername;
+        */
     }
 }

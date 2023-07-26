@@ -45,14 +45,14 @@ namespace Gaos.User.User
                 TryToLoginAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest");
+                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest");
                 }
                 else
                 {
                     GuestLoginResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.GuestLoginResponse>(apiCall.ResponseJsonStr);
                     if (GuestLoginResponse.IsError == true)
                     {
-                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest: {GuestLoginResponse.ErrorMessage}");
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in guest: {GuestLoginResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -102,10 +102,11 @@ namespace Gaos.User.User
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  guest logged in");
                 Gaos.Context.Authentication.SetJWT(GuestLoginResponse.Jwt);
                 Gaos.Context.Authentication.SetUserId(GuestLoginResponse.UserId);
+                Gaos.Context.Authentication.SetUserName(GuestLoginResponse.UserName);
             }
             else
             {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: guest not logged in");
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: guest not logged in");
             }
 
             if (onComplete != null)
@@ -161,14 +162,14 @@ namespace Gaos.User.User
                 TryToRegisterAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user");
+                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user");
                 }
                 else
                 {
                     RegisterResponse = JsonUtility.FromJson<Gaos.Routes.Model.UserJson.RegisterResponse>(apiCall.ResponseJsonStr);
                     if (RegisterResponse.IsError == true)
                     {
-                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.ErrorMessage}");
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -205,7 +206,7 @@ namespace Gaos.User.User
                     }
                     else
                     {
-                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not registered");
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not registered");
                     }
                     break;
                 }
@@ -263,14 +264,14 @@ namespace Gaos.User.User
                 TryToLoginAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user");
+                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user");
                 }
                 else
                 {
                     LoginResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.LoginResponse>(apiCall.ResponseJsonStr);
                     if (LoginResponse.IsError == true)
                     {
-                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.ErrorMessage}");
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.ErrorMessage}");
                     }
                     else
                     {
@@ -301,10 +302,12 @@ namespace Gaos.User.User
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user logged in");
                         Gaos.Context.Authentication.SetJWT(LoginResponse.Jwt);
+                        Gaos.Context.Authentication.SetUserId(LoginResponse.UserId);
+                        Gaos.Context.Authentication.SetUserName(LoginResponse.UserName);
                     }
                     else
                     {
-                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not logged in");
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not logged in");
                     }
                     break;
                 }

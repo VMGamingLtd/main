@@ -1,59 +1,38 @@
 using UnityEngine;
 using TMPro;
+using Cysharp.Threading.Tasks;
 
-public class SendMessageInput : MonoBehaviour
+namespace Chat
 {
-    public MessageList messageList;
-    public GameObject chatMessageTemplate;
-
-    private TMP_InputField inputField;
-
-    private void Start()
+    public class SendMessageInput : MonoBehaviour
     {
-        inputField = GetComponent<TMP_InputField>();
-    }
+        public Chat.MessageList messageList;
 
-    public void CreateMessage()
-    {
-        string messageContent = inputField.text;
-        if (!string.IsNullOrEmpty(messageContent))
+        private TMP_InputField inputField;
+
+        private void Start()
         {
-            messageList.CreateMessage(messageContent);
-
-            if (chatMessageTemplate != null)
-            {
-                // Create a new game object based on the chatMessageTemplate
-                GameObject newMessageObject = Instantiate(chatMessageTemplate);
-
-                // Get the Message component from the new message object
-                Message messageComponent = newMessageObject.GetComponent<Message>();
-                if (messageComponent != null)
-                {
-                    // Get the TMP_Text component from the Message component
-                    TMP_Text messageTextComponent = messageComponent.GetComponentInChildren<TMP_Text>();
-                    if (messageTextComponent != null)
-                    {
-                        // Assign the message content to the text property of the TMP_Text component
-                        messageTextComponent.text = messageContent;
-                    }
-                    else
-                    {
-                        Debug.LogWarning("ChatMessageTemplate does not have a TMP_Text component.");
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("ChatMessageTemplate does not have the Message component attached.");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("ChatMessageTemplate is not assigned.");
-            }
-
-            inputField.text = string.Empty;
+            inputField = GetComponent<TMP_InputField>();
         }
-    }
 
+        public void CreateMessage()
+        {
+            string messageContent = inputField.text;
+            if (!string.IsNullOrEmpty(messageContent))
+            {
+                SendChatMessage(messageContent).Forget();
+
+                inputField.text = string.Empty;
+            }
+        }
+
+        private async UniTaskVoid SendChatMessage(string messageContent)
+        {
+            // Send the message to the server
+            await Gaos.ChatRoom.ChatRoom.WriteMessage.CallAsync(messageList.GetChatRoomId(), messageContent);
+            messageList.WakeupReadMessagesLoop();
+        }
+
+    }
 
 }

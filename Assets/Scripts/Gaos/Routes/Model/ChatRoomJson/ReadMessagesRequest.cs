@@ -8,6 +8,7 @@ namespace Gaos.Routes.Model.ChatRoomJson
     {
         public int ChatRoomId;
         public int LastMessageId;
+        public int Count;
 
     }
 }

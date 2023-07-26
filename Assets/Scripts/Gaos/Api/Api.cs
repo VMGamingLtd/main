@@ -8,6 +8,7 @@ using System.Web;
 using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
+using Cysharp.Threading.Tasks;
 
 namespace Gaos.Api
 {
@@ -68,13 +69,10 @@ namespace Gaos.Api
 
     public class Configuration
     {
-        //public static Configuration Config = new Configuration("https://vmgaming.com/gaos");
         public static Configuration Config = new Configuration($"{Gaos.Environment.Environment.GetEnvironment()["GAOS_URL"]}");
 
         public string API_URL;
         public int RequestTimeoutSeconds = 10;
-        public int RequestRetryCount = 5;
-        public int RequestRetryDelaySeconds = 5;
 
         Configuration(string apiUrl)
         {
@@ -85,12 +83,17 @@ namespace Gaos.Api
         {
             Configuration cfg = new Configuration(this.API_URL);
             cfg.RequestTimeoutSeconds = this.RequestTimeoutSeconds;
-            cfg.RequestRetryCount = this.RequestRetryCount;
-            cfg.RequestRetryDelaySeconds = this.RequestRetryDelaySeconds;
             return cfg;
         }
 
 
+    }
+
+    public class PostResponse
+    {
+        public string ResponseJsonStr;
+        public bool IsResponseError = false;
+        public bool IsResponseTimeout = false;
     }
 
     public class HttpPostJsonCall
@@ -160,9 +163,9 @@ namespace Gaos.Api
 
         }
 
-        private IEnumerator Call_()
+        public IEnumerator Call()
         {
-            string METHOD = "_call()";
+            string METHOD = "Call()";
             var wr = this.makeWebRequest();
             this.LastWebRequest = wr;
 
@@ -197,12 +200,59 @@ namespace Gaos.Api
             }
         }
 
-        public IEnumerator Call()
+        public async UniTask<PostResponse> CallAsync()
         {
+            string METHOD = "CallAsync()";
+            UnityWebRequest wr;
+            try
+            {
+                wr = this.makeWebRequest();
+                this.LastWebRequest = wr;
 
-            var requestRetryCount = this.config.RequestRetryCount;
-            var requestRetryDelaySeconds = this.config.RequestRetryDelaySeconds;
-            yield return this.Call_();
+                await wr.SendWebRequest();
+
+                if (wr.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: {wr.error}, url: {wr.url}, status: {wr.responseCode}");
+                    this.IsResponseError = true;
+                    this.IsResponseTimeout = wr.error.Contains("timeout");
+
+                    string contenType = wr.GetResponseHeader("Content-Type");
+                    if (contenType != null && contenType.Contains("json"))
+                    {
+                        this.ResponseJsonStr = wr.downloadHandler.text;
+                    }
+
+                }
+                else
+                {
+                    string contenType = wr.GetResponseHeader("Content-Type");
+                    if (contenType != null && contenType.Contains("json"))
+                    {
+                        this.ResponseJsonStr = wr.downloadHandler.text;
+                        this.IsResponseError = false;
+
+                    }
+                    else
+                    {
+                        Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: response content type is not json, url: {wr.url}");
+                        this.IsResponseError = true;
+                    }
+                }
+
+                return new PostResponse()
+                {
+                    ResponseJsonStr = this.ResponseJsonStr,
+                    IsResponseError = this.IsResponseError,
+                    IsResponseTimeout = this.IsResponseTimeout
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD}: ERROR: {ex.Message}, url: {this.Url}");
+                throw ex;
+            }
+
         }
 
     }
@@ -229,6 +279,7 @@ namespace Gaos.Api
         {
             this.Config = config;
         }
+
         public IEnumerator Call()
         {
             string METHOD = "Call()";
@@ -243,15 +294,40 @@ namespace Gaos.Api
             if (http.IsResponseError)
             {
                 Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {url}, {http.ResponseJsonStr}");
-                this.IsResponseError = true;
-                this.IsResponseTimeout = http.IsResponseTimeout;
             }
-            else
+
+            this.ResponseJsonStr = http.ResponseJsonStr;
+            this.IsResponseError = http.IsResponseError;
+            this.IsResponseTimeout = http.IsResponseTimeout;
+
+        }
+
+        public async UniTask<PostResponse> CallAsync()
+        {
+            string METHOD = "CallAsync()";
+
+            string url = $"{Configuration.Config.API_URL}/{this.UrlPath}";
+
+            HttpPostJsonCall http = new HttpPostJsonCall($"{url}", RequestJsonStr);
+            http.SetConfig(this.Config);
+
+            await http.CallAsync();
+
+            if (http.IsResponseError)
             {
-                this.ResponseJsonStr = http.ResponseJsonStr;
-                this.IsResponseError = false;
-                this.IsResponseTimeout = http.IsResponseTimeout;
+                Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: calling api url: {url}, {http.ResponseJsonStr}");
             }
+
+            this.ResponseJsonStr = http.ResponseJsonStr;
+            this.IsResponseError = http.IsResponseError;
+            this.IsResponseTimeout = http.IsResponseTimeout;
+
+            return new PostResponse()
+            {
+                ResponseJsonStr = this.ResponseJsonStr,
+                IsResponseError = this.IsResponseError,
+                IsResponseTimeout = this.IsResponseTimeout
+            };
 
         }
     }
