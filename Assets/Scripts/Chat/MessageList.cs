@@ -33,6 +33,10 @@ namespace Chat
         private string FriendUsername;
         public GameObject FriendListButton;
 
+        private int DbMinMessageId;
+        private int DbMaxMessageId;
+        private int DbMessageCount;
+
         public void SetFriendUserName(string username)
         {
             FriendUsername = username;
@@ -119,6 +123,9 @@ namespace Chat
                     messageModel.message = message;
                     AllMessages.AddLast(messageModel);
                 }
+                DbMinMessageId = response.MinMessageId;
+                DbMaxMessageId = response.MaxMessageId;
+                DbMessageCount = response.MessageCount;
                 TrimAllMessages();
             }
             else
@@ -149,6 +156,9 @@ namespace Chat
                     messageModel.message = message;
                     AllMessages.AddFirst(messageModel);
                 }
+                DbMinMessageId = response.MinMessageId;
+                DbMaxMessageId = response.MaxMessageId;
+                DbMessageCount = response.MessageCount;
                 TrimAllMessages();
             }
 
@@ -169,7 +179,6 @@ namespace Chat
 
         private async UniTaskVoid ReadMessagesLoop()
         {
-            Debug.Log("ReadMessagesLoop: starting"); //@@@@@@@@@@@@@@@@@@
             await EnsureChatRoomExists();
 
             ReadMessagesLoopWaitCancellationTokenSource = new System.Threading.CancellationTokenSource();
@@ -182,7 +191,6 @@ namespace Chat
                 await readLastMessages();
                 if (IsFinished)
                 {
-                    Debug.Log("ReadMessagesLoop: IsFinished"); //@@@@@@@@@@@@@@@@@@
                     break;
                 }
                 int cntAfter = AllMessages.Count;
@@ -204,7 +212,6 @@ namespace Chat
                     await readPreviousMessages();
                     if (IsFinished)
                     {
-                        Debug.Log("ReadMessagesLoop: IsFinished"); //@@@@@@@@@@@@@@@@@@
                         break;
                     }
                     cntAfter = AllMessages.Count;
@@ -220,6 +227,14 @@ namespace Chat
 
                 }
 
+                if (AllMessages.Count > 0 && AllMessages.Last.Value.message.MessageId < DbMaxMessageId)
+                {
+                    continue;
+                }
+                if (AllMessages.Count == 0 && DbMessageCount > 0) { 
+                    continue;
+                }
+
                 // sleep
                 try
                 {
@@ -227,10 +242,8 @@ namespace Chat
                 }
                 catch (System.OperationCanceledException)
                 {
-                    Debug.Log("ReadMessagesLoop: OperationCanceledException"); //@@@@@@@@@@@@@@@@@@
                     if (IsFinished)
                     {
-                        Debug.Log("ReadMessagesLoop: IsFinished"); //@@@@@@@@@@@@@@@@@@
                         break;
                     }
                 }
@@ -247,11 +260,8 @@ namespace Chat
         private async UniTask EnsureChatRoomExists()
         {
             int previousChatRoomId = ChatRoomId;
-            Debug.Log($"EnsureChatRoomExists(): previousChatRoomId: {previousChatRoomId}"); //@@@@@@@@@@@@@@@@@@
             ChatRoomName = MakeChatRoomName();
-            Debug.Log($"EnsureChatRoomExists(): ChatRoomName: {ChatRoomName}"); //@@@@@@@@@@@@@@@@@@
             ChatRoomId = await Gaos.ChatRoom.ChatRoom.EnsureChatRoomExists.CallAsync(ChatRoomName);
-            Debug.Log($"EnsureChatRoomExists(): ChatRoomId: {ChatRoomId}"); //@@@@@@@@@@@@@@@@@@
             if (ChatRoomId != previousChatRoomId)
             {
                 AllMessages.Clear();

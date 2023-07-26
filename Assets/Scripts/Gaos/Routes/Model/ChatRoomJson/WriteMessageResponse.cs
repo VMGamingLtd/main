@@ -8,5 +8,9 @@ namespace Gaos.Routes.Model.ChatRoomJson
     {
         public bool? IsError;
         public string? ErrorMessage;
+
+        public int MinMessageId;
+        public int MaxMessageId;
+        public int MessageCount;
     }
 }
