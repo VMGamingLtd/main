@@ -8,7 +8,7 @@ public class DragAndDropBuildings : MonoBehaviour, IDragHandler, IBeginDragHandl
     private RectTransform rectTransform;
     private Image objectImage;
     private Animation objAnimation;
-    private BuildingItemData initialItemData;
+    private Color highlightCol = new Color (1f, 0.83f, 0.3f, 0.6f);
 
     private void Awake()
     {
@@ -18,19 +18,11 @@ public class DragAndDropBuildings : MonoBehaviour, IDragHandler, IBeginDragHandl
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        objectImage.color = Color.yellow;
-        BuildingItemData itemData = eventData.pointerEnter.GetComponent<BuildingItemData>();
+        objectImage.color = highlightCol;
     }
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (objAnimation != null && objAnimation.isPlaying)
-        {
-
-        }
-        else
-        {
-            objectImage.color = Color.black;
-        }
+        objectImage.color = Color.black;
     }
 
     public void OnBeginDrag(PointerEventData eventData)

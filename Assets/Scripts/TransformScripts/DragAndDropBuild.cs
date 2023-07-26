@@ -10,6 +10,7 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     public GameObject BuildingManagerArea;
     public GameObject BuildingArea;
     private GameObject draggedObject;
+    public bool isOverlapping;
     private RectTransform buildingAreaRectTransform;
     private Image buildingAreaImage;
     public BuildingCreator buildingCreator;
@@ -28,33 +29,68 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         draggedObject.transform.position = eventData.position;
         buildingAreaImage.enabled = true;
         BuildingManager.isDraggingBuilding = true;
+        isOverlapping = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Update the position of the dragged object based on the mouse cursor
+        Image objImg = draggedObject.GetComponent<Image>();
+
+        if (CheckForOverlap())
+        {
+            objImg.color = Color.red;
+            isOverlapping = true;
+        }
+        else
+        {
+            objImg.color = Color.black;
+            isOverlapping = false;
+        }
         draggedObject.transform.position = eventData.position;
+    }
+    private bool CheckForOverlap()
+    {
+        BoxCollider2D draggedCollider = draggedObject.GetComponent<BoxCollider2D>();
+
+        if (draggedCollider == null)
+        {
+            return false;
+        }
+        Vector2 colliderSize = new Vector2(100f, 100f);
+
+        return Physics2D.OverlapBox(draggedCollider.bounds.center, colliderSize, 0f) != null;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // Check if the dragged object is within the boundaries of the building area
-        if (IsWithinBounds(eventData, buildingAreaRectTransform))
+        if (!isOverlapping)
         {
-            draggedObject.transform.SetParent(BuildingManagerArea.transform, true);
-            Animation animation = draggedObject.GetComponent<Animation>();
-            if (animation != null)
+            // Check if the dragged object is within the boundaries of the building area
+            if (IsWithinBounds(eventData, buildingAreaRectTransform))
             {
-                animation.Play("BuildingSpawn");
+                draggedObject.transform.SetParent(BuildingManagerArea.transform, true);
+                Animation animation = draggedObject.GetComponent<Animation>();
+                BoxCollider2D draggedCollider = draggedObject.GetComponent<BoxCollider2D>();
+                draggedCollider.enabled = true;
+                if (animation != null)
+                {
+                    animation.Play("BuildingSpawn");
+                }
+                StartCoroutine(AttachDragAndDropBuildingsWithDelay(draggedObject));
             }
-            StartCoroutine(AttachDragAndDropBuildingsWithDelay(draggedObject));
+            else
+            {
+                Destroy(draggedObject);
+            }
+            buildingAreaImage.enabled = false;
+            BuildingManager.isDraggingBuilding = false;
         }
         else
         {
             Destroy(draggedObject);
+            buildingAreaImage.enabled = false;
+            BuildingManager.isDraggingBuilding = false;
         }
-        buildingAreaImage.enabled = false;
-        BuildingManager.isDraggingBuilding = false;
     }
     private bool IsWithinBounds(PointerEventData eventData, RectTransform bounds)
     {
@@ -75,19 +111,19 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         switch (objectName)
         {
             case "WaterPump":
-                buildingCreator.CreateBuilding(draggedObject, "LIQUID");
+                buildingCreator.CreateBuilding(draggedObject, "PUMPINGFACILITY");
                 break;
             case "PlantField":
-                buildingCreator.CreateBuilding(draggedObject, "PLANTS");
+                buildingCreator.CreateBuilding(draggedObject, "AGRICULTURE");
                 break;
             case "Boiler":
-                buildingCreator.CreateBuilding(draggedObject, "LIQUID");
+                buildingCreator.CreateBuilding(draggedObject, "HEATINGFACILITY");
                 break;
             case "SteamGenerator":
-                buildingCreator.CreateBuilding(draggedObject, "ENERGY");
+                buildingCreator.CreateBuilding(draggedObject, "POWERPLANT");
                 break;
             case "BiofuelGenerator":
-                buildingCreator.CreateBuilding(draggedObject, "ENERGY");
+                buildingCreator.CreateBuilding(draggedObject, "POWERPLANT");
                 break;
             default:
                 Debug.LogWarning("Unknown building type: " + objectName);

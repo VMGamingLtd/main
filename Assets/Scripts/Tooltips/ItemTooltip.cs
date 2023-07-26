@@ -8,30 +8,12 @@ using ItemManagement;
 
 public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public TooltipObjects tooltipObjects;
-    private Dictionary<string, GameObject> tooltipMap;
+    private TooltipObjects tooltipObjects;
 
-    private void Start()
+    private void Awake()
     {
-        // Initialize the tooltip map
-        tooltipMap = new Dictionary<string, GameObject>
-        {
-            {"PlanetIndex", tooltipObjects.PlanetIndex},
-            {"LevelInfo", tooltipObjects.LevelInfo},
-            {"FriendsPanel", tooltipObjects.FriendsPanel},
-            {"FibrousLeaves", tooltipObjects.FibrousLeaves},
-            {"AlienWater", tooltipObjects.AlienWater},
-            {"Biofuel", tooltipObjects.Biofuel},
-            {"PurifiedWater", tooltipObjects.PurifiedWater},
-            {"BatteryCore", tooltipObjects.BatteryCore},
-            {"Battery", tooltipObjects.Battery},
-            {"OxygenTank", tooltipObjects.OxygenTank},
-            {"CraftBattery", tooltipObjects.CraftBattery},
-            {"CraftAndUseWater", tooltipObjects.CraftAndUseWater},
-            {"BuildBase", tooltipObjects.BuildBase},
-            {"EngineeringSkill", tooltipObjects.EngineeringSkill},
-            {"BiofuelGenerator", tooltipObjects.BiofuelGenerator}
-        };
+        GameObject tooltipObjectsGO = GameObject.Find("TooltipCanvas/TooltipObjects");
+        tooltipObjects = tooltipObjectsGO.GetComponent<TooltipObjects>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -52,11 +34,25 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             HideAllTooltips();
         }
     }
+    private GameObject FindTooltipObject(string objectName)
+    {
+        foreach (GameObject tooltipObj in tooltipObjects.tooltipObjects)
+        {
+            if (tooltipObj.name == objectName)
+            {
+                return tooltipObj;
+            }
+        }
+
+        return null;
+    }
 
     public void DisplayTooltip(string objectName, PointerEventData eventData)
     {
         GameObject hoveredObject = eventData.pointerEnter;
-        if (tooltipMap.TryGetValue(objectName, out GameObject tooltipObject))
+        GameObject tooltipObject = FindTooltipObject(objectName);
+
+        if (tooltipObject != null)
         {
             tooltipObject.SetActive(true);
             ItemData itemData = hoveredObject.GetComponentInParent<ItemData>();
@@ -138,16 +134,18 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void HideTooltip(string objectName)
     {
-        if (tooltipMap.TryGetValue(objectName, out GameObject tooltipObject))
+        GameObject tooltipObject = FindTooltipObject(objectName);
+
+        if (tooltipObject != null)
         {
             tooltipObject.SetActive(false);
         }
     }
     public void HideAllTooltips()
     {
-        foreach (var kvp in tooltipMap)
+        foreach (GameObject tooltipObject in tooltipObjects.tooltipObjects)
         {
-            kvp.Value.SetActive(false);
+            tooltipObject.SetActive(false);
         }
     }
 }

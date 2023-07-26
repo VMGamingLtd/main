@@ -82,220 +82,238 @@ public class BuildingTypes : MonoBehaviour
                     return "Všetky typy";
                 }
                 break;
-            case "PLANTS":
+            case "AGRICULTURE":
                 if (language == SystemLanguage.English)
                 {
                     return "Plants";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Растения";
+                    return "Cельское хозяйство";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "植物";
+                    return "农业设施";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Rastliny";
+                    return "Poľnohospodárstvo";
                 }
                 break;
-            case "LIQUID":
+            case "PUMPINGFACILITY":
                 if (language == SystemLanguage.English)
                 {
-                    return "Liquid";
+                    return "Pumping facility";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Жидкость";
+                    return "Насосная установка";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "液体";
+                    return "抽水设施";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Tekutina";
+                    return "Čerpacie zariadenie";
                 }
                 break;
-            case "MINERALS":
+            case "FACTORY":
                 if (language == SystemLanguage.English)
                 {
-                    return "Minerals";
+                    return "Factory";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Минералы";
+                    return "Фабрика";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "矿物质";
+                    return "工厂";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Minerály";
+                    return "Fabrika";
                 }
                 break;
-            case "METALS":
+            case "COMMFACILITY":
                 if (language == SystemLanguage.English)
                 {
-                    return "Metals";
+                    return "Comm facility";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Металлы";
+                    return "Средства связи";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "金属";
+                    return "通讯设施";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Kovy";
+                    return "Komunikačné zariadenie";
                 }
                 break;
-            case "FOAM":
+            case "STORAGEHOUSE":
                 if (language == SystemLanguage.English)
                 {
-                    return "Foam";
+                    return "Storage house";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Пена";
+                    return "Складское помещение";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "泡沫";
+                    return "储藏室";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Pena";
+                    return "Skladový dom";
                 }
                 break;
-            case "POWDERS":
+            case "NAVALFACILITY":
                 if (language == SystemLanguage.English)
                 {
-                    return "Powders";
+                    return "Naval facility";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Порошки";
+                    return "Военно-морской объект";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "粉末";
+                    return "海军设施";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Prášky";
+                    return "Námorné zariadenie";
                 }
                 break;
-            case "FLESH":
+            case "OXYGENFACILITY":
                 if (language == SystemLanguage.English)
                 {
-                    return "Flesh";
+                    return "Oxygen facility";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Плоть";
+                    return "Кислородная установка";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "肉体";
+                    return "制氧设施";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Mäso";
+                    return "Kyslíkové zariadenie";
                 }
                 break;
-            case "WEAPON":
+            case "AVIATIONFACILITY":
                 if (language == SystemLanguage.English)
                 {
-                    return "Weapon";
+                    return "Aviation facility";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Оружие";
+                    return "Авиационный объект";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "武器";
+                    return "航空设施";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Zbraň";
+                    return "Letecké zariadenie";
                 }
                 break;
-            case "ARMOR":
+            case "HEATINGFACILITY":
                 if (language == SystemLanguage.English)
                 {
-                    return "Armor";
+                    return "Heating facility";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Броня";
+                    return "Отопительная установка";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "盔甲";
+                    return "供暖设施";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Zbroj";
+                    return "Vykurovacie zariadenie";
                 }
                 break;
-            case "ENERGY":
+            case "COOLINGFACILITY":
                 if (language == SystemLanguage.English)
                 {
-                    return "Energy";
+                    return "Cooling facility";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Энергия";
+                    return "Охлаждающая установка";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "能源";
+                    return "冷却设施";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Energia";
+                    return "Chladiace zariadenie";
                 }
                 break;
-            case "OXYGEN":
+            case "POWERPLANT":
                 if (language == SystemLanguage.English)
                 {
-                    return "Oxygen";
+                    return "Powerplant";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Кислород";
+                    return "Электростанция";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "氧气";
+                    return "发电厂";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Kyslík";
+                    return "Elektráreň";
                 }
                 break;
-            case "MINING":
+            case "OXYGENSTATION":
                 if (language == SystemLanguage.English)
                 {
-                    return "Mining";
+                    return "Oxygen station";
                 }
                 else if (language == SystemLanguage.Russian)
                 {
-                    return "Добыча";
+                    return "Кислородная станция";
                 }
                 else if (language == SystemLanguage.Chinese)
                 {
-                    return "采矿";
+                    return "氧气站";
                 }
                 else if (language == SystemLanguage.Slovak)
                 {
-                    return "Ťažba";
+                    return "Kyslíková stanica";
+                }
+                break;
+            case "MININGRIG":
+                if (language == SystemLanguage.English)
+                {
+                    return "Mining rig";
+                }
+                else if (language == SystemLanguage.Russian)
+                {
+                    return "Горная установка";
+                }
+                else if (language == SystemLanguage.Chinese)
+                {
+                    return "采矿设施";
+                }
+                else if (language == SystemLanguage.Slovak)
+                {
+                    return "Ťažobné zariadenie";
                 }
                 break;
         }
@@ -316,77 +334,83 @@ public class BuildingTypes : MonoBehaviour
             case "Všetky typy":
                 BuildingManager.ShowBuildingTypes = "ALL";
                 break;
-            case "Plants":
-            case "Растения":
-            case "植物":
-            case "Rastliny":
-                BuildingManager.ShowBuildingTypes = "PLANTS";
+            case "Agriculture":
+            case "Cельское хозяйство":
+            case "农业设施":
+            case "Poľnohospodárstvo":
+                BuildingManager.ShowBuildingTypes = "AGRICULTURE";
                 break;
-            case "Liquid":
-            case "Жидкость":
-            case "液体":
-            case "Tekutina":
-                BuildingManager.ShowBuildingTypes = "LIQUID";
+            case "Pumping facility":
+            case "Насосная установка":
+            case "抽水设施":
+            case "Čerpacie zariadenie":
+                BuildingManager.ShowBuildingTypes = "PUMPINGFACILITY";
                 break;
-            case "Minerals":
-            case "Минералы":
-            case "矿物质":
-            case "Minerály":
-                BuildingManager.ShowBuildingTypes = "MINERALS";
+            case "Factory":
+            case "Фабрика":
+            case "工厂":
+            case "Fabrika":
+                BuildingManager.ShowBuildingTypes = "FACTORY";
                 break;
-            case "Metals":
-            case "Металлы":
+            case "Comm facility":
+            case "Средства связи":
             case "金属":
-            case "Kovy":
-                BuildingManager.ShowBuildingTypes = "METALS";
+            case "Komunikačné zariadenie":
+                BuildingManager.ShowBuildingTypes = "COMMFACILITY";
                 break;
-            case "Foam":
-            case "Пена":
-            case "泡沫":
-            case "Pena":
-                BuildingManager.ShowBuildingTypes = "FOAM";
+            case "Storage house":
+            case "Складское помещение":
+            case "储藏室":
+            case "Skladový dom":
+                BuildingManager.ShowBuildingTypes = "STORAGEHOUSE";
                 break;
-            case "Powders":
-            case "Порошки":
-            case "粉末":
-            case "Prášky":
-                BuildingManager.ShowBuildingTypes = "POWDERS";
+            case "Naval facility":
+            case "Военно-морской объект":
+            case "海军设施":
+            case "Námorné zariadenie":
+                BuildingManager.ShowBuildingTypes = "NAVALFACILITY";
                 break;
-            case "Flesh":
-            case "Плоть":
-            case "肉体":
-            case "Mäso":
-                BuildingManager.ShowBuildingTypes = "FLESH";
+            case "Oxygen facility":
+            case "Кислородная установка":
+            case "制氧设施":
+            case "Kyslíkové zariadenie":
+                BuildingManager.ShowBuildingTypes = "OXYGENFACILITY";
                 break;
-            case "Weapon":
-            case "Оружие":
-            case "武器":
-            case "Zbraň":
-                BuildingManager.ShowBuildingTypes = "WEAPON";
+            case "Aviation facility":
+            case "Авиационный объект":
+            case "航空设施":
+            case "Letecké zariadenie":
+                BuildingManager.ShowBuildingTypes = "AVIATIONFACILITY";
                 break;
-            case "Armor":
-            case "Броня":
-            case "盔甲":
-            case "Zbroj":
-                BuildingManager.ShowBuildingTypes = "ARMOR";
+            case "Heating facility":
+            case "Отопительная установка":
+            case "供暖设施":
+            case "Vykurovacie zariadenie":
+                BuildingManager.ShowBuildingTypes = "HEATINGFACILITY";
                 break;
-            case "Energy":
-            case "Энергия":
-            case "能源":
-            case "Energia":
-                BuildingManager.ShowBuildingTypes = "ENERGY";
+            case "Cooling facility":
+            case "Охлаждающая установка":
+            case "冷却设施":
+            case "Chladiace zariadenie":
+                BuildingManager.ShowBuildingTypes = "COOLINGFACILITY";
                 break;
-            case "Oxygen":
+            case "Powerplant":
+            case "Электростанция":
+            case "发电厂":
+            case "Elektráreň":
+                BuildingManager.ShowBuildingTypes = "POWERPLANT";
+                break;
+            case "Oxygen station":
             case "Кислород":
-            case "氧气":
-            case "Kyslík":
-                BuildingManager.ShowBuildingTypes = "OXYGEN";
+            case "氧气站":
+            case "Kyslíková stanica":
+                BuildingManager.ShowBuildingTypes = "OXYGENSTATION";
                 break;
-            case "Mining":
-            case "Добыча":
-            case "采矿":
-            case "Ťažba":
-                BuildingManager.ShowBuildingTypes = "MINING";
+            case "Mining rig":
+            case "Кислородная станция":
+            case "采矿设施":
+            case "Ťažobné zariadenie":
+                BuildingManager.ShowBuildingTypes = "MININGRIG";
                 break;
         }
         buildingManager.ShowFilteredItems();

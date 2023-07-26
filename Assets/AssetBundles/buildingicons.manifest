@@ -1,0 +1,26 @@
+ManifestFileVersion: 0
+CRC: 2640976328
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0cf1592e69300f50bdd2e48468c4f029
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4df8c69f2c8a6ad9e3cbf82bb83e4dc3
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/AssetBundlesRepo/BuildingIcons/pipe.png
+- Assets/AssetBundlesRepo/BuildingIcons/grass.png
+- Assets/AssetBundlesRepo/BuildingIcons/turbine.png
+- Assets/AssetBundlesRepo/BuildingIcons/boiler.png
+- Assets/AssetBundlesRepo/BuildingIcons/steam.png
+- Assets/AssetBundlesRepo/BuildingIcons/bio-electricity.png
+- Assets/AssetBundlesRepo/BuildingIcons/gas-pipe.png
+- Assets/AssetBundlesRepo/BuildingIcons/pump.png
+Dependencies: []

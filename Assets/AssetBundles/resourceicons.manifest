@@ -1,0 +1,26 @@
+ManifestFileVersion: 0
+CRC: 357350170
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7ae43a8f98dff3f8999d087cb105f166
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4df8c69f2c8a6ad9e3cbf82bb83e4dc3
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/AssetBundlesRepo/ResourceIcons/FibrousPlants.png
+- Assets/AssetBundlesRepo/ResourceIcons/Steam.png
+- Assets/AssetBundlesRepo/ResourceIcons/BatteryCore.png
+- Assets/AssetBundlesRepo/ResourceIcons/WaterBottle.png
+- Assets/AssetBundlesRepo/ResourceIcons/Biofuel.png
+- Assets/AssetBundlesRepo/ResourceIcons/OxygenTank.png
+- Assets/AssetBundlesRepo/ResourceIcons/Battery.png
+- Assets/AssetBundlesRepo/ResourceIcons/Water.png
+Dependencies: []
