@@ -166,7 +166,7 @@ namespace Gaos.User.User
                 }
                 else
                 {
-                    RegisterResponse = JsonUtility.FromJson<Gaos.Routes.Model.UserJson.RegisterResponse>(apiCall.ResponseJsonStr);
+                    RegisterResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.RegisterResponse>(apiCall.ResponseJsonStr);
                     if (RegisterResponse.IsError == true)
                     {
                         Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.ErrorMessage}");

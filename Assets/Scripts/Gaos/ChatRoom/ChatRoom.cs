@@ -17,7 +17,7 @@ namespace Gaos.ChatRoom.ChatRoom
 
                 Gaos.Routes.Model.ChatRoomJson.ExistsChatRoomRequest request = new Gaos.Routes.Model.ChatRoomJson.ExistsChatRoomRequest();
                 request.ChatRoomName = chatRoomName;
-                string requestJsonStr = JsonUtility.ToJson(request);
+                string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/chatRoom/existsChatRoom", requestJsonStr);
                 await apiCall.CallAsync();
                 if (apiCall.IsResponseError)
@@ -57,7 +57,7 @@ namespace Gaos.ChatRoom.ChatRoom
 
                 Gaos.Routes.Model.ChatRoomJson.CreateChatRoomRequest request = new Gaos.Routes.Model.ChatRoomJson.CreateChatRoomRequest();
                 request.ChatRoomName = chatRoomName;
-                string requestJsonStr = JsonUtility.ToJson(request);
+                string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/chatRoom/createChatRoom", requestJsonStr);
                 await apiCall.CallAsync();
                 if (apiCall.IsResponseError)
@@ -130,7 +130,7 @@ namespace Gaos.ChatRoom.ChatRoom
                 request.ChatRoomId = chatRoomId;
                 request.LastMessageId = lastMessageId;
                 request.Count = count;
-                string requestJsonStr = JsonUtility.ToJson(request);
+                string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/chatRoom/readMessages", requestJsonStr);
                 await apiCall.CallAsync();
                 if (apiCall.IsResponseError)
@@ -171,7 +171,7 @@ namespace Gaos.ChatRoom.ChatRoom
                 request.ChatRoomId = chatRoomId;
                 request.LastMessageId = lastMessageId;
                 request.Count = count;
-                string requestJsonStr = JsonUtility.ToJson(request);
+                string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/chatRoom/readMessagesBackwards", requestJsonStr);
                 await apiCall.CallAsync();
                 if (apiCall.IsResponseError)
@@ -211,7 +211,7 @@ namespace Gaos.ChatRoom.ChatRoom
                 Gaos.Routes.Model.ChatRoomJson.WriteMessageRequest request = new Gaos.Routes.Model.ChatRoomJson.WriteMessageRequest();
                 request.ChatRoomId = chatRoomId;
                 request.Message = message;
-                string requestJsonStr = JsonUtility.ToJson(request);
+                string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/chatRoom/writeMessage", requestJsonStr);
                 await apiCall.CallAsync();
                 if (apiCall.IsResponseError)

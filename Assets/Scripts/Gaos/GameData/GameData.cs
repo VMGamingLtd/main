@@ -22,7 +22,7 @@ namespace Gaos.GameData
             request.UserId = Gaos.Context.Authentication.GetUserId();
             request.SlotId = slotId;
 
-            string requestJsonStr = JsonUtility.ToJson(request);
+            string requestJsonStr = JsonConvert.SerializeObject(request);
 
             Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/gameData/userGameDataGet", requestJsonStr);
             yield return apiCall.Call();

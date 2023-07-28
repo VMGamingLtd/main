@@ -17,7 +17,7 @@ namespace Gaos.Friends.Friends
 
             Gaos.Routes.Model.FriendsJson.GetUsersListRequest request = new Gaos.Routes.Model.FriendsJson.GetUsersListRequest();
 
-            string requestJsonStr = JsonUtility.ToJson(request);
+            string requestJsonStr = JsonConvert.SerializeObject(request);
 
             Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getUsersList", requestJsonStr);
             yield return apiCall.Call();
@@ -48,7 +48,7 @@ namespace Gaos.Friends.Friends
             {
 
                 Gaos.Routes.Model.FriendsJson.GetUsersListRequest request = new Gaos.Routes.Model.FriendsJson.GetUsersListRequest();
-                string requestJsonStr = JsonUtility.ToJson(request);
+                string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getUsersList", requestJsonStr);
                 await apiCall.CallAsync();
                 if (apiCall.IsResponseError)
