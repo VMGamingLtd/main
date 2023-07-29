@@ -1,0 +1,18 @@
+bundleName: buildingicons
+assets:
+- filePath: Assets/AssetBundlesRepo/BuildingIcons/pipe.png
+  hash: 5a8a67be41464ff8f7ca79da1ea0bf62
+- filePath: Assets/AssetBundlesRepo/BuildingIcons/grass.png
+  hash: 7160dfc90fc8bf1135a26c4d1db4d116
+- filePath: Assets/AssetBundlesRepo/BuildingIcons/turbine.png
+  hash: bc4159cb635dc14d491676b702ee51a0
+- filePath: Assets/AssetBundlesRepo/BuildingIcons/boiler.png
+  hash: 4b75d807fe91a4b596ec64f6f69d7969
+- filePath: Assets/AssetBundlesRepo/BuildingIcons/steam.png
+  hash: 94d3f863ebb4d3f3b39e4da02934bd33
+- filePath: Assets/AssetBundlesRepo/BuildingIcons/bio-electricity.png
+  hash: ca422115861dce6b42b065dfa2a0e0c6
+- filePath: Assets/AssetBundlesRepo/BuildingIcons/gas-pipe.png
+  hash: b0fa48cb25c4e42f6f03e8a1d7f92584
+- filePath: Assets/AssetBundlesRepo/BuildingIcons/pump.png
+  hash: 8c40bc75d9ce67f6ca77043748b9f133
