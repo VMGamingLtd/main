@@ -33,6 +33,9 @@
     <Compile Include="gao\devops\folder.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gao\devops\publish.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="gao\devops\release.py">
       <SubType>Code</SubType>
     </Compile>

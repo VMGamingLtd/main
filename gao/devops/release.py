@@ -342,8 +342,9 @@ def test():
     #releaseAndroid(sconn, "1.0.0")
 
     # local
-    releaseWebgl(None, "1.0.0", True)
+    #releaseWebgl(None, "1.0.0", True)
     #releaseAndroid(None, "1.0.0", True)
+    pass
 
 if __name__ == "__main__":
     test()
