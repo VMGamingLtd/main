@@ -17,3 +17,11 @@ GAO_BUILD_WINDOWS_FOLDER="../gao_build/windows"
 GAO_BUILD_IOS_FOLDER="../gao_build/ios"
 GAO_BUILD_MACOS_FOLDER="../gao_build/macos"
 
+GAOP_PUBLIC_SSH_KEY="./.ssh/id_rsa.pub"
+GAOP_PUBLIC_SSH_KEY_NAME="gaop"
+GAOP_PRIVATE_SSH_KEY="./.ssh/id_rsa"
+
+GAOP_SSH_KEYS_FOLDER="gao/ssh_gaop"
+
+GAOP_REPO="git@212.24.97.13:repos/gaop.git"
+

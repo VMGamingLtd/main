@@ -23,6 +23,7 @@
   <ItemGroup>
     <Compile Include="fabfile.py" />
     <Compile Include="gaop.py" />
+    <Compile Include="gao\devops\bootstrap.py" />
     <Compile Include="gao\devops\config.py">
       <SubType>Code</SubType>
     </Compile>
