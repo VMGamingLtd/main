@@ -68,12 +68,13 @@ def updateVenv(sconn):
     """)
 
 def test():
-    sconn = connectionTestServer()
+    #sconn = connectionTestServer()
     #installAptPackages(sconn)
     #installGaopSshKeys(sconn)
     #addSshKeyToGit(sconn, "git", GAOP_PUBLIC_SSH_KEY, GAOP_PUBLIC_SSH_KEY)
     #installVenv(sconn)
     #updateVenv(sconn)
+    pass
 
 if __name__ == "__main__":
     test()

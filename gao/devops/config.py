@@ -17,8 +17,8 @@ WINDOWS_RELEASE_SUBFOLDER="windows"
 IOS_RELEASE_SUBFOLDER="ios"
 MACOS_RELEASE_SUBFOLDER="macos"
 
-PUBLISH_FOLDER="/var/www/release"
-LOCAL_PUBLISH_FOLDER="../nginx/www/release"
+PUBLISH_FOLDER="/var/www/html/release"
+LOCAL_PUBLISH_FOLDER="../nginx/html/release"
 
 
 GAOP_PUBLIC_SSH_KEY="./.ssh/id_rsa.pub"

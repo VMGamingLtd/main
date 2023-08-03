@@ -32,8 +32,22 @@ def archiveAssetBundles():
 
     return archiveFilePath
 
-def archiveWebglBuild():
-    webglBuildFolder = Path(gao.devops.config.GAO_BUILD_WEBGL_FOLDER)
+def archiveBuild(platform):
+
+    webglBuildFolder = None 
+    if platform == "webgl":
+        webglBuildFolder = Path(gao.devops.config.GAO_BUILD_WEBGL_FOLDER)
+    elif platform == "android":
+        webglBuildFolder = Path(gao.devops.config.GAO_BUILD_ANDROID_FOLDER)
+    elif platform == "ios":
+        webglBuildFolder = Path(gao.devops.config.GAO_BUILD_IOS_FOLDER)
+    elif platform == "windows":
+        webglBuildFolder = Path(gao.devops.config.GAO_BUILD_WINDOWS_FOLDER)
+    elif platform == "macos":
+        webglBuildFolder = Path(gao.devops.config.GAO_BUILD_MACOS_FOLDER)
+    else:
+        raise Exception("Unknown platform: " + platform)
+
     cwd = os.getcwd()
     archivedFolder =  os.path.basename(webglBuildFolder)
     archiveName = archivedFolder + ".tar.gz"
@@ -187,19 +201,18 @@ def releaseBundles(sconn, version, platform, isLocal=False):
 
         print(f"INFO: release {platform} {version} - releasing of bundles finished: {versionFolder}/{archiveBaseName}")
 
-def releaseWebgl(sconn, version, isLocal=False):
-    platform = "webgl"
+def release(sconn, platform, version, isLocal=False):
 
     versionFolder = createVersionFolder(sconn, version, platform, isLocal)
     releaseBundles(sconn, version, platform, isLocal)
 
 
     if isLocal:
-        # Create webgl build archive and copy it to release folder
+        # Create build archive and copy it to release folder
 
         print(f"INFO: release {platform} {version} - creating build archive")
 
-        archiveFilePath = archiveWebglBuild()
+        archiveFilePath = archiveBuild(platform)
         shutil.copy(archiveFilePath, versionFolder)
         archiveBaseName = os.path.basename(archiveFilePath).split(".")[0]
 
@@ -232,90 +245,17 @@ def releaseWebgl(sconn, version, isLocal=False):
                 tar.close()
             os.chdir(cwd)
 
-        print(f"INFO: release {platform} {version} - releasing of build finished: {versionFolder}/{archiveBaseName}")
+        print(f"INFO: release {platform} {version} - releasing of build finished: {versionFolder}/build")
     else:
-        # Create webgl build archive and upload to server
+        # Create build archive and upload to server
 
         print(f"INFO: release {platform} {version} - creating build archive")
 
-        archiveFilePath = archiveWebglBuild()
+        archiveFilePath = archiveBuild(platform)
         sconn.put(archiveFilePath, versionFolder)
         archiveBaseName = os.path.basename(archiveFilePath).split(".")[0]
 
         # Expand build archive on server
-
-        print(f"INFO: release {platform} {version} - uploading build archive to server")
-
-        sconn.run(f"""
-            cd {versionFolder}
-            tar -xvf {archiveBaseName}.tar.gz
-            chown -R gao:gao {archiveBaseName}
-            chmod -R 664 {archiveBaseName}
-            mv {archiveBaseName} build
-            rm -rf {archiveBaseName}.tar.gz
-            cd ..
-            tar -cvf gao_{platform}__{version}__.tar {version}
-            gzip gao_{platform}__{version}__.tar  
-        """)
-
-        print(f"INFO: release {platform} {version} - releasing of build finished: {versionFolder}/{archiveBaseName}")
-
-def releaseAndroid(sconn, version, isLocal=False):
-    platform = "android"
-
-    versionFolder = createVersionFolder(sconn, version, platform, isLocal)
-    releaseBundles(sconn, version, platform, isLocal)
-
-    if isLocal:
-        # Create webgl build archive and copy it to release folder
-
-        print(f"INFO: release {platform} {version} - creating build archive")
-
-        archiveFilePath = archiveWebglBuild()
-        shutil.copy(archiveFilePath, versionFolder)
-        archiveBaseName = os.path.basename(archiveFilePath).split(".")[0]
-
-        # Expand build archive in release folder
-
-        print(f"INFO: release {platform} {version} - exapnding bundle archive in release folder")
-
-        cwd = os.getcwd()
-        os.chdir(versionFolder)
-        tar = None
-        try:
-            tar = tarfile.open(f"{archiveBaseName}.tar.gz")
-            tar.extractall()
-        finally:
-            if tar != None:
-                tar.close()
-            os.rename(archiveBaseName, "build")
-            if os.path.exists(f"{archiveBaseName}.tar.gz"):
-                os.remove(f"{archiveBaseName}.tar.gz")
-            os.chdir(cwd)
-
-        tar = None
-        try:
-            os.chdir(versionFolder)
-            os.chdir("..")
-            versionFolderBaseName = os.path.basename(versionFolder)
-            with tarfile.open(f"gao_{platform}__{version}__.tar.gz", "w:gz") as tar:
-                tar.add(version)
-        finally:
-            if tar != None:
-                tar.close()
-            os.chdir(cwd)
-
-        print(f"INFO: release {platform} {version} - releasing of build finished: {versionFolder}/{archiveBaseName}")
-    else:
-        # Create webgl build archive and upload to server
-
-        print(f"INFO: release {platform} {version} - creating build archive")
-
-        archiveFilePath = archiveAndroidBuild()
-        sconn.put(archiveFilePath, versionFolder)
-        archiveBaseName = os.path.basename(archiveFilePath).split(".")[0]
-
-        # Expand bundle archive on server
 
         print(f"INFO: release {platform} {version} - uploading build archive to server")
 
@@ -338,12 +278,12 @@ def releaseAndroid(sconn, version, isLocal=False):
 def test():
     # remote
     #sconn = gao.devops.connection.connectionTestServer()
-    #releaseWebgl(sconn, "1.0.0")
-    #releaseAndroid(sconn, "1.0.0")
+    #release(sconn, "webgl", "1.0.0")
+    #release(sconn, "android", "1.0.0")
 
     # local
-    #releaseWebgl(None, "1.0.0", True)
-    #releaseAndroid(None, "1.0.0", True)
+    #release(None, "webgl", "1.0.0", True)
+    #release(None, "android", "1.0.0", True)
     pass
 
 if __name__ == "__main__":
