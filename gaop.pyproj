@@ -24,6 +24,7 @@
     <Compile Include="fabfile.py" />
     <Compile Include="gaop.py" />
     <Compile Include="gao\devops\bootstrap.py" />
+    <Compile Include="gao\devops\common.py" />
     <Compile Include="gao\devops\config.py">
       <SubType>Code</SubType>
     </Compile>
@@ -39,6 +40,7 @@
     <Compile Include="gao\devops\release.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="tasks.py" />
     <Compile Include="gao\devops\user.py" />
     <Compile Include="gao\devops\__init__.py" />
     <Compile Include="gao\__init__.py" />
@@ -57,6 +59,9 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="c.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

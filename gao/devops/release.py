@@ -131,14 +131,26 @@ def createVersionFolder(sconn, version, platform, isLocal=False):
         """)
         return versionFolder
 
-def releaseBundles(sconn, version, platform, isLocal=False):
+def releaseBundles(sconn, platform, version, **kwargs):
+
+    isLocal = False
+    if "isLocal" in kwargs:
+        isLocal = kwargs["isLocal"]
+
+    bundlesVersion = "1"
+    if "bundlesVersion" in kwargs:
+        bundlesVersion = kwargs["bundlesVersion"]
+
+
+
+
     versionFolder = getVersionFolderPath(version, platform, isLocal)
 
     if isLocal:
-        # Before releasing the bundles, platform version must already exists
+        # Before releasing the bundles, platform version must already exist
         if not os.path.isdir(versionFolder):
-            print(f"ERROR: release {platform} {version} - platform version deas not exists")
-            raise Exception("Platform version does not exists")
+            print(f"ERROR: release {platform} {version} - platform version deas not exist")
+            raise Exception("Platform version does not exist")
 
 
         # Create bundle archive and copy it to release folder
@@ -147,26 +159,49 @@ def releaseBundles(sconn, version, platform, isLocal=False):
 
         archiveFilePath = archiveAssetBundles()
         shutil.copy(archiveFilePath, versionFolder)
-        archiveBaseName = os.path.basename(archiveFilePath).split(".")[0]
+        archiveBaseName = os.path.basename(archiveFilePath).split(".")[0] # remove extension tar.gz
+
+        # Create archiveBaseName folder inside versionFolder if not exists
+        if not os.path.isdir(f"{versionFolder}/{archiveBaseName}"):
+            os.makedirs(f"{versionFolder}/{archiveBaseName}")
+
+        # bundlesVersion folder must not exists inside archiveBaseName subfolder of versionFolder
+        if os.path.isdir(f"{versionFolder}/{archiveBaseName}/{bundlesVersion}"):
+            raise Exception(f"ERROR: release {platform} {version} - bundles version {bundlesVersion} already exists")
 
         # Expand bundle archive in release folder
 
         print(f"INFO: release {platform} {version} - exapnding bundle archive in release folder")
 
         cwd = os.getcwd()
+
         os.chdir(versionFolder)
         tar = None
         try:
+            if os.path.isdir("tmp"):
+                shutil.rmtree("tmp")
+            os.makedirs("tmp")
+            shutil.move(f"{archiveBaseName}.tar.gz", "tmp")
+            os.chdir("tmp")
+             
             tar = tarfile.open(f"{archiveBaseName}.tar.gz")
             tar.extractall()
         finally:
             if tar != None:
                 tar.close()
+            shutil.move(archiveBaseName, f"../{archiveBaseName}/{bundlesVersion}")
             if os.path.exists(f"{archiveBaseName}.tar.gz"):
                 os.remove(f"{archiveBaseName}.tar.gz")
-            os.chdir(cwd)
+            os.chdir("..")
+            shutil.rmtree("tmp")
 
-        print(f"INFO: release {platform} {version} - releasing of bundles finished: {versionFolder}/{archiveBaseName}")
+        os.chdir(f"{archiveBaseName}")
+        #with open("version.txt", "w") as text_file:
+        #    text_file.write(f"{bundlesVersion}")
+
+        os.chdir(cwd)
+
+        print(f"INFO: release {platform} {version} - releasing of bundles finished: {versionFolder}/{archiveBaseName}/{bundlesVersion}")
     else:
         # Before releasing the bundles, platform version must already exists
         sconn.run(f"""
@@ -186,6 +221,13 @@ def releaseBundles(sconn, version, platform, isLocal=False):
         sconn.put(archiveFilePath, versionFolder)
         archiveBaseName = os.path.basename(archiveFilePath).split(".")[0]
 
+        # Create archiveBaseName folder inside versionFolder if not exists
+        sconn.run(f"""
+            if [ ! -d {versionFolder}/{archiveBaseName} ]; then
+                mkdir {versionFolder}/{archiveBaseName}
+            fi
+        """)
+
 
         # Expand bundle archive on server
 
@@ -193,18 +235,36 @@ def releaseBundles(sconn, version, platform, isLocal=False):
 
         sconn.run(f"""
             cd {versionFolder}
+            rm -rf tmp
+            mkdir tmp
+            mv {archiveBaseName}.tar.gz tmp
+            cd tmp
             tar -xvf {archiveBaseName}.tar.gz
             chown -R gao:gao {archiveBaseName}
             chmod -R 664 {archiveBaseName}
+            mv {archiveBaseName} ../{archiveBaseName}/{bundlesVersion}
             rm -rf {archiveBaseName}.tar.gz
+            cd ..
+            rm -rf tmp
+            cd {archiveBaseName}
+            #echo {bundlesVersion} > version.txt
+            cd ..
         """)
 
-        print(f"INFO: release {platform} {version} - releasing of bundles finished: {versionFolder}/{archiveBaseName}")
+        print(f"INFO: release {platform} {version} - releasing of bundles finished: {versionFolder}/{archiveBaseName}/{bundlesVersion}")
 
-def release(sconn, platform, version, isLocal=False):
+def release(sconn, platform, version, **kwargs):
+
+    isLocal = False
+    if "isLocal" in kwargs:
+        isLocal = kwargs["isLocal"]
+
+    isIncludeBuild = True
+    if "isIncludeBuild" in kwargs:
+        isIncludeBuild = kwargs["isIncludeBuild"]
 
     versionFolder = createVersionFolder(sconn, version, platform, isLocal)
-    releaseBundles(sconn, version, platform, isLocal)
+    releaseBundles(sconn, platform, version, isLocal=isLocal)
 
 
     if isLocal:
@@ -212,78 +272,85 @@ def release(sconn, platform, version, isLocal=False):
 
         print(f"INFO: release {platform} {version} - creating build archive")
 
-        archiveFilePath = archiveBuild(platform)
-        shutil.copy(archiveFilePath, versionFolder)
-        archiveBaseName = os.path.basename(archiveFilePath).split(".")[0]
 
-        # Expand build archive in release folder
+        if isIncludeBuild:
+            archiveFilePath = archiveBuild(platform)
+            shutil.copy(archiveFilePath, versionFolder)
+            archiveBaseName = os.path.basename(archiveFilePath).split(".")[0]
 
-        print(f"INFO: release platform {version} - exapnding bundle archive in release folder")
+            # Expand build archive in release folder
 
-        cwd = os.getcwd()
-        os.chdir(versionFolder)
-        tar = None
-        try:
-            tar = tarfile.open(f"{archiveBaseName}.tar.gz")
-            tar.extractall()
-        finally:
-            if tar != None:
-                tar.close()
-            os.rename(archiveBaseName, "build")
-            if os.path.exists(f"{archiveBaseName}.tar.gz"):
-                os.remove(f"{archiveBaseName}.tar.gz")
-            os.chdir(cwd)
+            print(f"INFO: release platform {version} - exapnding bundle archive in release folder")
 
-        tar = None
-        try:
+            cwd = os.getcwd()
             os.chdir(versionFolder)
-            os.chdir("..")
-            with tarfile.open(f"gao_{platform}__{version}__.tar.gz", "w:gz") as tar:
-                tar.add(version)
-        finally:
-            if tar != None:
-                tar.close()
-            os.chdir(cwd)
+            tar = None
+            try:
+                tar = tarfile.open(f"{archiveBaseName}.tar.gz")
+                tar.extractall()
+            finally:
+                if tar != None:
+                    tar.close()
+                os.rename(archiveBaseName, "build")
+                if os.path.exists(f"{archiveBaseName}.tar.gz"):
+                    os.remove(f"{archiveBaseName}.tar.gz")
+                os.chdir(cwd)
 
-        print(f"INFO: release {platform} {version} - releasing of build finished: {versionFolder}/build")
+            print(f"INFO: release {platform} {version} - releasing of build finished: {versionFolder}/build")
+        else:
+            print(f"INFO: release {platform} {version} - releasing finished")
     else:
         # Create build archive and upload to server
 
         print(f"INFO: release {platform} {version} - creating build archive")
 
         archiveFilePath = archiveBuild(platform)
-        sconn.put(archiveFilePath, versionFolder)
         archiveBaseName = os.path.basename(archiveFilePath).split(".")[0]
 
-        # Expand build archive on server
+        if isIncludeBuild:
+            sconn.put(archiveFilePath, versionFolder)
 
-        print(f"INFO: release {platform} {version} - uploading build archive to server")
+            # Expand build archive on server
 
-        sconn.run(f"""
-            cd {versionFolder}
-            tar -xvf {archiveBaseName}.tar.gz
-            chown -R gao:gao {archiveBaseName}
-            chmod -R 664 {archiveBaseName}
-            mv {archiveBaseName} build
-            rm -rf {archiveBaseName}.tar.gz
-            cd ..
-            tar -cvf gao_{platform}__{version}__.tar {version}
-            gzip gao_{platform}__{version}__.tar  
-        """)
+            print(f"INFO: release {platform} {version} - uploading build archive to server")
 
-        print(f"INFO: release {platform} {version} - releasing of build finished: {versionFolder}/build")
+            sconn.run(f"""
+                cd {versionFolder}
+                tar -xvf {archiveBaseName}.tar.gz
+                chown -R gao:gao {archiveBaseName}
+                chmod -R 664 {archiveBaseName}
+                mv {archiveBaseName} build
+                rm -rf {archiveBaseName}.tar.gz
+            """)
+
+            print(f"INFO: release {platform} {version} - releasing of build finished: {versionFolder}/build")
+        else:
+            print(f"INFO: release {platform} {version} - releasing finished: {versionFolder}/build")
 
 
 
 def test():
     # remote
+
     #sconn = gao.devops.connection.connectionTestServer()
+
     #release(sconn, "webgl", "1.0.0")
+    #releaseBundles(sconn, "webgl", "1.0.0", isLocal=False, bundlesVersion="2")
+    #releaseBundles(sconn, "webgl", "1.0.0", isLocal=False, bindlesVersion="3")
+
     #release(sconn, "android", "1.0.0")
+    #releaseBundles(sconn, "android", "1.0.0", isLocal=False, bundlesVersion="2")
+    #releaseBundles(sconn, "android", "1.0.0", isLocal=False, bundlesVertsion="3")
 
     # local
-    #release(None, "webgl", "1.0.0", True)
-    #release(None, "android", "1.0.0", True)
+
+    #release(None, "webgl", "1.0.0", isLocal=True)
+    #releaseBundles(None, "webgl", "1.0.0", isLocal=True, bundlesVersion="2")
+    #releaseBundles(None, "webgl", "1.0.0", isLocal=True, bundlesVersion="3")
+
+    #release(None, "android", "1.0.0", isLocal=isLocal=True)
+    #releaseBundles(None, "android", "1.0.0", isLocal=True, bundlesVersion="2")
+    #releaseBundles(None, "android", "1.0.0", isLocal=True, bundlesVersion="3")
     pass
 
 if __name__ == "__main__":
