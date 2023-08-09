@@ -3,7 +3,7 @@ import os
 import os.path
 import tarfile
 import tempfile
-from gao.devops.config import LOCAL_RELEASE_FOLDER, RELEASE_FOLDER, WEBGL_RELEASE_SUBFOLDER, WINDOWS_RELEASE_SUBFOLDER, MACOS_RELEASE_SUBFOLDER, ANDROID_RELEASE_SUBFOLDER, IOS_RELEASE_SUBFOLDER, LOCAL_PUBLISH_FOLDER, PUBLISH_FOLDER
+from gao.devops.config import LOCAL_RELEASE_FOLDER, RELEASE_FOLDER, WEBGL_RELEASE_SUBFOLDER, WINDOWS_RELEASE_SUBFOLDER, MACOS_RELEASE_SUBFOLDER, ANDROID_RELEASE_SUBFOLDER, IOS_RELEASE_SUBFOLDER, LOCAL_PUBLISH_FOLDER, PUBLISH_FOLDER, LOCAL_PUBLISH_WEBGL_FOLDER, PUBLISH_WEBGL_FOLDER
 from gao.devops.connection import connectionTestServer
 from gao.devops.common import createTempFolderOnServer
 
@@ -70,6 +70,13 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
         with open("versionBundles.txt", "w") as text_file:
             text_file.write(f"{bundlesVersion}")
 
+        if platform == "webgl":
+            print(f"INFO: copy webgl")
+            os.chdir(cwd)
+            shutil.rmtree(f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
+            os.makedirs(f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
+            shutil.copytree(f"{LOCAL_RELEASE_FOLDER}/{releaseSubfolder}/{version}/webgl/build", f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
+
         print(f"INFO: finsished publishing of build: platform: {platform}, version: {version}, bundles version: 1")
 
         os.chdir(cwd)
@@ -119,6 +126,14 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
             chown root:root AssetBundles
             echo "{bundlesVersion}" > versionBundles.txt
 
+            if [ "{platform}" == "webgl" ]; then
+                if [ ! -d "{PUBLISH_WEBGL_FOLDER}" ]; then
+                    mkdir {PUBLISH_WEBGL_FOLDER}
+                fi
+                rm -rf {PUBLISH_WEBGL_FOLDER}/*
+                cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/build/* {PUBLISH_WEBGL_FOLDER}
+            fi
+
             echo "INFO: finsished publishing of build: platform: {platform}, version: {version}, bundles version: {bundlesVersion}"
             """)
         else:
@@ -137,6 +152,14 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
                 cp -r {RELEASE_FOLDER}/{releaseSubfolder}/{version}/AssetBundles/{bundlesVersion} AssetBundles
                 chown root:root AssetBundles
                 echo "{bundlesVersion}" > versionBundles.txt
+
+                if [ "{platform}" == "webgl" ]; then
+                    if [ ! -d "{PUBLISH_WEBGL_FOLDER}" ]; then
+                        mkdir {PUBLISH_WEBGL_FOLDER}
+                    fi
+                    rm -rf {PUBLISH_WEBGL_FOLDER}/*
+                    cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/build/* {PUBLISH_WEBGL_FOLDER}
+                fi
 
                 echo "INFO: finsished publishing of build: platform: {platform}, version: {version}, bundles version: {bundlesVersion}"
             """)

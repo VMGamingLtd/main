@@ -18,7 +18,12 @@ IOS_RELEASE_SUBFOLDER="ios"
 MACOS_RELEASE_SUBFOLDER="macos"
 
 PUBLISH_FOLDER="/var/www/html/release"
+PUBLISH_WEBGL_FOLDER="/var/www/html/gao"
 LOCAL_PUBLISH_FOLDER="../nginx/html/release"
+LOCAL_PUBLISH_WEBGL_FOLDER="../nginx/html/gao"
+
+LOCAL_TEST_ENVIRONMENT_DOCUMENT_ROOT="../nginx_conf/test/html"
+LOCAL_TEST_ENVIRONMENT_NGINX_CONF="../nginx_conf/test/nginx.conf"
 
 
 GAOP_PUBLIC_SSH_KEY="./.ssh/id_rsa.pub"

@@ -2,6 +2,9 @@ from invoke import task
 import gao.devops.connection
 from gao.devops.release import release, releaseBundles
 from gao.devops.publish import publish, publishBundles
+import gao.devops.gaos
+import gao.devops.nginx
+
 
 def checkPlatform(platform):
     platforms = ["webgl", "windows", "macos", "android", "ios"]
@@ -52,3 +55,13 @@ def publish_bundles_to_local(c, platform = "webgl", version = "0.0.1", bundles_v
 def publish_bundles_to_test_server(c, platform = "webgl", version = "0.0.1", bundles_version = "1", is_use_local_release = True):
     sconn = gao.devops.connection.connectionTestServer()
     publishBundles(sconn,  platform, version, bundlesVersion = bundles_version, isLocal = False, isUseLocalRelease = is_use_local_release)
+
+@task
+def deploy_gaos_to_test_server(c):
+    sconn = gao.devops.connection.connectionTestServer()
+    gao.devops.gaos.deploy(sconn)
+
+@task
+def update_nginx_on_test_server(c):
+    sconn = gao.devops.connection.connectionTestServer()
+    gao.devops.nginx.update(sconn)
