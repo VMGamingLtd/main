@@ -1,13 +1,13 @@
 ManifestFileVersion: 0
-CRC: 3858961035
+CRC: 3069927373
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: resourceicons
-      Dependencies: {}
-    Info_1:
       Name: skillicons
       Dependencies: {}
-    Info_2:
+    Info_1:
       Name: buildingicons
+      Dependencies: {}
+    Info_2:
+      Name: resourceicons
       Dependencies: {}
