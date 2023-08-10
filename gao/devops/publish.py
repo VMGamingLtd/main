@@ -44,11 +44,12 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
         cwd = os.getcwd()
 
         if not os.path.isdir(f"{LOCAL_PUBLISH_FOLDER}"):
-            print("INFO: create local publish folder: {LOCAL_PUBLISH_FOLDER}")
+            print(f"INFO: create local publish folder: {LOCAL_PUBLISH_FOLDER}")
             os.mkdir(f"{LOCAL_PUBLISH_FOLDER}")
             
 
         if not os.path.isdir(f"{LOCAL_PUBLISH_FOLDER}/{releaseSubfolder}"):
+            print(f"INFO: create local publish folder for {platform}: {LOCAL_PUBLISH_FOLDER}")
             os.mkdir(f"{LOCAL_PUBLISH_FOLDER}/{releaseSubfolder}")
 
         os.chdir(f"{LOCAL_PUBLISH_FOLDER}/{releaseSubfolder}")
