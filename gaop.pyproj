@@ -34,6 +34,7 @@
     <Compile Include="gao\devops\folder.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gao\devops\nginx.py" />
     <Compile Include="gao\devops\publish.py">
       <SubType>Code</SubType>
     </Compile>
@@ -50,6 +51,9 @@
     <Folder Include="gao\devops\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="c.ps1" />
+  </ItemGroup>
+  <ItemGroup>
     <Interpreter Include=".venv\">
       <Id>.venv</Id>
       <Version>3.10</Version>
@@ -59,9 +63,6 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="c.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

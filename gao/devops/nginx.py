@@ -11,32 +11,27 @@ def update(sconn, isLocal = False):
             taskkill /F /IM nginx.exe & set errorlevel=0
 
             echo "INFO: remove document root"
-            rd /s /q ..\nginx\html
+            rd /s /q ..\\nginx\\html
 
             echo "INFO: copy over document root"
-            mkdir ..\nginx\html 
-            xcopy /e ..\nginx_conf\html ..\nginx\html
+            mkdir ..\\nginx\\html 
+            xcopy /e ..\\nginx_conf\\html ..\\nginx\\html
 
             echo "INFO: copy over nginx.conf"
-            copy ..\nginx_conf\nginx.conf ..\nginx\nginx.conf
+            copy ..\\nginx_conf\\nginx.conf ..\\nginx\\nginx.conf
 
             echo "INFO: copy over certificates"
-            copy /y ..\nginx_conf\certs\cert.key ..\nginx\certs
-            copy /y ..\nginx_conf\certs\cert.pem ..\nginx\certs
+            copy /y ..\\nginx_conf\\certs\\cert.key ..\\nginx\\certs
+            copy /y ..\\nginx_conf\\certs\\cert.pem ..\\nginx\\certs
 
             echo "INFO: start nginx.exe"
-            cd ..\nginx
+            cd ..\\nginx
             start nginx.exe
        """
 
-       print("INFO: stop nginx.exe")
-       sconn.run("taskkill /F /IM nginx.exe & set errorlevel=0")
-
-       print("INFO: remove document root")
-       sconn.run("rd /s /q ..\nginx\html")
-
-       print("INFO: copy over document root")
-       sconn.run("mkdir ..\nginx\html")
+       commands = [cmd.strip() for cmd in commandStr.strip().splitlines()]
+       for cmd in commands:
+           sconn.run(cmd)
 
        pass
     else:
