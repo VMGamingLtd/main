@@ -46,8 +46,22 @@
 
 
 # sandbox testing
-invoke update-nginx-on-local
-#invoke update-nginx-on-test-server
+
+#invoke update-nginx-on-local
+#invoke start-nginx-on-local
+#invoke stop-nginx-on-local
 
 #invoke release-to-local --platform="webgl" --version="0.0.1" --is-forced  
 #invoke publish-to-local --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build
+
+#invoke update-nginx-on-test-server
+
+#invoke release-to-test-server --platform="webgl" --version="0.0.1" --is-forced  
+#invoke release-to-test-server --platform="android" --version="0.0.1" --is-forced  
+
+#invoke publish-to-test-server --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build --no-is-use-local-release
+#invoke publish-to-test-server --platform="android" --version="0.0.1", --bundles-version="1" --is-include-build --no-is-use-local-release
+
+invoke publish-to-test-server --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build --is-use-local-release
+#invoke publish-to-test-server --platform="android" --version="0.0.1", --bundles-version="1" --is-include-build --no-is-use-local-release
+

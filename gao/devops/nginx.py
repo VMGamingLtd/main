@@ -3,6 +3,7 @@ import shutil
 import tarfile
 import tempfile
 from gao.devops.config import LOCAL_TEST_ENVIRONMENT_DOCUMENT_ROOT, LOCAL_TEST_ENVIRONMENT_NGINX_CONF
+from gao.devops.common import runCommands
 
 def update(sconn, isLocal = False):
     if isLocal:
@@ -23,15 +24,9 @@ def update(sconn, isLocal = False):
             echo "INFO: copy over certificates"
             copy /y ..\\nginx_conf\\certs\\cert.key ..\\nginx\\certs
             copy /y ..\\nginx_conf\\certs\\cert.pem ..\\nginx\\certs
-
-            echo "INFO: start nginx.exe"
-            cd ..\\nginx
-            start nginx.exe
        """
 
-       commands = [cmd.strip() for cmd in commandStr.strip().splitlines()]
-       for cmd in commands:
-           sconn.run(cmd)
+       runCommands(sconn, commandStr)
 
        pass
     else:
@@ -96,3 +91,27 @@ def update(sconn, isLocal = False):
         """
         )
         pass
+
+def start(sconn, isLocal = False):
+    if isLocal:
+       commandStr = f"""
+            echo "INFO: start nginx.exe"
+            cd ..\\nginx && start nginx.exe
+       """
+       runCommands(sconn, commandStr)
+
+       pass
+    else:
+        raise Exception("isLocal=True not supported yet")
+
+def stop(sconn, isLocal = False):
+    if isLocal:
+       commandStr = f"""
+            echo "INFO: stop nginx.exe"
+            taskkill /F /IM nginx.exe & set errorlevel=0
+       """
+       runCommands(sconn, commandStr)
+
+       pass
+    else:
+        raise Exception("isLocal=True not supported yet")

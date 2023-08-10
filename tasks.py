@@ -70,3 +70,12 @@ def update_nginx_on_local(c):
 def update_nginx_on_test_server(c):
     sconn = gao.devops.connection.connectionTestServer()
     gao.devops.nginx.update(sconn, isLocal = False)
+
+@task
+def start_nginx_on_local(c):
+    gao.devops.nginx.start(c, isLocal = True)
+
+@task
+def stop_nginx_on_local(c):
+    gao.devops.nginx.stop(c, isLocal = True)
+

@@ -37,11 +37,19 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
     isUseLocalRelease = True
     if "isUseLocalRelease" in kwargs:
         isUseLocalRelease = kwargs["isUseLocalRelease"]
-        
 
     releaseSubfolder = getReleaseSubfolder(platform)
+
     if isLocal:
         cwd = os.getcwd()
+
+        if not os.path.isdir(f"{LOCAL_PUBLISH_FOLDER}"):
+            print("INFO: create local publish folder: {LOCAL_PUBLISH_FOLDER}")
+            os.mkdir(f"{LOCAL_PUBLISH_FOLDER}")
+            
+
+        if not os.path.isdir(f"{LOCAL_PUBLISH_FOLDER}/{releaseSubfolder}"):
+            os.mkdir(f"{LOCAL_PUBLISH_FOLDER}/{releaseSubfolder}")
 
         os.chdir(f"{LOCAL_PUBLISH_FOLDER}/{releaseSubfolder}")
         if os.path.isdir("build"):
@@ -71,11 +79,12 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
             text_file.write(f"{bundlesVersion}")
 
         if platform == "webgl":
-            print(f"INFO: copy webgl")
+            print(f"INFO: copy webgl build do html document root")
             os.chdir(cwd)
+            if not os.path.isdir(f"{LOCAL_PUBLISH_WEBGL_FOLDER}"):
+                os.mkdir(f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
             shutil.rmtree(f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
-            os.makedirs(f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
-            shutil.copytree(f"{LOCAL_RELEASE_FOLDER}/{releaseSubfolder}/{version}/webgl/build", f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
+            shutil.copytree(f"{LOCAL_RELEASE_FOLDER}/{releaseSubfolder}/{version}/build", f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
 
         print(f"INFO: finsished publishing of build: platform: {platform}, version: {version}, bundles version: 1")
 
@@ -111,24 +120,48 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
             sconn.put(f"{tmpFolder}/AssetBundles.tar.gz", tmpFolderServer)
 
             sconn.run(f"""
+            set -e
+
+            if [ ! -d "{PUBLISH_FOLDER}" ]; then
+                echo "INFO: create publish folder: {PUBLISH_FOLDER}"
+                mkdir {PUBLISH_FOLDER}
+                chown www-data:www-data {PUBLISH_FOLDER}
+            fi
+
+            if [ ! -d "{PUBLISH_FOLDER}/{releaseSubfolder}" ]; then
+                echo "INFO: create publish folder for {platform}: {PUBLISH_FOLDER}/{releaseSubfolder}"
+                mkdir {PUBLISH_FOLDER}/{releaseSubfolder}
+                chown www-data:www-data {PUBLISH_FOLDER}/{releaseSubfolder}
+            fi
+
             cd {PUBLISH_FOLDER}/{releaseSubfolder}
             rm -rf build AssetBundles version.txt versionBundles.txt
+
+            echo "INFO: extract build archive"
 
             cp {tmpFolderServer}/build.tar.gz .
             tar -xvf build.tar.gz
             rm build.tar.gz
-            chown root:root build
+            chown -R www-data:www-data build
             echo "{version}" > version.txt
+            chown www-data:www-data version.txt
+
+            echo "INFO: extract build archive"
 
             cp {tmpFolderServer}/AssetBundles.tar.gz .
             tar -xvf AssetBundles.tar.gz
             rm AssetBundles.tar.gz
-            chown root:root AssetBundles
+            chown -R www-data:www-data AssetBundles
             echo "{bundlesVersion}" > versionBundles.txt
+            chown www-data:www-data versionBundles.txt
+
+            echo "INFO: update webgl publish folder"
 
             if [ "{platform}" == "webgl" ]; then
                 if [ ! -d "{PUBLISH_WEBGL_FOLDER}" ]; then
+                    echo "INFO: create webgl publish folder: {PUBLISH_WEBGL_FOLDER}"
                     mkdir {PUBLISH_WEBGL_FOLDER}
+                    chown -R www-data:www-data {PUBLISH_WEBGL_FOLDER}
                 fi
                 rm -rf {PUBLISH_WEBGL_FOLDER}/*
                 cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/build/* {PUBLISH_WEBGL_FOLDER}
@@ -138,24 +171,43 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
             """)
         else:
             sconn.run(f"""
+                set -e
+                if [ ! -d "{PUBLISH_FOLDER}" ]; then
+                    echo "INFO: create publish folder: {PUBLISH_FOLDER}"
+                    mkdir {PUBLISH_FOLDER}
+                    chown www-data:www-data {PUBLISH_FOLDER}
+                fi
+
+                if [ ! -d "{PUBLISH_FOLDER}/{releaseSubfolder}" ]; then
+                    echo "INFO: create publish folder for {platform}: {PUBLISH_FOLDER}/{releaseSubfolder}"
+                    mkdir {PUBLISH_FOLDER}/{releaseSubfolder}
+                    chown www-data:www-data {PUBLISH_FOLDER}/{releaseSubfolder}
+                fi
+
                 echo "INFO: copy build"
 
                 cd {PUBLISH_FOLDER}/{releaseSubfolder}
                 rm -rf build AssetBundles version.txt versionBundles.txt
 
                 cp -r {RELEASE_FOLDER}/{releaseSubfolder}/{version}/build .
-                chown root:root build
+                chown -R www-data:www-data build
                 echo "{version}" > version.txt
+                chown www-data:www-data version.txt
 
                 echo "INFO: copy asset bundles"
 
                 cp -r {RELEASE_FOLDER}/{releaseSubfolder}/{version}/AssetBundles/{bundlesVersion} AssetBundles
-                chown root:root AssetBundles
+                chown -R www-data:www-data AssetBundles
                 echo "{bundlesVersion}" > versionBundles.txt
+                chown www-data:www-data versionBundles.txt
+
+                echo "INFO: update webgl publish folder"
 
                 if [ "{platform}" == "webgl" ]; then
                     if [ ! -d "{PUBLISH_WEBGL_FOLDER}" ]; then
+                        echo "INFO: create webgl publish folder: {PUBLISH_WEBGL_FOLDER}"
                         mkdir {PUBLISH_WEBGL_FOLDER}
+                        chown -R www-data:www-data {PUBLISH_WEBGL_FOLDER}
                     fi
                     rm -rf {PUBLISH_WEBGL_FOLDER}/*
                     cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/build/* {PUBLISH_WEBGL_FOLDER}
@@ -214,6 +266,7 @@ def publishBundles(sconn, platform, version, bundlesVersion, **kwargs):
             print(f"INFO: copy AssetBundles archive to server")
             sconn.put(f"AssetBundles.tar.gz", f"{PUBLISH_FOLDER}/{releaseSubfolder}")
             sconn.run(f"""
+                set -e
                 cd {PUBLISH_FOLDER}/{releaseSubfolder}
                 rm -rf AssetBundles versionBundles.txt
                 tar -xvf AssetBundles.tar.gz
@@ -225,6 +278,7 @@ def publishBundles(sconn, platform, version, bundlesVersion, **kwargs):
         else:
             print(f"INFO: copy AssetBundles")
             sconn.run(f"""
+                set -e
                 cd {PUBLISH_FOLDER}/{releaseSubfolder}
                 rm -rf AssetBundles versionBundles.txt
                 cp -r {RELEASE_FOLDER}/{releaseSubfolder}/{version}/AssetBundles/{bundlesVersion} {PUBLISH_FOLDER}/{releaseSubfolder}/AssetBundles

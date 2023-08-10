@@ -103,7 +103,7 @@ def getVersionFolderPath(version, platform, isLocal=False):
         raise Exception(f"Unknown platform {platform}")
 
 
-def createVersionFolder(sconn, version, platform, isLocal = False, isForced = False):
+def createVersionFolder(sconn, version, platform, isLocal, isForced = False):
     # Create new version folder
 
     print(f"INFO: release {platform} {version} - checking if version already exists")
