@@ -103,7 +103,7 @@ def getVersionFolderPath(version, platform, isLocal=False):
         raise Exception(f"Unknown platform {platform}")
 
 
-def createVersionFolder(sconn, version, platform, isLocal=False):
+def createVersionFolder(sconn, version, platform, isLocal = False, isForced = False):
     # Create new version folder
 
     print(f"INFO: release {platform} {version} - checking if version already exists")
@@ -113,22 +113,42 @@ def createVersionFolder(sconn, version, platform, isLocal=False):
     versionFolder = getVersionFolderPath(version, platform, isLocal)
     if isLocal:
         if os.path.isdir(versionFolder):
-            print(f"ERROR: release {platform} {version} - version already exists")
-            raise Exception(f"release {platform} {version} - version already exists")
+            if isForced:
+                print(f"INFO: release {platform} {version} - version already exists, delete version folder")
+                shutil.rmtree(versionFolder)
+                print(f"INFO: release {platform} {version} - create version folder")
+                os.makedirs(versionFolder)
+            else:
+                print(f"ERROR: release {platform} {version} - version already exists")
+                raise Exception(f"release {platform} {version} - version already exists")
         else:
             print(f"INFO: release {platform} {version} - version does not exists, create version folder")
             os.makedirs(versionFolder)
         return versionFolder
     else:
-        sconn.run(f"""
-            if [ -d {versionFolder} ]; then
-                echo "ERROR: release {platform} {version} - version already exists"
-                exit 1
-            else
-                echo "INFO: release {platform} {version} - version does not exists, create version folder"
-                mkdir {versionFolder}
-            fi
-        """)
+        if isForced:
+            sconn.run(f"""
+                if [ -d {versionFolder} ]; then
+                    echo "INFO: release {platform} {version} - version already exists, delete version folder"
+                    rm -rf {versionFolder}
+                    echo "INFO: release {platform} {version} - create version folder"
+                    mkdir {versionFolder}
+                else
+                    echo "INFO: release {platform} {version} - version does not exists, create version folder"
+                    mkdir {versionFolder}
+                fi
+            """)
+            pass
+        else:
+            sconn.run(f"""
+                if [ -d {versionFolder} ]; then
+                    echo "ERROR: release {platform} {version} - version already exists"
+                    exit 1
+                else
+                    echo "INFO: release {platform} {version} - version does not exists, create version folder"
+                    mkdir {versionFolder}
+                fi
+            """)
         return versionFolder
 
 def releaseBundles(sconn, platform, version, **kwargs):
@@ -141,8 +161,9 @@ def releaseBundles(sconn, platform, version, **kwargs):
     if "bundlesVersion" in kwargs:
         bundlesVersion = kwargs["bundlesVersion"]
 
-
-
+    isForced = False
+    if "isForced" in kwargs:
+        isForced = kwargs["isForced"]
 
     versionFolder = getVersionFolderPath(version, platform, isLocal)
 
@@ -167,7 +188,11 @@ def releaseBundles(sconn, platform, version, **kwargs):
 
         # bundlesVersion folder must not exists inside archiveBaseName subfolder of versionFolder
         if os.path.isdir(f"{versionFolder}/{archiveBaseName}/{bundlesVersion}"):
-            raise Exception(f"ERROR: release {platform} {version} - bundles version {bundlesVersion} already exists")
+            if isForced:
+                print(f"INFO: release {platform} {version} - bundles version {bundlesVersion} already exists, delete it")
+                shutil.rmtree(f"{versionFolder}/{archiveBaseName}/{bundlesVersion}")
+            else:
+                raise Exception(f"ERROR: release {platform} {version} - bundles version {bundlesVersion} already exists")
 
         # Expand bundle archive in release folder
 
@@ -228,6 +253,23 @@ def releaseBundles(sconn, platform, version, **kwargs):
             fi
         """)
 
+        if isForced:
+            # Remove bundlesVersion folder if it already exists inside archiveBaseName subfolder of versionFolder
+            sconn.run(f"""
+                if [ -d {versionFolder}/{archiveBaseName}/{bundlesVersion} ]; then
+                    echo "INFO: release {platform} {version} - bundles version {bundlesVersion} already exists, remove it"
+                    rm -rf {versionFolder}/{archiveBaseName}/{bundlesVersion} 
+                fi
+            """)
+        else:
+            # Report error if bundlesVersion folder already exists inside archiveBaseName subfolder of versionFolder
+            sconn.run(f"""
+                if [ -d {versionFolder}/{archiveBaseName}/{bundlesVersion} ]; then
+                    echo "ERROR: release {platform} {version} - bundles version {bundlesVersion} already exists"
+                    exit 1
+                fi
+            """)
+
 
         # Expand bundle archive on server
 
@@ -262,9 +304,16 @@ def release(sconn, platform, version, **kwargs):
     isIncludeBuild = True
     if "isIncludeBuild" in kwargs:
         isIncludeBuild = kwargs["isIncludeBuild"]
+    else:
+        if platform == "webgl":
+            isIncludeBuild = True
 
-    versionFolder = createVersionFolder(sconn, version, platform, isLocal)
-    releaseBundles(sconn, platform, version, isLocal=isLocal)
+    isForced = False
+    if "isForced" in kwargs:
+        isForced = kwargs["isForced"]
+
+    versionFolder = createVersionFolder(sconn, version, platform, isLocal, isForced)
+    releaseBundles(sconn, platform, version, isLocal = isLocal, isForced = isForced)
 
 
     if isLocal:
@@ -280,7 +329,7 @@ def release(sconn, platform, version, **kwargs):
 
             # Expand build archive in release folder
 
-            print(f"INFO: release platform {version} - exapnding bundle archive in release folder")
+            print(f"INFO: release {platform} {version} - exapnding bundle archive in release folder")
 
             cwd = os.getcwd()
             os.chdir(versionFolder)

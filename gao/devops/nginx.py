@@ -4,65 +4,100 @@ import tarfile
 import tempfile
 from gao.devops.config import LOCAL_TEST_ENVIRONMENT_DOCUMENT_ROOT, LOCAL_TEST_ENVIRONMENT_NGINX_CONF
 
-def update(sconn):
-    sconn.run(
-    f"""
-        set -e
+def update(sconn, isLocal = False):
+    if isLocal:
+       commandStr = f"""
+            echo "INFO: stop nginx.exe"
+            taskkill /F /IM nginx.exe & set errorlevel=0
 
-        echo "INFO: stop nginx service"
-        systemctl stop nginx
+            echo "INFO: remove document root"
+            rd /s /q ..\nginx\html
 
-        echo "INFO: remove document root"
-        rm -rf /var/www/html/*
-    """
-    )
+            echo "INFO: copy over document root"
+            mkdir ..\nginx\html 
+            xcopy /e ..\nginx_conf\html ..\nginx\html
 
-    cwd = os.getcwd()
+            echo "INFO: copy over nginx.conf"
+            copy ..\nginx_conf\nginx.conf ..\nginx\nginx.conf
 
-    print(f"INFO: copy over document root archive")
-    tmpFolder = tempfile.mkdtemp()
-    shutil.copytree(LOCAL_TEST_ENVIRONMENT_DOCUMENT_ROOT, f"{tmpFolder}/html")
+            echo "INFO: copy over certificates"
+            copy /y ..\nginx_conf\certs\cert.key ..\nginx\certs
+            copy /y ..\nginx_conf\certs\cert.pem ..\nginx\certs
 
-    os.chdir(tmpFolder)
+            echo "INFO: start nginx.exe"
+            cd ..\nginx
+            start nginx.exe
+       """
 
-    # create html.tar.gz archive
-    with tarfile.open("html.tar.gz", "w:gz") as tar:
-        tar.add("html")
+       print("INFO: stop nginx.exe")
+       sconn.run("taskkill /F /IM nginx.exe & set errorlevel=0")
 
-    # copy archive to remote
-    sconn.put("html.tar.gz", "/tmp/html.tar.gz")
+       print("INFO: remove document root")
+       sconn.run("rd /s /q ..\nginx\html")
 
-    os.chdir(cwd)
+       print("INFO: copy over document root")
+       sconn.run("mkdir ..\nginx\html")
 
-    print(f"INFO: copy over nginx.conf")
-    sconn.put(LOCAL_TEST_ENVIRONMENT_NGINX_CONF, "/tmp/nginx.conf")
+       pass
+    else:
+        sconn.run(
+        f"""
+            set -e
 
-    sconn.run(
-    f"""
-        set -e
+            echo "INFO: stop nginx service"
+            systemctl stop nginx
 
-        echo "INFO: update document root"
+            echo "INFO: remove document root"
+            rm -rf /var/www/html/*
+        """
+        )
 
-        rm -rf /var/www/html
-        cp -r /tmp/html.tar.gz /var/www/html.tar.gz
-        cd /var/www
-        tar -xzf html.tar.gz
-        rm -rf html.tar.gz
-        chown -R www-data:www-data html/
+        cwd = os.getcwd()
 
-        find html/ -type d -exec chmod 755 {{}} +
-        find html/ -type f -exec chmod 644 {{}} +
+        print(f"INFO: copy over document root archive")
+        tmpFolder = tempfile.mkdtemp()
+        shutil.copytree(LOCAL_TEST_ENVIRONMENT_DOCUMENT_ROOT, f"{tmpFolder}/html")
 
-        echo "INFO: update mginx.conf"
-        cd /etc/nginx
-        cp /tmp/nginx.conf nginx.conf
-        chmod 644 nginx.conf
+        os.chdir(tmpFolder)
 
-        echo "INFO: start nginx service"
-        systemctl start nginx
+        # create html.tar.gz archive
+        with tarfile.open("html.tar.gz", "w:gz") as tar:
+            tar.add("html")
 
-        systemctl status nginx
+        # copy archive to remote
+        sconn.put("html.tar.gz", "/tmp/html.tar.gz")
 
-    """
-    )
-    pass
+        os.chdir(cwd)
+
+        print(f"INFO: copy over nginx.conf")
+        sconn.put(LOCAL_TEST_ENVIRONMENT_NGINX_CONF, "/tmp/nginx.conf")
+
+        sconn.run(
+        f"""
+            set -e
+
+            echo "INFO: update document root"
+
+            rm -rf /var/www/html
+            cp -r /tmp/html.tar.gz /var/www/html.tar.gz
+            cd /var/www
+            tar -xzf html.tar.gz
+            rm -rf html.tar.gz
+            chown -R www-data:www-data html/
+
+            find html/ -type d -exec chmod 755 {{}} +
+            find html/ -type f -exec chmod 644 {{}} +
+
+            echo "INFO: update mginx.conf"
+            cd /etc/nginx
+            cp /tmp/nginx.conf nginx.conf
+            chmod 644 nginx.conf
+
+            echo "INFO: start nginx service"
+            systemctl start nginx
+
+            systemctl status nginx
+
+        """
+        )
+        pass

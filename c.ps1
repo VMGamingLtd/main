@@ -40,4 +40,14 @@
 #invoke publish-bundles-to-test-server --platform="android" --version="0.0.1", --bundles-version="1" 
 
 #invoke publish-to-test-server --platform="android" --version="0.0.1", --bundles-version="1" --is-include-build --no-is-use-local-release
-invoke publish-bundles-to-test-server --platform="android" --version="0.0.1", --bundles-version="2" --no-is-use-local-release 
+#invoke publish-bundles-to-test-server --platform="android" --version="0.0.1", --bundles-version="2" --no-is-use-local-release 
+
+#invoke update-nginx-on-test-server
+
+
+# sandbox testing
+invoke update-nginx-on-local
+#invoke update-nginx-on-test-server
+
+#invoke release-to-local --platform="webgl" --version="0.0.1" --is-forced  
+#invoke publish-to-local --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build

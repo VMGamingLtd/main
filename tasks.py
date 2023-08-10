@@ -12,31 +12,30 @@ def checkPlatform(platform):
     if platform not in platforms:
         raise Exception(f"unknown platform {platform}")
 
-# release tasks
+# release
 
 @task
-def release_to_local(c, platform = "webgl", version = "0.0.1", is_include_build = True):
+def release_to_local(c, platform = "webgl", version = "0.0.1", is_include_build = True, is_forced = False):
     checkPlatform(platform)
-    release(None, platform, version, isLocal = True, isIncludeBuild = is_include_build)
+    release(None, platform, version, isLocal = True, isIncludeBuild = is_include_build, isForced = is_forced)
 
 @task
-def release_to_test_server(c, platform = "webgl", version = "0.0.1", is_include_build = True):
-    isIncludeBuild = is_include_build
+def release_to_test_server(c, platform = "webgl", version = "0.0.1", is_include_build = True, is_forced = False):
     sconn = gao.devops.connection.connectionTestServer()
-    release(sconn, platform, version, isLocal = False, isIncludeBuild = is_include_build)
+    release(sconn, platform, version, isLocal = False, isIncludeBuild = is_include_build, isForced = is_forced)
 
 @task
-def release_bundles_to_local(c, platform = "webgl", version = "0.0.1", bundles_version = "2"):
+def release_bundles_to_local(c, platform = "webgl", version = "0.0.1", bundles_version = "2", is_forced = False):
     bundlesVersion = bundles_version
-    releaseBundles(None, platform, version, isLocal = True, bundlesVersion = "2")
+    releaseBundles(None, platform, version, isLocal = True, bundlesVersion = "2", isForced = is_forced)
 
 @task
-def release_bundles_to_test_server(c, platform = "webgl", version = "0.0.1", bundles_version = "2"):
+def release_bundles_to_test_server(c, platform = "webgl", version = "0.0.1", bundles_version = "2", is_forced = False):
     bundlesVersion = bundles_version
     sconn = gao.devops.connection.connectionTestServer()
-    releaseBundles(sconn, platform, version, isLocal = False, bundlesVersion = "2")
+    releaseBundles(sconn, platform, version, isLocal = False, bundlesVersion = "2", isForced = is_forced)
 
-# publish tasks
+# publish 
 
 @task
 def publish_to_local(c, platform = "webgl", version = "0.0.1", bundles_version = "1", is_include_build = True):
@@ -61,7 +60,13 @@ def deploy_gaos_to_test_server(c):
     sconn = gao.devops.connection.connectionTestServer()
     gao.devops.gaos.deploy(sconn)
 
+# nginx
+
+@task
+def update_nginx_on_local(c):
+    gao.devops.nginx.update(c, isLocal = True)
+
 @task
 def update_nginx_on_test_server(c):
     sconn = gao.devops.connection.connectionTestServer()
-    gao.devops.nginx.update(sconn)
+    gao.devops.nginx.update(sconn, isLocal = False)
