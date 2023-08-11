@@ -40,11 +40,13 @@ def release_bundles_to_test_server(c, platform = "webgl", version = "0.0.1", bun
 @task
 def publish_to_local(c, platform = "webgl", version = "0.0.1", bundles_version = "1", is_include_build = True):
     publish(None,  platform, version, bundlesVersion = bundles_version, isLocal = True, isIncludeBuild = is_include_build)
+    print("https://local.galacticodyssey.space")
 
 @task
 def publish_to_test_server(c, platform = "webgl", version = "0.0.1", bundles_version = "1",  is_include_build = True, is_use_local_release = True):
     sconn = gao.devops.connection.connectionTestServer()
     publish(sconn,  platform, version,  bundlesVersion = bundles_version, isLocal = False, isIncludeBuild = is_include_build, isUseLocalRelease = is_use_local_release)
+    print("https://test.galacticodyssey.space")
 
 @task
 def publish_bundles_to_local(c, platform = "webgl", version = "0.0.1", bundles_version = "1"):
@@ -55,10 +57,14 @@ def publish_bundles_to_test_server(c, platform = "webgl", version = "0.0.1", bun
     sconn = gao.devops.connection.connectionTestServer()
     publishBundles(sconn,  platform, version, bundlesVersion = bundles_version, isLocal = False, isUseLocalRelease = is_use_local_release)
 
+
+# gaos
+
 @task
 def deploy_gaos_to_test_server(c):
     sconn = gao.devops.connection.connectionTestServer()
     gao.devops.gaos.deploy(sconn)
+
 
 # nginx
 

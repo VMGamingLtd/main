@@ -13,11 +13,16 @@ def deploy(sconn):
 
         echo "INFO: pulling from git"
         cd /opt/gaos
+        git reset --hard
         git pull
 
         echo "INFO: drop and update gaos database"
         dotnet ef database drop --force
         dotnet ef database update
+
+        echo "INFO: build release"
+        dotnet publish --configuration Release
+        chown -R gaos:gaos /opt/gaos/bin/Release/net7.0/publish
 
         echo "INFO: start gaos service"
         systemctl start gaos

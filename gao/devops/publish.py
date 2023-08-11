@@ -126,13 +126,11 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
             if [ ! -d "{PUBLISH_FOLDER}" ]; then
                 echo "INFO: create publish folder: {PUBLISH_FOLDER}"
                 mkdir {PUBLISH_FOLDER}
-                chown www-data:www-data {PUBLISH_FOLDER}
             fi
 
             if [ ! -d "{PUBLISH_FOLDER}/{releaseSubfolder}" ]; then
                 echo "INFO: create publish folder for {platform}: {PUBLISH_FOLDER}/{releaseSubfolder}"
                 mkdir {PUBLISH_FOLDER}/{releaseSubfolder}
-                chown www-data:www-data {PUBLISH_FOLDER}/{releaseSubfolder}
             fi
 
             cd {PUBLISH_FOLDER}/{releaseSubfolder}
@@ -143,18 +141,14 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
             cp {tmpFolderServer}/build.tar.gz .
             tar -xvf build.tar.gz
             rm build.tar.gz
-            chown -R www-data:www-data build
             echo "{version}" > version.txt
-            chown www-data:www-data version.txt
 
             echo "INFO: extract build archive"
 
             cp {tmpFolderServer}/AssetBundles.tar.gz .
             tar -xvf AssetBundles.tar.gz
             rm AssetBundles.tar.gz
-            chown -R www-data:www-data AssetBundles
             echo "{bundlesVersion}" > versionBundles.txt
-            chown www-data:www-data versionBundles.txt
 
             echo "INFO: update webgl publish folder"
 
@@ -162,11 +156,21 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
                 if [ ! -d "{PUBLISH_WEBGL_FOLDER}" ]; then
                     echo "INFO: create webgl publish folder: {PUBLISH_WEBGL_FOLDER}"
                     mkdir {PUBLISH_WEBGL_FOLDER}
-                    chown -R www-data:www-data {PUBLISH_WEBGL_FOLDER}
                 fi
                 rm -rf {PUBLISH_WEBGL_FOLDER}/*
                 cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/build/* {PUBLISH_WEBGL_FOLDER}
             fi
+
+            echo "INFO: set permissions"
+
+            chown -R www-data:www-data {PUBLISH_FOLDER}
+            chown -R www-data:www-data {PUBLISH_WEBGL_FOLDER}
+
+            find {PUBLISH_FOLDER} -type d -exec chmod 755 {{}} +
+            find {PUBLISH_FOLDER} -type f -exec chmod 644 {{}} +
+
+            find {PUBLISH_WEBGL_FOLDER} -type d -exec chmod 755 {{}} +
+            find {PUBLISH_WEBGL_FOLDER} -type f -exec chmod 644 {{}} +
 
             echo "INFO: finsished publishing of build: platform: {platform}, version: {version}, bundles version: {bundlesVersion}"
             """)
@@ -176,13 +180,11 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
                 if [ ! -d "{PUBLISH_FOLDER}" ]; then
                     echo "INFO: create publish folder: {PUBLISH_FOLDER}"
                     mkdir {PUBLISH_FOLDER}
-                    chown www-data:www-data {PUBLISH_FOLDER}
                 fi
 
                 if [ ! -d "{PUBLISH_FOLDER}/{releaseSubfolder}" ]; then
                     echo "INFO: create publish folder for {platform}: {PUBLISH_FOLDER}/{releaseSubfolder}"
                     mkdir {PUBLISH_FOLDER}/{releaseSubfolder}
-                    chown www-data:www-data {PUBLISH_FOLDER}/{releaseSubfolder}
                 fi
 
                 echo "INFO: copy build"
@@ -191,16 +193,12 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
                 rm -rf build AssetBundles version.txt versionBundles.txt
 
                 cp -r {RELEASE_FOLDER}/{releaseSubfolder}/{version}/build .
-                chown -R www-data:www-data build
                 echo "{version}" > version.txt
-                chown www-data:www-data version.txt
 
                 echo "INFO: copy asset bundles"
 
                 cp -r {RELEASE_FOLDER}/{releaseSubfolder}/{version}/AssetBundles/{bundlesVersion} AssetBundles
-                chown -R www-data:www-data AssetBundles
                 echo "{bundlesVersion}" > versionBundles.txt
-                chown www-data:www-data versionBundles.txt
 
                 echo "INFO: update webgl publish folder"
 
@@ -208,11 +206,21 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
                     if [ ! -d "{PUBLISH_WEBGL_FOLDER}" ]; then
                         echo "INFO: create webgl publish folder: {PUBLISH_WEBGL_FOLDER}"
                         mkdir {PUBLISH_WEBGL_FOLDER}
-                        chown -R www-data:www-data {PUBLISH_WEBGL_FOLDER}
                     fi
                     rm -rf {PUBLISH_WEBGL_FOLDER}/*
                     cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/build/* {PUBLISH_WEBGL_FOLDER}
                 fi
+
+                echo "INFO: set permissions"
+
+                chown -R www-data:www-data {PUBLISH_FOLDER}
+                chown -R www-data:www-data {PUBLISH_WEBGL_FOLDER}
+
+                find {PUBLISH_FOLDER} -type d -exec chmod 755 {{}} +
+                find {PUBLISH_FOLDER} -type f -exec chmod 644 {{}} +
+
+                find {PUBLISH_WEBGL_FOLDER} -type d -exec chmod 755 {{}} +
+                find {PUBLISH_WEBGL_FOLDER} -type f -exec chmod 644 {{}} +
 
                 echo "INFO: finsished publishing of build: platform: {platform}, version: {version}, bundles version: {bundlesVersion}"
             """)
@@ -271,9 +279,17 @@ def publishBundles(sconn, platform, version, bundlesVersion, **kwargs):
                 cd {PUBLISH_FOLDER}/{releaseSubfolder}
                 rm -rf AssetBundles versionBundles.txt
                 tar -xvf AssetBundles.tar.gz
-                chown -R root:root AssetBundles
                 echo "{bundlesVersion}" > versionBundles.txt
                 rm -f AssetBundles.tar.gz 
+
+                echo "INFO: set permissions"
+                
+                chown -R www-data:www-data {PUBLISH_FOLDER}/{releaseSubfolder}
+
+                find  {PUBLISH_FOLDER}/{releaseSubfolder}-type d -exec chmod 755 {{}} +
+                find  {PUBLISH_FOLDER}/{releaseSubfolder}-type f -exec chmod 644 {{}} +
+
+                
                 echo "INFO: finsished publishing of AssetBunddles: platform: {platform}, version: {version}, bundles version: {bundlesVersion}"
             """)
         else:
@@ -285,6 +301,15 @@ def publishBundles(sconn, platform, version, bundlesVersion, **kwargs):
                 cp -r {RELEASE_FOLDER}/{releaseSubfolder}/{version}/AssetBundles/{bundlesVersion} {PUBLISH_FOLDER}/{releaseSubfolder}/AssetBundles
                 chown -R root:root AssetBundles
                 echo "{bundlesVersion}" > versionBundles.txt
+
+                echo "INFO: set permissions"
+                
+                chown -R www-data:www-data {PUBLISH_FOLDER}/{releaseSubfolder}
+
+                find  {PUBLISH_FOLDER}/{releaseSubfolder}-type d -exec chmod 755 {{}} +
+                find  {PUBLISH_FOLDER}/{releaseSubfolder}-type f -exec chmod 644 {{}} +
+
+
                 echo "INFO: finsished publishing of AssetBunddles: platform: {platform}, version: {version}, bundles version: {bundlesVersion}"
             """)
             pass

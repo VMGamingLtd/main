@@ -42,7 +42,16 @@
 #invoke publish-to-test-server --platform="android" --version="0.0.1", --bundles-version="1" --is-include-build --no-is-use-local-release
 #invoke publish-bundles-to-test-server --platform="android" --version="0.0.1", --bundles-version="2" --no-is-use-local-release 
 
+## Nginx
+
 #invoke update-nginx-on-test-server
+#invoke update-nginx-on-local
+#invoke start-nginx-on-local
+#invoke stop-nginx-on-local
+
+## Gaos
+
+#invoke deploy-gaos-to-test-server
 
 
 # sandbox testing
@@ -55,13 +64,8 @@
 #invoke publish-to-local --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build
 
 #invoke update-nginx-on-test-server
+#invoke deploy-gaos-to-test-server
 
-#invoke release-to-test-server --platform="webgl" --version="0.0.1" --is-forced  
-#invoke release-to-test-server --platform="android" --version="0.0.1" --is-forced  
-
+invoke deploy-gaos-to-test-server
 #invoke publish-to-test-server --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build --no-is-use-local-release
-#invoke publish-to-test-server --platform="android" --version="0.0.1", --bundles-version="1" --is-include-build --no-is-use-local-release
-
-#invoke publish-to-test-server --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build --is-use-local-release
-#invoke publish-to-test-server --platform="android" --version="0.0.1", --bundles-version="1" --is-include-build --no-is-use-local-release
 

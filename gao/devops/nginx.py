@@ -19,11 +19,7 @@ def update(sconn, isLocal = False):
             xcopy /e ..\\nginx_conf\\html ..\\nginx\\html
 
             echo "INFO: copy over nginx.conf"
-            copy ..\\nginx_conf\\nginx.conf ..\\nginx\\nginx.conf
-
-            echo "INFO: copy over certificates"
-            copy /y ..\\nginx_conf\\certs\\cert.key ..\\nginx\\certs
-            copy /y ..\\nginx_conf\\certs\\cert.pem ..\\nginx\\certs
+            copy ..\\nginx_conf\\nginx.conf ..\\nginx\\conf\\nginx.conf
        """
 
        runCommands(sconn, commandStr)
