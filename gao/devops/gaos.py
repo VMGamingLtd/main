@@ -18,6 +18,8 @@ def deploy(sconn):
 
         echo "INFO: drop and update gaos database"
         dotnet ef database drop --force
+        rm -rf /opt/gaos/Migrations
+        dotnet ef migrations add InitialCreate
         dotnet ef database update
 
         echo "INFO: build release"
