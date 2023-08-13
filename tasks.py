@@ -4,6 +4,7 @@ from gao.devops.release import release, releaseBundles
 from gao.devops.publish import publish, publishBundles
 import gao.devops.gaos
 import gao.devops.nginx
+import gao.devops.mongo
 
 
 def checkPlatform(platform):
@@ -84,4 +85,14 @@ def start_nginx_on_local(c):
 @task
 def stop_nginx_on_local(c):
     gao.devops.nginx.stop(c, isLocal = True)
+
+# mongo
+
+@task
+def drop_gaos_database_on_local(c):
+    gao.devops.mongo.drop_gaos_database(None, isLocal = True)
+
+@task
+def drop_gaos_database_on_test_server(c):
+    gao.devops.mongo.drop_gaos_database(None, isLocal = True)
 
