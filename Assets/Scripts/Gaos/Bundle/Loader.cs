@@ -13,7 +13,7 @@ public class Loader : MonoBehaviour
 
     bool IsError = false;
 
-    
+
     private string bundleUrl(string bundleName)
     {
         return $"{BUNDLES_URL}/{bundleName}";
@@ -50,12 +50,6 @@ public class Loader : MonoBehaviour
             string bundleName = bundleNames[i];
             yield return this.LoadBundle(bundleName);
         }
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
 
     }
 }

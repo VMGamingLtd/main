@@ -41,11 +41,16 @@ public class SaveManager : MonoBehaviour
         public int fossilFuelsPlanet0;
         public int rareElementsPlanet0;
         public int gemstonesPlanet0;
+        public int planet0BiofuelGenerator;
+        public int planet0WaterPump;
+        public int planet0PlantField;
+        public int planet0Boiler;
+        public int planet0SteamGenerator;
         public string planet0WindStatus;
-        public string playerOxygen;
-        public string playerWater;
-        public string playerEnergy;
-        public string playerHunger;
+        public float playerOxygen;
+        public float playerWater;
+        public float playerEnergy;
+        public float playerHunger;
         public string MenuButtonTypeOn;
         public int playerLevel;
         public int playerCurrentExp;
@@ -56,6 +61,7 @@ public class SaveManager : MonoBehaviour
         public int minutes;
         public int seconds;
         public int Planet0CurrentElectricity;
+        public int Planet0CurrentConsumption;
         public int Planet0MaxElectricity;
         public bool registeredUser;
         public bool firstGoal;
@@ -74,24 +80,24 @@ public class SaveManager : MonoBehaviour
         public RecipeData[] processedRecipeObjects;
         public RecipeData[] enhancedRecipeObjects;
         public RecipeData[] assembledRecipeObjects;
+        public string BuildingStatisticProcess;
+        public string BuildingStatisticType;
+        public string BuildingStatisticInterval;
+        public bool BuildingStatisticTypeChanged;
+        public bool BuildingIntervalTypeChanged;
+        public bool[] slotEquipped;
+        public int ItemCreationID;
     }
 
     public class InventoryItemData
     {
+        public int ID;
+        public float stackLimit;
         public string itemName;
         public string itemType;
         public string itemClass;
         public string itemProduct;
-        public int itemQuantity;
-        public string OxygenTimer;
-        public string EnergyTimer;
-        public string WaterTimer;
-
-        public bool ShouldSerializeOxygenTimer()
-        {
-            string[] excludedTypes = { "BASIC", "PROCESSED", "ENHANCED" };
-            return !excludedTypes.Any(type => itemType.Equals(type, StringComparison.OrdinalIgnoreCase));
-        }
+        public float itemQuantity;
     }
     public class RecipeData
     {
@@ -144,6 +150,11 @@ public class SaveManager : MonoBehaviour
         currentSaveData.fossilFuelsPlanet0 = Planet0Buildings.FossilFuelsPlanet0;
         currentSaveData.rareElementsPlanet0 = Planet0Buildings.RareElementsPlanet0;
         currentSaveData.gemstonesPlanet0 = Planet0Buildings.GemstonesPlanet0;
+        currentSaveData.planet0BiofuelGenerator = Planet0Buildings.Planet0BiofuelGenerator;
+        currentSaveData.planet0WaterPump = Planet0Buildings.Planet0WaterPump;
+        currentSaveData.planet0PlantField = Planet0Buildings.Planet0PlantField;
+        currentSaveData.planet0Boiler = Planet0Buildings.Planet0Boiler;
+        currentSaveData.planet0SteamGenerator = Planet0Buildings.Planet0SteamGenerator;
         currentSaveData.playerLevel = Level.PlayerLevel;
         currentSaveData.playerCurrentExp = Level.PlayerCurrentExp;
         currentSaveData.playerMaxExp = Level.PlayerMaxExp;
@@ -165,7 +176,17 @@ public class SaveManager : MonoBehaviour
         currentSaveData.MenuButtonTypeOn = ButtonManager.MenuButtonTypeOn;
         currentSaveData.isDraggingBuilding = BuildingManager.isDraggingBuilding;
         currentSaveData.Planet0MaxElectricity = Planet0Buildings.Planet0CurrentElectricity;
+        currentSaveData.Planet0CurrentConsumption = Planet0Buildings.Planet0CurrentConsumption;
         currentSaveData.Planet0MaxElectricity = Planet0Buildings.Planet0MaxElectricity;
+        currentSaveData.BuildingStatisticProcess = BuildingStatisticsManager.BuildingStatisticProcess;
+        currentSaveData.BuildingStatisticType = BuildingStatisticsManager.BuildingStatisticType;
+        currentSaveData.BuildingStatisticInterval = BuildingStatisticsManager.BuildingStatisticInterval;
+        currentSaveData.BuildingIntervalTypeChanged = BuildingIntervalTypes.BuildingIntervalTypeChanged;
+        currentSaveData.BuildingStatisticTypeChanged = BuildingStatisticTypes.BuildingStatisticTypeChanged;
+        currentSaveData.ItemCreationID = ItemCreator.ItemCreationID;
+
+        // slot equip array
+        currentSaveData.slotEquipped = EquipmentManager.slotEquipped;
 
         // Access the itemArrays dictionary through the inventoryManager reference
         Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;
@@ -180,6 +201,8 @@ public class SaveManager : MonoBehaviour
             InventoryItemData itemData = new InventoryItemData();
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            itemData.ID = itemDataComponent.ID;
+            itemData.stackLimit = itemDataComponent.stackLimit;
             itemData.itemType = itemDataComponent.itemType;
             itemData.itemProduct = itemDataComponent.itemProduct;
             itemData.itemClass = itemDataComponent.itemClass;
@@ -198,11 +221,12 @@ public class SaveManager : MonoBehaviour
             InventoryItemData itemData = new InventoryItemData();
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            itemData.ID = itemDataComponent.ID;
+            itemData.stackLimit = itemDataComponent.stackLimit;
             itemData.itemType = itemDataComponent.itemType;
             itemData.itemProduct = itemDataComponent.itemProduct;
             itemData.itemClass = itemDataComponent.itemClass;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
-            itemData.WaterTimer = itemDataComponent.WaterTimer;
 
             currentSaveData.processedInventoryObjects[i] = itemData;
         }
@@ -216,6 +240,8 @@ public class SaveManager : MonoBehaviour
             InventoryItemData itemData = new InventoryItemData();
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            itemData.ID = itemDataComponent.ID;
+            itemData.stackLimit = itemDataComponent.stackLimit;
             itemData.itemType = itemDataComponent.itemType;
             itemData.itemProduct = itemDataComponent.itemProduct;
             itemData.itemClass = itemDataComponent.itemClass;
@@ -233,13 +259,12 @@ public class SaveManager : MonoBehaviour
             InventoryItemData itemData = new InventoryItemData();
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
+            itemData.ID = itemDataComponent.ID;
+            itemData.stackLimit = itemDataComponent.stackLimit;
             itemData.itemType = itemDataComponent.itemType;
             itemData.itemProduct = itemDataComponent.itemProduct;
             itemData.itemClass = itemDataComponent.itemClass;
             itemData.itemQuantity = itemDataComponent.itemQuantity;
-            itemData.OxygenTimer = itemDataComponent.OxygenTimer;
-            itemData.EnergyTimer = itemDataComponent.EnergyTimer;
-            itemData.WaterTimer = itemDataComponent.WaterTimer;
 
             currentSaveData.assembledInventoryObjects[i] = itemData;
         }
@@ -386,15 +411,30 @@ public class SaveManager : MonoBehaviour
         userGameDataSaveRequest.GameData.PlayerEnergy = PlayerResources.PlayerEnergy;
         userGameDataSaveRequest.GameData.PlayerHunger = PlayerResources.PlayerHunger;
         userGameDataSaveRequest.GameData.RegisteredUser = CoroutineManager.registeredUser;
-        userGameDataSaveRequest.GameData.FirstGoal = GoalManager.firstGoal; // bool
-        userGameDataSaveRequest.GameData.SecondGoal = GoalManager.secondGoal; // bool
-        userGameDataSaveRequest.GameData.ThirdGoal = GoalManager.thirdGoal; // bool
+        userGameDataSaveRequest.GameData.FirstGoal = GoalManager.firstGoal;
+        userGameDataSaveRequest.GameData.SecondGoal = GoalManager.secondGoal;
+        userGameDataSaveRequest.GameData.ThirdGoal = GoalManager.thirdGoal;
         userGameDataSaveRequest.GameData.IsPlayerInBiologicalBiome = GlobalCalculator.isPlayerInBiologicalBiome;
         userGameDataSaveRequest.GameData.Credits = Credits.credits;
-        //userGameDataSaveRequest.GameData.MenuButtonTypeOn = ButtonManager.MenuButtonTypeOn; //new variable
-        //userGameDataSaveRequest.GameData.isDraggingBuilding = BuildingManager.isDraggingBuilding; //new variable
-        //userGameDataSaveRequest.GameData.Planet0MaxElectricity = Planet0Buildings.Planet0CurrentElectricity; //new variable
-        //userGameDataSaveRequest.GameData.Planet0MaxElectricity = Planet0Buildings.Planet0MaxElectricity; //new variable
+        userGameDataSaveRequest.GameData.MenuButtonTypeOn = ButtonManager.MenuButtonTypeOn;
+        userGameDataSaveRequest.GameData.isDraggingBuilding = BuildingManager.isDraggingBuilding;
+        userGameDataSaveRequest.GameData.Planet0CurrentElectricity = Planet0Buildings.Planet0CurrentElectricity;
+        userGameDataSaveRequest.GameData.Planet0CurrentConsumption = Planet0Buildings.Planet0CurrentConsumption;
+        userGameDataSaveRequest.GameData.Planet0MaxElectricity = Planet0Buildings.Planet0MaxElectricity;
+        userGameDataSaveRequest.GameData.Planet0BiofuelGenerator = Planet0Buildings.Planet0BiofuelGenerator;
+        userGameDataSaveRequest.GameData.Planet0WaterPump = Planet0Buildings.Planet0WaterPump;
+        userGameDataSaveRequest.GameData.Planet0PlantField = Planet0Buildings.Planet0PlantField;
+        userGameDataSaveRequest.GameData.Planet0Boiler = Planet0Buildings.Planet0Boiler;
+        userGameDataSaveRequest.GameData.Planet0SteamGenerator = Planet0Buildings.Planet0SteamGenerator;
+        userGameDataSaveRequest.GameData.BuildingStatisticProcess = BuildingStatisticsManager.BuildingStatisticProcess;
+        userGameDataSaveRequest.GameData.BuildingStatisticType = BuildingStatisticsManager.BuildingStatisticType;
+        userGameDataSaveRequest.GameData.BuildingStatisticInterval = BuildingStatisticsManager.BuildingStatisticInterval;
+        userGameDataSaveRequest.GameData.BuildingIntervalTypeChanged = BuildingIntervalTypes.BuildingIntervalTypeChanged;
+        userGameDataSaveRequest.GameData.BuildingStatisticTypeChanged = BuildingStatisticTypes.BuildingStatisticTypeChanged;
+        userGameDataSaveRequest.GameData.ItemCreationID = ItemCreator.ItemCreationID;
+
+        // store the equipment bool array
+        userGameDataSaveRequest.GameData.slotEquipped = EquipmentManager.slotEquipped;
 
         // fill in inventories
 
@@ -412,6 +452,8 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.BasicInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.BasicInventoryObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.BasicInventoryObjects[i].ID = itemDataComponent.ID;
+            userGameDataSaveRequest.BasicInventoryObjects[i].stackLimit = itemDataComponent.stackLimit;
             userGameDataSaveRequest.BasicInventoryObjects[i].ItemType = itemDataComponent.itemType;
             userGameDataSaveRequest.BasicInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
             userGameDataSaveRequest.BasicInventoryObjects[i].ItemClass = itemDataComponent.itemClass;
@@ -429,11 +471,12 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.ProcessedInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.ProcessedInventoryObjects[i].ID = itemDataComponent.ID;
+            userGameDataSaveRequest.ProcessedInventoryObjects[i].stackLimit = itemDataComponent.stackLimit;
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemType = itemDataComponent.itemType;
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemClass = itemDataComponent.itemClass;
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemQuantity =itemDataComponent.itemQuantity;
-            userGameDataSaveRequest.ProcessedInventoryObjects[i].OxygenTimer = itemDataComponent.OxygenTimer;
         }
 
         userGameDataSaveRequest.EnhancedInventoryObjects = new Gaos.Dbo.Model.InventoryItemData[itemArrays["ENHANCED"].Length];
@@ -448,6 +491,8 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.EnhancedInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.EnhancedInventoryObjects[i].ID = itemDataComponent.ID;
+            userGameDataSaveRequest.EnhancedInventoryObjects[i].stackLimit = itemDataComponent.stackLimit;
             userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemType = itemDataComponent.itemType;
             userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
             userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemClass = itemDataComponent.itemClass;
@@ -465,13 +510,12 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.AssembledInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemName = itemName;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].ID = itemDataComponent.ID;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].stackLimit = itemDataComponent.stackLimit;
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemType = itemDataComponent.itemType;
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemClass = itemDataComponent.itemClass;
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemQuantity =itemDataComponent.itemQuantity;
-            userGameDataSaveRequest.AssembledInventoryObjects[i].OxygenTimer = itemDataComponent.OxygenTimer;
-            userGameDataSaveRequest.AssembledInventoryObjects[i].WaterTimer = itemDataComponent.WaterTimer;
-            userGameDataSaveRequest.AssembledInventoryObjects[i].EnergyTimer = itemDataComponent.EnergyTimer;
         }
         // recipeTitle treba vyhodit!
         //userGameDataSaveRequest.GameData.RecipeTitle = saveDataModel.recipeTitle;
@@ -562,5 +606,6 @@ public class SaveManager : MonoBehaviour
         string responseString = JsonConvert.SerializeObject(response);
         Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3100: OnUserGameDataGetComplete(): {responseString}");
 
+        // DON'T FORGET TO SWITCH 'GlobalCalculator.GameStarted' bool to true when game is loaded!!!
     }
 }

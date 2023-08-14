@@ -15,6 +15,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
 
     public void StartCollectPlants()
     {
+        RefreshResourceMap();
         if (CoroutineManager.AllCoroutineBooleans[0] == true)
         {
             coroutineManager.StartCoroutine("StopCollectPlants");
@@ -35,6 +36,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
 
     public void StartCollectWater()
     {
+        RefreshResourceMap();
         if (CoroutineManager.AllCoroutineBooleans[1] == true)
         {
             coroutineManager.StartCoroutine("StopCollectWater");
@@ -54,7 +56,8 @@ public class BuildingBarPlanet0 : MonoBehaviour {
 
     public void StartCollectBiofuel()
     {
-        int plants = inventoryManager.GetItemQuantity("FibrousLeaves", "BASIC");
+        RefreshResourceMap();
+        float plants = inventoryManager.GetItemQuantity("FibrousLeaves", "BASIC");
         if (CoroutineManager.AllCoroutineBooleans[2] == true)
         {
             coroutineManager.StartCoroutine("StopCollectBiofuel");
@@ -84,10 +87,11 @@ public class BuildingBarPlanet0 : MonoBehaviour {
     }
     public void StartWaterBottle()
     {
-        int water = inventoryManager.GetItemQuantity("AlienWater", "BASIC");
+        RefreshResourceMap();
+        float water = inventoryManager.GetItemQuantity("Water", "BASIC");
         if (CoroutineManager.AllCoroutineBooleans[3] == true)
         {
-            coroutineManager.StartCoroutine("StopCollectPurifiedWater");
+            coroutineManager.StartCoroutine("StopCollectDistilledWater");
         }
         else if (CoroutineManager.CheckForTrueValues())
         {
@@ -95,7 +99,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
             {
                 coroutineManager.StopRunningCoroutine();
                 CoroutineManager.AllCoroutineBooleans[3] = true;
-                coroutineManager.StartCoroutine("CollectPurifiedWater");
+                coroutineManager.StartCoroutine("CollectDistilledWater");
             }
             else
             {
@@ -105,7 +109,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
         else if (water >= 50)
         {
             CoroutineManager.AllCoroutineBooleans[3] = true;
-            coroutineManager.StartCoroutine("CollectPurifiedWater");
+            coroutineManager.StartCoroutine("CollectDistilledWater");
         }
         else
         {
@@ -114,7 +118,8 @@ public class BuildingBarPlanet0 : MonoBehaviour {
     }
     public void StartCreateBatteryCore()
     {
-        int biofuel = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED");
+        RefreshResourceMap();
+        float biofuel = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED");
         if (CoroutineManager.AllCoroutineBooleans[6] == true)
         {
             coroutineManager.StartCoroutine("StopCreateBatteryCore");
@@ -145,8 +150,9 @@ public class BuildingBarPlanet0 : MonoBehaviour {
 
     public void StartCreateBattery()
     {
-        int batteryCore = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED");
-        int biofuel = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED");
+        RefreshResourceMap();
+        float batteryCore = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED");
+        float biofuel = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED");
 
         if (CoroutineManager.AllCoroutineBooleans[4] == true)
         {
@@ -186,6 +192,11 @@ public class BuildingBarPlanet0 : MonoBehaviour {
                 errorObjectTransform.gameObject.SetActive(false);
             }
         }
+    }
+
+    private void RefreshResourceMap()
+    {
+        coroutineManager.InitializeResourceMap();
     }
 
     IEnumerator errorCoroutine()

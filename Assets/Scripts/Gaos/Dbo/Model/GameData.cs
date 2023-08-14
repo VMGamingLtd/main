@@ -33,10 +33,15 @@ namespace Gaos.Dbo.Model
         public int FossilFuelsPlanet0;
         public int RareElementsPlanet0;
         public int GemstonesPlanet0;
-        public string? PlayerOxygen;
-        public string? PlayerWater;
-        public string? PlayerEnergy;
-        public string? PlayerHunger;
+        public int Planet0BiofuelGenerator;
+        public int Planet0WaterPump;
+        public int Planet0PlantField;
+        public int Planet0Boiler;
+        public int Planet0SteamGenerator;
+        public float? PlayerOxygen;
+        public float? PlayerWater;
+        public float? PlayerEnergy;
+        public float? PlayerHunger;
         public int PlayerLevel;
         public int PlayerCurrentExp;
         public int PlayerMaxExp;
@@ -51,5 +56,17 @@ namespace Gaos.Dbo.Model
         public bool ThirdGoal;
         public bool IsPlayerInBiologicalBiome;
         public float Credits;
+        public string MenuButtonTypeOn;
+        public bool isDraggingBuilding;
+        public int Planet0CurrentElectricity;
+        public int Planet0CurrentConsumption;
+        public int Planet0MaxElectricity;
+        public string BuildingStatisticProcess;
+        public string BuildingStatisticType;
+        public string BuildingStatisticInterval;
+        public bool BuildingIntervalTypeChanged;
+        public bool BuildingStatisticTypeChanged;
+        public bool[] slotEquipped;
+        public int ItemCreationID;
     }
 }

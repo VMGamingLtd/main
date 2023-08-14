@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 357350170
+CRC: 2775866549
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 7ae43a8f98dff3f8999d087cb105f166
+    Hash: e3b08c9815a47ba5f2a5ae810b2c412f
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 4df8c69f2c8a6ad9e3cbf82bb83e4dc3
+    Hash: 2d8df09e698f722ada1caa03d3413830
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -15,7 +15,7 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/AssetBundlesRepo/ResourceIcons/FibrousPlants.png
+- Assets/AssetBundlesRepo/ResourceIcons/FibrousLeaves.png
 - Assets/AssetBundlesRepo/ResourceIcons/Steam.png
 - Assets/AssetBundlesRepo/ResourceIcons/BatteryCore.png
 - Assets/AssetBundlesRepo/ResourceIcons/WaterBottle.png

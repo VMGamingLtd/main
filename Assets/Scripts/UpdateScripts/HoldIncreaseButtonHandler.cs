@@ -12,6 +12,7 @@ public class HoldIncreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPo
     public TextMeshProUGUI efficiency;
     public TextMeshProUGUI totalTime;
     public TextMeshProUGUI powerOutput;
+    public TextMeshProUGUI[] consumedQuantity;
     private bool isHoldingButton = false;
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -28,12 +29,29 @@ public class HoldIncreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPo
     {
         refObj = buildingOptionsInterface.mainObj;
         itemData = refObj.GetComponent<BuildingItemData>();
-        while (isHoldingButton && itemData.efficiencySetting < 200)
+        float quantityBaseInput;
+        if (itemData.itemType == "POWERPLANT")
         {
-            itemData.efficiencySetting++;
-            itemData.totalTime -= 0.1f;
-            itemData.powerOutput += (int)(itemData.basePowerOutput / 100f);
-            yield return new WaitForSeconds(0.1f); // Repeat every 1 second (adjust as needed).
+            if (itemData.basePowerOutput == 99999)
+            {
+                quantityBaseInput = 2f;
+            }
+            else
+            {
+                quantityBaseInput = 0.5f;
+            }
+            int consumedSlots = itemData.consumedSlotCount;
+            while (isHoldingButton && itemData.efficiencySetting < 200)
+            {
+                for (int i = 0; i < consumedSlots; i++)
+                {
+                    itemData.consumedItems[i].quantity += quantityBaseInput / 100f;
+                }
+                itemData.efficiencySetting++;
+                itemData.totalTime -= 0.05f;
+                itemData.powerOutput += (int)(itemData.basePowerOutput / 100f);
+                yield return new WaitForSeconds(0.1f); // Repeat every 1 second (adjust as needed).
+            }
         }
     }
 }

@@ -21,9 +21,13 @@ public class BuildingOptions : MonoBehaviour
 
     public void PassOptionWindowData()
     {
-        itemData = GetComponent<BuildingItemData>();
-        refObj = transform.gameObject;
-        buildingOptionsWindow.buildingOptions.SetActive(false);
-        optionsInterfaceScript.StartUpdatingUI(itemData, refObj);
+        if (!BuildingManager.isDraggingBuilding)
+        {
+            itemData = GetComponent<BuildingItemData>();
+            refObj = transform.gameObject;
+            buildingOptionsWindow.buildingOptions.SetActive(false);
+            optionsInterfaceScript.StartUpdatingUI(itemData, refObj);
+        }
+
     }
 }

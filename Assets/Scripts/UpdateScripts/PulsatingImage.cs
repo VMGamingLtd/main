@@ -21,7 +21,7 @@ public class PulsatingImage : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerResources.PlayerEnergy == "00:00:00:00")
+        if (EquipmentManager.slotEquipped[5] == false)
         {
             if (targetObject.activeSelf)
             {

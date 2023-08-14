@@ -10,14 +10,13 @@ namespace Gaos.Dbo.Model
         public int? InventoryItemDataKindId;
         public InventoryItemDataKind? InventoryItemDataKind;
 
+        public int? ID;
+        public float? stackLimit;
         public string? ItemName;
         public string? ItemType;
         public string? ItemClass;
         public string? ItemProduct;
-        public int? ItemQuantity;
-        public string? OxygenTimer;
-        public string? EnergyTimer;
-        public string? WaterTimer;
+        public float? ItemQuantity;
 
     }
 }

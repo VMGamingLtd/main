@@ -5,12 +5,16 @@ using UnityEngine;
 using TMPro;
 using System;
 using System.Linq;
+using System.Globalization;
 
 public class InventoryManager : MonoBehaviour
 {
     public Dictionary<string, GameObject[]> itemArrays;
     public ItemCreator itemCreator;
     public EquipmentManager equipmentManager;
+
+    // this variable is for DragAndDrop.cs that is in every item so it is better nested here
+    public static bool endingDrag = false;
 
     public static string ShowItemProducts = "ALL";
     public static string ShowItemTypes = "ALL";
@@ -102,33 +106,7 @@ public class InventoryManager : MonoBehaviour
             Debug.LogWarning("Item type not found in the itemArrays dictionary.");
         }
     }
-
-
-
-    public void IncreaseItemQuantity(string prefabName, GameObject item, ItemData itemData) // this function is initiated only after production
-    {
-        // Check if the item exists in the dictionary
-        if (itemArrays.ContainsKey(prefabName))
-        {
-            // Get the array of items for the prefabName
-            GameObject[] itemArray = itemArrays[prefabName];
-
-            // Find the index of the item in the array
-            int index = System.Array.IndexOf(itemArray, item);
-
-            // Check if the item is present in the array
-            if (index != -1)
-            {
-                // Increase the item quantity
-                itemData.itemQuantity++;
-
-                // Update the item in the array
-                itemArray[index] = item;
-            }
-        }
-    }
-
-    public bool CheckItemQuantity(string prefabName, string itemProduct, int quantityThreshold)
+    public bool CheckItemQuantity(string prefabName, string itemProduct, float quantityThreshold)
     {
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
         {
@@ -148,7 +126,7 @@ public class InventoryManager : MonoBehaviour
 
         return false;
     }
-    public int GetItemQuantity(string prefabName, string itemProduct)
+    public float GetItemQuantity(string prefabName, string itemProduct)
     {
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] foundItemArray))
         {
@@ -167,7 +145,69 @@ public class InventoryManager : MonoBehaviour
 
         return 0;
     }
-    public void AddItemQuantity(string prefabName, string itemProduct, int quantity) // changes quantity of already instantiated product if it doesn't exist, creates new one
+    public void SplitItem(string prefabName, float quantity)
+    {
+        if (prefabName == "FibrousLeaves")
+        {
+            itemCreator.SplitPlants(quantity);
+        }
+        else if (prefabName == "Water")
+        {
+            itemCreator.SplitWater(quantity);
+        }
+        else if (prefabName == "Biofuel")
+        {
+            itemCreator.SplitBiofuel(quantity);
+        }
+        else if (prefabName == "DistilledWater")
+        {
+            itemCreator.SplitDistilledWater(quantity);
+        }
+        else if (prefabName == "Battery")
+        {
+            itemCreator.SplitBattery(quantity);
+        }
+        else if (prefabName == "BatteryCore")
+        {
+            itemCreator.SplitBatteryCore(quantity);
+        }
+        else if (prefabName == "Steam")
+        {
+            itemCreator.SplitSteam(quantity);
+        }
+    }
+    public void CreateItem(string prefabName, float quantity)
+    {
+        if (prefabName == "FibrousLeaves")
+        {
+            itemCreator.CreatePlants(quantity);
+        }
+        else if (prefabName == "Water")
+        {
+            itemCreator.CreateWater(quantity);
+        }
+        else if (prefabName == "Biofuel")
+        {
+            itemCreator.CreateBiofuel(quantity);
+        }
+        else if (prefabName == "DistilledWater")
+        {
+            itemCreator.CreateDistilledWater(quantity);
+        }
+        else if (prefabName == "Battery")
+        {
+            itemCreator.CreateBattery(quantity);
+        }
+        else if (prefabName == "BatteryCore")
+        {
+            itemCreator.CreateBatteryCore(quantity);
+        }
+        else if (prefabName == "Steam")
+        {
+            itemCreator.CreateSteam(quantity);
+        }
+    }
+    public void AddItemQuantity(string prefabName, string itemProduct, float quantity) // changes quantity of already instantiated product if it doesn't exist, creates new one
     {
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
         {
@@ -181,39 +221,64 @@ public class InventoryManager : MonoBehaviour
                     TextMeshProUGUI countText = itemPrefab.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                     if (countText != null)
                     {
-                        countText.text = itemData.itemQuantity.ToString();
+                        countText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
                     }
 
                     return; // Exit the function since item was found and quantity was updated
                 }
             }
         }
-        if (prefabName == "FibrousLeaves")
+        else
         {
-            itemCreator.CreatePlants(quantity);
-        }
-        else if (prefabName == "AlienWater")
-        {
-            itemCreator.CreateWater(quantity);
-        }
-        else if (prefabName == "Biofuel")
-        {
-            itemCreator.CreateBiofuel(quantity);
-        }
-        else if (prefabName == "PurifiedWater")
-        {
-            itemCreator.CreatePurifiedWater(quantity);
-        }
-        else if (prefabName == "Battery")
-        {
-            itemCreator.CreateBattery(quantity);
-        }
-        else if (prefabName == "BatteryCore")
-        {
-            itemCreator.CreateBatteryCore(quantity);
+            CreateItem(prefabName, quantity);
         }
     }
-    public void ReduceItemQuantity(string prefabName, string itemProduct, int quantity)
+    public void ReduceSplitItemQuantity(string prefabName, string itemProduct, float quantity, int objID)
+    {
+        if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
+        {
+            foreach (GameObject itemPrefab in itemArray)
+            {
+                if (itemPrefab.name == prefabName + "(Clone)")
+                {
+                    ItemData itemData = itemPrefab.GetComponent<ItemData>();
+                    if (itemData.ID == objID)
+                    {
+                        itemData.itemQuantity -= quantity;
+
+                        TextMeshProUGUI countText = itemPrefab.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
+                        if (countText != null)
+                        {
+                            countText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                        }
+                        return;
+                    }
+
+                }
+            }
+        }
+    }
+    public void DestroySpecificItem(string prefabName, string itemProduct, int ID)
+    {
+        if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
+        {
+            foreach (GameObject itemPrefab in itemArray)
+            {
+                if (itemPrefab.name == prefabName + "(Clone)")
+                {
+                    ItemData itemData = itemPrefab.GetComponent<ItemData>();
+
+                    if (itemData.ID == ID)
+                    {
+                        itemArrays[itemProduct] = itemArrays[itemProduct].Where(item => item != itemPrefab).ToArray();
+                        Destroy(itemPrefab);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    public void ReduceItemQuantity(string prefabName, string itemProduct, float quantity)
     {
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
         {
@@ -227,7 +292,7 @@ public class InventoryManager : MonoBehaviour
                     TextMeshProUGUI countText = itemPrefab.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                     if (countText != null)
                     {
-                        countText.text = itemData.itemQuantity.ToString();
+                        countText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
                     }
 
                     // Ensure the item quantity doesn't go below zero

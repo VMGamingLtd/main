@@ -27,7 +27,7 @@ namespace RecipeManagement
         {
             CreateRecipe(recipePrefabs[2], "PROCESSED", "LIQUID", "CLASS-F", recipePrefabs[2].name);
         }
-        public void CreatePurifiedWaterRecipe()
+        public void CreateDistilledWaterRecipe()
         {
             CreateRecipe(recipePrefabs[3], "PROCESSED", "LIQUID", "CLASS-F", recipePrefabs[3].name);
         }

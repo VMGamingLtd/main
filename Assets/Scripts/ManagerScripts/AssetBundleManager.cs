@@ -13,46 +13,16 @@ public static class AssetBundleManager
         if (loadedAssetBundles.ContainsKey(bundleName))
         {
             AssetBundle assetBundle = loadedAssetBundles[bundleName];
-            if (assetBundle != null)
-            {
-                T asset = assetBundle.LoadAsset<T>(assetName);
-                if (asset != null)
-                {
-                    Debug.Log("Loaded asset '" + assetName + "' from asset bundle '" + bundleName + "'.");
-                    return asset;
-                }
-                else
-                {
-                    Debug.LogError("Failed to load asset '" + assetName + "' from asset bundle '" + bundleName + "'.");
-                }
-            }
+            T asset = assetBundle.LoadAsset<T>(assetName);
+            return asset;
         }
         else
         {
             AssetBundle assetBundle = AssetBundle.LoadFromFile(assetBundlePath);
-            if (assetBundle != null)
-            {
-                loadedAssetBundles.Add(bundleName, assetBundle);
-                Debug.Log("Asset bundle '" + bundleName + "' loaded successfully.");
-
-                T asset = assetBundle.LoadAsset<T>(assetName);
-                if (asset != null)
-                {
-                    Debug.Log("Loaded asset '" + assetName + "' from asset bundle '" + bundleName + "'.");
-                    return asset;
-                }
-                else
-                {
-                    Debug.LogError("Failed to load asset '" + assetName + "' from asset bundle '" + bundleName + "'.");
-                }
-            }
-            else
-            {
-                Debug.LogError("Failed to load AssetBundle: " + assetBundlePath);
-            }
+            loadedAssetBundles.Add(bundleName, assetBundle);
+            T asset = assetBundle.LoadAsset<T>(assetName);
+            return asset;
         }
-
-        return null;
     }
 
     public static void UnloadAssetBundle(string bundleName)

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2640976328
+CRC: 1603872277
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0cf1592e69300f50bdd2e48468c4f029
+    Hash: acccc37e9d5b1ed517b2ccc625e2c776
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 4df8c69f2c8a6ad9e3cbf82bb83e4dc3
+    Hash: 2d8df09e698f722ada1caa03d3413830
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -15,12 +15,12 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/AssetBundlesRepo/BuildingIcons/pipe.png
-- Assets/AssetBundlesRepo/BuildingIcons/grass.png
-- Assets/AssetBundlesRepo/BuildingIcons/turbine.png
-- Assets/AssetBundlesRepo/BuildingIcons/boiler.png
-- Assets/AssetBundlesRepo/BuildingIcons/steam.png
-- Assets/AssetBundlesRepo/BuildingIcons/bio-electricity.png
-- Assets/AssetBundlesRepo/BuildingIcons/gas-pipe.png
-- Assets/AssetBundlesRepo/BuildingIcons/pump.png
+- Assets/AssetBundlesRepo/BuildingIcons/Pipe.png
+- Assets/AssetBundlesRepo/BuildingIcons/PlantField.png
+- Assets/AssetBundlesRepo/BuildingIcons/Turbine.png
+- Assets/AssetBundlesRepo/BuildingIcons/Boiler.png
+- Assets/AssetBundlesRepo/BuildingIcons/SteamGenerator.png
+- Assets/AssetBundlesRepo/BuildingIcons/BiofuelGenerator.png
+- Assets/AssetBundlesRepo/BuildingIcons/WaterPipeline.png
+- Assets/AssetBundlesRepo/BuildingIcons/WaterPump.png
 Dependencies: []

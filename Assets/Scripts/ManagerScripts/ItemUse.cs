@@ -3,36 +3,28 @@ using UnityEngine.EventSystems;
 using ItemManagement;
 using TMPro;
 
-public class ItemUse : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class ItemUse : MonoBehaviour, IPointerClickHandler
 {
     private GameObject itemObject;
-    public UnlockManager unlockManager;
-    public Animation addAnimation;
-    private bool isPointerDown = false;
-    public InventoryManager inventoryManager;
+    private GameObject selectedObj;
+    private MessageObjects messageObjects;
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
+        if (Splitter.isSplitting && eventData.pointerEnter.transform.parent != null)
         {
-            if (eventData.pointerEnter != null && eventData.pointerEnter.transform.parent != null)
-            {
-                itemObject = eventData.pointerEnter.transform.parent.gameObject;
-                isPointerDown = true;
-                StartCoroutine(SingleClickRoutine(itemObject));
-            }
+            string objName = transform.name.Replace("(Clone)","");
+            itemObject = eventData.pointerEnter.transform.parent.gameObject;
+            ItemData itemData = itemObject.GetComponent<ItemData>();
+            messageObjects = GameObject.Find("MessageCanvas/MESSAGEOBJECTS").GetComponent<MessageObjects>();
+            messageObjects.DisplaySplitWindow(itemData, objName);
+            Splitter.isSplitting = false;
+            Splitter.isAwaitingInput = false;
+            //StartCoroutine(SingleClickRoutine(itemObject));
         }
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (eventData.button == PointerEventData.InputButton.Left)
-        {
-            isPointerDown = false;
-        }
-    }
-
-    private System.Collections.IEnumerator SingleClickRoutine(GameObject itemObject)
+    /*private System.Collections.IEnumerator SingleClickRoutine(GameObject itemObject)
     {
         yield return new WaitForSecondsRealtime(0.2f);
         if (isPointerDown == false)
@@ -45,7 +37,7 @@ public class ItemUse : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 {
                     string itemName = itemObject.name;
 
-                    if (itemName == "PurifiedWater(Clone)")
+                    if (itemName == "DistilledWater(Clone)")
                     {
                         if (GoalManager.secondGoal == false)
                         {
@@ -61,11 +53,11 @@ public class ItemUse : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                         int minutes = int.Parse(timerParts[2]);
                         int seconds = int.Parse(timerParts[3]);
                         PlayerResources.AddCurrentResourceTime(ref PlayerResources.PlayerWater, days, hours, minutes, seconds);
-                        inventoryManager.ReduceItemQuantity("PurifiedWater", "PROCESSED", 1);
+                        inventoryManager.ReduceItemQuantity("DistilledWater", "PROCESSED", 1);
                     }
                 }
             }
         }
-    }
+    }*/
 
 }

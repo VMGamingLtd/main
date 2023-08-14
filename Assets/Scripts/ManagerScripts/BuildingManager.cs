@@ -6,6 +6,12 @@ using TMPro;
 using System;
 using System.Linq;
 
+public class BuildingCycleCount
+{
+    public List<int> tenCycleCounts = new List<int> { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120 };
+    public List<int> thirtyCycleCounts = new List<int> { 30, 60, 90, 120 };
+    public List<int> sixHourCounts = new List<int> { 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108, 114, 120 };
+}
 public class BuildingManager : MonoBehaviour
 {
     public Dictionary<string, GameObject[]> buildingArrays;
@@ -14,20 +20,116 @@ public class BuildingManager : MonoBehaviour
     public static bool isDraggingBuilding = false;
     public InventoryManager inventoryManagerRef;
     public CoroutineManager coroutineManagerRef;
+    private BuildingCycleCount cycleCount;
 
     public void PopulateBuildingArrays()
     {
         buildingArrays = new Dictionary<string, GameObject[]>
         {
-            { "BASIC", new GameObject[0] },
-            { "PROCESSED", new GameObject[0] },
-            { "ENHANCED", new GameObject[0] },
-            { "ASSEMBLED", new GameObject[0] }
+            { "AGRICULTURE", new GameObject[0] },
+            { "PUMPINGFACILITY", new GameObject[0] },
+            { "FACTORY", new GameObject[0] },
+            { "COMMFACILITY", new GameObject[0] },
+            { "STORAGEHOUSE", new GameObject[0] },
+            { "NAVALFACILITY", new GameObject[0] },
+            { "OXYGENFACILITY", new GameObject[0] },
+            { "AVIATIONFACILITY", new GameObject[0] },
+            { "HEATINGFACILITY", new GameObject[0] },
+            { "COOLINGFACILITY", new GameObject[0] },
+            { "POWERPLANT", new GameObject[0] },
+            { "OXYGENSTATION", new GameObject[0] },
+            { "MININGRIG", new GameObject[0] }
         };
+        cycleCount = new BuildingCycleCount();
     }
     void OnEnable()
     {
         ShowItems(BuildingManager.ShowBuildingTypes);
+    }
+    public void UpdateBuildingCyclesForAllBuildings()
+    {
+        if (buildingArrays != null && buildingArrays.Count > 0)
+        {
+            foreach (var kvp in buildingArrays)
+            {
+                GameObject[] itemArray = kvp.Value;
+
+                foreach (GameObject item in itemArray)
+                {
+                    BuildingItemData itemData = item.GetComponent<BuildingItemData>();
+                    UpdateBuildingCycles(itemData);
+                }
+            }
+        }
+    }
+    public void UpdateBuildingCycles(BuildingItemData itemData)
+    {
+        // Shift the elements in the secondCycle array to the right (oldest values will be discarded)
+        ShiftAndFillCycle(itemData.powerCycleData.secondCycle, itemData.actualPowerOutput);
+        ShiftAndFillCycle(itemData.powerConsumptionCycleData.secondCycle, itemData.actualPowerConsumption);
+        itemData.secondCycleCount++;
+
+        // Add actualPowerOutput to the first element of the 10s cycle array
+        if (cycleCount.tenCycleCounts.Contains(itemData.secondCycleCount))
+        {
+            ShiftAndFillCycle(itemData.powerCycleData.tenSecondCycle, itemData.actualPowerOutput);
+        }
+
+        // Add actualPowerOutput to the first element of the 30s cycle array
+        if (cycleCount.thirtyCycleCounts.Contains(itemData.secondCycleCount))
+        {
+            ShiftAndFillCycle(itemData.powerCycleData.thirtySecondCycle, itemData.actualPowerOutput);
+        }
+
+        // Add actualPowerOutput to the first element of the 1 minute cycle array
+        if (itemData.secondCycleCount == 60 || itemData.secondCycleCount == 120)
+        {
+            ShiftAndFillCycle(itemData.powerCycleData.minuteCycle, itemData.actualPowerOutput);
+            itemData.minuteCycleCount++;
+        }
+
+        // Add actualPowerOutput to the first element of the 10 minute cycle array
+        if (cycleCount.tenCycleCounts.Contains(itemData.minuteCycleCount))
+        {
+            ShiftAndFillCycle(itemData.powerCycleData.tenMinuteCycle, itemData.actualPowerOutput);
+        }
+
+        // Add actualPowerOutput to the first element of the 30 minute cycle array
+        if (cycleCount.thirtyCycleCounts.Contains(itemData.minuteCycleCount))
+        {
+            ShiftAndFillCycle(itemData.powerCycleData.thirtyMinuteCycle, itemData.actualPowerOutput);
+        }
+
+        // Add actualPowerOutput to the first element of the 1 hour cycle array
+        if (itemData.minuteCycleCount == 60 || itemData.minuteCycleCount == 120)
+        {
+            ShiftAndFillCycle(itemData.powerCycleData.hourCycle, itemData.actualPowerOutput);
+            itemData.hourCycleCount++;
+        }
+
+        // Add actualPowerOutput to the first element of the 6 hour cycle array
+        if (cycleCount.sixHourCounts.Contains(itemData.hourCycleCount))
+        {
+            ShiftAndFillCycle(itemData.powerCycleData.sixHourCycle, itemData.actualPowerOutput);
+        }
+
+        if (itemData.secondCycleCount == 120)
+        {
+            itemData.secondCycleCount = 0;
+        }
+        if (itemData.minuteCycleCount == 120)
+        {
+            itemData.minuteCycleCount = 0;
+        }
+        if (itemData.hourCycleCount == 120)
+        {
+            itemData.hourCycleCount = 0;
+        }
+    }
+    private void ShiftAndFillCycle(float[] cycleArray, float value)
+    {
+        Array.Copy(cycleArray, 0, cycleArray, 1, cycleArray.Length - 1);
+        cycleArray[0] = value;
     }
 
     public void AddToItemArray(string itemType, GameObject item)
