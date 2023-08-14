@@ -16,10 +16,13 @@ public class StartGameInputChecker : MonoBehaviour
     public GameObject MainUI;
     public Button buttonToClick;
     public EquipmentManager equipmentManager;
+    private GlobalCalculator globalCalculator;
 
     // Update is called once per frame
     public void startGameCheckForUsername()
     {
+        globalCalculator = GameObject.Find("GlobalCalculator").GetComponent<GlobalCalculator>();
+        globalCalculator.UpdatePlayerConsumption();
         GlobalCalculator.GameStarted = true;
         NewGamePopup.SetActive(false);
 
@@ -35,9 +38,6 @@ public class StartGameInputChecker : MonoBehaviour
         //initialize starting resources
         Credits.ResetCredits();
         Credits.AddCredits(42);
-        PlayerResources.AddCurrentResourceTime(ref PlayerResources.PlayerWater, 0, 0, 5, 40);
-        PlayerResources.AddCurrentResourceTime(ref PlayerResources.PlayerHunger, 0, 0, 12, 35);
-        PlayerResources.AddCurrentResourceTime(ref PlayerResources.PlayerEnergy, 0, 0, 0, 0);
 
         MainUI.SetActive(true);
 

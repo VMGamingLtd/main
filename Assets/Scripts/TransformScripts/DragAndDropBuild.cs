@@ -8,15 +8,20 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
 {
     public GameObject NewBuilding;
     public GameObject BuildingManagerArea;
-    public GameObject BuildingArea;
+    private GameObject BuildingArea;
     private GameObject draggedObject;
-    public bool isOverlapping;
+    private bool isOverlapping;
     private RectTransform buildingAreaRectTransform;
     private Image buildingAreaImage;
-    public BuildingCreator buildingCreator;
+    private BuildingCreator buildingCreator;
+    private BuildingOptionsInterface optionsInterfaceScript;
+    private BuildingOptionsWindow buildingOptionsWindow;
 
     private void Awake()
     {
+        Transform parentTransform = transform.parent;
+        Transform grandparentTransform = parentTransform.parent;
+        BuildingArea = grandparentTransform.Find("BuildingArea").gameObject;
         buildingAreaRectTransform = BuildingArea.GetComponent<RectTransform>();
         buildingAreaImage = BuildingArea.GetComponent<Image>();
     }
@@ -36,7 +41,7 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     {
         Image objImg = draggedObject.GetComponent<Image>();
 
-        if (CheckForOverlap())
+        if (UIUtils.CheckForOverlap(draggedObject))
         {
             objImg.color = Color.red;
             isOverlapping = true;
@@ -48,25 +53,13 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         }
         draggedObject.transform.position = eventData.position;
     }
-    private bool CheckForOverlap()
-    {
-        BoxCollider2D draggedCollider = draggedObject.GetComponent<BoxCollider2D>();
-
-        if (draggedCollider == null)
-        {
-            return false;
-        }
-        Vector2 colliderSize = new Vector2(100f, 100f);
-
-        return Physics2D.OverlapBox(draggedCollider.bounds.center, colliderSize, 0f) != null;
-    }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         if (!isOverlapping)
         {
             // Check if the dragged object is within the boundaries of the building area
-            if (IsWithinBounds(eventData, buildingAreaRectTransform))
+            if (UIUtils.IsWithinBounds(eventData, buildingAreaRectTransform))
             {
                 draggedObject.transform.SetParent(BuildingManagerArea.transform, true);
                 Animation animation = draggedObject.GetComponent<Animation>();
@@ -92,21 +85,18 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
             BuildingManager.isDraggingBuilding = false;
         }
     }
-    private bool IsWithinBounds(PointerEventData eventData, RectTransform bounds)
-    {
-        Vector2 localPoint;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(bounds, eventData.position, null, out localPoint);
-
-        Rect boundsRect = new Rect(bounds.rect.position, bounds.rect.size);
-
-        return boundsRect.Contains(localPoint);
-    }
     public IEnumerator AttachDragAndDropBuildingsWithDelay(GameObject draggedObject)
     {
         yield return new WaitForSeconds(0.5f);
         draggedObject.AddComponent<DragAndDropBuildings>();
 
+        // if the Building options window is open, then it will be closed
+        buildingOptionsWindow = GameObject.Find("BuildingOptionsWindow").GetComponent<BuildingOptionsWindow>();
+        optionsInterfaceScript = buildingOptionsWindow.optionsInterfaceScript;
+        buildingOptionsWindow.buildingOptions.SetActive(false);
+
         // add the object into buildingArray and with BuildingDataItem component
+        buildingCreator = GameObject.Find("BuildingCreatorList").GetComponent<BuildingCreator>();
         string objectName = draggedObject.transform.name.Replace("(Clone)", "");
         switch (objectName)
         {

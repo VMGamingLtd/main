@@ -3,14 +3,14 @@ using TMPro;
 
 public class AddToTextArray : MonoBehaviour
 {
-    public GameObject coroutineManager;
+    private CoroutineManager manager;
     public string targetVariableName;
     private TextMeshProUGUI myText;
 
     private void Awake()
     {
         myText = GetComponent<TextMeshProUGUI>();
-        CoroutineManager manager = coroutineManager.GetComponent<CoroutineManager>();
+        manager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
         System.Reflection.FieldInfo targetVariable = manager.GetType().GetField(targetVariableName);
         if (GlobalCalculator.GameStarted == true)
         {

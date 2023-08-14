@@ -4,6 +4,20 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 
+[System.Serializable]
+public class TranslationDataArrayWrapper
+{
+    public TranslationData[] translations;
+}
+
+[System.Serializable]
+public class TranslationData
+{
+    public string EnglishText;
+    public string RussianText;
+    public string ChineseText;
+    public string SlovakText;
+}
 public class TranslationManager : MonoBehaviour
 {
     public GameObject[] translationTexts;
@@ -82,19 +96,4 @@ public class TranslationManager : MonoBehaviour
             Debug.LogWarning("Translation file not found: " + filePath);
         }
     }
-}
-
-[System.Serializable]
-public class TranslationDataArrayWrapper
-{
-    public TranslationData[] translations;
-}
-
-[System.Serializable]
-public class TranslationData
-{
-    public string EnglishText;
-    public string RussianText;
-    public string ChineseText;
-    public string SlovakText;
 }

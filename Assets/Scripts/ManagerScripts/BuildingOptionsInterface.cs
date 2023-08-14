@@ -4,27 +4,39 @@ using UnityEngine.EventSystems;
 using TMPro;
 using BuildingManagement;
 using System.Collections;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using System.Globalization;
 
 public class BuildingOptionsInterface : MonoBehaviour
 {
     [Header("Reactor display elements")]
     public TextMeshProUGUI efficiency;
     public TextMeshProUGUI powerOutput;
+    public TextMeshProUGUI powerConsumption;
     public TextMeshProUGUI totalTime;
+    public TextMeshProUGUI title;
     public TextMeshProUGUI[] consumedSlotQuantity;
     public Image[] consumedSlotImage;
     public GameObject[] consumedSlotObjects;
+    public TextMeshProUGUI[] producedSlotQuantity;
+    public Image[] producedSlotImage;
+    public GameObject[] producedSlotObjects;
+    public GameObject ConsumeModel;
+    public GameObject PowerConumeModel;
+    public GameObject PowerOutputModel;
+    public GameObject ProductionModel;
     public Animation reactorStatus;
     public GameObject mainObj;
     public GameObject playButton;
     public GameObject pauseButton;
     public Image fillImg;
+    public AudioClip reactorAudioClip;
     private bool isUpdatingUI = false;
     private BuildingItemData itemData;
     private BuildingCycles buildingCycles;
     private AudioSource audioSource;
-    public AudioClip reactorAudioClip;
+
     public void StartUpdatingUI(BuildingItemData itemData, GameObject refObj)
     {
         if (!isUpdatingUI)
@@ -43,37 +55,108 @@ public class BuildingOptionsInterface : MonoBehaviour
         audioSource = transform.gameObject.GetComponent<AudioSource>();
         NumberFormater formatter = new NumberFormater();
         audioSource.clip = reactorAudioClip;
+        title.text = itemData.buildingName;
         bool audioPlaying = false;
 
-        int consumedSlots = itemData.consumedSlotCount;
-        for (int i = 0; i < consumedSlotObjects.Length; i++)
+        if (itemData.powerConsumption > 0)
         {
-            if (i < consumedSlots)
-            {
-                consumedSlotObjects[i].SetActive(true);
-                var consumedItem = itemData.consumedItems[i];
-                consumedSlotImage[i].sprite = AssignSpriteToSlot(consumedItem.itemName);
-            }
-            else
-            {
-                consumedSlotObjects[i].SetActive(false); // Deactivate the rest of the consumedSlotObjects
-            }
+            PowerConumeModel.SetActive(true);
+        }
+        else
+        {
+            PowerConumeModel.SetActive(false);
+        }
+        if (itemData.basePowerOutput > 0)
+        {
+            PowerOutputModel.SetActive(true);
+        }
+        else
+        {
+            PowerOutputModel.SetActive(false);
         }
 
+        int consumedSlots = itemData.consumedSlotCount;
+        if (consumedSlots > 0)
+        {
+            ConsumeModel.SetActive(true);
+            for (int i = 0; i < consumedSlotObjects.Length; i++)
+            {
+                if (i < consumedSlots)
+                {
+                    consumedSlotObjects[i].SetActive(true);
+                    var item = itemData.consumedItems[i];
+                    consumedSlotImage[i].sprite = AssignSpriteToSlot(item.itemName);
+                    consumedSlotQuantity[i].text = itemData.consumedItems[i].quantity.ToString();
+                }
+                else
+                {
+                    consumedSlotObjects[i].SetActive(false); // Deactivate the rest of the consumedSlotObjects
+                }
+            }
+        }
+        else
+        {
+            ConsumeModel.SetActive(false);
+        }
+        int producedSlots = itemData.producedSlotCount;
+        if (producedSlots > 0)
+        {
+            ProductionModel.SetActive(true);
+            for (int i = 0; i < producedSlotObjects.Length; i++)
+            {
+                if (i < producedSlots)
+                {
+                    producedSlotObjects[i].SetActive(true);
+                    var item = itemData.producedItems[i];
+                    producedSlotImage[i].sprite = AssignSpriteToSlot(item.itemName);
+                }
+                else
+                {
+                    producedSlotObjects[i].SetActive(false); // Deactivate the rest of the consumedSlotObjects
+                }
+            }
+        }
+        else
+        {
+            ProductionModel.SetActive(false);
+        }
 
         while (isUpdatingUI)
         {
             efficiency.text = itemData.efficiencySetting.ToString() + '%';
-            string formattedPower = formatter.FormatEnergyInThousands(itemData.powerOutput);
-            powerOutput.text = formattedPower;
             string formattedTime = formatter.FormatTimeInTens(itemData.totalTime);
             totalTime.text = formattedTime;
 
-            for (int i = 0; i < consumedSlots; i++)
+            if (consumedSlots > 0)
+            for (int i = 0; i < consumedSlotQuantity.Length; i++)
             {
-                consumedSlotQuantity[i].text = itemData.consumedItems[i].quantity.ToString();
+                if (i < consumedSlots)
+                {
+                    consumedSlotQuantity[i].text = itemData.consumedItems[i].quantity.ToString("F2", CultureInfo.InvariantCulture);
+                }
             }
 
+            if (producedSlots > 0)
+            {
+                for (int i = 0; i < producedSlotQuantity.Length; i++)
+                {
+                    if (i < producedSlots)
+                    {
+                        producedSlotQuantity[i].text = itemData.producedItems[i].quantity.ToString("F2", CultureInfo.InvariantCulture);
+                    }
+
+                }
+            }
+            if (itemData.basePowerOutput > 0)
+            {
+                string formattedPower = formatter.FormatEnergyInThousands(itemData.powerOutput);
+                powerOutput.text = formattedPower;
+            }
+            if (itemData.powerConsumption > 0)
+            {
+                string formattedPower = formatter.FormatEnergyInThousands(itemData.powerConsumption);
+                powerConsumption.text = formattedPower;
+            }
             if (itemData.isPaused == true)
             {
                 pauseButton.SetActive(false);
@@ -88,8 +171,6 @@ public class BuildingOptionsInterface : MonoBehaviour
                 {
                     audioSource.Play();
                     audioPlaying = true;
-                    pauseButton.SetActive(true);
-                    playButton.SetActive(false);
                 }
                 fillImg.fillAmount = buildingCycles.currentFillAmount;
                 reactorStatus.Play("ReactorOn");
@@ -100,7 +181,7 @@ public class BuildingOptionsInterface : MonoBehaviour
             }
             else
             {
-                pauseButton.SetActive(false);
+                pauseButton.SetActive(true);
                 playButton.SetActive(false);
                 audioPlaying = false;
                 audioSource.Stop();
@@ -124,14 +205,19 @@ public class BuildingOptionsInterface : MonoBehaviour
         else
         {
             itemData.efficiency = itemData.efficiencySetting;
+            itemData.isPaused = false;
             BuildingCycles buildingCycles = mainObj.GetComponent<BuildingCycles>();
-            if (mainObj.layer == LayerMask.NameToLayer("Energy"))
+            if (mainObj.CompareTag("Energy"))
             {
                 buildingCycles.StartBuildingCycleEnergy().Forget();
             }
-            else if (mainObj.layer == LayerMask.NameToLayer("NoConsume"))
+            else if (mainObj.CompareTag("NoConsume"))
             {
                 buildingCycles.StartNoConsumeCycle().Forget();
+            }
+            else if (mainObj.CompareTag("Consume"))
+            {
+                buildingCycles.StartConsumeCycle().Forget();
             }
         }
 

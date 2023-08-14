@@ -39,15 +39,29 @@ public class CoroutineManager : MonoBehaviour
     private float currentFillAmountPlanet0bb = 0f;
 
     // after production is finished add +1 to the counter
-    public TextMeshProUGUI[] plantsTexts;
-    public TextMeshProUGUI[] waterTexts;
-    public TextMeshProUGUI[] biofuelTexts;
-    public TextMeshProUGUI[] purifiedWaterTexts;
-    public TextMeshProUGUI[] batteryTexts;
-    public TextMeshProUGUI[] batteryCoreTexts;
-    public TextMeshProUGUI[] planetStatsTexts;
+    public Dictionary<string, TextMeshProUGUI[]> resourceTextMap;
+    public TextMeshProUGUI[] FibrousLeavesTexts;
+    public TextMeshProUGUI[] WaterTexts;
+    public TextMeshProUGUI[] BiofuelTexts;
+    public TextMeshProUGUI[] DistilledWaterTexts;
+    public TextMeshProUGUI[] BatteryTexts;
+    public TextMeshProUGUI[] BatteryCoreTexts;
+    public TextMeshProUGUI[] PlanetStatsTexts;
+    public TextMeshProUGUI[] SteamTexts;
 
-
+    public void InitializeResourceMap()
+    {
+        resourceTextMap = new Dictionary<string, TextMeshProUGUI[]>
+        {
+            { "FibrousLeaves", FibrousLeavesTexts },
+            { "Water", WaterTexts },
+            { "Biofuel", BiofuelTexts },
+            { "DistilledWater", DistilledWaterTexts },
+            { "BatteryCore", BatteryCoreTexts },
+            { "Battery", BatteryTexts },
+            { "Steam", SteamTexts }
+        };
+    }
     public void OnEnable()
     {
         if (StartNewGame.loadingNewGame == false){
@@ -83,7 +97,7 @@ public class CoroutineManager : MonoBehaviour
         }
         else if (CoroutineManager.IndexNumber == 3)
         {
-            StartCoroutine("StopCollectPurifiedWater");
+            StartCoroutine("StopCollectDistilledWater");
         }
         else if (CoroutineManager.IndexNumber == 4)
         {
@@ -218,9 +232,9 @@ public class CoroutineManager : MonoBehaviour
 
         string currentPlantResource = inventoryManager.GetItemQuantity("FibrousLeaves", "BASIC").ToString();
 
-        for (int i = 0; i < plantsTexts.Length; i++)
+        for (int i = 0; i < FibrousLeavesTexts.Length; i++)
         {
-            plantsTexts[i].text = currentPlantResource;
+            FibrousLeavesTexts[i].text = currentPlantResource;
         }
         StartCoroutine("CollectPlants");
     }
@@ -238,7 +252,7 @@ public class CoroutineManager : MonoBehaviour
         float timer = 0f;
         float fillTimePlanet0bb = 2f;
 
-        GameObject fillBarObject = RecipeList.transform.Find("AlienWaterRecipe(Clone)/FillBckg/FillBar").gameObject;
+        GameObject fillBarObject = RecipeList.transform.Find("WaterRecipe(Clone)/FillBckg/FillBar").gameObject;
         imageToFill = fillBarObject.GetComponent<Image>();
 
         while (timer < fillTimePlanet0bb)
@@ -274,11 +288,11 @@ public class CoroutineManager : MonoBehaviour
             skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
         }
 
-        string currentWaterResource = inventoryManager.GetItemQuantity("AlienWater", "BASIC").ToString();
+        string currentWaterResource = inventoryManager.GetItemQuantity("Water", "BASIC").ToString();
 
-        for (int i = 0; i < waterTexts.Length; i++)
+        for (int i = 0; i < WaterTexts.Length; i++)
         {
-            waterTexts[i].text = currentWaterResource;
+            WaterTexts[i].text = currentWaterResource;
         }
         imageToFill.fillAmount = 0f;
 
@@ -309,9 +323,9 @@ public class CoroutineManager : MonoBehaviour
 
             string currentPlantResource = inventoryManager.GetItemQuantity("FibrousLeaves", "BASIC").ToString();
 
-            for (int i = 0; i < plantsTexts.Length; i++)
+            for (int i = 0; i < FibrousLeavesTexts.Length; i++)
             {
-                plantsTexts[i].text = currentPlantResource;
+                FibrousLeavesTexts[i].text = currentPlantResource;
             }
 
             while (timer < fillTimePlanet0bb)
@@ -350,9 +364,9 @@ public class CoroutineManager : MonoBehaviour
 
             string currentBiofuelResource = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED").ToString();
 
-            for (int i = 0; i < biofuelTexts.Length; i++)
+            for (int i = 0; i < BiofuelTexts.Length; i++)
             {
-                biofuelTexts[i].text = currentBiofuelResource;
+                BiofuelTexts[i].text = currentBiofuelResource;
             }
             StartCoroutine("CollectBiofuel");
 
@@ -370,9 +384,9 @@ public class CoroutineManager : MonoBehaviour
 
         string currentPlantResource = inventoryManager.GetItemQuantity("FibrousLeaves", "BASIC").ToString();
 
-        for (int i = 0; i < plantsTexts.Length; i++)
+        for (int i = 0; i < FibrousLeavesTexts.Length; i++)
         {
-            plantsTexts[i].text = currentPlantResource;
+            FibrousLeavesTexts[i].text = currentPlantResource;
         }
 
         CoroutineManager.AllCoroutineBooleans[2] = false;
@@ -380,25 +394,25 @@ public class CoroutineManager : MonoBehaviour
         yield return null;
     }
 
-    public IEnumerator CollectPurifiedWater()
+    public IEnumerator CollectDistilledWater()
     {
-        bool isQuantityMet = inventoryManager.CheckItemQuantity("AlienWater", "BASIC", 50);
+        bool isQuantityMet = inventoryManager.CheckItemQuantity("Water", "BASIC", 50);
         if (isQuantityMet)
         {
             float timer = 0f;
             float fillTimePlanet0bb = 3f;
             CoroutineManager.AllCoroutineBooleans[3] = true;
 
-            GameObject fillBarObject = RecipeList.transform.Find("PurifiedWaterRecipe(Clone)/FillBckg/FillBar").gameObject;
+            GameObject fillBarObject = RecipeList.transform.Find("DistilledWaterRecipe(Clone)/FillBckg/FillBar").gameObject;
             imageToFill = fillBarObject.GetComponent<Image>();
 
-            inventoryManager.ReduceItemQuantity("AlienWater", "BASIC", 50);
+            inventoryManager.ReduceItemQuantity("Water", "BASIC", 50);
 
-            string currentWaterResource = inventoryManager.GetItemQuantity("AlienWater", "BASIC").ToString();
+            string currentWaterResource = inventoryManager.GetItemQuantity("Water", "BASIC").ToString();
 
-            for (int i = 0; i < waterTexts.Length; i++)
+            for (int i = 0; i < WaterTexts.Length; i++)
             {
-                waterTexts[i].text = currentWaterResource;
+                WaterTexts[i].text = currentWaterResource;
             }
 
             while (timer < fillTimePlanet0bb)
@@ -408,7 +422,7 @@ public class CoroutineManager : MonoBehaviour
                 timer += UnityEngine.Time.deltaTime;
                 yield return null;
             }
-            itemCreator.CreatePurifiedWater(1);
+            itemCreator.CreateDistilledWater(1);
             Level.AddCurrentResource(ref Level.PlayerCurrentExp, 2);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
 
@@ -436,14 +450,14 @@ public class CoroutineManager : MonoBehaviour
 
             imageToFill.fillAmount = 0f;
 
-            string currentPurifiedWaterResource = inventoryManager.GetItemQuantity("PurifiedWater", "PROCESSED").ToString();
+            string currentDistilledWaterResource = inventoryManager.GetItemQuantity("DistilledWater", "PROCESSED").ToString();
 
-            for (int i = 0; i < purifiedWaterTexts.Length; i++)
+            for (int i = 0; i < DistilledWaterTexts.Length; i++)
             {
-                purifiedWaterTexts[i].text = currentPurifiedWaterResource;
+                DistilledWaterTexts[i].text = currentDistilledWaterResource;
             }
 
-            StartCoroutine("CollectPurifiedWater");
+            StartCoroutine("CollectDistilledWater");
         }
         else
         {
@@ -451,17 +465,17 @@ public class CoroutineManager : MonoBehaviour
         }
     }
 
-    public IEnumerator StopCollectPurifiedWater()
+    public IEnumerator StopCollectDistilledWater()
     {
-        StopCoroutine("CollectPurifiedWater");
+        StopCoroutine("CollectDistilledWater");
         CoroutineManager.AllCoroutineBooleans[3] = false;
-        inventoryManager.AddItemQuantity("AlienWater", "BASIC", 50);
+        inventoryManager.AddItemQuantity("Water", "BASIC", 50);
 
-        string currentWaterResource = inventoryManager.GetItemQuantity("AlienWater", "BASIC").ToString();
+        string currentWaterResource = inventoryManager.GetItemQuantity("Water", "BASIC").ToString();
 
-        for (int i = 0; i < waterTexts.Length; i++)
+        for (int i = 0; i < WaterTexts.Length; i++)
         {
-            waterTexts[i].text = currentWaterResource;
+            WaterTexts[i].text = currentWaterResource;
         }
 
         imageToFill.fillAmount = 0f;
@@ -483,9 +497,9 @@ public class CoroutineManager : MonoBehaviour
 
             string currentBiofuelResource = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED").ToString();
 
-            for (int i = 0; i < biofuelTexts.Length; i++)
+            for (int i = 0; i < BiofuelTexts.Length; i++)
             {
-                biofuelTexts[i].text = currentBiofuelResource;
+                BiofuelTexts[i].text = currentBiofuelResource;
             }
 
             while (timer < fillTimePlanet0bb)
@@ -526,9 +540,9 @@ public class CoroutineManager : MonoBehaviour
 
             string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED").ToString();
 
-            for (int i = 0; i < batteryCoreTexts.Length; i++)
+            for (int i = 0; i < BatteryCoreTexts.Length; i++)
             {
-                batteryCoreTexts[i].text = currentBatteryCoreResource;
+                BatteryCoreTexts[i].text = currentBatteryCoreResource;
             }
             StartCoroutine("CreateBatteryCore");
         }
@@ -545,9 +559,9 @@ public class CoroutineManager : MonoBehaviour
 
         string currentBiofuelResource = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED").ToString();
 
-        for (int i = 0; i < biofuelTexts.Length; i++)
+        for (int i = 0; i < BiofuelTexts.Length; i++)
         {
-            biofuelTexts[i].text = currentBiofuelResource;
+            BiofuelTexts[i].text = currentBiofuelResource;
         }
 
 
@@ -575,13 +589,13 @@ public class CoroutineManager : MonoBehaviour
             string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED").ToString();
             string currentBiofuelResource = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED").ToString();
 
-            for (int i = 0; i < batteryCoreTexts.Length; i++)
+            for (int i = 0; i < BatteryCoreTexts.Length; i++)
             {
-                batteryCoreTexts[i].text = currentBatteryCoreResource;
+                BatteryCoreTexts[i].text = currentBatteryCoreResource;
             }
-            for (int i = 0; i < biofuelTexts.Length; i++)
+            for (int i = 0; i < BiofuelTexts.Length; i++)
             {
-                biofuelTexts[i].text = currentBiofuelResource;
+                BiofuelTexts[i].text = currentBiofuelResource;
             }
 
             while (timer < fillTimePlanet0bb)
@@ -618,9 +632,9 @@ public class CoroutineManager : MonoBehaviour
             }
             imageToFill.fillAmount = 0f;
             string currentBatteryResource = inventoryManager.GetItemQuantity("Battery", "ASSEMBLED").ToString();
-            for (int i = 0; i < batteryTexts.Length; i++)
+            for (int i = 0; i < BatteryTexts.Length; i++)
             {
-                batteryTexts[i].text = currentBatteryResource;
+                BatteryTexts[i].text = currentBatteryResource;
             }
             StartCoroutine("CreateBattery");
 
@@ -632,7 +646,7 @@ public class CoroutineManager : MonoBehaviour
                     animation.Play("Success");
                     yield return new WaitForSeconds(1f);
                     recipeCreator.CreateWaterRecipe();
-                    recipeCreator.CreatePurifiedWaterRecipe();
+                    recipeCreator.CreateDistilledWaterRecipe();
                     goalManager.ChangeGoal("CraftAndUseWater");
                     animation.Play("Idle");
                 }
@@ -653,13 +667,13 @@ public class CoroutineManager : MonoBehaviour
         string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED").ToString();
         string currentBiofuelResource = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED").ToString();
 
-        for (int i = 0; i < batteryCoreTexts.Length; i++)
+        for (int i = 0; i < BatteryCoreTexts.Length; i++)
         {
-            batteryCoreTexts[i].text = currentBatteryCoreResource;
+            BatteryCoreTexts[i].text = currentBatteryCoreResource;
         }
-        for (int i = 0; i < biofuelTexts.Length; i++)
+        for (int i = 0; i < BiofuelTexts.Length; i++)
         {
-            biofuelTexts[i].text = currentBiofuelResource;
+            BiofuelTexts[i].text = currentBiofuelResource;
         }
 
 

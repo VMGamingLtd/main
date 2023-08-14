@@ -118,6 +118,24 @@ public class InventoryTypes : MonoBehaviour
                     return "Tekutina";
                 }
                 break;
+            case "GAS":
+                if (language == SystemLanguage.English)
+                {
+                    return "Gas";
+                }
+                else if (language == SystemLanguage.Russian)
+                {
+                    return "Газ";
+                }
+                else if (language == SystemLanguage.Chinese)
+                {
+                    return "气体";
+                }
+                else if (language == SystemLanguage.Slovak)
+                {
+                    return "Plyn";
+                }
+                break;
             case "MINERALS":
                 if (language == SystemLanguage.English)
                 {
@@ -351,6 +369,12 @@ public class InventoryTypes : MonoBehaviour
             case "矿物质":
             case "Minerály":
                 InventoryManager.ShowItemTypes = "MINERALS";
+                break;
+            case "Gas":
+            case "Газ":
+            case "气体":
+            case "Plyn":
+                InventoryManager.ShowItemTypes = "GAS";
                 break;
             case "Metals":
             case "Металлы":

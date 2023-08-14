@@ -21,7 +21,15 @@ public static class Planet0Buildings
     public static int OxygenGeneratorPlanet0 = 0;
     public static int AtmosphericCondenserPlanet0 = 0;
     public static int Planet0CurrentElectricity = 0;
+    public static int Planet0CurrentConsumption = 0;
     public static int Planet0MaxElectricity = 0;
+
+    // building counter
+    public static int Planet0BiofuelGenerator = 0;
+    public static int Planet0PlantField = 0;
+    public static int Planet0WaterPump = 0;
+    public static int Planet0Boiler = 0;
+    public static int Planet0SteamGenerator = 0;
 
     public static string AddBuildingCount(ref int buildingName, int amount)
     {
