@@ -35,6 +35,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gao\devops\gaos.py" />
+    <Compile Include="gao\devops\mongo.py" />
     <Compile Include="gao\devops\nginx.py" />
     <Compile Include="gao\devops\publish.py">
       <SubType>Code</SubType>

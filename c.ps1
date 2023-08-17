@@ -49,6 +49,11 @@
 #invoke start-nginx-on-local
 #invoke stop-nginx-on-local
 
+## Mongo
+
+invoke drop-gaos-database-on-local
+#invoke drop-gaos-database-on-test-local
+
 ## Gaos
 
 #invoke deploy-gaos-to-test-server

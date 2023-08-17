@@ -90,9 +90,10 @@ def stop_nginx_on_local(c):
 
 @task
 def drop_gaos_database_on_local(c):
-    gao.devops.mongo.drop_gaos_database(None, isLocal = True)
+    gao.devops.mongo.drop_gaos_database(c, isLocal = True)
 
 @task
 def drop_gaos_database_on_test_server(c):
-    gao.devops.mongo.drop_gaos_database(None, isLocal = True)
+    sconn = gao.devops.connection.connectionTestServer()
+    gao.devops.mongo.drop_gaos_database(sconn, isLocal = True)
 
