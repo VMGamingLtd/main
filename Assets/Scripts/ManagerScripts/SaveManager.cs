@@ -124,8 +124,7 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-
-    public void SaveToJsonFile()
+    public string SerializeGameData()
     {
         currentSaveData.username = UserName.userName;
         currentSaveData.password = Password.password;
@@ -339,6 +338,14 @@ public class SaveManager : MonoBehaviour
         }
 
         string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented);
+        return jsonString;
+
+    }
+
+
+    public void SaveToJsonFile()
+    {
+        string jsonString = SerializeGameData();
         File.WriteAllText(filePath, jsonString);
     }
 
@@ -366,6 +373,7 @@ public class SaveManager : MonoBehaviour
 
     public void TestSaveGameDataOnServer()
     {
+        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000: TestSaveGameDataOnServer()");
         int slotId = 1;
 
         // fill in game data
@@ -589,6 +597,8 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.AssembledRecipeObjects[i].ItemClass = itemDataComponent.itemClass;
         }
 
+        userGameDataSaveRequest.GameDataJson = SerializeGameData();
+
         StartCoroutine(Gaos.GameData.UserGameDataSave.Save(slotId, userGameDataSaveRequest, OnUserGameDataSaveComplete));
 
     }
@@ -596,7 +606,7 @@ public class SaveManager : MonoBehaviour
     public  void OnUserGameDataSaveComplete(Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response)
     {
         string responseString = JsonConvert.SerializeObject(response);
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000: OnUserGameDataSaveComplete(): {responseString}");
+        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3100: OnUserGameDataSaveComplete(): {responseString}");
 
 
         StartCoroutine(Gaos.GameData.UserGameDataGet.Get(1,OnUserGameDataGetComplete));
@@ -604,7 +614,12 @@ public class SaveManager : MonoBehaviour
     public static void OnUserGameDataGetComplete(Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response)
     {
         string responseString = JsonConvert.SerializeObject(response);
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3100: OnUserGameDataGetComplete(): {responseString}");
+        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3200: OnUserGameDataGetComplete(): {responseString}");
+        SaveDataModel saveDataModel = JsonConvert.DeserializeObject<SaveDataModel>(responseString);
+        string saveDataModelStr = JsonConvert.SerializeObject(saveDataModel);
+        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3300: saveDataModel: {saveDataModelStr}");
+
+
 
         // DON'T FORGET TO SWITCH 'GlobalCalculator.GameStarted' bool to true when game is loaded!!!
     }
