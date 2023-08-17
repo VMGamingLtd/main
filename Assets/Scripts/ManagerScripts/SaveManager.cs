@@ -434,7 +434,7 @@ public class SaveManager : MonoBehaviour
         userGameDataSaveRequest.GameData.ItemCreationID = ItemCreator.ItemCreationID;
 
         // store the equipment bool array
-        userGameDataSaveRequest.GameData.slotEquipped = EquipmentManager.slotEquipped;
+        userGameDataSaveRequest.GameData.slotEquipped = JsonConvert.SerializeObject(EquipmentManager.slotEquipped);
 
         // fill in inventories
 
@@ -452,7 +452,7 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.BasicInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.BasicInventoryObjects[i].ItemName = itemName;
-            userGameDataSaveRequest.BasicInventoryObjects[i].ID = itemDataComponent.ID;
+            userGameDataSaveRequest.BasicInventoryObjects[i].ID_ = itemDataComponent.ID;
             userGameDataSaveRequest.BasicInventoryObjects[i].stackLimit = itemDataComponent.stackLimit;
             userGameDataSaveRequest.BasicInventoryObjects[i].ItemType = itemDataComponent.itemType;
             userGameDataSaveRequest.BasicInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
@@ -471,7 +471,7 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.ProcessedInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemName = itemName;
-            userGameDataSaveRequest.ProcessedInventoryObjects[i].ID = itemDataComponent.ID;
+            userGameDataSaveRequest.ProcessedInventoryObjects[i].ID_ = itemDataComponent.ID;
             userGameDataSaveRequest.ProcessedInventoryObjects[i].stackLimit = itemDataComponent.stackLimit;
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemType = itemDataComponent.itemType;
             userGameDataSaveRequest.ProcessedInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
@@ -491,7 +491,7 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.EnhancedInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemName = itemName;
-            userGameDataSaveRequest.EnhancedInventoryObjects[i].ID = itemDataComponent.ID;
+            userGameDataSaveRequest.EnhancedInventoryObjects[i].ID_ = itemDataComponent.ID;
             userGameDataSaveRequest.EnhancedInventoryObjects[i].stackLimit = itemDataComponent.stackLimit;
             userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemType = itemDataComponent.itemType;
             userGameDataSaveRequest.EnhancedInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;
@@ -510,7 +510,7 @@ public class SaveManager : MonoBehaviour
             userGameDataSaveRequest.AssembledInventoryObjects[i] = new Gaos.Dbo.Model.InventoryItemData();
 
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemName = itemName;
-            userGameDataSaveRequest.AssembledInventoryObjects[i].ID = itemDataComponent.ID;
+            userGameDataSaveRequest.AssembledInventoryObjects[i].ID_ = itemDataComponent.ID;
             userGameDataSaveRequest.AssembledInventoryObjects[i].stackLimit = itemDataComponent.stackLimit;
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemType = itemDataComponent.itemType;
             userGameDataSaveRequest.AssembledInventoryObjects[i].ItemProduct = itemDataComponent.itemProduct;

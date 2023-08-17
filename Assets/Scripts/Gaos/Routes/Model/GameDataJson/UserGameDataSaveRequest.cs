@@ -20,6 +20,9 @@ namespace Gaos.Routes.Model.GameDataJson
         public Gaos.Dbo.Model.RecipeData[]? EnhancedRecipeObjects;
         public Gaos.Dbo.Model.RecipeData[]? AssembledRecipeObjects;
 
+        public string? GameDataJson;
+
+
 
 
     }
