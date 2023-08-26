@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using UnityEngine.EventSystems;
-using ItemManagement;
 
 public class Splitter : MonoBehaviour
 {

@@ -20,6 +20,7 @@ namespace ItemManagement
         public GameObject[] itemPrefabs;
         public InventoryManager inventoryManager;
         public static int ItemCreationID = 0;
+        private float remainingQuantity;
         public void CreatePlants(float quantity)
         {
             CreateItem(quantity, itemPrefabs[0], "BASIC", "PLANTS", "CLASS-F", itemPrefabs[0].name);
@@ -86,6 +87,7 @@ namespace ItemManagement
             SplitItem(quantity, itemPrefabs[7], "BASIC", "GAS", "CLASS-F", itemPrefabs[7].name);
         }
 
+
         private void SplitItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)
         {
                 // Split the item, meaning that it will be duplicated
@@ -100,48 +102,67 @@ namespace ItemManagement
                 newItemData.itemType = itemType;
                 newItemData.itemClass = itemClass;
                 newItemData.ID = ItemCreationID++;
-                newItemData.stackLimit = 10f;
+                newItemData.stackLimit = StackLimits.MediumStackLimit;
 
                 // Add the new item to the itemArrays dictionary
                 inventoryManager.AddToItemArray(itemProduct, newItem);
 
                 // Update the CountInventory text
-                TextMeshProUGUI newCountText = newItem.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                if (newCountText != null)
-                {
-                    newCountText.text = newItemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
-                }
+                UpdateItemCountText(newItem, newItemData);
                 newItem.AddComponent<ItemUse>();
+        }
+
+        private void UpdateItemCountText(GameObject item, ItemData itemData)
+        {
+            TextMeshProUGUI existingCountText = item.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
+            if (existingCountText != null)
+            {
+                existingCountText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+            }
         }
 
         private void CreateItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)
         {
             bool itemFound = false;
+            bool spliRemainingQuantity = true;
             if (inventoryManager.itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray) && itemArray.Length > 0)
             {
                 foreach (GameObject item in itemArray)
                 {
-                    if (item.name == prefabName + "(Clone)")
+                    ItemData existingItemData = item.GetComponent<ItemData>();
+                    if (item.name == prefabName + "(Clone)" && existingItemData.itemQuantity < existingItemData.stackLimit)
                     {
                         // The item already exists, increment the quantity for the rest of the quantity order
-                        ItemData existingItemData = item.GetComponent<ItemData>();
                         existingItemData.itemQuantity += quantity;
-
+                        spliRemainingQuantity = false;
                         if (existingItemData.itemQuantity > existingItemData.stackLimit)
                         {
-                            float remainingQuantity = existingItemData.itemQuantity - existingItemData.stackLimit;
-                            SplitItem(remainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName);
+                            spliRemainingQuantity = true;
+                            remainingQuantity = existingItemData.itemQuantity - existingItemData.stackLimit;
                             existingItemData.itemQuantity -= remainingQuantity;
                         }
-
-                        // Update the CountInventory text
-                        TextMeshProUGUI existingCountText = item.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                        if (existingCountText != null)
-                        {
-                            existingCountText.text = existingItemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
-                        }
+                        UpdateItemCountText(item, existingItemData);
                         itemFound = true;
                         break;
+                    }
+                }
+                if (spliRemainingQuantity)
+                {
+                    foreach (GameObject item in itemArray)
+                    {
+                        ItemData existingItemData = item.GetComponent<ItemData>();
+                        if (item.name == prefabName + "(Clone)" && existingItemData.itemQuantity < existingItemData.stackLimit)
+                        {
+                            existingItemData.itemQuantity += remainingQuantity;
+                            if (existingItemData.itemQuantity > existingItemData.stackLimit)
+                            {
+                                float newRemainingQuantity = existingItemData.itemQuantity - existingItemData.stackLimit;
+                                SplitItem(newRemainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName);
+                                existingItemData.itemQuantity -= remainingQuantity;
+                            }
+                            UpdateItemCountText(item, existingItemData);
+                            break;
+                        }
                     }
                 }
             }
@@ -163,18 +184,15 @@ namespace ItemManagement
                 newItemData.itemType = itemType;
                 newItemData.itemClass = itemClass;
                 newItemData.ID = ItemCreationID++;
-                newItemData.stackLimit = 10f;
+                newItemData.stackLimit = StackLimits.MediumStackLimit;
 
                 // Add the new item to the itemArrays dictionary
                 inventoryManager.AddToItemArray(itemProduct, newItem);
 
                 // Update the CountInventory text
-                TextMeshProUGUI newCountText = newItem.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                if (newCountText != null)
-                {
-                    newCountText.text = newItemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
-                }
+                UpdateItemCountText(newItem, newItemData);
                 newItem.AddComponent<ItemUse>();
+                newItem.transform.localScale = Vector3.one;
             }
         }
     }

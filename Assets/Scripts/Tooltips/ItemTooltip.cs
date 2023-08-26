@@ -8,17 +8,21 @@ using TMPro;
 public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private TooltipObjects tooltipObjects;
+    private TooltipObjectsSmall smallTooltipObjects;
+    private TooltipObjectsItems itemTooltipObjects;
+    private TooltipFollowMouse tooltipFollowMouse;
 
     private void Awake()
     {
-        GameObject tooltipObjectsGO = GameObject.Find("TooltipCanvas/TooltipObjects");
-        tooltipObjects = tooltipObjectsGO.GetComponent<TooltipObjects>();
+        tooltipObjects = GameObject.Find("TooltipCanvas/TooltipObjects").GetComponent<TooltipObjects>();
+        smallTooltipObjects = GameObject.Find("TooltipCanvas/TooltipObjectsSmall").GetComponent<TooltipObjectsSmall>();
+        itemTooltipObjects = GameObject.Find("TooltipCanvas/TooltipObjectsItems").GetComponent<TooltipObjectsItems>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         string objectName = eventData.pointerEnter.transform.name;
-        DisplayTooltip(objectName, eventData);
+        StartCoroutine (DisplayTooltip(objectName));
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -42,24 +46,55 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 return tooltipObj;
             }
         }
+        foreach (GameObject tooltipObj in smallTooltipObjects.tooltipObjectsSmall)
+        {
+            if (tooltipObj.name == objectName)
+            {
+                return tooltipObj;
+            }
+        }
+        foreach (GameObject tooltipObj in itemTooltipObjects.tooltipObjectItems)
+        {
+            if (tooltipObj.name == objectName)
+            {
+                return tooltipObj;
+            }
+        }
 
         return null;
     }
 
-    public void DisplayTooltip(string objectName, PointerEventData eventData)
+    public IEnumerator DisplayTooltip(string objectName)
     {
-        GameObject hoveredObject = eventData.pointerEnter;
         GameObject tooltipObject = FindTooltipObject(objectName);
+        tooltipFollowMouse = tooltipObject.transform.parent.GetComponent<TooltipFollowMouse>();
+        tooltipFollowMouse.enabled = true;
+        FadeCanvasGroup(tooltipObject, 0);
+        float timer = 0f;
+        float totalTime = 0.1f;
+        tooltipObject.SetActive(true);
 
-        if (tooltipObject != null)
+        while (timer < totalTime)
         {
-            tooltipObject.SetActive(true);
+            timer += UnityEngine.Time.deltaTime;
+            float normalizedTime = Mathf.Clamp01(timer / totalTime);
+            FadeCanvasGroup(tooltipObject, normalizedTime);
+            yield return null;
+        }
+    }
+    private void FadeCanvasGroup(GameObject targetObject, float alpha)
+    {
+        CanvasGroup canvasGroup = targetObject.transform.parent.GetComponent<CanvasGroup>();
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = alpha;
         }
     }
 
     public void HideTooltip(string objectName)
     {
         GameObject tooltipObject = FindTooltipObject(objectName);
+        tooltipFollowMouse.enabled = false;
 
         if (tooltipObject != null)
         {

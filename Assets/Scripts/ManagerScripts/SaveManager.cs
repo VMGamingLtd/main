@@ -69,6 +69,7 @@ public class SaveManager : MonoBehaviour
         public bool thirdGoal;
         public bool isPlayerInBiologicalBiome;
         public bool isDraggingBuilding;
+        public bool autoConsumption;
         public float credits;
         public string inventoryTitle;
         public InventoryItemData[] basicInventoryObjects;
@@ -183,6 +184,7 @@ public class SaveManager : MonoBehaviour
         currentSaveData.BuildingIntervalTypeChanged = BuildingIntervalTypes.BuildingIntervalTypeChanged;
         currentSaveData.BuildingStatisticTypeChanged = BuildingStatisticTypes.BuildingStatisticTypeChanged;
         currentSaveData.ItemCreationID = ItemCreator.ItemCreationID;
+        currentSaveData.autoConsumption = EquipmentManager.autoConsumption;
 
         // slot equip array
         currentSaveData.slotEquipped = EquipmentManager.slotEquipped;
