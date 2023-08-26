@@ -29,14 +29,14 @@ public class TooltipFollowMouse : MonoBehaviour
         float xPosition = localPoint.x + xOffset;
         float yPosition = localPoint.y + yOffset;
 
-        // Adjust the x position to keep the tooltip within the screen bounds
+        //Adjust the x position to keep the tooltip within the screen bounds
         if (xPosition + tooltipWidth + horizontalPadding > screenWidth)
         {
             xPosition = screenWidth - tooltipWidth - horizontalPadding;
         }
-        else if (xPosition - horizontalPadding < -300)
+        else if (xPosition < 0)
         {
-            xPosition = horizontalPadding;
+            xPosition -= horizontalPadding;
         }
 
         // Adjust the y position to keep the tooltip within the screen bounds
@@ -44,7 +44,7 @@ public class TooltipFollowMouse : MonoBehaviour
         {
             yPosition = screenHeight - tooltipHeight - verticalPadding;
         }
-        else if (yPosition - verticalPadding < -300)
+        else if (yPosition - verticalPadding < 0)
         {
             yPosition = verticalPadding;
         }
@@ -55,6 +55,11 @@ public class TooltipFollowMouse : MonoBehaviour
 
         // Set the tooltip position
         tooltipRect.localPosition = new Vector2(xPosition, yPosition);
+    }
+
+    private void OnDisable()
+    {
+        tooltipRect.localPosition = new Vector2(-500, -2000);
     }
 
 }

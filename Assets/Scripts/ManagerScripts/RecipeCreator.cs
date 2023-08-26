@@ -48,7 +48,6 @@ namespace RecipeManagement
         {
             // Create the item once and set the initial quantity
             GameObject newItem = Instantiate(prefab);
-            newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
 
             // Get or add the ItemData component to the new item
             RecipeItemData newItemData = newItem.GetComponent<RecipeItemData>();
@@ -60,6 +59,9 @@ namespace RecipeManagement
             newItemData.itemType = itemType;
             newItemData.itemClass = itemClass;
             recipeManager.AddToItemArray(itemProduct, newItem);
+
+            newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+            newItem.transform.localScale = Vector3.one;
         }
     }
 }

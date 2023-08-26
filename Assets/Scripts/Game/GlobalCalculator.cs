@@ -49,7 +49,7 @@ public class GlobalCalculator : MonoBehaviour
 
     void Update()
     {
-        if (GlobalCalculator.GameStarted == true)
+        if (GameStarted == true)
         {
             timer += Time.deltaTime;
             if (timer >= delayTime)
@@ -84,6 +84,8 @@ public class GlobalCalculator : MonoBehaviour
     }
     public void DeductPlayerConsumption()
     {
+        equipmentManager.DeductFromEquip();
+        /*
         // Oxygen need deduction based on what player has equipped and if player is in biological
         bool isAirBreathable = IsBreathableAir();
         if (!isAirBreathable)
@@ -101,6 +103,7 @@ public class GlobalCalculator : MonoBehaviour
         // Energy need deduction based on what player has equipped
         if (EquipmentManager.slotEquippedName[5] == "Battery")
         {
+
             float resouceQuantity1 = inventoryManager.GetItemQuantity("Battery", "ASSEMBLED");
             if (resouceQuantity1 > PlayerResources.PlayerEnergy)
             {
@@ -127,7 +130,7 @@ public class GlobalCalculator : MonoBehaviour
             {
                 inventoryManager.ReduceItemQuantity("FibrousLeaves", "BASIC", PlayerResources.PlayerHunger);
             }
-        }
+        }*/
     }
     public void UpdatePlayerConsumption()
     {
@@ -170,7 +173,7 @@ public class GlobalCalculator : MonoBehaviour
         else
         {
             NoEnergy.SetActive(false);
-            PlayerNeeds[3].text = PlayerResources.PlayerEnergy.ToString("F2", CultureInfo.InvariantCulture) + "/m";
+            PlayerNeeds[3].text = PlayerResources.PlayerEnergy.ToString("F3", CultureInfo.InvariantCulture) + "/m";
         }
 
         // hunger need check
@@ -211,12 +214,12 @@ public class GlobalCalculator : MonoBehaviour
     public void UpdateEverySecond()
     {
         //DateDisplay.text = $"{GlobalCalculator.days.ToString("00")}:{GlobalCalculator.hours.ToString("00")}:{GlobalCalculator.minutes.ToString("00")}:{GlobalCalculator.seconds.ToString("00")}";
-        System.DateTime currentTime = System.DateTime.Now;
+        DateTime currentTime = DateTime.Now;
         string timeString = currentTime.ToString("HH:mm:ss");
         timeText.text = timeString;
         bool isAirBreathable = IsBreathableAir();
 
-        if (EquipmentManager.slotEquipped[5] == true)
+        /*if (EquipmentManager.slotEquipped[5] == true)
         {
             if (EnergyTimer >= 1)
             {
@@ -227,12 +230,17 @@ public class GlobalCalculator : MonoBehaviour
                 EnergyTimer += 0.0166f;
             }
             EnergyFill.fillAmount = EnergyTimer;
+        }*/
+        if (EquipmentManager.slotEquipped[5] == true || (EquipmentManager.slotEquipped[6] == true) || (EquipmentManager.slotEquipped[7] == true) || (EquipmentManager.slotEquipped[8] == true))
+        {
+            DeductPlayerConsumption();
         }
+
     }
 
     public bool IsBreathableAir()
     {
-        return GlobalCalculator.isPlayerInBiologicalBiome;
+        return isPlayerInBiologicalBiome;
     }
 }
 
