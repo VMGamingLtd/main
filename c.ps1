@@ -66,6 +66,7 @@ invoke drop-gaos-database-on-local
 #invoke stop-nginx-on-local
 
 #invoke release-to-local --platform="webgl" --version="0.0.1" --is-forced  
+#invoke release-bundles-to-local --platform="webgl" --version="0.0.1" --bundles-version="2" --is-forced
 #invoke publish-to-local --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build
 
 #invoke update-nginx-on-test-server
