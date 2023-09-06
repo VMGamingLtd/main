@@ -23,7 +23,8 @@ public class RecipeManager : MonoBehaviour
             { "BASIC", new GameObject[0] },
             { "PROCESSED", new GameObject[0] },
             { "ENHANCED", new GameObject[0] },
-            { "ASSEMBLED", new GameObject[0] }
+            { "ASSEMBLED", new GameObject[0] },
+            { "BUILDINGS", new GameObject[0] }
         };
     }
     void OnEnable()
@@ -110,7 +111,7 @@ public class RecipeManager : MonoBehaviour
     }
     public void ShowFilteredItems()
     {
-        ShowItems(RecipeManager.ShowRecipeProducts, RecipeManager.ShowRecipeTypes, RecipeManager.ShowRecipeClass);
+        ShowItems(ShowRecipeProducts, ShowRecipeTypes, ShowRecipeClass);
     }
     public void ShowItems(string itemProduct, string itemType, string itemClass)
     {

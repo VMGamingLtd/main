@@ -175,6 +175,18 @@ public class InventoryManager : MonoBehaviour
         {
             itemCreator.SplitSteam(quantity);
         }
+        else if (prefabName == "Wood")
+        {
+            itemCreator.SplitWood(quantity);
+        }
+        else if (prefabName == "IronOre")
+        {
+            itemCreator.SplitIronOre(quantity);
+        }
+        else if (prefabName == "Coal")
+        {
+            itemCreator.SplitCoal(quantity);
+        }
     }
     public void CreateItem(string prefabName, float quantity)
     {
@@ -205,6 +217,18 @@ public class InventoryManager : MonoBehaviour
         else if (prefabName == "Steam")
         {
             itemCreator.CreateSteam(quantity);
+        }
+        else if (prefabName == "Wood")
+        {
+            itemCreator.CreateWood(quantity);
+        }
+        else if (prefabName == "IronOre")
+        {
+            itemCreator.CreateIronOre(quantity);
+        }
+        else if (prefabName == "Coal")
+        {
+            itemCreator.CreateCoal(quantity);
         }
     }
     public void AddItemQuantity(string prefabName, string itemProduct, float quantity) // changes quantity of already instantiated product if it doesn't exist, creates new one

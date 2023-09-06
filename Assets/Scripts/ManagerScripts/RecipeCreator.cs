@@ -43,6 +43,26 @@ namespace RecipeManagement
         {
             CreateRecipe(recipePrefabs[6], "ENHANCED", "ENERGY", "CLASS-F", recipePrefabs[6].name);
         }
+        public void CreateWoodRecipe()
+        {
+            CreateRecipe(recipePrefabs[7], "BASIC", "PLANTS", "CLASS-F", recipePrefabs[7].name);
+        }
+        public void CreateIronOreRecipe()
+        {
+            CreateRecipe(recipePrefabs[8], "BASIC", "MINERALS", "CLASS-F", recipePrefabs[8].name);
+        }
+        public void CreateCoalRecipe()
+        {
+            CreateRecipe(recipePrefabs[9], "BASIC", "MINERALS", "CLASS-F", recipePrefabs[9].name);
+        }
+        public void CreateIronBeamRecipe()
+        {
+            CreateRecipe(recipePrefabs[10], "PROCESSED", "METALS", "CLASS-F", recipePrefabs[10].name);
+        }
+        public void CreateBiofuelGeneratorBlueprint()
+        {
+            CreateRecipe(recipePrefabs[11], "BUILDINGS", "POWERPLANT", null, recipePrefabs[11].name);
+        }
 
         private void CreateRecipe(GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)
         {

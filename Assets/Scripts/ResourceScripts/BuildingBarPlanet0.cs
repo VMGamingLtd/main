@@ -8,12 +8,10 @@ public class BuildingBarPlanet0 : MonoBehaviour {
 
 
     public CoroutineManager coroutineManager;
-    public Animation errorMessage;
     public InventoryManager inventoryManager;
-    private Transform errorObjectTransform;
 
 
-    public void StartCollectPlants()
+    public bool StartCollectPlants()
     {
         RefreshResourceMap();
         if (CoroutineManager.AllCoroutineBooleans[0] == true)
@@ -31,10 +29,10 @@ public class BuildingBarPlanet0 : MonoBehaviour {
             CoroutineManager.AllCoroutineBooleans[0] = true;
             coroutineManager.StartCoroutine("CollectPlants");
         }
-
+        return true;
     }
 
-    public void StartCollectWater()
+    public bool StartCollectWater()
     {
         RefreshResourceMap();
         if (CoroutineManager.AllCoroutineBooleans[1] == true)
@@ -52,15 +50,17 @@ public class BuildingBarPlanet0 : MonoBehaviour {
             CoroutineManager.AllCoroutineBooleans[1] = true;
             coroutineManager.StartCoroutine("CollectWater");
         }
+        return true;
     }
 
-    public void StartCollectBiofuel()
+    public bool StartCollectBiofuel()
     {
         RefreshResourceMap();
         float plants = inventoryManager.GetItemQuantity("FibrousLeaves", "BASIC");
         if (CoroutineManager.AllCoroutineBooleans[2] == true)
         {
             coroutineManager.StartCoroutine("StopCollectBiofuel");
+            return true;
         }
         else if (CoroutineManager.CheckForTrueValues())
         {
@@ -69,29 +69,32 @@ public class BuildingBarPlanet0 : MonoBehaviour {
                 coroutineManager.StopRunningCoroutine();
                 CoroutineManager.AllCoroutineBooleans[2] = true;
                 coroutineManager.StartCoroutine("CollectBiofuel");
+                return true;
             }
             else
             {
-                StartCoroutine(errorCoroutine());
+                return false;
             }
         }
         else if (plants >= 20)
         {
             CoroutineManager.AllCoroutineBooleans[2] = true;
             coroutineManager.StartCoroutine("CollectBiofuel");
+            return true;
         }
         else
         {
-            StartCoroutine(errorCoroutine());
+            return false;
         }
     }
-    public void StartWaterBottle()
+    public bool StartWaterBottle()
     {
         RefreshResourceMap();
         float water = inventoryManager.GetItemQuantity("Water", "BASIC");
         if (CoroutineManager.AllCoroutineBooleans[3] == true)
         {
             coroutineManager.StartCoroutine("StopCollectDistilledWater");
+            return true;
         }
         else if (CoroutineManager.CheckForTrueValues())
         {
@@ -100,29 +103,32 @@ public class BuildingBarPlanet0 : MonoBehaviour {
                 coroutineManager.StopRunningCoroutine();
                 CoroutineManager.AllCoroutineBooleans[3] = true;
                 coroutineManager.StartCoroutine("CollectDistilledWater");
+                return true;
             }
             else
             {
-                StartCoroutine(errorCoroutine());
+                return false;
             }
         }
         else if (water >= 50)
         {
             CoroutineManager.AllCoroutineBooleans[3] = true;
             coroutineManager.StartCoroutine("CollectDistilledWater");
+            return true;
         }
         else
         {
-            StartCoroutine(errorCoroutine());
+            return false;
         }
     }
-    public void StartCreateBatteryCore()
+    public bool StartCreateBatteryCore()
     {
         RefreshResourceMap();
         float biofuel = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED");
         if (CoroutineManager.AllCoroutineBooleans[6] == true)
         {
             coroutineManager.StartCoroutine("StopCreateBatteryCore");
+            return true;
         }
         else if (CoroutineManager.CheckForTrueValues())
         {
@@ -131,24 +137,26 @@ public class BuildingBarPlanet0 : MonoBehaviour {
                 coroutineManager.StopRunningCoroutine();
                 CoroutineManager.AllCoroutineBooleans[6] = true;
                 coroutineManager.StartCoroutine("CreateBatteryCore");
+                return true;
             }
             else
             {
-                StartCoroutine(errorCoroutine());
+                return false;
             }
         }
         else if (biofuel >= 4)
         {
             CoroutineManager.AllCoroutineBooleans[6] = true;
             coroutineManager.StartCoroutine("CreateBatteryCore");
+            return true;
         }
         else
         {
-            StartCoroutine(errorCoroutine());
+            return false;
         }
     }
 
-    public void StartCreateBattery()
+    public bool StartCreateBattery()
     {
         RefreshResourceMap();
         float batteryCore = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED");
@@ -157,6 +165,7 @@ public class BuildingBarPlanet0 : MonoBehaviour {
         if (CoroutineManager.AllCoroutineBooleans[4] == true)
         {
             coroutineManager.StartCoroutine("StopCreateBattery");
+            return true;
         }
         else if (CoroutineManager.CheckForTrueValues())
         {
@@ -165,44 +174,162 @@ public class BuildingBarPlanet0 : MonoBehaviour {
                 coroutineManager.StopRunningCoroutine();
                 CoroutineManager.AllCoroutineBooleans[4] = true;
                 coroutineManager.StartCoroutine("CreateBattery");
+                return true;
             }
             else
             {
-                StartCoroutine(errorCoroutine());
+                return false;
             }
         }
         else if (batteryCore >= 1 && biofuel >= 1)
         {
             CoroutineManager.AllCoroutineBooleans[4] = true;
             coroutineManager.StartCoroutine("CreateBattery");
+            return true;
         }
         else
         {
-            StartCoroutine(errorCoroutine());
+            return false;
         }
     }
-
-    private void OnDisable()
+    public bool StartCollectWood()
     {
-        if (errorMessage.isPlaying)
+        RefreshResourceMap();
+        if (CoroutineManager.AllCoroutineBooleans[7] == true)
         {
-            Transform errorObjectTransform = transform.Find("ErrorImage");
-            if (errorObjectTransform != null)
+            coroutineManager.StartCoroutine("StopCollectWood");
+        }
+        else if (CoroutineManager.CheckForTrueValues())
+        {
+            coroutineManager.StopRunningCoroutine();
+            CoroutineManager.AllCoroutineBooleans[7] = true;
+            coroutineManager.StartCoroutine("CollectWood");
+        }
+        else
+        {
+            CoroutineManager.AllCoroutineBooleans[7] = true;
+            coroutineManager.StartCoroutine("CollectWood");
+        }
+        return true;
+    }
+    public bool StartCollectIronOre()
+    {
+        RefreshResourceMap();
+        if (CoroutineManager.AllCoroutineBooleans[8] == true)
+        {
+            coroutineManager.StartCoroutine("StopCollectIronOre");
+        }
+        else if (CoroutineManager.CheckForTrueValues())
+        {
+            coroutineManager.StopRunningCoroutine();
+            CoroutineManager.AllCoroutineBooleans[8] = true;
+            coroutineManager.StartCoroutine("CollectIronOre");
+        }
+        else
+        {
+            CoroutineManager.AllCoroutineBooleans[8] = true;
+            coroutineManager.StartCoroutine("CollectIronOre");
+        }
+        return true;
+    }
+
+    public bool StartCollectCoal()
+    {
+        RefreshResourceMap();
+        if (CoroutineManager.AllCoroutineBooleans[9] == true)
+        {
+            coroutineManager.StartCoroutine("StopCollectCoal");
+        }
+        else if (CoroutineManager.CheckForTrueValues())
+        {
+            coroutineManager.StopRunningCoroutine();
+            CoroutineManager.AllCoroutineBooleans[9] = true;
+            coroutineManager.StartCoroutine("CollectCoal");
+        }
+        else
+        {
+            CoroutineManager.AllCoroutineBooleans[9] = true;
+            coroutineManager.StartCoroutine("CollectCoal");
+        }
+        return true;
+    }
+
+    public bool StartCreateIronBeam()
+    {
+        RefreshResourceMap();
+        float ironOre = inventoryManager.GetItemQuantity("IronOre", "BASIC");
+        float coal = inventoryManager.GetItemQuantity("Coal", "BASIC");
+
+        if (CoroutineManager.AllCoroutineBooleans[10] == true)
+        {
+            coroutineManager.StartCoroutine("StopCreateIronBeam");
+            return true;
+        }
+        else if (CoroutineManager.CheckForTrueValues())
+        {
+            if (ironOre >= 6 && coal >= 2)
             {
-                errorObjectTransform.gameObject.SetActive(false);
+                coroutineManager.StopRunningCoroutine();
+                CoroutineManager.AllCoroutineBooleans[10] = true;
+                coroutineManager.StartCoroutine("CreateIronBeam");
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
+        else if (ironOre >= 6 && coal >= 2)
+        {
+            CoroutineManager.AllCoroutineBooleans[10] = true;
+            coroutineManager.StartCoroutine("CreateIronBeam");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public bool StartCreateBiofuelGenerator()
+    {
+        RefreshResourceMap();
+        float ironBeam = inventoryManager.GetItemQuantity("IronBeam", "PROCESSED");
+        float wood = inventoryManager.GetItemQuantity("Wood", "BASIC");
+
+        if (CoroutineManager.AllCoroutineBooleans[11] == true)
+        {
+            coroutineManager.StartCoroutine("StopCreateBiofuelGenerator");
+            return true;
+        }
+        else if (CoroutineManager.CheckForTrueValues())
+        {
+            if (ironBeam >= 4 && wood >= 4)
+            {
+                coroutineManager.StopRunningCoroutine();
+                CoroutineManager.AllCoroutineBooleans[11] = true;
+                coroutineManager.StartCoroutine("CreateBiofuelGenerator");
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (ironBeam >= 4 && wood >= 4)
+        {
+            CoroutineManager.AllCoroutineBooleans[11] = true;
+            coroutineManager.StartCoroutine("CreateBiofuelGenerator");
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
     private void RefreshResourceMap()
     {
         coroutineManager.InitializeResourceMap();
-    }
-
-    IEnumerator errorCoroutine()
-    {
-        errorMessage.Play("ErrorMessage");
-        yield return new WaitForSeconds(1.4f);
     }
 
   }

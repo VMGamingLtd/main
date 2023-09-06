@@ -42,10 +42,17 @@ public class SaveManager : MonoBehaviour
         public int rareElementsPlanet0;
         public int gemstonesPlanet0;
         public int planet0BiofuelGenerator;
+        public int planet0BiofuelGeneratorBlueprint;
         public int planet0WaterPump;
+        public int planet0WaterPumpBlueprint;
         public int planet0PlantField;
+        public int planet0PlantFieldBlueprint;
         public int planet0Boiler;
+        public int planet0BoilerBlueprint;
         public int planet0SteamGenerator;
+        public int planet0SteamGeneratorBlueprint;
+        public int planet0Furnace;
+        public int planet0FurnaceBlueprint;
         public string planet0WindStatus;
         public float playerOxygen;
         public float playerWater;
@@ -151,10 +158,17 @@ public class SaveManager : MonoBehaviour
         currentSaveData.rareElementsPlanet0 = Planet0Buildings.RareElementsPlanet0;
         currentSaveData.gemstonesPlanet0 = Planet0Buildings.GemstonesPlanet0;
         currentSaveData.planet0BiofuelGenerator = Planet0Buildings.Planet0BiofuelGenerator;
+        currentSaveData.planet0BiofuelGeneratorBlueprint = Planet0Buildings.Planet0BiofuelGeneratorBlueprint;
         currentSaveData.planet0WaterPump = Planet0Buildings.Planet0WaterPump;
+        currentSaveData.planet0WaterPumpBlueprint = Planet0Buildings.Planet0WaterPumpBlueprint;
         currentSaveData.planet0PlantField = Planet0Buildings.Planet0PlantField;
+        currentSaveData.planet0PlantFieldBlueprint = Planet0Buildings.Planet0PlantFieldBlueprint;
         currentSaveData.planet0Boiler = Planet0Buildings.Planet0Boiler;
+        currentSaveData.planet0BoilerBlueprint = Planet0Buildings.Planet0BoilerBlueprint;
         currentSaveData.planet0SteamGenerator = Planet0Buildings.Planet0SteamGenerator;
+        currentSaveData.planet0SteamGeneratorBlueprint = Planet0Buildings.Planet0SteamGeneratorBlueprint;
+        currentSaveData.planet0Furnace = Planet0Buildings.Planet0Furnace;
+        currentSaveData.planet0FurnaceBlueprint = Planet0Buildings.Planet0FurnaceBlueprint;
         currentSaveData.playerLevel = Level.PlayerLevel;
         currentSaveData.playerCurrentExp = Level.PlayerCurrentExp;
         currentSaveData.playerMaxExp = Level.PlayerMaxExp;
@@ -624,5 +638,6 @@ public class SaveManager : MonoBehaviour
 
 
         // DON'T FORGET TO SWITCH 'GlobalCalculator.GameStarted' bool to true when game is loaded!!!
+        // Also BuildingIncrementor has to be re-initialized!
     }
 }

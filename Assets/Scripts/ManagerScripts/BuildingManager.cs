@@ -44,7 +44,7 @@ public class BuildingManager : MonoBehaviour
     }
     void OnEnable()
     {
-        ShowItems(BuildingManager.ShowBuildingTypes);
+        ShowItems(ShowBuildingTypes);
     }
     public void UpdateBuildingCyclesForAllBuildings()
     {
@@ -194,7 +194,7 @@ public class BuildingManager : MonoBehaviour
     }
     public void ShowFilteredItems()
     {
-        ShowItems(BuildingManager.ShowBuildingTypes);
+        ShowItems(ShowBuildingTypes);
     }
     public void ShowItems(string itemType)
     {
@@ -209,8 +209,7 @@ public class BuildingManager : MonoBehaviour
             {
                 BuildingItemData itemData = item.GetComponent<BuildingItemData>();
 
-                bool showItem =
-                    (showAllTypes || itemType == itemData.itemType);
+                bool showItem = showAllTypes || itemType == itemData.itemType;
 
                 item.SetActive(showItem);
             }
