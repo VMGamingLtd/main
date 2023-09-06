@@ -1,7 +1,6 @@
 using TMPro;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using BuildingManagement;
 public class BuildingTypes : MonoBehaviour
 {
@@ -85,7 +84,7 @@ public class BuildingTypes : MonoBehaviour
             case "AGRICULTURE":
                 if (language == SystemLanguage.English)
                 {
-                    return "Plants";
+                    return "Agriculture";
                 }
                 else if (language == SystemLanguage.Russian)
                 {

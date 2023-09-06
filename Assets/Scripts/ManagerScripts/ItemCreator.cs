@@ -53,6 +53,23 @@ namespace ItemManagement
         {
             CreateItem(quantity, itemPrefabs[7], "BASIC", "GAS", "CLASS-F", itemPrefabs[7].name);
         }
+        public void CreateWood(float quantity)
+        {
+            CreateItem(quantity, itemPrefabs[8], "BASIC", "PLANTS", "CLASS-F", itemPrefabs[8].name);
+        }
+        public void CreateIronOre(float quantity)
+        {
+            CreateItem(quantity, itemPrefabs[9], "BASIC", "MINERALS", "CLASS-F", itemPrefabs[9].name);
+        }
+        public void CreateCoal(float quantity)
+        {
+            CreateItem(quantity, itemPrefabs[10], "BASIC", "MINERALS", "CLASS-F", itemPrefabs[10].name);
+        }
+        public void CreateIronBeam(float quantity)
+        {
+            CreateItem(quantity, itemPrefabs[11], "PROCESSED", "METALS", "CLASS-F", itemPrefabs[11].name);
+        }
+
 
         public void SplitPlants(float quantity)
         {
@@ -85,6 +102,22 @@ namespace ItemManagement
         public void SplitSteam(float quantity)
         {
             SplitItem(quantity, itemPrefabs[7], "BASIC", "GAS", "CLASS-F", itemPrefabs[7].name);
+        }
+        public void SplitWood(float quantity)
+        {
+            SplitItem(quantity, itemPrefabs[8], "BASIC", "PLANTS", "CLASS-F", itemPrefabs[8].name);
+        }
+        public void SplitIronOre(float quantity)
+        {
+            SplitItem(quantity, itemPrefabs[9], "BASIC", "MINERALS", "CLASS-F", itemPrefabs[9].name);
+        }
+        public void SplitCoal(float quantity)
+        {
+            SplitItem(quantity, itemPrefabs[10], "BASIC", "MINERALS", "CLASS-F", itemPrefabs[10].name);
+        }
+        public void SplitIronBeam(float quantity)
+        {
+            SplitItem(quantity, itemPrefabs[11], "PROCESSED", "METALS", "CLASS-F", itemPrefabs[11].name);
         }
 
 
