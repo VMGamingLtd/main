@@ -11,6 +11,8 @@ public class Login : MonoBehaviour
     public TMP_InputField UserNameInputField;
     public TMP_InputField PasswordInputField;
 
+    public TextMeshProUGUI errorText;
+
     public void OnButtonClick()
     {
         StartCoroutine(LoginUser());

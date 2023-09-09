@@ -38,31 +38,4 @@ public class Register : MonoBehaviour
          }
     }
 
-    public void OnButtonClick() {
-        StartCoroutine(RegisterUser());
-    }
-
-    private IEnumerator RegisterUser() 
-    { 
-        yield return new WaitUntil(() => Gaos.Device.Device.Registration.IsDeviceRegistered == true);
-        StartCoroutine(Gaos.User.User.UserRegister.Register(EmailInputField.text, UserNameInputField.text, PasswordInputField.text, OnUserRegisterComplete));
-
-
-    }
-    public void OnUserRegisterComplete()
-    {
-        const string METHOD_NAME = "OnUserRegisterComplete()";
-
-        if (Gaos.User.User.UserRegister.IsRegistered == true) {
-            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User registered: {Gaos.User.User.UserRegister.RegisterResponse.Jwt}");
-        } 
-        else
-        {
-            throw new System.Exception("User registration failed");
-        }
-
-    }
-     
-    
-
 }
