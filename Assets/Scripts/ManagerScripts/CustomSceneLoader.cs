@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 
 public class CustomSceneLoader : MonoBehaviour
 {
     public string sceneName;
+    private CoroutineManager coroutineManager;
 
 
     private void OnEnable()
@@ -14,17 +15,29 @@ public class CustomSceneLoader : MonoBehaviour
         StartCoroutine(Gaos.User.User.GuestLogin.Login(OnGuestLoginComplete));
     }
 
-    public void LoadSceneAsync()
+    public async void LoadGuestAsync()
     {
-        StartCoroutine(LoadSceneCoroutine(sceneName));
+        await LoadSceneUniTask(sceneName);
     }
 
-    private IEnumerator LoadSceneCoroutine(string sceneName)
+    private async UniTask LoadSceneUniTask(string sceneName)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        yield return null;
-    }
 
+        // Wait for the scene to be fully loaded
+        while (!asyncLoad.isDone)
+        {
+            // You can check the progress if needed
+            //float progress = asyncLoad.progress;
+
+            await UniTask.Yield(); // Yield to the Unity main thread
+        }
+
+
+        coroutineManager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
+
+        await coroutineManager.LoadSaveSlots();
+    }
     public void OnGuestLoginComplete()
     {
         if (Gaos.User.User.GuestLogin.IsLoggedIn == true)
@@ -32,7 +45,7 @@ public class CustomSceneLoader : MonoBehaviour
             Debug.Log($"Guest logged in: {Gaos.User.User.GuestLogin.GuestLoginResponse.UserName}");
             UserName.userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
 
-            LoadSceneAsync();
+            LoadGuestAsync();
         }
         else
         {

@@ -57,17 +57,17 @@ public class GlobalCalculator : MonoBehaviour
                 timer -= delayTime;
                 seconds++;
 
-                if (seconds == 10 || seconds == 20 || seconds == 30 || seconds == 40 || seconds  == 50 )
+                /*if (seconds == 10 || seconds == 20 || seconds == 30 || seconds == 40 || seconds  == 50 )
                 {
                     saveManager.TestSaveGameDataOnServer();
-                }
+                }*/
 
                 if (seconds > 59)
                 {
                     seconds = 0;
                     minutes++;
                     UpdatePlayerConsumption();
-                    saveManager.TestSaveGameDataOnServer();
+                    //saveManager.TestSaveGameDataOnServer();
                     weatherManager.SetUVAmount();
                     StartCoroutine(rotateImage.RotateOverTime(0.5f));
                     daylightSemicircle.RunAllCoroutines();

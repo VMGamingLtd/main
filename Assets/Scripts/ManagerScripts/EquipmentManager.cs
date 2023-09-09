@@ -38,18 +38,17 @@ public class EquipmentManager : MonoBehaviour
             {
                 if (i == 5)
                 {
-                    Transform targetChild = EnergySlot.transform.Cast<Transform>()
-                        .FirstOrDefault(child => child.name.Contains("(Clone)"));
+                    Transform targetChild = EnergySlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("(Clone)"));
                     if (targetChild != null && targetChild.name == "Battery(Clone)")
                     {
                         ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null && itemData.itemQuantity > PlayerResources.PlayerEnergy)
                         {
                             itemData.itemQuantity -= PlayerResources.PlayerEnergy;
-                            TextMeshProUGUI newCountText = itemData.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                            if (newCountText != null)
+                            TextMeshProUGUI newCountTextEnergy = itemData.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
+                            if (newCountTextEnergy != null)
                             {
-                                newCountText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                                newCountTextEnergy.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
                             }
                         }
                         else
@@ -69,14 +68,12 @@ public class EquipmentManager : MonoBehaviour
                                 Destroy(targetChild.gameObject);
                                 globalCalculator.UpdatePlayerConsumption();
                             }
-                            Debug.Log("battery is empty");
                         }
                     }
                 }
                 if (i == 6 && GlobalCalculator.isPlayerInBiologicalBiome == false)
                 {
-                    Transform targetChild = OxygenSlot.transform.Cast<Transform>()
-                        .FirstOrDefault(child => child.name.Contains("(Clone)"));
+                    Transform targetChild = OxygenSlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("(Clone)"));
                     if (targetChild != null && targetChild.name == "OxygenTank(Clone)")
                     {
                         ItemData itemData = targetChild.GetComponent<ItemData>();
@@ -89,14 +86,18 @@ public class EquipmentManager : MonoBehaviour
                 }
                 if (i == 7)
                 {
-                    Transform targetChild = WaterSlot.transform.Cast<Transform>()
-                        .FirstOrDefault(child => child.name.Contains("(Clone)"));
+                    Transform targetChild = WaterSlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("(Clone)"));
                     if (targetChild != null && targetChild.name == "DistilledWater(Clone)")
                     {
                         ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null && itemData.itemQuantity > PlayerResources.PlayerWater)
                         {
                             itemData.itemQuantity -= PlayerResources.PlayerWater;
+                            TextMeshProUGUI newCountTextWater = itemData.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
+                            if (newCountTextWater != null)
+                            {
+                                newCountTextWater.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                            }
                         }
                         else
                         {

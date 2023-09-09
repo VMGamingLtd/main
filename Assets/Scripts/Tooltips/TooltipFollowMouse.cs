@@ -7,6 +7,7 @@ public class TooltipFollowMouse : MonoBehaviour
     public RectTransform canvasRect;
     public float horizontalPadding = 10f;
     public float verticalPadding = 10f;
+    private Camera mainCamera;
 
     public RectTransform tooltipRect;
     private float screenWidth;
@@ -17,6 +18,7 @@ public class TooltipFollowMouse : MonoBehaviour
         tooltipRect = GetComponent<RectTransform>();
         screenWidth = Screen.width;
         screenHeight = Screen.height;
+        mainCamera = GetComponent<Camera>();
     }
     private void Update()
     {
@@ -28,7 +30,6 @@ public class TooltipFollowMouse : MonoBehaviour
         float tooltipHeight = tooltipRect.rect.height;
         float xPosition = localPoint.x + xOffset;
         float yPosition = localPoint.y + yOffset;
-
         //Adjust the x position to keep the tooltip within the screen bounds
         if (xPosition + tooltipWidth + horizontalPadding > screenWidth)
         {
@@ -57,6 +58,7 @@ public class TooltipFollowMouse : MonoBehaviour
         tooltipRect.localPosition = new Vector2(xPosition, yPosition);
     }
 
+    // Moves the tooltip object list away from the camera to avoid window intersection when moving fast in-between multiple objects with mouse cursor
     private void OnDisable()
     {
         tooltipRect.localPosition = new Vector2(-500, -2000);

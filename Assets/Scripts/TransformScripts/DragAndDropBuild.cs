@@ -115,6 +115,9 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
             case "BiofuelGenerator":
                 buildingCreator.CreateBuilding(draggedObject, "POWERPLANT");
                 break;
+            case "Furnace":
+                buildingCreator.CreateBuilding(draggedObject, "FACTORY");
+                break;
             default:
                 Debug.LogWarning("Unknown building type: " + objectName);
                 break;

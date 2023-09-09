@@ -11,14 +11,18 @@ public class StartNewGame : MonoBehaviour
     public GameObject coroutineManager;
     public static bool loadingNewGame;
 
-    public void startNewGame() {
+    public void startNewGame()
+    {
         newGameUI.SetActive(false);
         legal.SetActive(false);
         title.SetActive(false);
         coroutineManager.SetActive(false);
-        
+
         loadingNewGame = true;
         loadingBar.SetActive(true);
         coroutineManager.SetActive(true);
+
+        CoroutineManager coroutineControl = coroutineManager.GetComponent<CoroutineManager>();
+        _ = coroutineControl.ResetNewGame();
     }
 }

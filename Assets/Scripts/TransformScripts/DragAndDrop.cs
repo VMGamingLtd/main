@@ -24,6 +24,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
     private MessageObjects messageObjects;
     private AudioManager audioManager;
     private GlobalCalculator globalCalculator;
+    private TextMeshProUGUI countInventory;
 
     public void MessageInput(string messageText)
     {
@@ -57,6 +58,8 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
         cloneObject.transform.SetParent(highestObject.transform);
         cloneObject.AddComponent<CanvasGroup>();
         cloneObject.GetComponent<CanvasGroup>().blocksRaycasts = false; // Allow raycasts to pass through the clone
+        countInventory = cloneObject.GetComponentInChildren<TextMeshProUGUI>();
+        countInventory.enabled = false;
 
         isDragging = true;
         if (originalParentName != "INVENTORYMANAGER")
@@ -201,7 +204,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             {
                 if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "DistilledWater")
                 {
-                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 7, "PlayerWater", 0.1f);
+                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 7, "PlayerWater", 0.001f);
                     audioManager.PlayWaterSlotSound();
                 }
             }

@@ -33,7 +33,7 @@ public class StartGameInputChecker : MonoBehaviour
         recipeCreator.CreateBiofuelRecipe();
         recipeCreator.CreateBatteryCoreRecipe();
         recipeCreator.CreateBatteryRecipe();
-        itemCreator.CreateBattery(1);
+        itemCreator.CreateDistilledWater(1);
 
         //initialize starting resources
         Credits.ResetCredits();

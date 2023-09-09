@@ -128,6 +128,8 @@ public class InventoryManager : MonoBehaviour
     }
     public float GetItemQuantity(string prefabName, string itemProduct)
     {
+        float totalQuantity = 0;
+
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] foundItemArray))
         {
             foreach (GameObject item in foundItemArray)
@@ -137,13 +139,13 @@ public class InventoryManager : MonoBehaviour
                     ItemData itemData = item.GetComponent<ItemData>();
                     if (itemData != null)
                     {
-                        return itemData.itemQuantity;
+                        totalQuantity += itemData.itemQuantity;
                     }
                 }
             }
         }
 
-        return 0;
+        return totalQuantity;
     }
     public void SplitItem(string prefabName, float quantity)
     {

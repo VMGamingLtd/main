@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using ItemManagement;
 using RecipeManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class CoroutineManager : MonoBehaviour
 {
@@ -55,6 +57,11 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] IronBeamTexts;
     public TextMeshProUGUI[] BiofuelGeneratorTexts;
 
+    // OnEnable is only for testing purposes! Has to be deleted in official launch!
+    void OnEnable()
+    {
+        ResetNewGame();
+    }
     public void InitializeResourceMap()
     {
         resourceTextMap = new Dictionary<string, TextMeshProUGUI[]>
@@ -72,24 +79,6 @@ public class CoroutineManager : MonoBehaviour
             { "IronBeam", IronBeamTexts },
             { "BiofuelGenerator", BiofuelGeneratorTexts }
         };
-    }
-    public void OnEnable()
-    {
-        if (StartNewGame.loadingNewGame == false){
-            StartCoroutine(WaitForLoadingBar());
-        }
-        else if (StartNewGame.loadingNewGame == true) {
-            StartCoroutine(ResetNewGame());
-        }
-
-        /*
-        if (false)
-        {
-            Ws.Open();
-            StartCoroutine(Ws.StartProcessing());
-            Ws.GetOutboundQueue().Enqueue("ping");
-        }
-        */
     }
 
     public void StopRunningCoroutine()
@@ -162,8 +151,9 @@ public class CoroutineManager : MonoBehaviour
         }
     }
 
-    IEnumerator ResetNewGame () {
-        textObject = this.loadingBar.transform.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+    public async UniTask ResetNewGame()
+    {
+        textObject = loadingBar.transform.GetComponentInChildren<TextMeshProUGUI>();
         SystemLanguage systemLanguage = Application.systemLanguage;
         switch (systemLanguage)
         {
@@ -181,7 +171,7 @@ public class CoroutineManager : MonoBehaviour
                 break;
         }
         newGamePopup.SetActive(true);
-        yield return new WaitForSeconds(1.5f);
+        await UniTask.Delay(TimeSpan.FromSeconds(1.5f));
         newGamePopup.GetComponent<Michsky.UI.Shift.ModalWindowManager>().ModalWindowIn();
         loadingBar.SetActive (false);
     }
