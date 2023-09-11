@@ -68,9 +68,15 @@ public class GlobalCalculator : MonoBehaviour
                     minutes++;
                     UpdatePlayerConsumption();
                     //saveManager.TestSaveGameDataOnServer();
-                    weatherManager.SetUVAmount();
+                    if (false) // @@@@@@@@@@@@@@@@@@@@@@@ temporarily disabled
+                    {
+                        weatherManager.SetUVAmount();
+                    }
                     StartCoroutine(rotateImage.RotateOverTime(0.5f));
-                    daylightSemicircle.RunAllCoroutines();
+                    if (false) // @@@@@@@@@@@@@@@@@@@@@@@ temporarily disabled   
+                    {
+                        daylightSemicircle.RunAllCoroutines();
+                    }
                 }
                 if (minutes > 59)
                 {

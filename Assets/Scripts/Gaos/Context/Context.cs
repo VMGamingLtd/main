@@ -11,6 +11,7 @@ namespace Gaos.Context
         private static string JWT = null;
         private static int UserId = -1;
         private static string UserName;
+        private static bool IsGuest = false;
         public static void SetJWT(string jwt)
         { 
             JWT = jwt;
@@ -40,6 +41,16 @@ namespace Gaos.Context
         {
             return UserName;
         }
+
+        public static void SetIsGuest(bool isGuest)
+        {
+            IsGuest = isGuest;
+        }   
+
+        public static bool GetIsGuest()
+        {
+            return IsGuest;
+        }   
     }
 
     public class Device

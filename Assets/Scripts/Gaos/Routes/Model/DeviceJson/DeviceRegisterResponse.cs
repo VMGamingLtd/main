@@ -1,6 +1,7 @@
 #pragma warning disable 8632
 namespace Gaos.Routes.Model.DeviceJson
 {
+
     [System.Serializable]
     public class DeviceRegisterResponse
     {
@@ -11,6 +12,9 @@ namespace Gaos.Routes.Model.DeviceJson
         public string? Identification;
         public string? PlatformType;
         public string? BuildVersion;
+
+        public Dbo.Model.User? User;
+        public Dbo.Model.JWT? JWT;
 
     }
 }

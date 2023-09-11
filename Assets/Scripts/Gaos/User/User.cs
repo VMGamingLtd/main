@@ -1,3 +1,4 @@
+#pragma warning disable 8632
 
 using UnityEngine;
 using System.Collections;
@@ -100,13 +101,18 @@ namespace Gaos.User.User
             if (IsLoggedIn == true)
             {
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  guest logged in");
-                Gaos.Context.Authentication.SetJWT(GuestLoginResponse.Jwt);
-                Gaos.Context.Authentication.SetUserId(GuestLoginResponse.UserId);
-                Gaos.Context.Authentication.SetUserName(GuestLoginResponse.UserName);
+                Context.Authentication.SetJWT(GuestLoginResponse.Jwt);
+                Context.Authentication.SetUserId(GuestLoginResponse.UserId);
+                Context.Authentication.SetUserName(GuestLoginResponse.UserName);
+                Context.Authentication.SetIsGuest(true);
             }
             else
             {
                 Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: guest not logged in");
+                Context.Authentication.SetUserId(-1);
+                Context.Authentication.SetUserName("");
+                Context.Authentication.SetIsGuest(false);
+                Context.Authentication.SetJWT("");
             }
 
             if (onComplete != null)
@@ -124,11 +130,17 @@ namespace Gaos.User.User
         public static bool TryToRegisterAgain = false;
         public static Gaos.Routes.Model.UserJson.RegisterResponse  RegisterResponse = null;
         public static bool IsRegistered = false;
+        public static Gaos.Routes.Model.UserJson.RegisterResponseErrorKind? ResponseErrorKind = null;
 
 
         private static IEnumerator Register_(string userName, string email, string password)
         {
             const string METHOD_NAME = "Register_()";
+
+            TryToRegisterAgain = false;
+            RegisterResponse = null;
+            IsRegistered = false;
+            ResponseErrorKind = null;
 
             Gaos.Routes.Model.UserJson.RegisterRequest request = new Gaos.Routes.Model.UserJson.RegisterRequest();
 
@@ -162,14 +174,17 @@ namespace Gaos.User.User
                 TryToRegisterAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user");
+                    ResponseErrorKind = Gaos.Routes.Model.UserJson.RegisterResponseErrorKind.InternalError;
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user");
                 }
                 else
                 {
                     RegisterResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.RegisterResponse>(apiCall.ResponseJsonStr);
+                    ResponseErrorKind = RegisterResponse.ErrorKind;
                     if (RegisterResponse.IsError == true)
                     {
-                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.ErrorMessage}");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.ErrorMessage}");
+                        IsRegistered = false;
                     }
                     else
                     {
@@ -203,10 +218,22 @@ namespace Gaos.User.User
                     if (IsRegistered == true)
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user registered");
+
+                        Context.Authentication.SetUserId(RegisterResponse.User.Id);
+                        Context.Authentication.SetUserName(RegisterResponse.User.Name);
+                        if (RegisterResponse.User.IsGuest == true)
+                        {
+                            Context.Authentication.SetIsGuest(true);
+                        }
+                        else
+                        {
+                            Context.Authentication.SetIsGuest(false);
+                        }
+                        Context.Authentication.SetJWT(RegisterResponse.Jwt);
                     }
                     else
                     {
-                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not registered");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not registered");
                     }
                     break;
                 }

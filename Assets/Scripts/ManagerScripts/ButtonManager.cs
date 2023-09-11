@@ -40,4 +40,5 @@ public class ButtonManager : MonoBehaviour
         MenuButtonTypeOn = NewMenuType;
         return;
     }
+
 }

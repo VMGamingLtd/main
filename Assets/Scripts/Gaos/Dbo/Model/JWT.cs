@@ -10,6 +10,7 @@ namespace Gaos.Dbo.Model
         public User? User;
         // Do not remove unused System namespace or else it will not compile in Gao  
         public System.DateTime CreatedAt;
+        public System.DateTime ExpiresAt;
 
         public int? DeviceId;
         public Device? Device;

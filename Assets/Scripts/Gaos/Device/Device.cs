@@ -63,7 +63,9 @@ namespace Gaos.Device.Device
             }
         }
 
-        public static IEnumerator RegisterDevice()
+        public delegate void OnRegisterDeviceComplete();
+
+        public static IEnumerator RegisterDevice(OnRegisterDeviceComplete onRegisterDeviceComplete = null)
         {
             const string METHOD_NAME = "RegisterDevice()";
 
@@ -95,13 +97,38 @@ namespace Gaos.Device.Device
 
             if (IsDeviceRegistered == true)
             {
-                Gaos.Context.Device.SetDeviceId(DeviceRegisterResponse.DeviceId);
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: device registered");
+                Context.Device.SetDeviceId(DeviceRegisterResponse.DeviceId);
+                if (DeviceRegisterResponse.User != null)
+                {
+                    Context.Authentication.SetUserId(DeviceRegisterResponse.User.Id);
+                    Context.Authentication.SetUserName(DeviceRegisterResponse.User.Name);
+                    if (DeviceRegisterResponse.User.IsGuest == true)
+                    {
+                        Context.Authentication.SetIsGuest(true);
+                    }
+                    else
+                    {
+                        Context.Authentication.SetIsGuest(false);
+                    }
+                    Context.Authentication.SetJWT(DeviceRegisterResponse.JWT.Token);
+                }
+                else
+                {
+                    Context.Authentication.SetUserId(-1);
+                    Context.Authentication.SetUserName("");
+                    Context.Authentication.SetIsGuest(false);
+                    Context.Authentication.SetJWT("");
+                }
             }
             else
             {
                 Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
                 throw new System.Exception($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
+            }
+
+            if (onRegisterDeviceComplete != null)
+            {
+                onRegisterDeviceComplete();
             }
         }
     }
