@@ -254,6 +254,7 @@ namespace Gaos.User.User
         public static bool TryToLoginAgain = false;
         public static Gaos.Routes.Model.UserJson.LoginResponse LoginResponse = null;
         public static bool IsLoggedIn = false;
+        public static Gaos.Routes.Model.UserJson.LoginResponseErrorKind? ResponseErrorKind = null;
 
         private static IEnumerator Login_(string userName, string password)
         {
@@ -292,6 +293,7 @@ namespace Gaos.User.User
                 if (apiCall.IsResponseError == true)
                 {
                     Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user");
+                    ResponseErrorKind = Gaos.Routes.Model.UserJson.LoginResponseErrorKind.InternalError;
                 }
                 else
                 {
@@ -299,6 +301,7 @@ namespace Gaos.User.User
                     if (LoginResponse.IsError == true)
                     {
                         Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.ErrorMessage}");
+                        ResponseErrorKind = LoginResponse.ErrorKind;
                     }
                     else
                     {
@@ -314,6 +317,14 @@ namespace Gaos.User.User
         {
             const string METHOD_NAME = "Login()";
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: logging in user ...");
+
+
+            TryToLoginAgain = false;
+            LoginResponse = null;
+            IsLoggedIn = false;
+            ResponseErrorKind = null;
+
+
             while (true)
             {
                 yield return Login_(userName, password);
@@ -331,10 +342,11 @@ namespace Gaos.User.User
                         Gaos.Context.Authentication.SetJWT(LoginResponse.Jwt);
                         Gaos.Context.Authentication.SetUserId(LoginResponse.UserId);
                         Gaos.Context.Authentication.SetUserName(LoginResponse.UserName);
+                        Gaos.Context.Authentication.SetIsGuest(false);
                     }
                     else
                     {
-                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not logged in");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: user not logged in");
                     }
                     break;
                 }

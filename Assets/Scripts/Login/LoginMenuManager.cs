@@ -18,6 +18,7 @@ public class LoginMenuManager : MonoBehaviour
     public GameObject recoverPassword;
     public GameObject backToEmail;
     public GameObject back;
+
     public GameObject mainUI;
     public GameObject registerButton;
 
@@ -26,6 +27,48 @@ public class LoginMenuManager : MonoBehaviour
     public TMP_InputField PasswordInputField;
 
     public TextMeshProUGUI errorText;
+
+    private void showEmptyScreen()
+    {
+        email.SetActive(false);
+        EmailInputField.text = "";
+        username.SetActive(false);
+        UserNameInputField.text = "";
+        password.SetActive(false);
+        PasswordInputField.text = "";
+        createAccount.SetActive(false);
+        login.SetActive(false);
+        next.SetActive(false);
+        register.SetActive(false);
+        recoverPassword.SetActive(false);
+        backToEmail.SetActive(false);
+        back.SetActive(false);
+    }
+
+    private void showFirstScreen()
+    {
+        showEmptyScreen();
+        
+        if (Gaos.Context.Authentication.GetIsGuest())
+        {
+            login.SetActive(true);
+            register.SetActive(true);
+            back.SetActive(true);
+        }
+        else
+        {
+            login.SetActive(true);
+            register.SetActive(true);
+            back.SetActive(true);
+
+        }
+    }
+
+    public void OnEnable()
+    {
+        //showFirstScreen();
+        
+    }
 
 
     public void BackToEmail()
@@ -161,7 +204,7 @@ public class LoginMenuManager : MonoBehaviour
         else { return null; }
     }
 
-    public string GetErrorMessage(Gaos.Routes.Model.UserJson.RegisterResponseErrorKind? errorKind)
+    private string GetErrorMessage(Gaos.Routes.Model.UserJson.RegisterResponseErrorKind? errorKind)
     {
         const string METHOD_NAME = "GetErrorMessage()";
         string msg = "Error!";
@@ -336,41 +379,18 @@ public class LoginMenuManager : MonoBehaviour
         return msg;
     }
 
-    public void ProcessRegistrationError(Gaos.Routes.Model.UserJson.RegisterResponseErrorKind errorKing)
-    {
-        /*
-                UsernameExistsError,
-        UserNameIsEmptyError,
-        EmailIsEmptyError,
-        IncorrectEmailError,
-        EmailExistsError,
-        PasswordIsEmptyError,
-        PasswordsDoNotMatchError,
-        InternalError,
-        */
-
-    }
-
     public void StartRegisterUser()
     {
-        StartCoroutine(RegisterUser());
-    }
-
-    private IEnumerator RegisterUser()
-    {
-        yield return new WaitUntil(() => Gaos.Device.Device.Registration.IsDeviceRegistered == true);
         StartCoroutine(Gaos.User.User.UserRegister.Register(UserNameInputField.text, EmailInputField.text, PasswordInputField.text, OnUserRegisterComplete));
-
-
     }
+
     public void OnUserRegisterComplete()
     {
         const string METHOD_NAME = "OnUserRegisterComplete()";
 
         if (Gaos.User.User.UserRegister.IsRegistered == true)
         {
-            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User registered: {Gaos.User.User.UserRegister.RegisterResponse.Jwt}");
-
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User registered.");
 
 
             CoroutineManager.registeredUser = true;
@@ -383,6 +403,106 @@ public class LoginMenuManager : MonoBehaviour
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: User not registered, erorr: {Gaos.User.User.UserRegister.ResponseErrorKind}");
             errorText.text = GetErrorMessage(Gaos.User.User.UserRegister.ResponseErrorKind);
             //throw new System.Exception("User registration failed");
+        }
+    }
+
+    private string GetErrorMessage(Gaos.Routes.Model.UserJson.LoginResponseErrorKind? errorKind)
+    {
+        const string METHOD_NAME = "GetErrorMessage()";
+        string msg = "";
+
+        switch(errorKind)
+        {
+            case LoginResponseErrorKind.IncorrectUserNameOrEmailError:
+                switch(Application.systemLanguage)
+                {
+                    case SystemLanguage.English:
+                        msg = "Incorrect user name or password!";
+                        break;
+                    case SystemLanguage.Russian:
+                        msg = "Неверное имя пользователя или пароль!";
+                        break;
+                    case SystemLanguage.Chinese:
+                        msg = "用户名或密码错误 !";
+                        break;
+                    case SystemLanguage.Slovak:
+                        msg = "Nesprávne užívateľské meno alebo heslo!";
+                        break;
+                    default:
+                        msg = "Incorrect user name or password!";
+                        break;
+                }
+                break;
+            case LoginResponseErrorKind.IncorrectPasswordError:
+                switch(Application.systemLanguage)
+                {
+                    case SystemLanguage.English:
+                        msg = "Please enter your username!";
+                        break;
+                    case SystemLanguage.Russian:
+                        msg = "Пожалуйста, введите Ваш логин!";
+                        break;
+                    case SystemLanguage.Chinese:
+                        msg = "请输入您的用户名！";
+                        break;
+                    case SystemLanguage.Slovak:
+                        msg = "Zadajte svoje používateľské meno!";
+                        break;
+                    default:
+                        msg = "Please enter your username!";
+                        break;
+                }
+                break;
+            case LoginResponseErrorKind.InternalError:
+                switch(Application.systemLanguage)
+                {
+                    case SystemLanguage.English:
+                        msg = "Internal error!";
+                        break;
+                    case SystemLanguage.Russian:
+                        msg = "Internal error!";
+                        break;
+                    case SystemLanguage.Chinese:
+                        msg = "内部错误！";
+                        break;
+                    case SystemLanguage.Slovak:
+                        msg = "Vnútorná chyba!";
+                        break;
+                    default:
+                        break;
+                        msg = "Internal error!";
+                }
+                break;
+            default:
+                msg = "Error!";
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: missing translation for: {errorKind}");
+                break;  
+
+        }
+
+        return msg;
+
+    }
+
+
+    public void Login()
+    {
+        StartCoroutine(Gaos.User.User.UserLogin.Login(EmailInputField.text, PasswordInputField.text, OnUserLoginComplete));
+    }
+
+    private void OnUserLoginComplete()
+    {
+        const string METHOD_NAME = "OnUserLoginComplete()";
+
+        if (Gaos.User.User.UserRegister.IsRegistered == true)
+        {
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User logged in.");
+        }
+        else
+        {
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: User not logged in, erorr: {Gaos.User.User.UserLogin.ResponseErrorKind}");
+            errorText.text = GetErrorMessage(Gaos.User.User.UserLogin.ResponseErrorKind);
+
         }
     }
 }
