@@ -9,23 +9,33 @@ public class NewUserScreen : MonoBehaviour
 {
     public readonly static string CLASS_NAME = typeof(NewUserScreen).Name;
 
-    public GameObject mainUIGO;
+    private enum ErrorKind
+    {
+        PasswordsDoNotMatch,
+    }
+
+    public GameObject mainUI;
+
+    public TextMeshProUGUI errorText;
 
     public TMP_InputField emailTextInput;
     public TMP_InputField userNameTextInput;
     public TMP_InputField passwordTextInput;
     public TMP_InputField passwordVerifyTextInput;
 
-    // Start is called before the first frame update
-    void Start()
+    public void OnEnable()
     {
-        
+        ClearErrorText();
+
+        emailTextInput.text = "";
+        userNameTextInput.text = "";
+        passwordTextInput.text = "";
+        passwordVerifyTextInput.text = "";
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ClearErrorText()
     {
-        
+        errorText.text = "";
     }
 
     private string GetErrorMessage(Gaos.Routes.Model.UserJson.RegisterResponseErrorKind? errorKind)
@@ -203,8 +213,65 @@ public class NewUserScreen : MonoBehaviour
         return msg;
     }
 
+    private string GetErrorMessae(ErrorKind errorKimd)
+    {
+        string msg = "Error!";
+        switch(errorKimd)
+        {
+            case ErrorKind.PasswordsDoNotMatch:
+                switch(Application.systemLanguage)
+                {
+                    case SystemLanguage.English:
+                        msg = "Passwords do not match!";
+                        break;
+                    case SystemLanguage.Russian:
+                        msg = "Пароли не совпадают!";
+                        break;
+                    case SystemLanguage.Chinese:
+                        msg = "密码不匹配！";
+                        break;
+                    case SystemLanguage.Slovak:
+                        msg = "Heslá sa nezhodujú!";
+                        break;
+                    default:
+                        msg = "Passwords do not match!";
+                        break;
+                }
+                break;
+            default:
+                msg = "Error!";
+                break;
+        }
+
+        return msg;
+
+    } 
+
+
+    private bool VerifyIfPasswordsAreSame()
+    {
+        bool result = false;
+
+        if (passwordTextInput.text == passwordVerifyTextInput.text)
+        {
+            result = true;
+        }
+        else
+        {
+            result = false;
+        }
+
+        return result;
+    }
+
     public void StartRegisterUser()
     {
+        if (!VerifyIfPasswordsAreSame())
+        {
+            errorText.text = GetErrorMessae(ErrorKind.PasswordsDoNotMatch);
+            return;
+        }
+        
         StartCoroutine(Gaos.User.User.UserRegister.Register(userNameTextInput.text, emailTextInput.text, passwordTextInput.text, OnUserRegisterComplete));
     }
 
@@ -219,14 +286,13 @@ public class NewUserScreen : MonoBehaviour
 
             CoroutineManager.registeredUser = true;
             UserName.userName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;  
-            mainUIGO.SetActive(true);
+            mainUI.SetActive(true);
             this.gameObject.SetActive(false);
         }
         else
         {
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: User not registered, erorr: {Gaos.User.User.UserRegister.ResponseErrorKind}");
-            //errorText.text = GetErrorMessage(Gaos.User.User.UserRegister.ResponseErrorKind);
-            //throw new System.Exception("User registration failed");
+            errorText.text = GetErrorMessage(Gaos.User.User.UserRegister.ResponseErrorKind);
         }
     }
 }
