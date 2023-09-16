@@ -28,6 +28,9 @@ public class LoginMenuManager : MonoBehaviour
 
     public TextMeshProUGUI errorText;
 
+    public GameObject loginScreen;
+    public GameObject newUserScreen;
+
     private void showEmptyScreen()
     {
         email.SetActive(false);
@@ -365,8 +368,8 @@ public class LoginMenuManager : MonoBehaviour
                         msg = "Vnútorná chyba!";
                         break;
                     default:
-                        break;
                         msg = "Internal error!";
+                        break;
                 }
                 break;
             default:
@@ -469,8 +472,8 @@ public class LoginMenuManager : MonoBehaviour
                         msg = "Vnútorná chyba!";
                         break;
                     default:
-                        break;
                         msg = "Internal error!";
+                        break;
                 }
                 break;
             default:
@@ -504,5 +507,19 @@ public class LoginMenuManager : MonoBehaviour
             errorText.text = GetErrorMessage(Gaos.User.User.UserLogin.ResponseErrorKind);
 
         }
+    }
+
+    public void GoToLogin()
+    {
+        if (Gaos.Context.Authentication.GetIsGuest())
+        {
+            newUserScreen.SetActive(true);
+
+        }
+        else
+        {
+            loginScreen.SetActive(true);
+        }
+
     }
 }
