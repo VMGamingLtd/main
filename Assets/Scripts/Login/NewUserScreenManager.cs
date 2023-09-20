@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NewUserScreen : MonoBehaviour
 
@@ -14,7 +15,7 @@ public class NewUserScreen : MonoBehaviour
         PasswordsDoNotMatch,
     }
 
-    public GameObject mainUI;
+    //public GameObject mainUI;
 
     public TextMeshProUGUI errorText;
 
@@ -22,6 +23,9 @@ public class NewUserScreen : MonoBehaviour
     public TMP_InputField userNameTextInput;
     public TMP_InputField passwordTextInput;
     public TMP_InputField passwordVerifyTextInput;
+
+    public Button buttonCreate;
+    public Button buttonBack;
 
     public void OnEnable()
     {
@@ -31,6 +35,7 @@ public class NewUserScreen : MonoBehaviour
         userNameTextInput.text = "";
         passwordTextInput.text = "";
         passwordVerifyTextInput.text = "";
+
     }
 
     public void ClearErrorText()
@@ -272,12 +277,17 @@ public class NewUserScreen : MonoBehaviour
             return;
         }
         
+        buttonCreate.interactable = false;
+        buttonBack.interactable = false;
         StartCoroutine(Gaos.User.User.UserRegister.Register(userNameTextInput.text, emailTextInput.text, passwordTextInput.text, OnUserRegisterComplete));
     }
 
     public void OnUserRegisterComplete()
     {
         const string METHOD_NAME = "OnUserRegisterComplete()";
+
+        buttonCreate.interactable = true;
+        buttonBack.interactable = true;
 
         if (Gaos.User.User.UserRegister.IsRegistered == true)
         {
@@ -286,8 +296,9 @@ public class NewUserScreen : MonoBehaviour
 
             CoroutineManager.registeredUser = true;
             UserName.userName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;  
-            mainUI.SetActive(true);
-            this.gameObject.SetActive(false);
+            //mainUI.SetActive(true);
+            //this.gameObject.SetActive(false);
+            buttonBack.onClick.Invoke();
         }
         else
         {
@@ -295,4 +306,10 @@ public class NewUserScreen : MonoBehaviour
             errorText.text = GetErrorMessage(Gaos.User.User.UserRegister.ResponseErrorKind);
         }
     }
+
+    public void Display()
+    {
+
+    }
+
 }

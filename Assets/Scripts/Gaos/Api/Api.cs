@@ -195,6 +195,7 @@ namespace Gaos.Api
                 else
                 {
                     Debug.Log($"{CLASS_NAME}:{METHOD}: ERROR: response content type is not json, url: {wr.url}");
+                    this.ResponseJsonStr = null;
                     this.IsResponseError = true;
                 }
             }

@@ -127,10 +127,11 @@ namespace Gaos.User.User
     {
         public readonly static string CLASS_NAME = typeof(UserRegister).Name;
 
-        public static bool TryToRegisterAgain = false;
-        public static Gaos.Routes.Model.UserJson.RegisterResponse  RegisterResponse = null;
         public static bool IsRegistered = false;
         public static Gaos.Routes.Model.UserJson.RegisterResponseErrorKind? ResponseErrorKind = null;
+        public static Gaos.Routes.Model.UserJson.RegisterResponse  RegisterResponse = null;
+
+        private static bool TryToRegisterAgain = false;
 
 
         private static IEnumerator Register_(string userName, string email, string password)
@@ -174,8 +175,18 @@ namespace Gaos.User.User
                 TryToRegisterAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    ResponseErrorKind = Gaos.Routes.Model.UserJson.RegisterResponseErrorKind.InternalError;
                     Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user");
+                    if (apiCall.ResponseJsonStr != null)
+                    {
+                        RegisterResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.RegisterResponse>(apiCall.ResponseJsonStr);
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering user: {RegisterResponse.ErrorMessage}");
+                        ResponseErrorKind = RegisterResponse.ErrorKind;
+                    }
+                    else
+                    {
+                        ResponseErrorKind = Gaos.Routes.Model.UserJson.RegisterResponseErrorKind.InternalError;
+
+                    }
                 }
                 else
                 {
@@ -251,10 +262,11 @@ namespace Gaos.User.User
     {
         public readonly static string CLASS_NAME = typeof(UserLogin).Name;
 
-        public static bool TryToLoginAgain = false;
-        public static Gaos.Routes.Model.UserJson.LoginResponse LoginResponse = null;
         public static bool IsLoggedIn = false;
         public static Gaos.Routes.Model.UserJson.LoginResponseErrorKind? ResponseErrorKind = null;
+        public static Gaos.Routes.Model.UserJson.LoginResponse LoginResponse = null;
+
+        private static bool TryToLoginAgain = false;
 
         private static IEnumerator Login_(string userName, string password)
         {
@@ -292,15 +304,24 @@ namespace Gaos.User.User
                 TryToLoginAgain = false;
                 if (apiCall.IsResponseError == true)
                 {
-                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user");
-                    ResponseErrorKind = Gaos.Routes.Model.UserJson.LoginResponseErrorKind.InternalError;
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user");
+                    if (apiCall.ResponseJsonStr != null)
+                    {
+                        LoginResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.LoginResponse>(apiCall.ResponseJsonStr);
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.ErrorMessage}");
+                        ResponseErrorKind = LoginResponse.ErrorKind;
+                    }
+                    else
+                    {
+                        ResponseErrorKind = Gaos.Routes.Model.UserJson.LoginResponseErrorKind.InternalError;
+                    }
                 }
                 else
                 {
                     LoginResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.LoginResponse>(apiCall.ResponseJsonStr);
                     if (LoginResponse.IsError == true)
                     {
-                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.ErrorMessage}");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: logging in user: {LoginResponse.ErrorMessage}");
                         ResponseErrorKind = LoginResponse.ErrorKind;
                     }
                     else
@@ -319,10 +340,11 @@ namespace Gaos.User.User
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: logging in user ...");
 
 
-            TryToLoginAgain = false;
             LoginResponse = null;
             IsLoggedIn = false;
             ResponseErrorKind = null;
+
+            TryToLoginAgain = false;
 
 
             while (true)

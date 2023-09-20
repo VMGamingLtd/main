@@ -28,8 +28,10 @@ public class LoginMenuManager : MonoBehaviour
 
     public TextMeshProUGUI errorText;
 
-    public GameObject loginScreen;
     public GameObject newUserScreen;
+    public GameObject loginScreen;
+    public GameObject loginIntroScreenForGuest;
+    public GameObject loginIntroScreenForUser;
 
     private void showEmptyScreen()
     {
@@ -51,7 +53,7 @@ public class LoginMenuManager : MonoBehaviour
     private void showFirstScreen()
     {
         showEmptyScreen();
-        
+
         if (Gaos.Context.Authentication.GetIsGuest())
         {
             login.SetActive(true);
@@ -70,7 +72,7 @@ public class LoginMenuManager : MonoBehaviour
     public void OnEnable()
     {
         //showFirstScreen();
-        
+
     }
 
 
@@ -211,10 +213,10 @@ public class LoginMenuManager : MonoBehaviour
     {
         const string METHOD_NAME = "GetErrorMessage()";
         string msg = "Error!";
-        switch(errorKind)
+        switch (errorKind)
         {
             case RegisterResponseErrorKind.UsernameExistsError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please choose a different username!";
@@ -234,7 +236,7 @@ public class LoginMenuManager : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.UserNameIsEmptyError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please enter your username!";
@@ -254,7 +256,7 @@ public class LoginMenuManager : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.EmailIsEmptyError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please enter your email!";
@@ -274,7 +276,7 @@ public class LoginMenuManager : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.IncorrectEmailError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "The email has wrong format!";
@@ -294,7 +296,7 @@ public class LoginMenuManager : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.EmailExistsError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please choose a diffrent email!";
@@ -314,7 +316,7 @@ public class LoginMenuManager : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.PasswordIsEmptyError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please enter the password!";
@@ -333,7 +335,7 @@ public class LoginMenuManager : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.PasswordsDoNotMatchError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Passwords do not match!";
@@ -353,7 +355,7 @@ public class LoginMenuManager : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.InternalError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Internal error!";
@@ -375,7 +377,7 @@ public class LoginMenuManager : MonoBehaviour
             default:
                 msg = "Error!";
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: missing translation for: {errorKind}");
-                break;  
+                break;
 
         }
 
@@ -397,7 +399,7 @@ public class LoginMenuManager : MonoBehaviour
 
 
             CoroutineManager.registeredUser = true;
-            UserName.userName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;  
+            UserName.userName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;
             mainUI.SetActive(true);
             this.gameObject.SetActive(false);
         }
@@ -414,10 +416,10 @@ public class LoginMenuManager : MonoBehaviour
         const string METHOD_NAME = "GetErrorMessage()";
         string msg = "";
 
-        switch(errorKind)
+        switch (errorKind)
         {
             case LoginResponseErrorKind.IncorrectUserNameOrEmailError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Incorrect user name or password!";
@@ -437,7 +439,7 @@ public class LoginMenuManager : MonoBehaviour
                 }
                 break;
             case LoginResponseErrorKind.IncorrectPasswordError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please enter your username!";
@@ -457,7 +459,7 @@ public class LoginMenuManager : MonoBehaviour
                 }
                 break;
             case LoginResponseErrorKind.InternalError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Internal error!";
@@ -479,7 +481,7 @@ public class LoginMenuManager : MonoBehaviour
             default:
                 msg = "Error!";
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: missing translation for: {errorKind}");
-                break;  
+                break;
 
         }
 
@@ -509,17 +511,26 @@ public class LoginMenuManager : MonoBehaviour
         }
     }
 
+
     public void GoToLogin()
     {
         if (Gaos.Context.Authentication.GetIsGuest())
         {
-            newUserScreen.SetActive(true);
+            loginIntroScreenForGuest.SetActive(true);
+            //CanvasGroup canvasGroup = newUserScreen.GetComponent<CanvasGroup>();
+            //canvasGroup.alpha = 1;
+            //canvasGroup.interactable = true;
+            //Animation animation = loginIntroScreenForGuest.GetComponent<Animation>();
+            //animation.Play("TooltipStart");
 
         }
         else
         {
-            loginScreen.SetActive(true);
+            loginIntroScreenForUser.SetActive(true);
+            //Animation animation = loginIntroScreenForUser.GetComponent<Animation>();
+            //animation.Play("TooltipStart");
         }
 
     }
+
 }
