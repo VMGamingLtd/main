@@ -67,7 +67,7 @@ public class InventoryManager : MonoBehaviour
         ItemData itemData = item.GetComponent<ItemData>();
         if (itemData == null)
         {
-            itemData = item.AddComponent<ItemData>();
+            _ = item.AddComponent<ItemData>();
         }
     }
 
@@ -190,49 +190,7 @@ public class InventoryManager : MonoBehaviour
             itemCreator.SplitCoal(quantity);
         }
     }
-    public void CreateItem(string prefabName, float quantity)
-    {
-        if (prefabName == "FibrousLeaves")
-        {
-            itemCreator.CreatePlants(quantity);
-        }
-        else if (prefabName == "Water")
-        {
-            itemCreator.CreateWater(quantity);
-        }
-        else if (prefabName == "Biofuel")
-        {
-            itemCreator.CreateBiofuel(quantity);
-        }
-        else if (prefabName == "DistilledWater")
-        {
-            itemCreator.CreateDistilledWater(quantity);
-        }
-        else if (prefabName == "Battery")
-        {
-            itemCreator.CreateBattery(quantity);
-        }
-        else if (prefabName == "BatteryCore")
-        {
-            itemCreator.CreateBatteryCore(quantity);
-        }
-        else if (prefabName == "Steam")
-        {
-            itemCreator.CreateSteam(quantity);
-        }
-        else if (prefabName == "Wood")
-        {
-            itemCreator.CreateWood(quantity);
-        }
-        else if (prefabName == "IronOre")
-        {
-            itemCreator.CreateIronOre(quantity);
-        }
-        else if (prefabName == "Coal")
-        {
-            itemCreator.CreateCoal(quantity);
-        }
-    }
+    
     public void AddItemQuantity(string prefabName, string itemProduct, float quantity) // changes quantity of already instantiated product if it doesn't exist, creates new one
     {
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
@@ -253,10 +211,6 @@ public class InventoryManager : MonoBehaviour
                     return; // Exit the function since item was found and quantity was updated
                 }
             }
-        }
-        else
-        {
-            CreateItem(prefabName, quantity);
         }
     }
     public void ReduceSplitItemQuantity(string prefabName, string itemProduct, float quantity, int objID)
@@ -335,7 +289,7 @@ public class InventoryManager : MonoBehaviour
     }
     public void ShowFilteredItems()
     {
-        ShowItems(InventoryManager.ShowItemProducts, InventoryManager.ShowItemTypes, InventoryManager.ShowItemClass);
+        ShowItems(ShowItemProducts, ShowItemTypes, ShowItemClass);
     }
     public void ShowItems(string itemProduct, string itemType, string itemClass)
     {

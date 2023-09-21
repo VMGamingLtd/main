@@ -5,6 +5,8 @@ using System.Reflection;
 using ItemManagement;
 using TMPro;
 using System.Globalization;
+using RecipeManagement;
+using UnityEditor.EditorTools;
 
 public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -123,7 +125,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
         }
         GameObject highlightObj = GetDroppedHighlightObject(eventData);
 
-        // *dragging the same object onto each other (stacking them together with max limit 9999)
+        // *dragging the same object onto each other (stacking them together with max limit 100)
         if (selectedObjName == draggedObjectName)
         {
             int draggedObjID = 0;
@@ -206,6 +208,16 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                 {
                     EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 7, "PlayerWater", 0.001f);
                     audioManager.PlayWaterSlotSound();
+
+                    /// <summary>
+                    /// Second goal finished and set to true.
+                    /// </summary>
+                    /// <value>true</value>
+                    if (GoalManager.secondGoal == false)
+                    {
+                        GoalManager goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();
+                        _ = goalManager.SetThirdGoal();
+                    }
                 }
             }
             else if (highlightObj.name == "HungerButton")

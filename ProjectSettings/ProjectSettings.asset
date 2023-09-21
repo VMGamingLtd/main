@@ -156,6 +156,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.HappyAlien.GalacticOdyssey
     Standalone: com.HappyAlien.GalacticOdyssey
+    iPhone: com.HappyAlien.GalacticOdyssey
   buildNumber:
     Standalone: 0
     VisionOS: 0

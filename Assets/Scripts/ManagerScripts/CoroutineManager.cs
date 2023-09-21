@@ -12,13 +12,11 @@ public class CoroutineManager : MonoBehaviour
 {
     public ItemCreator itemCreator;
     public RecipeCreator recipeCreator;
-    public GoalManager goalManager;
     public TranslationManager translationManager;
     public InventoryManager inventoryManager;
     public BuildingIncrementor buildingIncrementor;
     public GameObject RecipeList;
     public GameObject loadingBar;
-    public GameObject goalGenerator;
     public GameObject saveSlots;
     public GameObject loginMenu;
     public GameObject newGamePopup;
@@ -34,7 +32,7 @@ public class CoroutineManager : MonoBehaviour
 
     // data for server
     public static bool registeredUser = false;
-    public static bool[] AllCoroutineBooleans = new bool[10];
+    public static bool[] AllCoroutineBooleans = new bool[12];
     public static int IndexNumber;
 
     public Image imageToFill;
@@ -237,7 +235,7 @@ public class CoroutineManager : MonoBehaviour
         }
         imageToFill.fillAmount = 0f;
 
-        itemCreator.CreatePlants(5);
+        itemCreator.CreateItem(0);
         Level.AddCurrentResource(ref Level.PlayerCurrentExp, 1);
         currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
         int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
@@ -282,7 +280,7 @@ public class CoroutineManager : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
-        itemCreator.CreateWater(10);
+        itemCreator.CreateItem(1);
         Level.AddCurrentResource(ref Level.PlayerCurrentExp, 1);
         currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
 
@@ -365,7 +363,7 @@ public class CoroutineManager : MonoBehaviour
         float timer = 0f;
         float fillTimePlanet0bb = 6f;
 
-        GameObject fillBarObject = RecipeList.transform.Find("WoodRecipe(Clone)/FillBckg/FillBar").gameObject;
+        GameObject fillBarObject = RecipeList.transform.Find("IronOreRecipe(Clone)/FillBckg/FillBar").gameObject;
         imageToFill = fillBarObject.GetComponent<Image>();
 
         while (timer < fillTimePlanet0bb)
@@ -412,7 +410,7 @@ public class CoroutineManager : MonoBehaviour
         float timer = 0f;
         float fillTimePlanet0bb = 6f;
 
-        GameObject fillBarObject = RecipeList.transform.Find("WoodRecipe(Clone)/FillBckg/FillBar").gameObject;
+        GameObject fillBarObject = RecipeList.transform.Find("CoalRecipe(Clone)/FillBckg/FillBar").gameObject;
         imageToFill = fillBarObject.GetComponent<Image>();
 
         while (timer < fillTimePlanet0bb)
@@ -605,7 +603,7 @@ public class CoroutineManager : MonoBehaviour
     public IEnumerator StopCollectBiofuel()
     {
         StopCoroutine("CollectBiofuel");
-        itemCreator.CreatePlants(20);
+        itemCreator.CreateItem(0, 20);
 
         string currentPlantResource = inventoryManager.GetItemQuantity("FibrousLeaves", "BASIC").ToString();
 
@@ -681,7 +679,7 @@ public class CoroutineManager : MonoBehaviour
     {
         StopCoroutine("CollectDistilledWater");
         AllCoroutineBooleans[3] = false;
-        itemCreator.CreateWater(50);
+        itemCreator.CreateItem(1, 50);
 
         string currentWaterResource = inventoryManager.GetItemQuantity("Water", "BASIC").ToString();
 
@@ -826,18 +824,14 @@ public class CoroutineManager : MonoBehaviour
             }
             StartCoroutine("CreateBattery");
 
+            /// <summary>
+            /// First goal finished and switched to true.
+            /// </summary>
+            /// <value>true</value>
             if (GoalManager.firstGoal == false)
             {
-                Animation animation = goalGenerator.GetComponent<Animation>();
-                if (animation != null)
-                {
-                    animation.Play("Success");
-                    yield return new WaitForSeconds(1f);
-                    recipeCreator.CreateWaterRecipe();
-                    recipeCreator.CreateDistilledWaterRecipe();
-                    goalManager.ChangeGoal("CraftAndUseWater");
-                    animation.Play("Idle");
-                }
+                GoalManager goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();
+                _ = goalManager.SetSecondGoal();
             }
         }
         else
@@ -878,7 +872,7 @@ public class CoroutineManager : MonoBehaviour
             float fillTimePlanet0bb = 30f;
             AllCoroutineBooleans[11] = true;
 
-            GameObject fillBarObject = RecipeList.transform.Find("BatteryRecipe(Clone)/FillBckg/FillBar").gameObject;
+            GameObject fillBarObject = RecipeList.transform.Find("BiofuelGeneratorBlueprint(Clone)/FillBckg/FillBar").gameObject;
             imageToFill = fillBarObject.GetComponent<Image>();
 
             inventoryManager.ReduceItemQuantity("IronBeam", "PROCESSED", 4);
@@ -927,16 +921,8 @@ public class CoroutineManager : MonoBehaviour
 
             if (GoalManager.firstGoal == false)
             {
-                Animation animation = goalGenerator.GetComponent<Animation>();
-                if (animation != null)
-                {
-                    animation.Play("Success");
-                    yield return new WaitForSeconds(1f);
-                    recipeCreator.CreateWaterRecipe();
-                    recipeCreator.CreateDistilledWaterRecipe();
-                    goalManager.ChangeGoal("CraftAndUseWater");
-                    animation.Play("Idle");
-                }
+                GoalManager goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();
+                _ = goalManager.SetFourthGoal();
             }
         }
         else

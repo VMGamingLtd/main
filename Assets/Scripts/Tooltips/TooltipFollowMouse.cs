@@ -1,24 +1,18 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class TooltipFollowMouse : MonoBehaviour
 {
-    public float xOffset = 10f;
-    public float yOffset = 10f;
-    public RectTransform canvasRect;
-    public float horizontalPadding = 10f;
-    public float verticalPadding = 10f;
-    private Camera mainCamera;
-
-    public RectTransform tooltipRect;
-    private float screenWidth;
-    private float screenHeight;
+    public float xOffset = 0f;
+    public float yOffset = 0f;
+    private RectTransform canvasRect;
+    private RectTransform tooltipRect;
 
     private void Awake()
     {
         tooltipRect = GetComponent<RectTransform>();
-        screenWidth = Screen.width;
-        screenHeight = Screen.height;
-        mainCamera = GetComponent<Camera>();
+        canvasRect = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        tooltipRect = transform.GetComponent<RectTransform>();
     }
     private void Update()
     {
@@ -26,36 +20,47 @@ public class TooltipFollowMouse : MonoBehaviour
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, mousePosition, null, out localPoint);
 
-        float tooltipWidth = tooltipRect.rect.width;
-        float tooltipHeight = tooltipRect.rect.height;
         float xPosition = localPoint.x + xOffset;
         float yPosition = localPoint.y + yOffset;
-        //Adjust the x position to keep the tooltip within the screen bounds
-        if (xPosition + tooltipWidth + horizontalPadding > screenWidth)
+
+        float yAdjustment = SmoothYAdjustment(yPosition);
+
+
+        if (xPosition > 600f)
         {
-            xPosition = screenWidth - tooltipWidth - horizontalPadding;
-        }
-        else if (xPosition < 0)
-        {
-            xPosition -= horizontalPadding;
+            xPosition -= tooltipRect.rect.width / 1.8f + xOffset;
         }
 
-        // Adjust the y position to keep the tooltip within the screen bounds
-        if (yPosition + tooltipHeight + verticalPadding > screenHeight)
-        {
-            yPosition = screenHeight - tooltipHeight - verticalPadding;
-        }
-        else if (yPosition - verticalPadding < 0)
-        {
-            yPosition = verticalPadding;
-        }
 
-        // Offset the tooltip position by the padding coordinates from the mouse cursor
-        xPosition += horizontalPadding;
-        yPosition += verticalPadding;
+        yPosition += yAdjustment;
+
 
         // Set the tooltip position
         tooltipRect.localPosition = new Vector2(xPosition, yPosition);
+    }
+    private float SmoothXAdjustment(float xPosition)
+    {
+        float startX = -600f;
+        float endX = 900f;
+        float startAdjustmentX = 100f;
+        float endAdjustmentX = -200f;
+
+        float smoothAdjustmentX = Mathf.Lerp(startAdjustmentX, endAdjustmentX, Mathf.InverseLerp(startX, endX, xPosition));
+
+        return smoothAdjustmentX;
+    }
+    private float SmoothYAdjustment(float yPosition)
+    {
+        // Define the start and end yPosition values and corresponding adjustment values
+        float startY = 500f;
+        float endY = -500f;
+        float startAdjustmentY = -100f;
+        float endAdjustmentY = 170f;
+
+        // Use Mathf.Lerp to calculate the smooth adjustment between start and end values
+        float smoothAdjustmentY = Mathf.Lerp(startAdjustmentY, endAdjustmentY, Mathf.InverseLerp(startY, endY, yPosition));
+
+        return smoothAdjustmentY;
     }
 
     // Moves the tooltip object list away from the camera to avoid window intersection when moving fast in-between multiple objects with mouse cursor

@@ -7,17 +7,7 @@ public class ButtonManager : MonoBehaviour
     public GameObject BaseButton;
     private Animator animator;
     public static string MenuButtonTypeOn = "";
-    void OnEnable()
-    {
-        if (GoalManager.secondGoal == true)
-        {
-            BaseButton.SetActive(true);
-        }
-        else
-        {
-            BaseButton.SetActive(false);
-        }
-    }
+
 
     public void BaseButtonAnimationOn()
     {
@@ -39,5 +29,17 @@ public class ButtonManager : MonoBehaviour
     {
         MenuButtonTypeOn = NewMenuType;
         return;
+    }
+
+    public void UnlockBaseButton()
+    {
+        if (GoalManager.secondGoal == true)
+        {
+            BaseButton.SetActive(true);
+        }
+        else
+        {
+            BaseButton.SetActive(false);
+        }
     }
 }

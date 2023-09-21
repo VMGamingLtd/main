@@ -6,6 +6,7 @@ using ItemManagement;
 using RecipeManagement;
 using System.Linq;
 using System;
+using Assets.Scripts.ItemFactory;
 
 public class SaveManager : MonoBehaviour
 {
@@ -197,7 +198,7 @@ public class SaveManager : MonoBehaviour
         currentSaveData.BuildingStatisticInterval = BuildingStatisticsManager.BuildingStatisticInterval;
         currentSaveData.BuildingIntervalTypeChanged = BuildingIntervalTypes.BuildingIntervalTypeChanged;
         currentSaveData.BuildingStatisticTypeChanged = BuildingStatisticTypes.BuildingStatisticTypeChanged;
-        currentSaveData.ItemCreationID = ItemCreator.ItemCreationID;
+        currentSaveData.ItemCreationID = ItemFactory.ItemCreationID;
         currentSaveData.autoConsumption = EquipmentManager.autoConsumption;
 
         // slot equip array

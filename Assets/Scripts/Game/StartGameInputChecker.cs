@@ -41,6 +41,10 @@ public class StartGameInputChecker : MonoBehaviour
 
         MainUI.SetActive(true);
 
+        // test purposes
+        itemCreator.CreateBatteryCore(1);
+        itemCreator.CreateBiofuel(1);
+
         equipmentManager.InitStartEquip();
 
         // force button click action to open the building menu that the button is set for

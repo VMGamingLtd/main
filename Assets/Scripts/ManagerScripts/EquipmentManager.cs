@@ -11,6 +11,7 @@ public class EquipmentManager : MonoBehaviour
     public static string[] slotEquippedName = new string[9];
     public static bool autoConsumption;
     public GlobalCalculator globalCalculator;
+    public InventoryManager inventoryManager;
 
     public GameObject HelmetSlot;
     public GameObject SuitSlot;
@@ -41,6 +42,7 @@ public class EquipmentManager : MonoBehaviour
                     Transform targetChild = EnergySlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("(Clone)"));
                     if (targetChild != null && targetChild.name == "Battery(Clone)")
                     {
+                        string targetChildName = targetChild.name.Replace("(Clone)", "");
                         ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null && itemData.itemQuantity > PlayerResources.PlayerEnergy)
                         {
@@ -64,7 +66,8 @@ public class EquipmentManager : MonoBehaviour
                                     ActivateObjects activateScript = noEnergyObjects.GetComponent<ActivateObjects>();
                                     activateScript?.ActivateAllObjects();
                                 }
-                                targetChild.parent.transform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(true);
+                                targetChild.parent.transform.Find("EmptyButton").GetComponent<Image>().gameObject.SetActive(true);
+                                inventoryManager.DestroySpecificItem(targetChildName, itemData.itemProduct, itemData.ID);
                                 Destroy(targetChild.gameObject);
                                 globalCalculator.UpdatePlayerConsumption();
                             }
@@ -76,6 +79,7 @@ public class EquipmentManager : MonoBehaviour
                     Transform targetChild = OxygenSlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("(Clone)"));
                     if (targetChild != null && targetChild.name == "OxygenTank(Clone)")
                     {
+                        string targetChildName = targetChild.name.Replace("(Clone)", "");
                         ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null)
                         {
@@ -89,6 +93,7 @@ public class EquipmentManager : MonoBehaviour
                     Transform targetChild = WaterSlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("(Clone)"));
                     if (targetChild != null && targetChild.name == "DistilledWater(Clone)")
                     {
+                        string targetChildName = targetChild.name.Replace("(Clone)", "");
                         ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null && itemData.itemQuantity > PlayerResources.PlayerWater)
                         {
@@ -101,7 +106,16 @@ public class EquipmentManager : MonoBehaviour
                         }
                         else
                         {
-
+                            if (!autoConsumption)
+                            {
+                                slotEquipped[7] = false;
+                                slotEquippedName[7] = "";
+                                PlayerResources.PlayerWater = 0f;
+                                targetChild.parent.transform.Find("EmptyButton").GetComponent<Image>().gameObject.SetActive(true);
+                                inventoryManager.DestroySpecificItem(targetChildName, itemData.itemProduct, itemData.ID);
+                                Destroy(targetChild.gameObject);
+                                globalCalculator.UpdatePlayerConsumption();
+                            }
                         }
                     }
                 }
