@@ -28,10 +28,10 @@ public class LoginMenuManager : MonoBehaviour
 
     public TextMeshProUGUI errorText;
 
-    public GameObject newUserScreen;
-    public GameObject loginScreen;
     public GameObject loginIntroScreenForGuest;
     public GameObject loginIntroScreenForUser;
+    public GameObject newUserScreen;
+    public GameObject loginScreen;
 
     private void showEmptyScreen()
     {

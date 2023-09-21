@@ -47,6 +47,10 @@ public class GlobalCalculator : MonoBehaviour
         timer = 0f;
     }
 
+    /// <summary>
+    /// Global time calculation of the whole project
+    /// </summary>
+    /// <result> seconds </result>
     void Update()
     {
         if (GameStarted == true)
@@ -96,52 +100,6 @@ public class GlobalCalculator : MonoBehaviour
     public void DeductPlayerConsumption()
     {
         equipmentManager.DeductFromEquip();
-        /*
-        // Oxygen need deduction based on what player has equipped and if player is in biological
-        bool isAirBreathable = IsBreathableAir();
-        if (!isAirBreathable)
-        {
-            if (EquipmentManager.slotEquippedName[6] == "OxygenTank")
-            {
-                float resouceQuantity1 = inventoryManager.GetItemQuantity("OxygenTank", "ASSEMBLED");
-                if (resouceQuantity1 > PlayerResources.PlayerOxygen)
-                {
-                    inventoryManager.ReduceItemQuantity("OxygenTank", "ASSEMBLED", PlayerResources.PlayerOxygen);
-                }
-            }
-        }
-
-        // Energy need deduction based on what player has equipped
-        if (EquipmentManager.slotEquippedName[5] == "Battery")
-        {
-
-            float resouceQuantity1 = inventoryManager.GetItemQuantity("Battery", "ASSEMBLED");
-            if (resouceQuantity1 > PlayerResources.PlayerEnergy)
-            {
-                inventoryManager.ReduceItemQuantity("Battery", "ASSEMBLED", PlayerResources.PlayerEnergy);
-            }
-        }
-
-
-        // Water need deduction based on what player has equipped
-        if (EquipmentManager.slotEquippedName[7] == "DistilledWater")
-        {
-            float resouceQuantity2 = inventoryManager.GetItemQuantity("DistilledWater", "PROCESSED");
-            if (resouceQuantity2 > PlayerResources.PlayerWater)
-            {
-                inventoryManager.ReduceItemQuantity("DistilledWater", "PROCESSED", PlayerResources.PlayerWater);
-            }
-        }
-
-        // Hunger need deduction based on what player has equipped
-        if (EquipmentManager.slotEquippedName[8] == "FibrousLeaves")
-        {
-            float resouceQuantity3 = inventoryManager.GetItemQuantity("FibrousLeaves", "BASIC");
-            if (resouceQuantity3 > PlayerResources.PlayerHunger)
-            {
-                inventoryManager.ReduceItemQuantity("FibrousLeaves", "BASIC", PlayerResources.PlayerHunger);
-            }
-        }*/
     }
     public void UpdatePlayerConsumption()
     {

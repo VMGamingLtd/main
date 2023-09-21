@@ -1,9 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using TMPro;
 
 public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -66,22 +63,30 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public IEnumerator DisplayTooltip(string objectName)
     {
+        HideAllTooltips();
         GameObject tooltipObject = FindTooltipObject(objectName);
-        tooltipFollowMouse = tooltipObject.transform.parent.GetComponent<TooltipFollowMouse>();
-        tooltipFollowMouse.enabled = true;
-        FadeCanvasGroup(tooltipObject, 0);
-        float timer = 0f;
-        float totalTime = 0.1f;
-        tooltipObject.SetActive(true);
-
-        while (timer < totalTime)
+        if (tooltipObject != null)
         {
-            timer += UnityEngine.Time.deltaTime;
-            float normalizedTime = Mathf.Clamp01(timer / totalTime);
-            FadeCanvasGroup(tooltipObject, normalizedTime);
-            yield return null;
-        }
+            tooltipFollowMouse = tooltipObject.transform.parent.GetComponent<TooltipFollowMouse>();
+            if (tooltipFollowMouse != null)
+            {
+                tooltipFollowMouse.enabled = true;
+            }
+            FadeCanvasGroup(tooltipObject, 0);
+            float timer = 0f;
+            float totalTime = 0.1f;
+            tooltipObject.SetActive(true);
+
+            while (timer < totalTime)
+            {
+                timer += Time.deltaTime;
+                float normalizedTime = Mathf.Clamp01(timer / totalTime);
+                FadeCanvasGroup(tooltipObject, normalizedTime);
+                yield return null;
+            }
+        }        
     }
+
     private void FadeCanvasGroup(GameObject targetObject, float alpha)
     {
         CanvasGroup canvasGroup = targetObject.transform.parent.GetComponent<CanvasGroup>();
@@ -94,16 +99,26 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void HideTooltip(string objectName)
     {
         GameObject tooltipObject = FindTooltipObject(objectName);
-        tooltipFollowMouse.enabled = false;
-
         if (tooltipObject != null)
         {
+            if (tooltipFollowMouse != null)
+            {
+                tooltipFollowMouse.enabled = true;
+            }
             tooltipObject.SetActive(false);
         }
     }
     public void HideAllTooltips()
     {
         foreach (GameObject tooltipObject in tooltipObjects.tooltipObjects)
+        {
+            tooltipObject.SetActive(false);
+        }
+        foreach (GameObject tooltipObject in smallTooltipObjects.tooltipObjectsSmall)
+        {
+            tooltipObject.SetActive(false);
+        }
+        foreach (GameObject tooltipObject in itemTooltipObjects.tooltipObjectItems)
         {
             tooltipObject.SetActive(false);
         }
