@@ -514,6 +514,7 @@ public class LoginMenuManager : MonoBehaviour
 
     public void GoToLogin()
     {
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 550: GoToLogin");
         if (Gaos.Context.Authentication.GetIsGuest())
         {
             loginIntroScreenForGuest.SetActive(true);

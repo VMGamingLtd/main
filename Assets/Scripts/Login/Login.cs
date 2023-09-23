@@ -20,7 +20,6 @@ public class Login : MonoBehaviour
 
     private IEnumerator LoginUser()
     {
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000");
         yield return new WaitUntil(() => Gaos.Device.Device.Registration.IsDeviceRegistered == true);
         StartCoroutine(Gaos.User.User.UserLogin.Login( UserNameInputField.text, PasswordInputField.text, OnUserLoginComplete));
     }
