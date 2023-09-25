@@ -56,10 +56,10 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelGeneratorTexts;
 
     // OnEnable is only for testing purposes! Has to be deleted in official launch!
-    void OnEnable()
-    {
-        ResetNewGame();
-    }
+    //void OnEnable()
+    //{
+    //    ResetNewGame();
+    //}
     public void InitializeResourceMap()
     {
         resourceTextMap = new Dictionary<string, TextMeshProUGUI[]>
