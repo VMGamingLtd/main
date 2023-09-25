@@ -10,9 +10,10 @@ public class FunctionCaller : MonoBehaviour
     {
         errorMessage = GetComponent<Animation>();
     }
-    public void CallFunctionByName(string functionName)
+    public void CallFunctionByName()
     {
         buildingBar = GameObject.Find("Planet0Production").GetComponent<BuildingBarPlanet0>();
+        string functionName = "Create" + gameObject.name;
         // Use reflection to call the function based on the provided function name
         System.Reflection.MethodInfo method = typeof(BuildingBarPlanet0).GetMethod(functionName);
         if (method != null)

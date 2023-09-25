@@ -1,10 +1,5 @@
 ﻿using ItemManagement;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -15,7 +10,7 @@ namespace Assets.Scripts.ItemFactory
         public InventoryManager inventoryManager;
         public static int ItemCreationID = 0;
         private float remainingQuantity;
-        public void CreateItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)
+        public void CreateItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit)
         {
             bool itemFound = false;
             bool spliRemainingQuantity = true;
@@ -51,7 +46,7 @@ namespace Assets.Scripts.ItemFactory
                             if (existingItemData.itemQuantity > existingItemData.stackLimit)
                             {
                                 float newRemainingQuantity = existingItemData.itemQuantity - existingItemData.stackLimit;
-                                SplitItem(newRemainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName);
+                                SplitItem(newRemainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName, index, stackLimit);
                                 existingItemData.itemQuantity -= remainingQuantity;
                             }
                             UpdateItemCountText(item, existingItemData);
@@ -77,8 +72,9 @@ namespace Assets.Scripts.ItemFactory
                 newItemData.itemProduct = itemProduct;
                 newItemData.itemType = itemType;
                 newItemData.itemClass = itemClass;
+                newItemData.index = index;
+                newItemData.stackLimit = stackLimit;
                 newItemData.ID = ItemCreationID++;
-                newItemData.stackLimit = StackLimits.MediumStackLimit;
 
                 // Add the new item to the itemArrays dictionary
                 inventoryManager.AddToItemArray(itemProduct, newItem);
@@ -89,11 +85,12 @@ namespace Assets.Scripts.ItemFactory
                 newItem.transform.localScale = Vector3.one;
             }
         }
-        public void SplitItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)
+        public void SplitItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit)
         {
             // Split the item, meaning that it will be duplicated
             GameObject newItem = Instantiate(prefab);
             newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+            newItem.transform.localScale = new Vector3(1f, 1f, 1f);
 
             // Get or add the ItemData component to the new item
             ItemData newItemData = newItem.GetComponent<ItemData>() ?? newItem.AddComponent<ItemData>();
@@ -102,8 +99,9 @@ namespace Assets.Scripts.ItemFactory
             newItemData.itemProduct = itemProduct;
             newItemData.itemType = itemType;
             newItemData.itemClass = itemClass;
+            newItemData.index = index;
+            newItemData.stackLimit = stackLimit;
             newItemData.ID = ItemCreationID++;
-            newItemData.stackLimit = StackLimits.MediumStackLimit;
 
             // Add the new item to the itemArrays dictionary
             inventoryManager.AddToItemArray(itemProduct, newItem);

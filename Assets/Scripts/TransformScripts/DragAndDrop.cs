@@ -132,6 +132,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             float draggedObjQuantity = 0f;
             int selectedObjID = 0;
             float selectedObjQuantity = 0f;
+            float selectedObjStackLimit = 0f;
             ItemData itemData1 = draggedObj.GetComponent<ItemData>();
             if (itemData1 != null)
             {
@@ -143,30 +144,36 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             {
                 selectedObjID = itemData2.ID;
                 selectedObjQuantity = itemData2.itemQuantity;
+                selectedObjStackLimit = itemData2.stackLimit;
             }
             if (draggedObjID != selectedObjID)
             {
-                if (selectedObjQuantity > StackLimits.LowStackLimit)
+                if (selectedObjQuantity < selectedObjStackLimit)
                 {
-                    float remainingStackQuantity = selectedObjQuantity - StackLimits.LargeStackLimit;
-                    itemData1.itemQuantity = remainingStackQuantity;
-                    TextMeshProUGUI newCountText2 = draggedObj.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                    if (newCountText2 != null)
+                    float totalStackQuantity = selectedObjQuantity + draggedObjQuantity;
+                    if (totalStackQuantity > selectedObjStackLimit)
                     {
-                        newCountText2.text = itemData1.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                        float remainingStackQuantity = totalStackQuantity - selectedObjStackLimit;
+                        itemData1.itemQuantity = remainingStackQuantity;
+                        TextMeshProUGUI newCountText2 = draggedObj.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
+                        if (newCountText2 != null)
+                        {
+                            newCountText2.text = itemData1.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                        }
+                        itemData2.itemQuantity = selectedObjStackLimit;
                     }
-                }
-                else
-                {
-                    InventoryManager inventoryManager = draggedObj.transform.parent.GetComponent<InventoryManager>();
-                    inventoryManager.DestroySpecificItem(draggedObjectName, itemData1.itemProduct, itemData1.ID);
-                }
-                itemData2.itemQuantity += draggedObjQuantity;
-                TextMeshProUGUI newCountText = SelectedObj.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                if (newCountText != null)
-                {
-                    newCountText.text = itemData2.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
-                }
+                    else
+                    {
+                        InventoryManager inventoryManager = draggedObj.transform.parent.GetComponent<InventoryManager>();
+                        inventoryManager.DestroySpecificItem(draggedObjectName, itemData1.itemProduct, itemData1.ID);
+                        itemData2.itemQuantity += draggedObjQuantity;
+                    }                
+                    TextMeshProUGUI newCountText = SelectedObj.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
+                    if (newCountText != null)
+                    {
+                        newCountText.text = itemData2.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                    }
+                }             
             }
             Destroy(cloneObject);
             previousHighlightObject = null;

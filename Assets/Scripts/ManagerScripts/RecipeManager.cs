@@ -32,16 +32,16 @@ public class RecipeManager : MonoBehaviour
         ShowItems(RecipeManager.ShowRecipeProducts, RecipeManager.ShowRecipeTypes, RecipeManager.ShowRecipeClass);
     }
 
-    public void AddToItemArray(string itemProduct, GameObject item)
+    public void AddToItemArray(string recipeProduct, GameObject item)
     {
         item.transform.SetParent(transform);
         // Check if the item type already exists in the itemRecipeArrays dictionary
-        if (itemRecipeArrays.ContainsKey(itemProduct))
+        if (itemRecipeArrays.ContainsKey(recipeProduct))
         {
             // Update the existing item
 
             // Get the existing array of items for the item type
-            GameObject[] itemArray = itemRecipeArrays[itemProduct];
+            GameObject[] itemArray = itemRecipeArrays[recipeProduct];
 
             // Create a new array with increased length to accommodate the new item
             GameObject[] newArray = new GameObject[itemArray.Length + 1];
@@ -53,7 +53,7 @@ public class RecipeManager : MonoBehaviour
             newArray[newArray.Length - 1] = item;
 
             // Update the itemArray reference in the dictionary
-            itemRecipeArrays[itemProduct] = newArray;
+            itemRecipeArrays[recipeProduct] = newArray;
         }
         else
         {
@@ -63,7 +63,7 @@ public class RecipeManager : MonoBehaviour
             GameObject[] itemArray = new GameObject[] { item };
 
             // Add the item array to the dictionary with the item type as the key
-            itemRecipeArrays.Add(itemProduct, itemArray);
+            itemRecipeArrays.Add(recipeProduct, itemArray);
         }
 
         // Get or add the ItemData component to the item
@@ -74,13 +74,13 @@ public class RecipeManager : MonoBehaviour
         }
     }
 
-    public void RemoveFromItemArray(string itemProduct, GameObject item)
+    public void RemoveFromItemArray(string recipeProduct, GameObject item)
     {
         // Check if the item type exists in the itemRecipeArrays dictionary
-        if (itemRecipeArrays.ContainsKey(itemProduct))
+        if (itemRecipeArrays.ContainsKey(recipeProduct))
         {
             // Get the array of items for the item type
-            GameObject[] itemArray = itemRecipeArrays[itemProduct];
+            GameObject[] itemArray = itemRecipeArrays[recipeProduct];
 
             // Find the index of the item in the array
             int index = Array.IndexOf(itemArray, item);
@@ -97,7 +97,7 @@ public class RecipeManager : MonoBehaviour
                 Array.Copy(itemArray, index + 1, newArray, index, itemArray.Length - index - 1);
 
                 // Update the itemArray reference in the dictionary
-                itemRecipeArrays[itemProduct] = newArray;
+                itemRecipeArrays[recipeProduct] = newArray;
             }
             else
             {
@@ -113,9 +113,9 @@ public class RecipeManager : MonoBehaviour
     {
         ShowItems(ShowRecipeProducts, ShowRecipeTypes, ShowRecipeClass);
     }
-    public void ShowItems(string itemProduct, string itemType, string itemClass)
+    public void ShowItems(string recipeProduct, string itemType, string itemClass)
     {
-        bool showAllProducts = itemProduct == "ALL";
+        bool showAllProducts = recipeProduct == "ALL";
         bool showAllTypes = itemType == "ALL";
         bool showAllClasses = itemClass == "ALL";
 
@@ -129,7 +129,7 @@ public class RecipeManager : MonoBehaviour
                 RecipeItemData itemData = item.GetComponent<RecipeItemData>();
 
                 bool showItem =
-                    (showAllProducts || itemProduct == itemData.itemProduct) &&
+                    (showAllProducts || recipeProduct == itemData.recipeProduct) &&
                     (showAllTypes || itemType == itemData.itemType) &&
                     (showAllClasses || itemClass == itemData.itemClass);
 

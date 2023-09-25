@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ItemManagement;
@@ -7,6 +6,7 @@ public class MessageObjects : MonoBehaviour
 {
     public Dictionary<string, GameObject> messageMap;
     public InventoryManager inventoryManager;
+    public ItemCreator itemCreator;
     private SliderManager sliderManager;
 
     private void Start()
@@ -42,9 +42,10 @@ public class MessageObjects : MonoBehaviour
             string objName = sliderManager.GetCurrentObjName();
             string objProduct = sliderManager.GetCurrentItemProduct();
             int objID = sliderManager.GetCurrentObjID();
+            int index = sliderManager.GetCurrentObjIndex();
 
             inventoryManager.ReduceSplitItemQuantity(objName, objProduct, quantity, objID);
-            inventoryManager.SplitItem(objName, quantity);
+            itemCreator.SplitItem(index, quantity);
         }
         HideAllMessages();
     }

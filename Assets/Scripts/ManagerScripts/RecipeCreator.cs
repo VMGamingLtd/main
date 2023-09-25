@@ -1,87 +1,172 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using System;
+using System.IO;
 using TMPro;
+using UnityEngine.UI;
 
 namespace RecipeManagement
 {
+    [Serializable]
+    public class RecipeDataJson
+    {
+        public int index;
+        public string recipeName;
+        public string recipeProduct;
+        public string itemType;
+        public string itemClass;
+        public int experience;
+        public float productionTime;
+        public float outputValue;
+        public bool hasRequirements;
+        public List<ChildData> childDataList;
+    }
+
+    [Serializable]
+    public class ChildData
+    {
+        public string name;
+        public float quantity;
+    }
     public class RecipeItemData : MonoBehaviour
-        {
-            public string itemProduct;
-            public string itemType;
-            public string itemClass;
-        }
+    {
+        public int index;
+        public string recipeName;
+        public string recipeProduct;
+        public string itemType;
+        public string itemClass;
+        public int experience;
+        public float productionTime;
+        public float outputValue;
+        public bool hasRequirements;
+    }
     public class RecipeCreator : MonoBehaviour
     {
+        public GameObject recipeTemplate;
         public GameObject[] recipePrefabs;
         public RecipeManager recipeManager;
-        public void CreatePlantsRecipe()
-        {
-            CreateRecipe(recipePrefabs[0], "BASIC", "PLANTS", "CLASS-F", recipePrefabs[0].name);
-        }
-        public void CreateWaterRecipe()
-        {
-            CreateRecipe(recipePrefabs[1], "BASIC", "LIQUID", "CLASS-F", recipePrefabs[1].name);
-        }
-        public void CreateBiofuelRecipe()
-        {
-            CreateRecipe(recipePrefabs[2], "PROCESSED", "LIQUID", "CLASS-F", recipePrefabs[2].name);
-        }
-        public void CreateDistilledWaterRecipe()
-        {
-            CreateRecipe(recipePrefabs[3], "PROCESSED", "LIQUID", "CLASS-F", recipePrefabs[3].name);
-        }
-        public void CreateBatteryRecipe()
-        {
-            CreateRecipe(recipePrefabs[4], "ASSEMBLED", "ENERGY", "CLASS-F", recipePrefabs[4].name);
-        }
-        public void CreateOxygenTanksRecipe()
-        {
-            CreateRecipe(recipePrefabs[5], "ASSEMBLED", "OXYGEN", "CLASS-F", recipePrefabs[5].name);
-        }
-        public void CreateBatteryCoreRecipe()
-        {
-            CreateRecipe(recipePrefabs[6], "ENHANCED", "ENERGY", "CLASS-F", recipePrefabs[6].name);
-        }
-        public void CreateWoodRecipe()
-        {
-            CreateRecipe(recipePrefabs[7], "BASIC", "PLANTS", "CLASS-F", recipePrefabs[7].name);
-        }
-        public void CreateIronOreRecipe()
-        {
-            CreateRecipe(recipePrefabs[8], "BASIC", "MINERALS", "CLASS-F", recipePrefabs[8].name);
-        }
-        public void CreateCoalRecipe()
-        {
-            CreateRecipe(recipePrefabs[9], "BASIC", "MINERALS", "CLASS-F", recipePrefabs[9].name);
-        }
-        public void CreateIronBeamRecipe()
-        {
-            CreateRecipe(recipePrefabs[10], "PROCESSED", "METALS", "CLASS-F", recipePrefabs[10].name);
-        }
-        public void CreateBiofuelGeneratorBlueprint()
-        {
-            CreateRecipe(recipePrefabs[11], "BUILDINGS", "POWERPLANT", null, recipePrefabs[11].name);
-        }
+        private List<RecipeDataJson> recipeDataList;
 
-        private void CreateRecipe(GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName)
+        [Serializable]
+        private class JsonArray
         {
-            // Create the item once and set the initial quantity
-            GameObject newItem = Instantiate(prefab);
+            public List<RecipeDataJson> recipes;
+        }
+        private void Awake()
+        {
+            string filePath = Path.Combine(Application.dataPath, "Scripts/Models/RecipeList.json");
 
-            // Get or add the ItemData component to the new item
-            RecipeItemData newItemData = newItem.GetComponent<RecipeItemData>();
-            if (newItemData == null)
+            if (File.Exists(filePath))
             {
-                newItemData = newItem.AddComponent<RecipeItemData>();
+                string jsonText = File.ReadAllText(filePath);
+                JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
+                if (jsonArray != null)
+                {
+                    recipeDataList = jsonArray.recipes;
+                }
             }
-            newItemData.itemProduct = itemProduct;
-            newItemData.itemType = itemType;
-            newItemData.itemClass = itemClass;
-            recipeManager.AddToItemArray(itemProduct, newItem);
+            else
+            {
+                Debug.LogError("RecipeList.json not found at: " + filePath);
+            }
+        }
+        public void CreateRecipe(int recipeIndex)
+        {
+            var itemData = recipeDataList[recipeIndex];
+
+            CreateRecipe(recipeTemplate,
+                        itemData.recipeProduct,
+                        itemData.itemType,
+                        itemData.itemClass,
+                        itemData.recipeName,
+                        itemData.index,
+                        itemData.experience,
+                        itemData.productionTime,
+                        itemData.outputValue,
+                        itemData.hasRequirements,
+                        itemData.childDataList.ToArray());
+        }
+
+
+        private void CreateRecipe(GameObject template,
+                                    string recipeProduct,
+                                    string itemType,
+                                    string itemClass,
+                                    string recipeName,
+                                    int index,
+                                    int experience,
+                                    float productionTime,
+                                    float outputValue,
+                                    bool hasRequirements,
+                                    ChildData[] childData)
+        {
+            GameObject newItem = Instantiate(template);
+            newItem.name = recipeName;
+            newItem.transform.Find("RecipeNameHolder").name = recipeName;
+            newItem.transform.Find("Content/Header/Title").GetComponent<TextMeshProUGUI>().text = recipeName;
+            Transform CountHeader = newItem.transform.Find("Content/Header/CountHeader/CountValue");
+            CountHeader.name = recipeName;
+            CountHeader.GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
+
+            newItem.transform.Find("Content/Cost/EXP").GetComponent<TextMeshProUGUI>().text = experience.ToString() + "XP";
+            newItem.transform.Find("Content/Cost/TimeValue").GetComponent<TextMeshProUGUI>().text = productionTime.ToString() + "s";
+            newItem.transform.Find("Content/Image/CountValue").GetComponent<TextMeshProUGUI>().text = outputValue.ToString();
+            newItem.transform.Find("Content/Image/Image").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeName);
+
+            GameObject productCost = newItem.transform.Find("ProductCost").gameObject;
+
+            if (!hasRequirements)
+            {
+                productCost.SetActive(false);
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    string childName = "Product" + (i + 1);
+                    Transform childTransform = productCost.transform.Find(childName);
+                    if (childTransform != null)
+                    {
+                        GameObject childObject = childTransform.gameObject;
+                        ChildData child = (i < childData.Length) ? childData[i] : null;
+
+                        if (child != null)
+                        {
+                            childObject.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(child.name);
+                            childObject.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
+                            childObject.transform.Find("ChildName").name = child.name;
+                            childObject.transform.Find(child.name).GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
+                        }
+                        else
+                        {
+                            childObject.SetActive(false);
+                        }
+                    }
+                }
+            }
+
+            
+
+            RecipeItemData newRecipeData = newItem.GetComponent<RecipeItemData>() ?? newItem.AddComponent<RecipeItemData>();
+            newRecipeData.recipeName = recipeName;
+            newRecipeData.recipeProduct = recipeProduct;
+            newRecipeData.itemType = itemType;
+            newRecipeData.itemClass = itemClass;
+            newRecipeData.index = index;
+            newRecipeData.experience = experience;
+            newRecipeData.productionTime = productionTime;
+            newRecipeData.outputValue = outputValue;
+            newRecipeData.hasRequirements = hasRequirements;
+            recipeManager.AddToItemArray(recipeProduct, newItem);
 
             newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
             newItem.transform.localScale = Vector3.one;
+        }
+
+        private Sprite AssignSpriteToSlot(string spriteName)
+        {
+            Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
+            return sprite;
         }
     }
 }
