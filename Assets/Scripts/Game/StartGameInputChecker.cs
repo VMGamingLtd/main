@@ -29,11 +29,10 @@ public class StartGameInputChecker : MonoBehaviour
         inventoryManager.PopulateInventoryArrays();
         buildingManager.PopulateBuildingArrays();
         recipeManager.PopulateInventoryArrays();
-        recipeCreator.CreatePlantsRecipe();
-        recipeCreator.CreateBiofuelRecipe();
-        recipeCreator.CreateBatteryCoreRecipe();
-        recipeCreator.CreateBatteryRecipe();
-        itemCreator.CreateDistilledWater(1);
+        recipeCreator.CreateRecipe(0);
+        recipeCreator.CreateRecipe(2);
+        recipeCreator.CreateRecipe(4);
+        recipeCreator.CreateRecipe(6);
 
         //initialize starting resources
         Credits.ResetCredits();
@@ -42,8 +41,9 @@ public class StartGameInputChecker : MonoBehaviour
         MainUI.SetActive(true);
 
         // test purposes
-        itemCreator.CreateBatteryCore(1);
-        itemCreator.CreateBiofuel(1);
+        itemCreator.CreateItem(3);
+        itemCreator.CreateItem(6);
+        itemCreator.CreateItem(2);
 
         equipmentManager.InitStartEquip();
 

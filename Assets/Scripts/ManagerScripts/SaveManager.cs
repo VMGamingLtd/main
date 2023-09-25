@@ -101,6 +101,7 @@ public class SaveManager : MonoBehaviour
     public class InventoryItemData
     {
         public int ID;
+        public int index;
         public float stackLimit;
         public string itemName;
         public string itemType;
@@ -214,10 +215,11 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemArrays["BASIC"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-            InventoryItemData itemData = new InventoryItemData();
+            InventoryItemData itemData = new();
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemData.ID = itemDataComponent.ID;
+            itemData.index = itemDataComponent.index;
             itemData.stackLimit = itemDataComponent.stackLimit;
             itemData.itemType = itemDataComponent.itemType;
             itemData.itemProduct = itemDataComponent.itemProduct;
@@ -234,10 +236,11 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemArrays["PROCESSED"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-            InventoryItemData itemData = new InventoryItemData();
+            InventoryItemData itemData = new();
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemData.ID = itemDataComponent.ID;
+            itemData.index = itemDataComponent.index;
             itemData.stackLimit = itemDataComponent.stackLimit;
             itemData.itemType = itemDataComponent.itemType;
             itemData.itemProduct = itemDataComponent.itemProduct;
@@ -253,10 +256,11 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemArrays["ENHANCED"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-            InventoryItemData itemData = new InventoryItemData();
+            InventoryItemData itemData = new();
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemData.ID = itemDataComponent.ID;
+            itemData.index = itemDataComponent.index;
             itemData.stackLimit = itemDataComponent.stackLimit;
             itemData.itemType = itemDataComponent.itemType;
             itemData.itemProduct = itemDataComponent.itemProduct;
@@ -272,10 +276,11 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemArrays["ASSEMBLED"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-            InventoryItemData itemData = new InventoryItemData();
+            InventoryItemData itemData = new();
             itemData.itemName = itemName;
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemData.ID = itemDataComponent.ID;
+            itemData.index = itemDataComponent.index;
             itemData.stackLimit = itemDataComponent.stackLimit;
             itemData.itemType = itemDataComponent.itemType;
             itemData.itemProduct = itemDataComponent.itemProduct;
@@ -295,11 +300,11 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemRecipeArrays["BASIC"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-            RecipeData itemData = new RecipeData();
+            RecipeData itemData = new();
             itemData.itemName = itemName;
             RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
             itemData.itemType = itemDataComponent.itemType;
-            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemProduct = itemDataComponent.recipeProduct;
             itemData.itemClass = itemDataComponent.itemClass;
 
             currentSaveData.basicRecipeObjects[i] = itemData;
@@ -312,11 +317,11 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemRecipeArrays["PROCESSED"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-            RecipeData itemData = new RecipeData();
+            RecipeData itemData = new();
             itemData.itemName = itemName;
             RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
             itemData.itemType = itemDataComponent.itemType;
-            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemProduct = itemDataComponent.recipeProduct;
             itemData.itemClass = itemDataComponent.itemClass;
 
             currentSaveData.processedRecipeObjects[i] = itemData;
@@ -328,11 +333,11 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemRecipeArrays["ENHANCED"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-            RecipeData itemData = new RecipeData();
+            RecipeData itemData = new();
             itemData.itemName = itemName;
             RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
             itemData.itemType = itemDataComponent.itemType;
-            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemProduct = itemDataComponent.recipeProduct;
             itemData.itemClass = itemDataComponent.itemClass;
 
             currentSaveData.enhancedRecipeObjects[i] = itemData;
@@ -344,11 +349,11 @@ public class SaveManager : MonoBehaviour
             GameObject itemGameObject = itemRecipeArrays["ASSEMBLED"][i];
             string itemName = itemGameObject.name.Replace("(Clone)", "");
 
-            RecipeData itemData = new RecipeData();
+            RecipeData itemData = new();
             itemData.itemName = itemName;
             RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
             itemData.itemType = itemDataComponent.itemType;
-            itemData.itemProduct = itemDataComponent.itemProduct;
+            itemData.itemProduct = itemDataComponent.recipeProduct;
             itemData.itemClass = itemDataComponent.itemClass;
 
             currentSaveData.assembledRecipeObjects[i] = itemData;

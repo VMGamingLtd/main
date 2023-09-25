@@ -147,49 +147,6 @@ public class InventoryManager : MonoBehaviour
 
         return totalQuantity;
     }
-    public void SplitItem(string prefabName, float quantity)
-    {
-        if (prefabName == "FibrousLeaves")
-        {
-            itemCreator.SplitPlants(quantity);
-        }
-        else if (prefabName == "Water")
-        {
-            itemCreator.SplitWater(quantity);
-        }
-        else if (prefabName == "Biofuel")
-        {
-            itemCreator.SplitBiofuel(quantity);
-        }
-        else if (prefabName == "DistilledWater")
-        {
-            itemCreator.SplitDistilledWater(quantity);
-        }
-        else if (prefabName == "Battery")
-        {
-            itemCreator.SplitBattery(quantity);
-        }
-        else if (prefabName == "BatteryCore")
-        {
-            itemCreator.SplitBatteryCore(quantity);
-        }
-        else if (prefabName == "Steam")
-        {
-            itemCreator.SplitSteam(quantity);
-        }
-        else if (prefabName == "Wood")
-        {
-            itemCreator.SplitWood(quantity);
-        }
-        else if (prefabName == "IronOre")
-        {
-            itemCreator.SplitIronOre(quantity);
-        }
-        else if (prefabName == "Coal")
-        {
-            itemCreator.SplitCoal(quantity);
-        }
-    }
     
     public void AddItemQuantity(string prefabName, string itemProduct, float quantity) // changes quantity of already instantiated product if it doesn't exist, creates new one
     {
@@ -250,6 +207,7 @@ public class InventoryManager : MonoBehaviour
 
                     if (itemData.ID == ID)
                     {
+                        Debug.Log($"Deleting item with ID {itemData.ID}");
                         itemArrays[itemProduct] = itemArrays[itemProduct].Where(item => item != itemPrefab).ToArray();
                         Destroy(itemPrefab);
                         return;

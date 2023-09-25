@@ -56,10 +56,10 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelGeneratorTexts;
 
     // OnEnable is only for testing purposes! Has to be deleted in official launch!
-    /*void OnEnable()
+    void OnEnable()
     {
         ResetNewGame();
-    }*/
+    }
     public void InitializeResourceMap()
     {
         resourceTextMap = new Dictionary<string, TextMeshProUGUI[]>
@@ -218,12 +218,12 @@ public class CoroutineManager : MonoBehaviour
         skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
     }
 
-    public IEnumerator CollectPlants()
+    public IEnumerator CreateFibrousLeaves()
     {
         float timer = 0f;
         float fillTimePlanet0bb = 2f;
 
-        GameObject fillBarObject = RecipeList.transform.Find("FibrousLeavesRecipe(Clone)/FillBckg/FillBar").gameObject;
+        GameObject fillBarObject = RecipeList.transform.Find("FibrousLeaves/FillBckg/FillBar").gameObject;
         imageToFill = fillBarObject.GetComponent<Image>();
 
         while (timer < fillTimePlanet0bb)
@@ -254,12 +254,12 @@ public class CoroutineManager : MonoBehaviour
         {
             FibrousLeavesTexts[i].text = currentPlantResource;
         }
-        StartCoroutine("CollectPlants");
+        StartCoroutine("CreateFibrousLeaves");
     }
 
-    public IEnumerator StopCollectPlants()
+    public IEnumerator StopCreateFibrousLeaves()
     {
-        StopCoroutine("CollectPlants");
+        StopCoroutine("CreateFibrousLeaves");
         AllCoroutineBooleans[0] = false;
         imageToFill.fillAmount = 0f;
         yield return null;
@@ -329,7 +329,7 @@ public class CoroutineManager : MonoBehaviour
         }
         imageToFill.fillAmount = 0f;
 
-        itemCreator.CreateWood(2);
+        itemCreator.CreateItem(8);
         Level.AddCurrentResource(ref Level.PlayerCurrentExp, 2);
         currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
         int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
@@ -375,7 +375,7 @@ public class CoroutineManager : MonoBehaviour
         }
         imageToFill.fillAmount = 0f;
 
-        itemCreator.CreateIronOre(4);
+        itemCreator.CreateItem(9);
         Level.AddCurrentResource(ref Level.PlayerCurrentExp, 2);
         currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
 
@@ -422,7 +422,7 @@ public class CoroutineManager : MonoBehaviour
         }
         imageToFill.fillAmount = 0f;
 
-        itemCreator.CreateCoal(2);
+        itemCreator.CreateItem(10);
         Level.AddCurrentResource(ref Level.PlayerCurrentExp, 2);
         currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
         int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
@@ -490,7 +490,7 @@ public class CoroutineManager : MonoBehaviour
                 yield return null;
             }
             imageToFill.fillAmount = 0f;
-            itemCreator.CreateIronBeam(1);
+            itemCreator.CreateItem(11);
 
             Level.AddCurrentResource(ref Level.PlayerCurrentExp, 4);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
@@ -522,8 +522,8 @@ public class CoroutineManager : MonoBehaviour
     public IEnumerator StopCreateIronBeam()
     {
         StopCoroutine("CreateIronBeam");
-        itemCreator.CreateIronOre(6);
-        itemCreator.CreateCoal(2);
+        itemCreator.CreateItem(9, 6);
+        itemCreator.CreateItem(10, 2);
 
         string currentIronOreResource = inventoryManager.GetItemQuantity("IronOre", "BASIC").ToString();
         string currentCoalResource = inventoryManager.GetItemQuantity("Coal", "BASIC").ToString();
@@ -567,11 +567,11 @@ public class CoroutineManager : MonoBehaviour
             {
                 currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
                 imageToFill.fillAmount = currentFillAmountPlanet0bb;
-                timer += UnityEngine.Time.deltaTime;
+                timer += Time.deltaTime;
                 yield return null;
             }
             imageToFill.fillAmount = 0f;
-            itemCreator.CreateBiofuel(1);
+            itemCreator.CreateItem(2);
 
             Level.AddCurrentResource(ref Level.PlayerCurrentExp, 2);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
@@ -642,10 +642,10 @@ public class CoroutineManager : MonoBehaviour
             {
                 currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
                 imageToFill.fillAmount = currentFillAmountPlanet0bb;
-                timer += UnityEngine.Time.deltaTime;
+                timer += Time.deltaTime;
                 yield return null;
             }
-            itemCreator.CreateDistilledWater(1);
+            itemCreator.CreateItem(3);
             Level.AddCurrentResource(ref Level.PlayerCurrentExp, 2);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
             int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
@@ -720,7 +720,7 @@ public class CoroutineManager : MonoBehaviour
                 yield return null;
             }
 
-            itemCreator.CreateBatteryCore(1);
+            itemCreator.CreateItem(6);
             Level.AddCurrentResource(ref Level.PlayerCurrentExp, 3);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
 
@@ -753,7 +753,7 @@ public class CoroutineManager : MonoBehaviour
     {
         StopCoroutine("CreateBatteryCore");
         AllCoroutineBooleans[6] = false;
-        itemCreator.CreateBiofuel(4);
+        itemCreator.CreateItem(2, 4);
 
         string currentBiofuelResource = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED").ToString();
 
@@ -804,7 +804,7 @@ public class CoroutineManager : MonoBehaviour
                 yield return null;
             }
 
-            itemCreator.CreateBattery(1);
+            itemCreator.CreateItem(4);
             Level.AddCurrentResource(ref Level.PlayerCurrentExp, 4);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
             int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
@@ -843,8 +843,8 @@ public class CoroutineManager : MonoBehaviour
     {
         StopCoroutine("CreateBattery");
         AllCoroutineBooleans[4] = false;
-        itemCreator.CreateBatteryCore(1);
-        itemCreator.CreateBiofuel(1);
+        itemCreator.CreateItem(6, 1);
+        itemCreator.CreateItem(2, 1);
 
         string currentBatteryCoreResource = inventoryManager.GetItemQuantity("BatteryCore", "ENHANCED").ToString();
         string currentBiofuelResource = inventoryManager.GetItemQuantity("Biofuel", "PROCESSED").ToString();
@@ -861,7 +861,7 @@ public class CoroutineManager : MonoBehaviour
         yield return null;
     }
 
-    public IEnumerator CreateBiofuelGenerator()
+    public IEnumerator CreateBiofuelGeneratorBlueprint()
     {
         bool isIronBeamQuantityMet = inventoryManager.CheckItemQuantity("IronBeam", "PROCESSED", 4);
         bool isWoodQuantityMet = inventoryManager.CheckItemQuantity("Wood", "BASIC", 4);
@@ -917,7 +917,7 @@ public class CoroutineManager : MonoBehaviour
             {
                 BiofuelGeneratorTexts[i].text = currentBiofuelGeneratorResource;
             }
-            StartCoroutine("CreateBiofuelGenerator");
+            StartCoroutine("CreateBiofuelGeneratorBlueprint");
 
             if (GoalManager.firstGoal == false)
             {
@@ -930,12 +930,12 @@ public class CoroutineManager : MonoBehaviour
             AllCoroutineBooleans[11] = false;
         }
     }
-    public IEnumerator StopCreateBiofuelGenerator()
+    public IEnumerator StopCreateBiofuelGeneratorBlueprint()
     {
-        StopCoroutine("CreateBiofuelGenerator");
+        StopCoroutine("CreateBiofuelGeneratorBlueprint");
         AllCoroutineBooleans[11] = false;
-        itemCreator.CreateIronBeam(4);
-        itemCreator.CreateWood(4);
+        itemCreator.CreateItem(11, 4);
+        itemCreator.CreateItem(8, 4);
 
         string currentIronBeamResource = inventoryManager.GetItemQuantity("IronBeam", "PROCESSED").ToString();
         string currentWoodResource = inventoryManager.GetItemQuantity("Wood", "BASIC").ToString();

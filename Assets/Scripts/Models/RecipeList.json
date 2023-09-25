@@ -1,0 +1,185 @@
+﻿{
+  "header": "Available recipes",
+  "recipes": [
+    {
+      "index": 0,
+      "recipeName": "FibrousLeaves",
+      "recipeProduct": "BASIC",
+      "itemType": "PLANTS",
+      "itemClass": "CLASS-F",
+      "experience": 1,
+      "productionTime": 2,
+      "outputValue": 5,
+      "hasRequirements": false
+    },
+    {
+      "index": 1,
+      "recipeName": "Water",
+      "recipeProduct": "BASIC",
+      "itemType": "LIQUID",
+      "itemClass": "CLASS-F",
+      "experience": 1,
+      "productionTime": 2,
+      "outputValue": 10,
+      "hasRequirements": false
+    },
+    {
+      "index": 2,
+      "recipeName": "Biofuel",
+      "recipeProduct": "PROCESSED",
+      "itemType": "LIQUID",
+      "itemClass": "CLASS-F",
+      "experience": 2,
+      "productionTime": 3,
+      "outputValue": 1,
+      "hasRequirements": true,
+      "childDataList": [
+        {
+          "name": "FibrousLeaves",
+          "quantity": 20
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "recipeName": "DistilledWater",
+      "recipeProduct": "PROCESSED",
+      "itemType": "LIQUID",
+      "itemClass": "CLASS-F",
+      "experience": 2,
+      "productionTime": 3,
+      "outputValue": 1,
+      "hasRequirements": true,
+      "childDataList": [
+        {
+          "name": "Water",
+          "quantity": 50
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "recipeName": "Battery",
+      "recipeProduct": "ASSEMBLED",
+      "itemType": "ENERGY",
+      "itemClass": "CLASS-F",
+      "experience": 4,
+      "productionTime": 8,
+      "outputValue": 1,
+      "hasRequirements": true,
+      "childDataList": [
+        {
+          "name": "Biofuel",
+          "quantity": 1
+        },
+        {
+          "name": "BatteryCore",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "recipeName": "OxygenTank",
+      "recipeProduct": "ASSEMBLED",
+      "itemType": "OXYGEN",
+      "itemClass": "CLASS-F",
+      "experience": 4,
+      "productionTime": 8,
+      "outputValue": 1,
+      "hasRequirements": true
+    },
+    {
+      "index": 6,
+      "recipeName": "BatteryCore",
+      "recipeProduct": "ENHANCED",
+      "itemType": "ENERGY",
+      "itemClass": "CLASS-F",
+      "experience": 3,
+      "productionTime": 6,
+      "outputValue": 1,
+      "hasRequirements": true,
+      "childDataList": [
+        {
+          "name": "Biofuel",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "recipeName": "Wood",
+      "recipeProduct": "BASIC",
+      "itemType": "PLANTS",
+      "itemClass": "CLASS-F",
+      "experience": 2,
+      "productionTime": 6,
+      "outputValue": 2,
+      "hasRequirements": false
+    },
+    {
+      "index": 8,
+      "recipeName": "IronOre",
+      "recipeProduct": "BASIC",
+      "itemType": "MINERALS",
+      "itemClass": "CLASS-F",
+      "experience": 2,
+      "productionTime": 6,
+      "outputValue": 4,
+      "hasRequirements": false
+    },
+    {
+      "index": 9,
+      "recipeName": "Coal",
+      "recipeProduct": "BASIC",
+      "itemType": "MINERALS",
+      "itemClass": "CLASS-F",
+      "experience": 2,
+      "productionTime": 6,
+      "outputValue": 2,
+      "hasRequirements": false
+    },
+    {
+      "index": 10,
+      "recipeName": "IronBeam",
+      "recipeProduct": "PROCESSED",
+      "itemType": "METALS",
+      "itemClass": "CLASS-F",
+      "experience": 4,
+      "productionTime": 8,
+      "outputValue": 1,
+      "hasRequirements": true,
+      "childDataList": [
+        {
+          "name": "IronOre",
+          "quantity": 6
+        },
+        {
+          "name": "Coal",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "recipeName": "BiofuelGenerator",
+      "recipeProduct": "BUILDINGS",
+      "itemType": "POWERPLANT",
+      "itemClass": "CLASS-F",
+      "experience": 16,
+      "productionTime": 30,
+      "outputValue": 1,
+      "hasRequirements": true,
+      "childDataList": [
+        {
+          "name": "IronBeam",
+          "quantity": 4
+        },
+        {
+          "name": "Wood",
+          "quantity": 4
+        }
+      ]
+    }
+  ]
+}

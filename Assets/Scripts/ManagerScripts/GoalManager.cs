@@ -30,8 +30,8 @@ public class GoalManager : MonoBehaviour
     {
         goalAnimation.Play("Success");
         await UniTask.Delay(1000); // Delay for 1 second
-        recipeCreator.CreateWaterRecipe();
-        recipeCreator.CreateDistilledWaterRecipe();
+        recipeCreator.CreateRecipe(1);
+        recipeCreator.CreateRecipe(3);
         ChangeGoal("CraftAndUseWater");
         goalAnimation.Play("Idle");
         firstGoal = true;
@@ -41,10 +41,10 @@ public class GoalManager : MonoBehaviour
     {
         goalAnimation.Play("Success");
         await UniTask.Delay(1000); // Delay for 1 second
-        recipeCreator.CreateBiofuelGeneratorBlueprint();
-        recipeCreator.CreateIronOreRecipe();
-        recipeCreator.CreateIronBeamRecipe();
-        recipeCreator.CreateCoalRecipe();
+        recipeCreator.CreateRecipe(8);
+        recipeCreator.CreateRecipe(9);
+        recipeCreator.CreateRecipe(10);
+        recipeCreator.CreateRecipe(11);
         ChangeGoal("BuildBase");
         goalAnimation.Play("Idle");
         secondGoal = true;
@@ -55,10 +55,7 @@ public class GoalManager : MonoBehaviour
     {
         goalAnimation.Play("Success");
         await UniTask.Delay(1000); // Delay for 1 second
-        recipeCreator.CreateBiofuelGeneratorBlueprint();
-        recipeCreator.CreateIronOreRecipe();
-        recipeCreator.CreateIronBeamRecipe();
-        recipeCreator.CreateCoalRecipe();
+
         ChangeGoal("BuildBase");
         goalAnimation.Play("Idle");
         thirdGoal = true;

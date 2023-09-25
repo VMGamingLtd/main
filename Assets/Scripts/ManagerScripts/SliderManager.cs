@@ -14,6 +14,7 @@ public class SliderManager : MonoBehaviour
     private int currentObjID;
     private string currentItemProduct;
     private string currentObjName;
+    private int objectIndex;
 
     public void InitializeSlider(ItemData itemData, string objName)
     {
@@ -25,6 +26,7 @@ public class SliderManager : MonoBehaviour
         currentObjName = objName;
         currentItemProduct = itemData.itemProduct;
         currentObjID = itemData.ID;
+        objectIndex = itemData.index;
         Time.timeScale = 0f;
     }
     public void OnDisable()
@@ -48,6 +50,10 @@ public class SliderManager : MonoBehaviour
     public int GetCurrentObjID()
     {
         return currentObjID;
+    }
+    public int GetCurrentObjIndex()
+    {
+        return objectIndex;
     }
 
     void Update()
