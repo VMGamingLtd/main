@@ -8,10 +8,8 @@ public class AddToTextArrayAdaptive : MonoBehaviour
 
     public void AssignTextToCoroutineManagerArray()
     {
-        Debug.Log("starting function");
         myText = GetComponent<TextMeshProUGUI>();
         string thisName = gameObject.name + "Texts";
-        Debug.Log(thisName);
         manager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
         System.Reflection.FieldInfo targetVariable = manager.GetType().GetField(thisName);
         if (GlobalCalculator.GameStarted == true)

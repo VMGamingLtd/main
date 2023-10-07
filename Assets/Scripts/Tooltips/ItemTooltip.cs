@@ -24,7 +24,9 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (eventData != null)
+        HideAllTooltips();
+
+        /*if (eventData != null)
         {
             string objectName = eventData.pointerEnter.transform.name;
             HideTooltip(objectName);
@@ -32,7 +34,7 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         else
         {
             HideAllTooltips();
-        }
+        }*/
     }
     private GameObject FindTooltipObject(string objectName)
     {

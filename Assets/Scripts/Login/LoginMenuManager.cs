@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Gaos.Routes.Model.UserJson;
+using UnityEngine.UI;
 
 public class LoginMenuManager : MonoBehaviour
 {
@@ -32,6 +33,10 @@ public class LoginMenuManager : MonoBehaviour
     public GameObject loginIntroScreenForUser;
     public GameObject newUserScreen;
     public GameObject loginScreen;
+
+    public GameObject AccountPanel;
+    public GameObject FriendsPanel;
+    public GameObject RegisterButton;
 
     private void showEmptyScreen()
     {
@@ -73,6 +78,26 @@ public class LoginMenuManager : MonoBehaviour
     {
         //showFirstScreen();
 
+    }
+    public void ActivateAccountPanel()
+    {
+        AccountPanel.SetActive(true);
+    }
+
+    public void DeactivateAccountPanel()
+    {
+        AccountPanel.SetActive(false);
+    }
+
+    public void ActivateFriendsTab()
+    {
+        FriendsPanel.SetActive(true);
+    }
+    public void DeactivateFriendsTab()
+    {
+        FriendsPanel.SetActive(false);
+        var button = RegisterButton.GetComponent<Button>();
+        button.interactable = false;
     }
 
 
@@ -531,7 +556,7 @@ public class LoginMenuManager : MonoBehaviour
             //Animation animation = loginIntroScreenForUser.GetComponent<Animation>();
             //animation.Play("TooltipStart");
         }
-
+        DeactivateFriendsTab();
     }
 
 }

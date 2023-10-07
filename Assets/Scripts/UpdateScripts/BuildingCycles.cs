@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using BuildingManagement;
 using TMPro;
 using System.Globalization;
+using ItemManagement;
 
 public class BuildingCycles : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class BuildingCycles : MonoBehaviour
     private GameObject obj;
     private InventoryManager inventoryManagerRef;
     private CoroutineManager coroutineManagerRef;
+    private ItemCreator itemCreatorRef;
     private BuildingItemData itemData;
     private new Animation animation;
     public float currentFillAmount;
@@ -23,6 +25,7 @@ public class BuildingCycles : MonoBehaviour
         itemData = obj.GetComponent<BuildingItemData>();
         BuildingManager buildingManager = GetComponentInParent<BuildingManager>();
         inventoryManagerRef = buildingManager.inventoryManagerRef;
+        itemCreatorRef = inventoryManagerRef.itemCreator;
         Transform fillImgObj = obj.transform.Find("FillImg");
         fillImg = fillImgObj.GetComponent<Image>();
         coroutineManagerRef = buildingManager.coroutineManagerRef;
@@ -207,9 +210,10 @@ public class BuildingCycles : MonoBehaviour
         {
             for (int i = 0; i < itemData.producedSlotCount; i++)
             {
-                    var item = itemData.producedItems[i];
-                    inventoryManagerRef.AddItemQuantity(itemData.producedItems[i].itemName, itemData.producedItems[i].itemQuality, itemData.producedItems[i].quantity);
-                    UpdateUITextForConsumable(item.itemName, item.itemQuality);
+                var item = itemData.producedItems[i];
+                itemCreatorRef.CreateItem(itemData.producedItems[i].index, itemData.producedItems[i].quantity);
+                //inventoryManagerRef.AddItemQuantity(itemData.producedItems[i].itemName, itemData.producedItems[i].itemQuality, itemData.producedItems[i].quantity, itemData.producedItems[i].index);
+                UpdateUITextForConsumable(item.itemName, item.itemQuality);
             }
 
             fillImg.fillAmount = 0f;
@@ -293,9 +297,10 @@ public class BuildingCycles : MonoBehaviour
         {
             for (int i = 0; i < itemData.producedSlotCount; i++)
             {
-                    var item = itemData.producedItems[i];
-                    inventoryManagerRef.AddItemQuantity(itemData.producedItems[i].itemName, itemData.producedItems[i].itemQuality, itemData.producedItems[i].quantity);
-                    UpdateUITextForConsumable(item.itemName, item.itemQuality);
+                var item = itemData.producedItems[i];
+                itemCreatorRef.CreateItem(itemData.producedItems[i].index, itemData.producedItems[i].quantity);
+                //inventoryManagerRef.AddItemQuantity(itemData.producedItems[i].itemName, itemData.producedItems[i].itemQuality, itemData.producedItems[i].quantity, itemData.producedItems[i].index);
+                UpdateUITextForConsumable(item.itemName, item.itemQuality);
             }
 
             fillImg.fillAmount = 0f;

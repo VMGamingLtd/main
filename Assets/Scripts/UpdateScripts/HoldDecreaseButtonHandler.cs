@@ -29,7 +29,7 @@ public class HoldDecreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPo
         refObj = buildingOptionsInterface.mainObj;
         itemData = refObj.GetComponent<BuildingItemData>();
         float quantityBaseInput;
-        if (itemData.itemType == "POWERPLANT")
+        if (itemData.buildingType == "POWERPLANT")
         {
             int consumedSlots = itemData.consumedSlotCount;
             if (itemData.basePowerOutput == 99999)

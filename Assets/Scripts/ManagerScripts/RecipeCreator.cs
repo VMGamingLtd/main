@@ -13,7 +13,7 @@ namespace RecipeManagement
         public int index;
         public string recipeName;
         public string recipeProduct;
-        public string itemType;
+        public string recipeType;
         public string itemClass;
         public int experience;
         public float productionTime;
@@ -25,7 +25,9 @@ namespace RecipeManagement
     [Serializable]
     public class ChildData
     {
+        public int index;
         public string name;
+        public string product;
         public float quantity;
     }
     public class RecipeItemData : MonoBehaviour
@@ -33,7 +35,7 @@ namespace RecipeManagement
         public int index;
         public string recipeName;
         public string recipeProduct;
-        public string itemType;
+        public string recipeType;
         public string itemClass;
         public int experience;
         public float productionTime;
@@ -43,9 +45,9 @@ namespace RecipeManagement
     public class RecipeCreator : MonoBehaviour
     {
         public GameObject recipeTemplate;
-        public GameObject[] recipePrefabs;
         public RecipeManager recipeManager;
-        private List<RecipeDataJson> recipeDataList;
+        public List<RecipeDataJson> recipeDataList;
+        private TranslationManager translationManager;
 
         [Serializable]
         private class JsonArray
@@ -76,7 +78,7 @@ namespace RecipeManagement
 
             CreateRecipe(recipeTemplate,
                         itemData.recipeProduct,
-                        itemData.itemType,
+                        itemData.recipeType,
                         itemData.itemClass,
                         itemData.recipeName,
                         itemData.index,
@@ -87,10 +89,9 @@ namespace RecipeManagement
                         itemData.childDataList.ToArray());
         }
 
-
         private void CreateRecipe(GameObject template,
                                     string recipeProduct,
-                                    string itemType,
+                                    string recipeType,
                                     string itemClass,
                                     string recipeName,
                                     int index,
@@ -100,10 +101,12 @@ namespace RecipeManagement
                                     bool hasRequirements,
                                     ChildData[] childData)
         {
+            // RecipeTemplate attribute injection
             GameObject newItem = Instantiate(template);
             newItem.name = recipeName;
             newItem.transform.Find("RecipeNameHolder").name = recipeName;
-            newItem.transform.Find("Content/Header/Title").GetComponent<TextMeshProUGUI>().text = recipeName;
+            translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+            newItem.transform.Find("Content/Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(recipeName);
             Transform CountHeader = newItem.transform.Find("Content/Header/CountHeader/CountValue");
             CountHeader.name = recipeName;
             CountHeader.GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
@@ -111,8 +114,9 @@ namespace RecipeManagement
             newItem.transform.Find("Content/Cost/EXP").GetComponent<TextMeshProUGUI>().text = experience.ToString() + "XP";
             newItem.transform.Find("Content/Cost/TimeValue").GetComponent<TextMeshProUGUI>().text = productionTime.ToString() + "s";
             newItem.transform.Find("Content/Image/CountValue").GetComponent<TextMeshProUGUI>().text = outputValue.ToString();
-            newItem.transform.Find("Content/Image/Image").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeName);
+            newItem.transform.Find("Content/Image/Image").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeName, recipeProduct);
 
+            // ProductCost is a child with additional material display objects that is only available if the item has some material requirements
             GameObject productCost = newItem.transform.Find("ProductCost").gameObject;
 
             if (!hasRequirements)
@@ -132,7 +136,7 @@ namespace RecipeManagement
 
                         if (child != null)
                         {
-                            childObject.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(child.name);
+                            childObject.transform.Find("Image").GetComponent<Image>().sprite = AssignChildSlot(child.name);
                             childObject.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
                             childObject.transform.Find("ChildName").name = child.name;
                             childObject.transform.Find(child.name).GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
@@ -144,13 +148,11 @@ namespace RecipeManagement
                     }
                 }
             }
-
-            
-
+            // Initialize RecipeItemData component that will hold all recipe data througout the game
             RecipeItemData newRecipeData = newItem.GetComponent<RecipeItemData>() ?? newItem.AddComponent<RecipeItemData>();
             newRecipeData.recipeName = recipeName;
             newRecipeData.recipeProduct = recipeProduct;
-            newRecipeData.itemType = itemType;
+            newRecipeData.recipeType = recipeType;
             newRecipeData.itemClass = itemClass;
             newRecipeData.index = index;
             newRecipeData.experience = experience;
@@ -163,10 +165,23 @@ namespace RecipeManagement
             newItem.transform.localScale = Vector3.one;
         }
 
-        private Sprite AssignSpriteToSlot(string spriteName)
+        private Sprite AssignChildSlot(string spriteName)
         {
             Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
             return sprite;
+        }
+        private Sprite AssignSpriteToSlot(string spriteName, string recipeProduct)
+        {
+            if (recipeProduct == "BUILDINGS")
+            {
+                Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("buildingicons", spriteName);
+                return sprite;
+            }
+            else
+            {
+                Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
+                return sprite;
+            }
         }
     }
 }

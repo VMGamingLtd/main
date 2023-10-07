@@ -5,8 +5,6 @@ using System.Reflection;
 using ItemManagement;
 using TMPro;
 using System.Globalization;
-using RecipeManagement;
-using UnityEditor.EditorTools;
 
 public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -49,10 +47,12 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
         draggedObj = transform.gameObject;
         originalParentName = transform.parent.name;
         draggedObjectName = gameObject.name.Replace("(Clone)","");
+
+        // first we check what are we dragging 
         if (originalParentName == "OxygenButton" || originalParentName == "EnergyButton" || originalParentName == "HelmetButton" ||
         originalParentName == "SuitButton" || originalParentName == "ToolButton" || originalParentName == "LeftHandButton" ||
         originalParentName == "BackpackButton" || originalParentName == "RightHandButton" || originalParentName == "DrillButton" ||
-        originalParentName == "EnergyButton")
+        originalParentName == "EnergyButton" || originalParentName == "WaterButton")
         {
             emptyButton = transform.parent.Find("EmptyButton");
         }
@@ -62,8 +62,9 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
         cloneObject.GetComponent<CanvasGroup>().blocksRaycasts = false; // Allow raycasts to pass through the clone
         countInventory = cloneObject.GetComponentInChildren<TextMeshProUGUI>();
         countInventory.enabled = false;
-
         isDragging = true;
+
+        // during drag we want to show player where he can drag the desired object by activating placeholder objects
         if (originalParentName != "INVENTORYMANAGER")
         {
             foreach (GameObject placeholderObject in placeholderObjects)
@@ -119,6 +120,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
 
         isDragging = false;
 
+        // we deactivate all placeholder objects since there is nowhere to drag anymore
         foreach (GameObject obj in placeholderObjects)
         {
             obj.SetActive(false);
@@ -182,7 +184,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             SelectedObj = null;
             return;
         }
-
+        // if player is dragging it into one of the desired destinations then we do something, otherwise reset to normal
         if (highlightObj != null)
         {
             RectTransform highlightRectTransform = highlightObj.GetComponent<RectTransform>();
@@ -277,6 +279,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                 gameObject.transform.SetParent(inventoryManagerObj);
                 audioManager.PlayUnequipSlotSound();
             }
+            // because any of the above objects may have altered consumption or any important value, that GlobalCalculator holds, it needs to be updated
             globalCalculator = GameObject.Find("GlobalCalculator").GetComponent<GlobalCalculator>();
             globalCalculator.UpdatePlayerConsumption();
             DeactivateHighlightObject();

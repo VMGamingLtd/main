@@ -209,7 +209,7 @@ public class BuildingManager : MonoBehaviour
             {
                 BuildingItemData itemData = item.GetComponent<BuildingItemData>();
 
-                bool showItem = showAllTypes || itemType == itemData.itemType;
+                bool showItem = showAllTypes || itemType == itemData.buildingType;
 
                 item.SetActive(showItem);
             }

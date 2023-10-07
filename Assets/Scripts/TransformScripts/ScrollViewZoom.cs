@@ -3,18 +3,14 @@ using UnityEngine.UI;
 
 public class ScrollViewZoom : MonoBehaviour
 {
+    public RectTransform controlBounds;
     public ScrollRect scrollRect;
     public float zoomSpeed = 0.1f;
     public float moveSpeed = 10f;
     public float minZoom = 0.5f;
     public float maxZoom = 2f;
     private bool isDragging = false;
-
-
-    private float initialDistance;
-    private Vector3 initialScale;
     private Vector2 initialPosition;
-
 
     private void Update()
     {
@@ -30,24 +26,6 @@ public class ScrollViewZoom : MonoBehaviour
             }
         }
     }
-    private void SetInitialPosition()
-{
-    RectTransform contentRect = scrollRect.content.GetComponent<RectTransform>();
-    RectTransform rootRect = scrollRect.content.Find("Root")?.GetComponent<RectTransform>();
-
-    if (contentRect != null && rootRect != null)
-    {
-        Vector2 contentSize = contentRect.sizeDelta;
-        Vector2 rootPosition = rootRect.anchoredPosition;
-        Vector2 viewportSize = ((RectTransform)scrollRect.viewport.transform).sizeDelta;
-
-        Vector2 contentCenter = (contentSize - viewportSize) * 0.5f;
-        initialPosition = -rootPosition - contentCenter;
-
-        scrollRect.content.anchoredPosition = initialPosition;
-    }
-}
-
 
     private void HandleMobileInput()
     {
@@ -68,10 +46,13 @@ public class ScrollViewZoom : MonoBehaviour
 
                 if (isDragging)
                 {
-                    // Move the content based on touch delta
-                    Vector2 touchDelta = touch.deltaPosition;
-                    Vector2 scrollDelta = touchDelta * moveSpeed * Time.deltaTime;
-                    scrollRect.content.anchoredPosition += scrollDelta;
+                    if (IsInsideContentArea(initialPosition))
+                    {
+                        // Move the content based on touch delta
+                        Vector2 touchDelta = touch.deltaPosition;
+                        Vector2 scrollDelta = moveSpeed * Time.deltaTime * touchDelta;
+                        scrollRect.content.anchoredPosition += scrollDelta;
+                    }
                 }
             }
             else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
@@ -98,10 +79,13 @@ public class ScrollViewZoom : MonoBehaviour
 
             if (isDragging)
             {
-                // Move the content based on mouse delta
-                Vector2 mouseDelta = ((Vector2)Input.mousePosition - initialPosition) * moveSpeed * Time.deltaTime;
-                scrollRect.content.anchoredPosition += mouseDelta;
-                initialPosition = Input.mousePosition;
+                if (IsInsideContentArea(initialPosition))
+                {
+                    // Move the content based on mouse delta
+                    Vector2 mouseDelta = ((Vector2)Input.mousePosition - initialPosition) * moveSpeed * Time.deltaTime;
+                    scrollRect.content.anchoredPosition += mouseDelta;
+                    initialPosition = Input.mousePosition;
+                }
             }
         }
         else if (Input.GetMouseButtonUp(0))
@@ -116,18 +100,27 @@ public class ScrollViewZoom : MonoBehaviour
     {
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
 
-        if (scrollInput != 0f)
+        if (scrollInput != 0f && IsInsideContentArea(Input.mousePosition))
         {
             float zoomAmount = scrollInput * zoomSpeed;
 
-            Vector2 newScale = (Vector2)scrollRect.content.localScale + new Vector2(zoomAmount, zoomAmount);
-            newScale = Vector2.Max(newScale, new Vector2(minZoom, minZoom));
-            newScale = Vector2.Min(newScale, new Vector2(maxZoom, maxZoom));
+            Vector3 newScale = scrollRect.content.localScale + new Vector3(zoomAmount, zoomAmount, 1);
+            newScale = Vector3.Max(newScale, new Vector3(minZoom, minZoom, 1));
+            newScale = Vector3.Min(newScale, new Vector3(maxZoom, maxZoom, 1));
 
-            Vector2 positionAdjustment = Vector2.Scale((Vector2)scrollRect.content.sizeDelta, (newScale - (Vector2)scrollRect.content.localScale) * 0.5f);
+            Vector3 positionAdjustment = Vector3.Scale(scrollRect.content.sizeDelta, (newScale - scrollRect.content.localScale) * 0.5f);
 
             scrollRect.content.localScale = newScale;
-            scrollRect.content.anchoredPosition -= positionAdjustment;
+            scrollRect.content.anchoredPosition3D -= positionAdjustment;
         }
+    }
+
+    private bool IsInsideContentArea(Vector2 screenPosition)
+    {
+        if (controlBounds.TryGetComponent<RectTransform>(out var contentRect))
+        {
+            return RectTransformUtility.RectangleContainsScreenPoint(contentRect, screenPosition);
+        }
+        return false;
     }
 }

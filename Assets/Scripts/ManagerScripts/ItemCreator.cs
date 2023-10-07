@@ -19,6 +19,7 @@ namespace ItemManagement
         public string itemType;
         public string itemClass;
         public string itemName;
+        public bool equipable;
     }
     public class ItemData : MonoBehaviour
     {
@@ -29,10 +30,12 @@ namespace ItemManagement
         public string itemProduct;
         public string itemType;
         public string itemClass;
+        public string itemName;
+        public bool equipable;
     }
     public class ItemCreator : MonoBehaviour
     {
-        public GameObject[] itemPrefabs;
+        public GameObject itemTemplate;
         public ItemFactory itemFactory;
 
         [Serializable]
@@ -65,12 +68,12 @@ namespace ItemManagement
         {
             var itemData = itemDataList[itemIndex];
             float finalQuantity = quantity ?? itemData.quantity;
-            itemFactory.CreateItem(finalQuantity, itemPrefabs[itemIndex], itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit);
+            itemFactory.CreateItem(finalQuantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable);
         }
         public void SplitItem(int itemIndex, float quantity)
         {
             var itemData = itemDataList[itemIndex];
-            itemFactory.SplitItem(quantity, itemPrefabs[itemIndex], itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit);
+            itemFactory.SplitItem(quantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable);
         }
     }
 }

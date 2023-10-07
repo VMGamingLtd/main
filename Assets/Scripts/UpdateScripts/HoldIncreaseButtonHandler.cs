@@ -30,7 +30,7 @@ public class HoldIncreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPo
         refObj = buildingOptionsInterface.mainObj;
         itemData = refObj.GetComponent<BuildingItemData>();
         float quantityBaseInput;
-        if (itemData.itemType == "POWERPLANT")
+        if (itemData.buildingType == "POWERPLANT")
         {
             if (itemData.basePowerOutput == 99999)
             {

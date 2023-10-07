@@ -15,8 +15,10 @@ public class StartGameInputChecker : MonoBehaviour
     public GameObject NewGamePopup;
     public GameObject MainUI;
     public Button buttonToClick;
+    public Button productionTabClick;
     public EquipmentManager equipmentManager;
     private GlobalCalculator globalCalculator;
+    public BuildingIncrementor buildingIncrementor;
 
     // Update is called once per frame
     public void startGameCheckForUsername()
@@ -41,20 +43,25 @@ public class StartGameInputChecker : MonoBehaviour
         MainUI.SetActive(true);
 
         // test purposes
-        itemCreator.CreateItem(3);
-        itemCreator.CreateItem(6);
-        itemCreator.CreateItem(2);
+        //itemCreator.CreateItem(3);
+        //itemCreator.CreateItem(6);
+        //itemCreator.CreateItem(2);
 
         equipmentManager.InitStartEquip();
 
-        // force button click action to open the building menu that the button is set for
+        // force button click action to open the Production menu that the button is set for
         buttonToClick.onClick.Invoke();
+
+        // after the Production menu is open we also want to display the Overview tab as the first one
+        productionTabClick.onClick.Invoke();
 
         // enable first achievement when starting new game
         AchievementManager.EnableAchievement(ref AchievementManager.achievement1, true);
 
         // with fresh game, all production booleans needs to reset to false
         CoroutineManager.ResetAllCoroutineBooleans();
+
+        buildingIncrementor.InitializeBuildingCounts();
     }
 }
 

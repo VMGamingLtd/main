@@ -24,9 +24,15 @@ public static class Planet0Buildings
     public static int Planet0CurrentConsumption = 0;
     public static int Planet0MaxElectricity = 0;
 
-    // available buildings to place
+    // available buildings unlocks
+    public static bool PlantFieldUnlocked;
+    public static bool WaterPumpUnlocked;
+    public static bool BoilerUnlocked;
+    public static bool SteamGeneratorUnlocked;
+    public static bool FurnaceUnlocked;
 
-    public static int Planet0BiofuelGeneratorBlueprint = 0;
+    // available buildings to place
+    public static int Planet0BiofuelGeneratorBlueprint = 2;
     public static int Planet0PlantFieldBlueprint = 0;
     public static int Planet0WaterPumpBlueprint = 0;
     public static int Planet0BoilerBlueprint = 0;
@@ -62,16 +68,16 @@ public static class Planet0Buildings
 
     public static float CalculatePlanet0Index()
     {
-    int condition1 = Planet0Buildings.AtmospherePlanet0;
-    int condition2 = Planet0Buildings.AgriLandPlanet0;
-    int condition3 = Planet0Buildings.ForestsPlanet0;
-    int condition4 = Planet0Buildings.WaterPlanet0;
-    int condition5 = Planet0Buildings.FisheriesPlanet0;
-    int condition6 = Planet0Buildings.MineralsPlanet0;
-    int condition7 = Planet0Buildings.RocksPlanet0;
-    int condition8 = Planet0Buildings.FossilFuelsPlanet0;
-    int condition9 = Planet0Buildings.RareElementsPlanet0;
-    int condition10 = Planet0Buildings.GemstonesPlanet0;
+    int condition1 = AtmospherePlanet0;
+    int condition2 = AgriLandPlanet0;
+    int condition3 = ForestsPlanet0;
+    int condition4 = WaterPlanet0;
+    int condition5 = FisheriesPlanet0;
+    int condition6 = MineralsPlanet0;
+    int condition7 = RocksPlanet0;
+    int condition8 = FossilFuelsPlanet0;
+    int condition9 = RareElementsPlanet0;
+    int condition10 = GemstonesPlanet0;
 
     float result = (float)Math.Round((condition1 + condition2 + condition3 + condition4 + condition5 + condition6 + condition7 + condition8 + condition9 + condition10) / 11.0f, 1);
     Planet0Buildings.Planet0Index = result;

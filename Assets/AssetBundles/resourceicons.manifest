@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2775866549
+CRC: 476124871
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e3b08c9815a47ba5f2a5ae810b2c412f
+    Hash: e44078db99d81850193b06ef41fab40c
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -15,12 +15,18 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/AssetBundlesRepo/ResourceIcons/Coal.png
 - Assets/AssetBundlesRepo/ResourceIcons/FibrousLeaves.png
 - Assets/AssetBundlesRepo/ResourceIcons/Steam.png
 - Assets/AssetBundlesRepo/ResourceIcons/BatteryCore.png
-- Assets/AssetBundlesRepo/ResourceIcons/WaterBottle.png
+- Assets/AssetBundlesRepo/ResourceIcons/DistilledWater.png
 - Assets/AssetBundlesRepo/ResourceIcons/Biofuel.png
+- Assets/AssetBundlesRepo/ResourceIcons/IronOre.png
+- Assets/AssetBundlesRepo/ResourceIcons/Wood.png
+- Assets/AssetBundlesRepo/ResourceIcons/Electricity.png
+- Assets/AssetBundlesRepo/ResourceIcons/IronBeam.png
 - Assets/AssetBundlesRepo/ResourceIcons/OxygenTank.png
 - Assets/AssetBundlesRepo/ResourceIcons/Battery.png
+- Assets/AssetBundlesRepo/ResourceIcons/SteelPlate.png
 - Assets/AssetBundlesRepo/ResourceIcons/Water.png
 Dependencies: []

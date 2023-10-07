@@ -8,7 +8,8 @@
       "itemName": "FibrousLeaves",
       "itemProduct": "BASIC",
       "itemType": "PLANTS",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "true"
     },
     {
       "index": 1,
@@ -17,7 +18,8 @@
       "itemName": "Water",
       "itemProduct": "BASIC",
       "itemType": "LIQUID",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "false"
     },
     {
       "index": 2,
@@ -26,7 +28,8 @@
       "itemName": "Biofuel",
       "itemProduct": "PROCESSED",
       "itemType": "LIQUID",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "false"
     },
     {
       "index": 3,
@@ -35,7 +38,8 @@
       "itemName": "DistilledWater",
       "itemProduct": "PROCESSED",
       "itemType": "LIQUID",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "true"
     },
     {
       "index": 4,
@@ -44,7 +48,8 @@
       "itemName": "Battery",
       "itemProduct": "ASSEMBLED",
       "itemType": "ENERGY",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "true"
     },
     {
       "index": 5,
@@ -53,7 +58,8 @@
       "itemName": "OxygenTank",
       "itemProduct": "ASSEMBLED",
       "itemType": "OXYGEN",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "true"
     },
     {
       "index": 6,
@@ -62,7 +68,8 @@
       "itemName": "BatteryCore",
       "itemProduct": "ENHANCED",
       "itemType": "ENERGY",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "false"
     },
     {
       "index": 7,
@@ -71,7 +78,8 @@
       "itemName": "Steam",
       "itemProduct": "BASIC",
       "itemType": "GAS",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "false"
     },
     {
       "index": 8,
@@ -80,7 +88,8 @@
       "itemName": "Wood",
       "itemProduct": "BASIC",
       "itemType": "PLANTS",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "false"
     },
     {
       "index": 9,
@@ -89,7 +98,8 @@
       "itemName": "IronOre",
       "itemProduct": "BASIC",
       "itemType": "MINERALS",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "false"
     },
     {
       "index": 10,
@@ -98,7 +108,8 @@
       "itemName": "Coal",
       "itemProduct": "BASIC",
       "itemType": "MINERALS",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "false"
     },
     {
       "index": 11,
@@ -107,7 +118,8 @@
       "itemName": "IronBeam",
       "itemProduct": "PROCESSED",
       "itemType": "METALS",
-      "itemClass": "CLASS-F"
+      "itemClass": "CLASS-F",
+      "equipable": "false"
     }
   ]
 }

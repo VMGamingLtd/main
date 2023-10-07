@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,7 +40,7 @@ public class AddAccounPane : MonoBehaviour
                 // Remove all listeners added by script
                 button.onClick.RemoveAllListeners();
                 // Try to remove all listeners added by Unity Editor (maximally 5 listener)
-                try
+                /*try
                 {
                     UnityEventTools.RemovePersistentListener(button.onClick, 0);
                     UnityEventTools.RemovePersistentListener(button.onClick, 0);
@@ -54,7 +51,7 @@ public class AddAccounPane : MonoBehaviour
                 catch (System.Exception)
                 {
                     ;
-                }
+                }*/
             }
         }   
         

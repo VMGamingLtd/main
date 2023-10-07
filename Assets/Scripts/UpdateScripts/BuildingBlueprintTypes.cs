@@ -27,11 +27,11 @@ public class BuildingBlueprintTypes : MonoBehaviour
                 RecipeItemData itemData = item.GetComponent<RecipeItemData>();
 
                 // Check if the item class is not already added to availableClasses
-                if (itemData.recipeProduct == "BUILDING" && !Array.Exists(availableClasses, element => element == itemData.itemType))
+                if (itemData.recipeProduct == "BUILDING" && !Array.Exists(availableClasses, element => element == itemData.recipeType))
                 {
                     // Resize the availableClasses array and add the item class
                     Array.Resize(ref availableClasses, availableClasses.Length + 1);
-                    availableClasses[classIndex] = itemData.itemType;
+                    availableClasses[classIndex] = itemData.recipeType;
                     classIndex++;
                 }
             }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.IO;
+using RecipeManagement;
+using System;
 
 [System.Serializable]
 public class TranslationDataArrayWrapper
@@ -18,34 +20,103 @@ public class TranslationData
     public string ChineseText;
     public string SlovakText;
 }
+[Serializable]
+public class CoreTranslations
+{
+    public string identifier;
+    public string english;
+    public string russian;
+    public string chinese;
+    public string slovak;
+
+}
 public class TranslationManager : MonoBehaviour
 {
     public GameObject[] translationTexts;
+    private List<CoreTranslations> coreTranslationList;
 
+    [Serializable]
+    private class JsonArray
+    {
+        public List<CoreTranslations> words;
+    }
+
+    void Awake()
+    {
+        string filePath = Path.Combine(Application.dataPath, "Scripts/Models/CoreTranslations.json");
+
+        if (File.Exists(filePath))
+        {
+            string jsonText = File.ReadAllText(filePath);
+            JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
+            if (jsonArray != null)
+            {
+                coreTranslationList = jsonArray.words;
+            }
+        }
+        else
+        {
+            Debug.LogError("CoreTranslations.json not found at: " + filePath);
+        }
+    }
+
+    public string Translate(string identifier)
+    {
+        CoreTranslations entry = FindTranslationEntry(identifier);
+
+        if (entry != null)
+        {
+            return Application.systemLanguage switch
+            {
+                SystemLanguage.English => entry.english,
+                SystemLanguage.Russian => entry.russian,
+                SystemLanguage.Chinese => entry.chinese,
+                SystemLanguage.Slovak => entry.slovak,
+                _ => entry.english,
+            };
+        }
+        else
+        {
+            return "???";
+        }
+    }
+    CoreTranslations FindTranslationEntry(string identifier)
+    {
+        foreach (CoreTranslations entry in coreTranslationList)
+        {
+            if (entry.identifier == identifier)
+            {
+                return entry;
+            }
+        }
+        return null;
+    }
     public void PushTextsIntoFile()
     {
-        List<TranslationData> translationDataList = new List<TranslationData>();
+        List<TranslationData> translationDataList = new();
 
-        // Iterate through each translationTexts object
         for (int i = 0; i < translationTexts.Length; i++)
         {
             GameObject translationTextObject = translationTexts[i];
-            TranslateText translateTextScript = translationTextObject.GetComponent<TranslateText>();
-
-            if (translateTextScript != null)
+            
+            if (translationTextObject.TryGetComponent<TranslateText>(out var translateTextScript))
             {
-                TranslationData translationData = new TranslationData();
-                translationData.EnglishText = translateTextScript.EnglishText;
-                translationData.RussianText = translateTextScript.RussianText;
-                translationData.ChineseText = translateTextScript.ChineseText;
-                translationData.SlovakText = translateTextScript.SlovakText;
+                TranslationData translationData = new()
+                {
+                    EnglishText = translateTextScript.EnglishText,
+                    RussianText = translateTextScript.RussianText,
+                    ChineseText = translateTextScript.ChineseText,
+                    SlovakText = translateTextScript.SlovakText
+                };
 
                 translationDataList.Add(translationData);
             }
         }
 
-        TranslationDataArrayWrapper dataArrayWrapper = new TranslationDataArrayWrapper();
-        dataArrayWrapper.translations = translationDataList.ToArray();
+        TranslationDataArrayWrapper dataArrayWrapper = new()
+        {
+            translations = translationDataList.ToArray()
+        };
 
         string jsonData = JsonUtility.ToJson(dataArrayWrapper, true);
 
@@ -73,9 +144,8 @@ public class TranslationManager : MonoBehaviour
                 for (int i = 0; i < translationTexts.Length && i < translationDataArray.Length; i++)
                 {
                     GameObject translationTextObject = translationTexts[i];
-                    TranslateText translateTextScript = translationTextObject.GetComponent<TranslateText>();
-
-                    if (translateTextScript != null)
+                    
+                    if (translationTextObject.TryGetComponent<TranslateText>(out var translateTextScript))
                     {
                         translateTextScript.EnglishText = translationDataArray[i].EnglishText;
                         translateTextScript.RussianText = translationDataArray[i].RussianText;

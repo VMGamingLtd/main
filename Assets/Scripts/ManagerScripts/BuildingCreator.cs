@@ -1,16 +1,35 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using BuildingManagement;
+using System;
+using System.IO;
 
 namespace BuildingManagement
 {
+    [Serializable]
+    public class BuildingDataJson
+    {
+        public int index;
+        public string buildingName;
+        public string buildingType;
+        public string buildingClass;
+        public int consumedSlotCount;
+        public List<SlotItemData> consumedItems;
+        public int producedSlotCount;
+        public List<SlotItemData> producedItems;
+        public float totalTime;
+        public int basePowerOutput;
+        public int powerConsumption;
+    }
+
     [System.Serializable]
     public class BuildingItemData : MonoBehaviour
     {
-        public string itemType;
+        public int index;
+        public string buildingType;
         public string buildingName;
+        public string buildingClass;
         public Vector3 buildingPosition;
         public List<SlotItemData> consumedItems;
         public List<SlotItemData> producedItems;
@@ -79,6 +98,7 @@ namespace BuildingManagement
     [System.Serializable]
     public class SlotItemData
     {
+        public int index;
         public string itemName;
         public string itemQuality;
         public float quantity;
@@ -87,139 +107,134 @@ namespace BuildingManagement
 
 public class BuildingCreator : MonoBehaviour
 {
-    public GameObject[] buildingPrefabs;
+    public GameObject buildingTemplate;
     public GameObject newItemParent;
     public BuildingManager buildingManager;
+    public TranslationManager translationManager;
     private BuildingItemData itemData;
-    private Transform titleTransform;
-    private TextMeshProUGUI title;
+    private List<BuildingDataJson> buildingDataList;
 
-    public void CreateBuilding(GameObject draggedObject, string itemType)
+    [Serializable]
+    private class JsonArray
+    {
+        public List<BuildingDataJson> buildings;
+    }
+    private void Awake()
+    {
+        string filePath = Path.Combine(Application.dataPath, "Scripts/Models/BuildingsList.json");
+
+        if (File.Exists(filePath))
+        {
+            string jsonText = File.ReadAllText(filePath);
+            JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
+            if (jsonArray != null)
+            {
+                buildingDataList = jsonArray.buildings;
+            }
+        }
+        else
+        {
+            Debug.LogError("BuildingsList.json not found at: " + filePath);
+        }
+    }
+    public void CreateBuilding(GameObject draggedObject, int buildingIndex)
+    {
+        var itemData = buildingDataList[buildingIndex];
+
+        CreateBuilding(draggedObject,
+                    itemData.index,
+                    itemData.buildingName,
+                    itemData.buildingType,
+                    itemData.buildingClass,
+                    itemData.consumedSlotCount,
+                    itemData.consumedItems.ToArray(),
+                    itemData.producedSlotCount,
+                    itemData.producedItems.ToArray(),
+                    itemData.totalTime,
+                    itemData.basePowerOutput,
+                    itemData.powerConsumption);
+    }
+
+    private void CreateBuilding(GameObject draggedObject, 
+                                int index, 
+                                string buildingName, 
+                                string buildingType,
+                                string buildingClass,
+                                int consumedSlotCount, 
+                                SlotItemData[] slotItemData,
+                                int producedSlotCount,
+                                SlotItemData[] producedItemData,
+                                float totalTime,
+                                int powerOutput,
+                                int powerConsumption)
     {
         itemData = draggedObject.AddComponent<BuildingItemData>();
-        itemData.itemType = itemType;
+        itemData.buildingType = buildingType;
         itemData.buildingPosition = draggedObject.GetComponent<RectTransform>().anchoredPosition3D;
+        itemData.index = index;
+        draggedObject.name = buildingName;
+        itemData.buildingClass = buildingClass;
+        itemData.consumedSlotCount = consumedSlotCount;
+        itemData.producedSlotCount = producedSlotCount;
+        itemData.consumedItems = new List<SlotItemData>(slotItemData);
+        itemData.producedItems = new List<SlotItemData>(producedItemData);
+        itemData.totalTime = totalTime;
+        itemData.powerOutput = powerOutput;
+        itemData.powerConsumption = powerConsumption;
+        itemData.efficiencySetting = 100;
+        itemData.isPaused = false;
 
-        if (draggedObject.name == "BiofuelGenerator(Clone)")
+        if (draggedObject.name == "BiofuelGenerator")
         {
-            SlotItemData consumedItem1 = new SlotItemData
-            {
-                itemName = "Biofuel",
-                itemQuality = "PROCESSED",
-                quantity = 1f
-            };
-            itemData.consumedItems.Add(consumedItem1);
-
-            itemData.efficiencySetting = 100;
-            itemData.totalTime = 10;
-            itemData.basePowerOutput = 10000;
-            itemData.powerOutput = itemData.basePowerOutput;
-            itemData.powerConsumption = 0;
-            itemData.consumedSlotCount = 1;
-            itemData.isPaused = false;
             Planet0Buildings.Planet0BiofuelGenerator++;
+            Planet0Buildings.Planet0BiofuelGeneratorBlueprint--;
             itemData.buildingCount = Planet0Buildings.Planet0BiofuelGenerator;
         }
-        else if (draggedObject.name == "WaterPump(Clone)")
+        else if (draggedObject.name == "WaterPump")
         {
-            SlotItemData producedItem1 = new SlotItemData
-            {
-                itemName = "Water",
-                itemQuality = "BASIC",
-                quantity = 4f
-            };
-            itemData.producedItems.Add(producedItem1);
-
-            itemData.efficiencySetting = 100;
-            itemData.totalTime = 10;
-            itemData.powerConsumption = 2000;
-            itemData.producedSlotCount = 1;
-            itemData.isPaused = false;
             Planet0Buildings.Planet0WaterPump++;
+            Planet0Buildings.Planet0WaterPumpBlueprint--;
             itemData.buildingCount = Planet0Buildings.Planet0WaterPump;
         }
-        else if (draggedObject.name == "PlantField(Clone)")
+        else if (draggedObject.name == "PlantField")
         {
-            SlotItemData consumedItem1 = new SlotItemData
-            {
-                itemName = "Water",
-                itemQuality = "BASIC",
-                quantity = 1f
-            };
-            itemData.consumedItems.Add(consumedItem1);
-
-            SlotItemData producedItem1 = new SlotItemData
-            {
-                itemName = "FibrousLeaves",
-                itemQuality = "BASIC",
-                quantity = 4f
-            };
-            itemData.producedItems.Add(producedItem1);
-
-            itemData.efficiencySetting = 100;
-            itemData.totalTime = 20;
-            itemData.powerConsumption = 0;
-            itemData.consumedSlotCount = 1;
-            itemData.producedSlotCount = 1;
-            itemData.isPaused = false;
             Planet0Buildings.Planet0PlantField++;
+            Planet0Buildings.Planet0PlantFieldBlueprint--;
             itemData.buildingCount = Planet0Buildings.Planet0PlantField;
         }
-        else if (draggedObject.name == "Boiler(Clone)")
+        else if (draggedObject.name == "Boiler")
         {
-            SlotItemData consumedItem1 = new SlotItemData
-            {
-                itemName = "Water",
-                itemQuality = "BASIC",
-                quantity = 1f
-            };
-            itemData.consumedItems.Add(consumedItem1);
-
-            SlotItemData producedItem1 = new SlotItemData
-            {
-                itemName = "Steam",
-                itemQuality = "BASIC",
-                quantity = 2f
-            };
-            itemData.producedItems.Add(producedItem1);
-
-            itemData.efficiencySetting = 100;
-            itemData.totalTime = 20;
-            itemData.powerConsumption = 2000;
-            itemData.consumedSlotCount = 1;
-            itemData.producedSlotCount = 1;
-            itemData.isPaused = false;
             Planet0Buildings.Planet0Boiler++;
+            Planet0Buildings.Planet0BoilerBlueprint--;
             itemData.buildingCount = Planet0Buildings.Planet0Boiler;
         }
-        else if (draggedObject.name == "SteamGenerator(Clone)")
+        else if (draggedObject.name == "SteamGenerator")
         {
-            SlotItemData consumedItem1 = new SlotItemData
-            {
-                itemName = "Steam",
-                itemQuality = "BASIC",
-                quantity = 1f
-            };
-            itemData.consumedItems.Add(consumedItem1);
-
-            itemData.efficiencySetting = 100;
-            itemData.totalTime = 10;
-            itemData.basePowerOutput = 30000;
-            itemData.powerOutput = itemData.basePowerOutput;
-            itemData.powerConsumption = 0;
-            itemData.consumedSlotCount = 1;
-            itemData.isPaused = false;
             Planet0Buildings.Planet0SteamGenerator++;
+            Planet0Buildings.Planet0SteamGeneratorBlueprint--;
             itemData.buildingCount = Planet0Buildings.Planet0SteamGenerator;
         }
-        titleTransform = draggedObject.transform.Find("Title");
-        title = titleTransform.GetComponent<TextMeshProUGUI>();
-        itemData.buildingName = $"{title.text} #{itemData.buildingCount}";
+        else if (draggedObject.name == "Furnace")
+        {
+            Planet0Buildings.Planet0Furnace++;
+            Planet0Buildings.Planet0FurnaceBlueprint--;
+            itemData.buildingCount = Planet0Buildings.Planet0Furnace;
+        }
+
+        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+        string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
+        itemData.buildingName = $"{titleText} #{itemData.buildingCount}";
 
         // Add the item to the building manager's item array
-        buildingManager.AddToItemArray(itemType, draggedObject);
+        buildingManager.AddToItemArray(buildingType, draggedObject);
 
         // Adding this class will start corotuine on the building object itself
         draggedObject.AddComponent<BuildingCycles>();
+
+        if (GoalManager.thirdGoal == false)
+        {
+            GoalManager goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();
+            _ = goalManager.SetFourthGoal();
+        }
     }
 }

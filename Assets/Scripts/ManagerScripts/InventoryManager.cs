@@ -112,7 +112,7 @@ public class InventoryManager : MonoBehaviour
         {
             foreach (GameObject item in itemArray)
             {
-                if (item.name == prefabName + "(Clone)")
+                if (item.name == prefabName)
                 {
                     ItemData itemData = item.GetComponent<ItemData>();
 
@@ -134,7 +134,7 @@ public class InventoryManager : MonoBehaviour
         {
             foreach (GameObject item in foundItemArray)
             {
-                if (item.name == prefabName + "(Clone)")
+                if (item.name == prefabName)
                 {
                     ItemData itemData = item.GetComponent<ItemData>();
                     if (itemData != null)
@@ -148,13 +148,13 @@ public class InventoryManager : MonoBehaviour
         return totalQuantity;
     }
     
-    public void AddItemQuantity(string prefabName, string itemProduct, float quantity) // changes quantity of already instantiated product if it doesn't exist, creates new one
+    public void AddItemQuantity(string prefabName, string itemProduct, float quantity, int? index = null) // changes quantity of already instantiated product if it doesn't exist, creates new one
     {
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
         {
             foreach (GameObject itemPrefab in itemArray)
             {
-                if (itemPrefab.name == prefabName + "(Clone)")
+                if (itemPrefab.name == prefabName)
                 {
                     ItemData itemData = itemPrefab.GetComponent<ItemData>();
                     itemData.itemQuantity += quantity;
@@ -169,6 +169,10 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            itemCreator.CreateItem((int)index, quantity);
+        }
     }
     public void ReduceSplitItemQuantity(string prefabName, string itemProduct, float quantity, int objID)
     {
@@ -176,7 +180,7 @@ public class InventoryManager : MonoBehaviour
         {
             foreach (GameObject itemPrefab in itemArray)
             {
-                if (itemPrefab.name == prefabName + "(Clone)")
+                if (itemPrefab.name == prefabName)
                 {
                     ItemData itemData = itemPrefab.GetComponent<ItemData>();
                     if (itemData.ID == objID)
@@ -201,7 +205,7 @@ public class InventoryManager : MonoBehaviour
         {
             foreach (GameObject itemPrefab in itemArray)
             {
-                if (itemPrefab.name == prefabName + "(Clone)")
+                if (itemPrefab.name == prefabName)
                 {
                     ItemData itemData = itemPrefab.GetComponent<ItemData>();
 
@@ -222,7 +226,7 @@ public class InventoryManager : MonoBehaviour
         {
             foreach (GameObject itemPrefab in itemArray)
             {
-                if (itemPrefab.name == prefabName + "(Clone)")
+                if (itemPrefab.name == prefabName)
                 {
                     ItemData itemData = itemPrefab.GetComponent<ItemData>();
                     itemData.itemQuantity -= quantity;

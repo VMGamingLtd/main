@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1603872277
+CRC: 3390701244
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: acccc37e9d5b1ed517b2ccc625e2c776
+    Hash: fff75c7c41d3dd0e1b761eba991b6e1c
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -22,5 +22,6 @@ Assets:
 - Assets/AssetBundlesRepo/BuildingIcons/SteamGenerator.png
 - Assets/AssetBundlesRepo/BuildingIcons/BiofuelGenerator.png
 - Assets/AssetBundlesRepo/BuildingIcons/WaterPipeline.png
+- Assets/AssetBundlesRepo/BuildingIcons/Furnace.png
 - Assets/AssetBundlesRepo/BuildingIcons/WaterPump.png
 Dependencies: []

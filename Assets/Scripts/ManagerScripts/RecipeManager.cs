@@ -29,7 +29,7 @@ public class RecipeManager : MonoBehaviour
     }
     void OnEnable()
     {
-        ShowItems(RecipeManager.ShowRecipeProducts, RecipeManager.ShowRecipeTypes, RecipeManager.ShowRecipeClass);
+        ShowItems(ShowRecipeProducts, ShowRecipeTypes, ShowRecipeClass);
     }
 
     public void AddToItemArray(string recipeProduct, GameObject item)
@@ -113,10 +113,10 @@ public class RecipeManager : MonoBehaviour
     {
         ShowItems(ShowRecipeProducts, ShowRecipeTypes, ShowRecipeClass);
     }
-    public void ShowItems(string recipeProduct, string itemType, string itemClass)
+    public void ShowItems(string recipeProduct, string recipeType, string itemClass)
     {
         bool showAllProducts = recipeProduct == "ALL";
-        bool showAllTypes = itemType == "ALL";
+        bool showAllTypes = recipeType == "ALL";
         bool showAllClasses = itemClass == "ALL";
 
         foreach (var kvp in itemRecipeArrays)
@@ -130,7 +130,7 @@ public class RecipeManager : MonoBehaviour
 
                 bool showItem =
                     (showAllProducts || recipeProduct == itemData.recipeProduct) &&
-                    (showAllTypes || itemType == itemData.itemType) &&
+                    (showAllTypes || recipeType == itemData.recipeType) &&
                     (showAllClasses || itemClass == itemData.itemClass);
 
                 item.SetActive(showItem);

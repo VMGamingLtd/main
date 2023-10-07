@@ -1,7 +1,9 @@
 ﻿using ItemManagement;
+using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.ItemFactory
 {
@@ -10,7 +12,10 @@ namespace Assets.Scripts.ItemFactory
         public InventoryManager inventoryManager;
         public static int ItemCreationID = 0;
         private float remainingQuantity;
-        public void CreateItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit)
+
+        public GameObject[] slotButtons = new GameObject[11];
+        public GameObject[] placeholderImages = new GameObject[11];
+        public void CreateItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable)
         {
             bool itemFound = false;
             bool spliRemainingQuantity = true;
@@ -19,7 +24,7 @@ namespace Assets.Scripts.ItemFactory
                 foreach (GameObject item in itemArray)
                 {
                     ItemData existingItemData = item.GetComponent<ItemData>();
-                    if (item.name == prefabName + "(Clone)" && existingItemData.itemQuantity < existingItemData.stackLimit)
+                    if (item.name == prefabName && existingItemData.itemQuantity < existingItemData.stackLimit)
                     {
                         // The item already exists, increment the quantity for the rest of the quantity order
                         existingItemData.itemQuantity += quantity;
@@ -40,13 +45,13 @@ namespace Assets.Scripts.ItemFactory
                     foreach (GameObject item in itemArray)
                     {
                         ItemData existingItemData = item.GetComponent<ItemData>();
-                        if (item.name == prefabName + "(Clone)" && existingItemData.itemQuantity < existingItemData.stackLimit)
+                        if (item.name == prefabName && existingItemData.itemQuantity < existingItemData.stackLimit)
                         {
                             existingItemData.itemQuantity += remainingQuantity;
                             if (existingItemData.itemQuantity > existingItemData.stackLimit)
                             {
                                 float newRemainingQuantity = existingItemData.itemQuantity - existingItemData.stackLimit;
-                                SplitItem(newRemainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName, index, stackLimit);
+                                SplitItem(newRemainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable);
                                 existingItemData.itemQuantity -= remainingQuantity;
                             }
                             UpdateItemCountText(item, existingItemData);
@@ -61,18 +66,45 @@ namespace Assets.Scripts.ItemFactory
                 GameObject newItem = Instantiate(prefab);
                 newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
 
-                // Get or add the ItemData component to the new item
-                ItemData newItemData = newItem.GetComponent<ItemData>();
-                if (newItemData == null)
+                // ItemTemplate attribute injection
+                newItem.name = prefabName;
+                newItem.transform.Find("ChildName").name = prefabName;
+                newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
+
+                // we need to give a proper highlight object placeholder so when the object will be dragged, visible possibilities will be shown to player
+                var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
+
+                if (itemType == "PLANTS" && equipable)
                 {
-                    newItemData = newItem.AddComponent<ItemData>();
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[9]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[9]);
+                }
+                else if (itemType == "ENERGY" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
+                }
+                else if (itemType == "OXYGEN" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
+                }
+                else if (itemType == "LIQUID" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[10]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[10]);
                 }
 
+
+                // Get or add the ItemData component to the new item
+                ItemData newItemData = newItem.GetComponent<ItemData>() ?? newItem.AddComponent<ItemData>();
                 newItemData.itemQuantity = quantity;
                 newItemData.itemProduct = itemProduct;
                 newItemData.itemType = itemType;
                 newItemData.itemClass = itemClass;
+                newItemData.itemName = prefabName;
                 newItemData.index = index;
+                newItemData.equipable = equipable;
                 newItemData.stackLimit = stackLimit;
                 newItemData.ID = ItemCreationID++;
 
@@ -85,12 +117,41 @@ namespace Assets.Scripts.ItemFactory
                 newItem.transform.localScale = Vector3.one;
             }
         }
-        public void SplitItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit)
+        public void SplitItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable)
         {
             // Split the item, meaning that it will be duplicated
             GameObject newItem = Instantiate(prefab);
             newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
             newItem.transform.localScale = new Vector3(1f, 1f, 1f);
+
+            // ItemTemplate attribute injection
+            newItem.name = prefabName;
+            newItem.transform.Find("ChildName").name = prefabName;
+            newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
+
+            // we need to give a proper highlight object placeholder so when the object will be dragged, visible possibilities will be shown to player
+            var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
+
+            if (itemType == "PLANTS" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[9]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[9]);
+            }
+            else if (itemType == "ENERGY" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
+            }
+            else if (itemType == "OXYGEN" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
+            }
+            else if (itemType == "LIQUID" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[10]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[10]);
+            }
 
             // Get or add the ItemData component to the new item
             ItemData newItemData = newItem.GetComponent<ItemData>() ?? newItem.AddComponent<ItemData>();
@@ -100,6 +161,8 @@ namespace Assets.Scripts.ItemFactory
             newItemData.itemType = itemType;
             newItemData.itemClass = itemClass;
             newItemData.index = index;
+            newItemData.itemName = prefabName;
+            newItemData.equipable = equipable;
             newItemData.stackLimit = stackLimit;
             newItemData.ID = ItemCreationID++;
 
@@ -119,5 +182,27 @@ namespace Assets.Scripts.ItemFactory
                 existingCountText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
             }
         }
+
+        private Sprite AssignSpriteToSlot(string spriteName)
+        {
+            Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
+            return sprite;
+        }
+
+        private GameObject[] ExtendArray(GameObject[] oldArray, GameObject newElement)
+        {
+            int oldLength = oldArray.Length;
+            GameObject[] newArray = new GameObject[oldLength + 1];
+
+            for (int i = 0; i < oldLength; i++)
+            {
+                newArray[i] = oldArray[i];
+            }
+
+            newArray[oldLength] = newElement;
+
+            return newArray;
+        }
+
     }
 }

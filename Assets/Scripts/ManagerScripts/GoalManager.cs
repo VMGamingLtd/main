@@ -9,10 +9,12 @@ public class GoalManager : MonoBehaviour
     public Animation goalAnimation;
     private RecipeCreator recipeCreator;
     private ButtonManager buttonManager;
+    public BuildingIncrementor buildingIncrementor;
     public GameObject[] Goals;
     public static bool firstGoal = false;
     public static bool secondGoal = false;
     public static bool thirdGoal = false;
+    public static bool fourthGoal = false;
 
     void Awake()
     {
@@ -29,7 +31,7 @@ public class GoalManager : MonoBehaviour
     public async UniTask SetSecondGoal()
     {
         goalAnimation.Play("Success");
-        await UniTask.Delay(1000); // Delay for 1 second
+        await UniTask.Delay(1000);
         recipeCreator.CreateRecipe(1);
         recipeCreator.CreateRecipe(3);
         ChangeGoal("CraftAndUseWater");
@@ -40,7 +42,8 @@ public class GoalManager : MonoBehaviour
     public async UniTask SetThirdGoal()
     {
         goalAnimation.Play("Success");
-        await UniTask.Delay(1000); // Delay for 1 second
+        await UniTask.Delay(1000);
+        recipeCreator.CreateRecipe(7);
         recipeCreator.CreateRecipe(8);
         recipeCreator.CreateRecipe(9);
         recipeCreator.CreateRecipe(10);
@@ -54,10 +57,25 @@ public class GoalManager : MonoBehaviour
     public async UniTask SetFourthGoal()
     {
         goalAnimation.Play("Success");
-        await UniTask.Delay(1000); // Delay for 1 second
-
-        ChangeGoal("BuildBase");
+        await UniTask.Delay(1000);
+        Planet0Buildings.PlantFieldUnlocked = true;
+        Planet0Buildings.WaterPumpUnlocked = true;
+        buildingIncrementor.InitializeAvailableBuildings();
+        ChangeGoal("AutomateBattery");
         goalAnimation.Play("Idle");
         thirdGoal = true;
+    }
+
+    public async UniTask SetFifthGoal()
+    {
+        goalAnimation.Play("Success");
+        await UniTask.Delay(1000);
+        Planet0Buildings.BoilerUnlocked = true;
+        Planet0Buildings.SteamGeneratorUnlocked = true;
+        Planet0Buildings.FurnaceUnlocked = true;
+        buildingIncrementor.InitializeAvailableBuildings();
+        ChangeGoal("AutomateBattery");
+        goalAnimation.Play("Idle");
+        fourthGoal = true;
     }
 }

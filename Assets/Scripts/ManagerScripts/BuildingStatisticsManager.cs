@@ -27,7 +27,7 @@ public class BuildingStatisticsManager : MonoBehaviour
     {
         updateCancellation?.Cancel();
         updateUI = true;
-        bool showAllTypes = BuildingStatisticsManager.BuildingStatisticType == "ALL";
+        bool showAllTypes = BuildingStatisticType == "ALL";
         foreach (Transform child in objectList)
         {
             Destroy(child.gameObject);
@@ -43,7 +43,7 @@ public class BuildingStatisticsManager : MonoBehaviour
                 {
                     BuildingItemData itemData = item.GetComponent<BuildingItemData>();
                     bool showItem =
-                    (showAllTypes || BuildingStatisticsManager.BuildingStatisticType == itemData.itemType);
+                    (showAllTypes || BuildingStatisticType == itemData.buildingType);
                     if (showItem)
                     {
                         GameObject rowObject = Instantiate(RowObject, objectList);
@@ -79,7 +79,7 @@ public class BuildingStatisticsManager : MonoBehaviour
                     {
                         BuildingItemData itemData = item.GetComponent<BuildingItemData>();
                         bool showItem =
-                        (showAllTypes || BuildingStatisticsManager.BuildingStatisticType == itemData.itemType);
+                        (showAllTypes || BuildingStatisticType == itemData.buildingType);
                         if (showItem)
                         {
                             UpdateRowObjectsWithData(itemData, ref currentRowIndex);

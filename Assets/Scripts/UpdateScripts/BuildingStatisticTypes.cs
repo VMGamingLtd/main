@@ -31,18 +31,18 @@ public class BuildingStatisticTypes : MonoBehaviour
                 BuildingItemData itemData = item.GetComponent<BuildingItemData>();
 
                 // Check if the item class is not already added to availableClasses
-                if (!Array.Exists(availableClasses, element => element == itemData.itemType))
+                if (!Array.Exists(availableClasses, element => element == itemData.buildingType))
                 {
                     // Resize the availableClasses array and add the item class
                     Array.Resize(ref availableClasses, availableClasses.Length + 1);
-                    availableClasses[classIndex] = itemData.itemType;
+                    availableClasses[classIndex] = itemData.buildingType;
                     classIndex++;
                 }
             }
         }
-        foreach (string itemType in availableClasses)
+        foreach (string buildingType in availableClasses)
         {
-            dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString(itemType)));
+            dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString(buildingType)));
         }
 
         int selectedOptionIndex = Array.FindIndex(dropdown.options.ToArray(), option => option.text == selectedOptionText);

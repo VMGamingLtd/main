@@ -1,113 +1,146 @@
 ﻿{
   "header": "Available buildings",
-  "items": [
+  "buildings": [
     {
       "index": 0,
-      "quantity": 5.0,
-      "stackLimit": 100.0,
-      "itemName": "FibrousLeaves",
-      "itemProduct": "BASIC",
-      "itemType": "PLANTS",
-      "itemClass": "CLASS-F"
+      "buildingName": "BiofuelGenerator",
+      "buildingType": "POWERPLANT",
+      "buildingClass": "CLASS-F",
+      "consumedSlotCount": 1,
+      "consumedItems": [
+        {
+          "index": 2,
+          "itemName": "Biofuel",
+          "itemQuality": "PROCESSED",
+          "quantity": 1.0
+        }
+      ],
+      "producedSlotCount": 0,
+      "producedItems": [],
+      "totalTime": 10.0,
+      "basePowerOutput": 10000,
+      "powerConsumption": 0
     },
     {
       "index": 1,
-      "quantity": 10.0,
-      "stackLimit": 100.0,
-      "itemName": "Water",
-      "itemProduct": "BASIC",
-      "itemType": "LIQUID",
-      "itemClass": "CLASS-F"
+      "buildingName": "WaterPump",
+      "buildingType": "PUMPINGFACILITY",
+      "buildingClass": "CLASS-F",
+      "consumedSlotCount": 0,
+      "consumedItems": [],
+      "producedSlotCount": 1,
+      "producedItems": [
+        {
+          "index": 1,
+          "itemName": "Water",
+          "itemQuality": "BASIC",
+          "quantity": 4.0
+        }
+      ],
+      "totalTime": 10.0,
+      "basePowerOutput": 0,
+      "powerConsumption": 2000
     },
     {
       "index": 2,
-      "quantity": 1.0,
-      "stackLimit": 100.0,
-      "itemName": "Biofuel",
-      "itemProduct": "PROCESSED",
-      "itemType": "LIQUID",
-      "itemClass": "CLASS-F"
+      "buildingName": "PlantField",
+      "buildingType": "AGRICULTURE",
+      "buildingClass": "CLASS-F",
+      "consumedSlotCount": 1,
+      "consumedItems": [
+        {
+          "index": 1,
+          "itemName": "Water",
+          "itemQuality": "BASIC",
+          "quantity": 1.0
+        }
+      ],
+      "producedSlotCount": 1,
+      "producedItems": [
+        {
+          "index": 0,
+          "itemName": "FibrousLeaves",
+          "itemQuality": "BASIC",
+          "quantity": 4.0
+        }
+      ],
+      "totalTime": 20.0,
+      "basePowerOutput": 0,
+      "powerConsumption": 2000
     },
     {
       "index": 3,
-      "quantity": 1.0,
-      "stackLimit": 100.0,
-      "itemName": "DistilledWater",
-      "itemProduct": "PROCESSED",
-      "itemType": "LIQUID",
-      "itemClass": "CLASS-F"
+      "buildingName": "Boiler",
+      "buildingType": "HEATINGFACILITY",
+      "buildingClass": "CLASS-F",
+      "consumedSlotCount": 1,
+      "consumedItems": [
+        {
+          "index": 1,
+          "itemName": "Water",
+          "itemQuality": "BASIC",
+          "quantity": 1.0
+        }
+      ],
+      "producedSlotCount": 1,
+      "producedItems": [
+        {
+          "index": 7,
+          "itemName": "Steam",
+          "itemQuality": "BASIC",
+          "quantity": 2.0
+        }
+      ],
+      "totalTime": 20.0,
+      "basePowerOutput": 0,
+      "powerConsumption": 2000
     },
     {
       "index": 4,
-      "quantity": 1.0,
-      "stackLimit": 100.0,
-      "itemName": "Battery",
-      "itemProduct": "ASSEMBLED",
-      "itemType": "ENERGY",
-      "itemClass": "CLASS-F"
+      "buildingName": "SteamGenerator",
+      "buildingType": "POWERPLANT",
+      "buildingClass": "CLASS-F",
+      "consumedSlotCount": 1,
+      "consumedItems": [
+        {
+          "index": 7,
+          "itemName": "Steam",
+          "itemQuality": "BASIC",
+          "quantity": 1.0
+        }
+      ],
+      "producedSlotCount": 0,
+      "producedItems": [],
+      "totalTime": 10.0,
+      "basePowerOutput": 30000,
+      "powerConsumption": 0
     },
     {
       "index": 5,
-      "quantity": 1.0,
-      "stackLimit": 100.0,
-      "itemName": "OxygenTank",
-      "itemProduct": "ASSEMBLED",
-      "itemType": "OXYGEN",
-      "itemClass": "CLASS-F"
-    },
-    {
-      "index": 6,
-      "quantity": 1.0,
-      "stackLimit": 100.0,
-      "itemName": "BatteryCore",
-      "itemProduct": "ENHANCED",
-      "itemType": "ENERGY",
-      "itemClass": "CLASS-F"
-    },
-    {
-      "index": 7,
-      "quantity": 2.0,
-      "stackLimit": 100.0,
-      "itemName": "Steam",
-      "itemProduct": "BASIC",
-      "itemType": "GAS",
-      "itemClass": "CLASS-F"
-    },
-    {
-      "index": 8,
-      "quantity": 2.0,
-      "stackLimit": 100.0,
-      "itemName": "Wood",
-      "itemProduct": "BASIC",
-      "itemType": "PLANTS",
-      "itemClass": "CLASS-F"
-    },
-    {
-      "index": 9,
-      "quantity": 4.0,
-      "stackLimit": 100.0,
-      "itemName": "IronOre",
-      "itemProduct": "BASIC",
-      "itemType": "MINERALS",
-      "itemClass": "CLASS-F"
-    },
-    {
-      "index": 10,
-      "quantity": 2.0,
-      "stackLimit": 100.0,
-      "itemName": "Coal",
-      "itemProduct": "BASIC",
-      "itemType": "MINERALS",
-      "itemClass": "CLASS-F"
-    },
-    {
-      "index": 11,
-      "quantity": 1.0,
-      "stackLimit": 100.0,
-      "itemName": "IronBeam",
-      "itemProduct": "PROCESSED",
-      "itemType": "METALS",
-      "itemClass": "CLASS-F"
+      "buildingName": "Furnace",
+      "buildingType": "FACTORY",
+      "buildingClass": "CLASS-F",
+      "consumedSlotCount": 1,
+      "consumedItems": [
+        {
+          "index": 7,
+          "itemName": "Steam",
+          "itemQuality": "BASIC",
+          "quantity": 1.0
+        }
+      ],
+      "producedSlotCount": 1,
+      "producedItems": [
+        {
+          "index": 7,
+          "itemName": "Steam",
+          "itemQuality": "BASIC",
+          "quantity": 1.0
+        }
+      ],
+      "totalTime": 10.0,
+      "basePowerOutput": 30000,
+      "powerConsumption": 0
     }
   ]
 }
