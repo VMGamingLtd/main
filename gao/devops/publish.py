@@ -80,7 +80,7 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
             text_file.write(f"{bundlesVersion}")
 
         if platform == "webgl":
-            print(f"INFO: copy webgl build do html document root")
+            print(f"INFO: copy webgl build to html document root")
             os.chdir(cwd)
             if not os.path.isdir(f"{LOCAL_PUBLISH_WEBGL_FOLDER}"):
                 os.mkdir(f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
