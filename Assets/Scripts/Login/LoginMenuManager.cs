@@ -82,6 +82,7 @@ public class LoginMenuManager : MonoBehaviour
     public void ActivateAccountPanel()
     {
         AccountPanel.SetActive(true);
+        ActivateFriendsTab();
     }
 
     public void DeactivateAccountPanel()
@@ -92,6 +93,8 @@ public class LoginMenuManager : MonoBehaviour
     public void ActivateFriendsTab()
     {
         FriendsPanel.SetActive(true);
+        var button = RegisterButton.GetComponent<Button>();
+        button.interactable = true;
     }
     public void DeactivateFriendsTab()
     {
