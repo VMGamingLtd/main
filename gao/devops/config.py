@@ -4,6 +4,7 @@ GAO_USER_NAME="gao"
 
 GAO_BUILD_ASSET_BUNDLES_FOLDER="../gao/Assets/AssetBundles"
 GAO_BUILD_WEBGL_FOLDER="../gao_build/webgl"
+GAO_BUILD_WEBGL_MODELS_FOLDER="../gao/Scripts/Models"
 GAO_BUILD_ANDROID_FOLDER="../gao_build/android"
 GAO_BUILD_WINDOWS_FOLDER="../gao_build/windows"
 GAO_BUILD_IOS_FOLDER="../gao_build/ios"

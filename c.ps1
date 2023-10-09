@@ -20,7 +20,7 @@
 ## Publish
 
 # local - webgl
-#invoke publish-to-local --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build
+invoke publish-to-local --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build
 #invoke publish-bundles-to-local --platform="webgl" --version="0.0.1", --bundles-version="2" 
 
 
@@ -51,7 +51,7 @@
 
 ## Mongo
 
-invoke drop-gaos-database-on-local
+#invoke drop-gaos-database-on-local
 #invoke drop-gaos-database-on-test-local
 
 ## Gaos
