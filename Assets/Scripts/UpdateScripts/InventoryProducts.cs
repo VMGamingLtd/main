@@ -3,22 +3,23 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using ItemManagement;
+using System.Transactions;
 
 public class InventoryProducts : MonoBehaviour
 {
     [SerializeField]
     private TMP_Dropdown dropdown;
     public InventoryManager inventoryManager;
-    private string selectedOptionText = "All products";
+    public TranslationManager translationManager;
 
     void OnEnable()
     {
-        selectedOptionText = dropdown.options[dropdown.value].text;
         dropdown.ClearOptions();
-        string[] availableClasses = new string[0];
+        string[] availableItems = new string[0];
         int classIndex = 0;
 
-        dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString("ALL")));
+        string allItems = translationManager.Translate("ALLITEMS");
+        dropdown.options.Add(new TMP_Dropdown.OptionData(allItems));
 
         foreach (var kvp in inventoryManager.itemArrays)
         {
@@ -28,176 +29,49 @@ public class InventoryProducts : MonoBehaviour
             {
                 ItemData itemData = item.GetComponent<ItemData>();
 
-                // Check if the item class is not already added to availableClasses
-                if (!Array.Exists(availableClasses, element => element == itemData.itemProduct))
+                // Check if the item class is not already added to availableProducts
+                if (!Array.Exists(availableItems, element => element == itemData.itemProduct))
                 {
                     // Resize the availableClasses array and add the item class
-                    Array.Resize(ref availableClasses, availableClasses.Length + 1);
-                    availableClasses[classIndex] = itemData.itemProduct;
+                    Array.Resize(ref availableItems, availableItems.Length + 1);
+                    availableItems[classIndex] = itemData.itemProduct;
                     classIndex++;
                 }
             }
         }
-        // Add each available item class as a dropdown option
-        foreach (string itemProduct in availableClasses)
+        // Add each available item product as a dropdown option
+        foreach (string itemProduct in availableItems)
         {
-            dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString(itemProduct)));
+            dropdown.options.Add(new TMP_Dropdown.OptionData(translationManager.Translate(itemProduct)));
         }
 
-        int selectedOptionIndex = Array.FindIndex(dropdown.options.ToArray(), option => option.text == selectedOptionText);
+        int selectedOptionIndex = Array.FindIndex(dropdown.options.ToArray(), option => option.text == allItems);
         if (selectedOptionIndex >= 0)
         {
             dropdown.value = selectedOptionIndex;
-            dropdown.captionText.text = selectedOptionText;
+            dropdown.captionText.text = allItems;
         }
         else
         {
             dropdown.value = 0;
-            selectedOptionText = dropdown.options[0].text;
-            dropdown.captionText.text = selectedOptionText;
+            allItems = dropdown.options[0].text;
+            dropdown.captionText.text = allItems;
         }
-    }
-
-    private string GetLocalizedString(string key)
-    {
-        // Get the system language
-        SystemLanguage language = Application.systemLanguage;
-
-        // Replace the localized strings with actual translations based on the system language
-        switch (key)
-        {
-            case "ALL":
-                if (language == SystemLanguage.English)
-                {
-                    return "All items";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Все детали";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "所有项目";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Všetky veci";
-                }
-                break;
-            case "BASIC":
-                if (language == SystemLanguage.English)
-                {
-                    return "Basic";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Основные";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "基础产品";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Základné";
-                }
-                break;
-            case "PROCESSED":
-                if (language == SystemLanguage.English)
-                {
-                    return "Processed";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Обработанные";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "处理过的产品";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Spracované";
-                }
-                break;
-            case "ENHANCED":
-                if (language == SystemLanguage.English)
-                {
-                    return "Enhanced";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Улучшенные";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "强化产品";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Upravené";
-                }
-                break;
-            case "ASSEMBLED":
-                if (language == SystemLanguage.English)
-                {
-                    return "Assembled";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Собранные";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "组装产品";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Zostavené";
-                }
-                break;
-        }
-
-        return key;
     }
     public void OnDropdownValueChanged()
     {
         TMP_Dropdown.OptionData selectedOption = dropdown.options[dropdown.value];
-
         string optionText = selectedOption.text;
-        switch (optionText)
+        CoreTranslations matchedEntry = translationManager.FindEntryBySubstring(optionText);
+        if (matchedEntry != null)
         {
-            case "All items":
-            case "Все детали":
-            case "所有项目":
-            case "Všetky veci":
-                InventoryManager.ShowItemProducts = "ALL";
-                break;
-            case "BASIC":
-            case "Основные":
-            case "基础产品":
-            case "Základné":
-                InventoryManager.ShowItemProducts = "BASIC";
-                break;
-            case "Processed":
-            case "Обработанные":
-            case "处理过的产品":
-            case "Spracované":
-                InventoryManager.ShowItemProducts = "PROCESSED";
-                break;
-            case "Enhanced":
-            case "Улучшенные":
-            case "强化产品":
-            case "Upravené":
-                InventoryManager.ShowItemProducts = "ENHANCED";
-                break;
-            case "Assembled":
-            case "Собранные":
-            case "组装产品":
-            case "Zostavené":
-                InventoryManager.ShowItemProducts = "ASSEMBLED";
-                break;
+            // Set InventoryManager.ShowItemTypes to the value of matchedEntry.identifier
+            InventoryManager.ShowItemProducts = matchedEntry.identifier;
         }
-        inventoryManager.ShowFilteredItems();
+        else
+        {
+            Debug.LogError("InventoryProducts.cs 'matchedEntry' value is null");
+        }
+        inventoryManager.ShowFilteredItems();       
     }
 }

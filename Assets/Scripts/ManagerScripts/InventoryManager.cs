@@ -16,9 +16,9 @@ public class InventoryManager : MonoBehaviour
     // this variable is for DragAndDrop.cs that is in every item so it is better nested here
     public static bool endingDrag = false;
 
-    public static string ShowItemProducts = "ALL";
-    public static string ShowItemTypes = "ALL";
-    public static string ShowItemClass = "ALL";
+    public static string ShowItemProducts = "ALLITEMS";
+    public static string ShowItemTypes = "ALLTYPES";
+    public static string ShowItemClass = "ALLCLASSES";
     public void PopulateInventoryArrays()
     {
         itemArrays = new Dictionary<string, GameObject[]>
@@ -255,9 +255,9 @@ public class InventoryManager : MonoBehaviour
     }
     public void ShowItems(string itemProduct, string itemType, string itemClass)
     {
-        bool showAllProducts = itemProduct == "ALL";
-        bool showAllTypes = itemType == "ALL";
-        bool showAllClasses = itemClass == "ALL";
+        bool showAllProducts = itemProduct == "ALLITEMS";
+        bool showAllTypes = itemType == "ALLTYPES";
+        bool showAllClasses = itemClass == "ALLCLASSES";
 
         foreach (var kvp in itemArrays)
         {
