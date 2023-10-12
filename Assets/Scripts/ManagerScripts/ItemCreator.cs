@@ -48,6 +48,7 @@ namespace ItemManagement
 
         private void Awake()
         {
+            /*
             string filePath = Path.Combine(Application.dataPath, "Scripts/Models/ItemsList.json");
 
             if (File.Exists(filePath))
@@ -62,6 +63,14 @@ namespace ItemManagement
             else
             {
                 Debug.LogError("ItemsList.json not found at: " + filePath);
+            }
+            */
+
+            string jsonText = Assets.Scripts.Models.ItemsListJson.json;
+            ItemDataJsonArray itemDataArray = JsonUtility.FromJson<ItemDataJsonArray>(jsonText);
+            if (itemDataArray != null)
+            {
+                itemDataList = itemDataArray.items;
             }
         }
         public void CreateItem(int itemIndex, float? quantity = null)

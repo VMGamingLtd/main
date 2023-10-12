@@ -56,6 +56,7 @@ namespace RecipeManagement
         }
         private void Awake()
         {
+            /*
             string filePath = Path.Combine(Application.dataPath, "Scripts/Models/RecipeList.json");
 
             if (File.Exists(filePath))
@@ -70,6 +71,13 @@ namespace RecipeManagement
             else
             {
                 Debug.LogError("RecipeList.json not found at: " + filePath);
+            }
+            */
+            string jsonText = Assets.Scripts.Models.RecipeListJson.json;
+            JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
+            if (jsonArray != null)
+            {
+                recipeDataList = jsonArray.recipes;
             }
         }
         public void CreateRecipe(int recipeIndex)

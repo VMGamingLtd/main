@@ -43,6 +43,7 @@ public class TranslationManager : MonoBehaviour
 
     void Awake()
     {
+        /*
         string filePath = Path.Combine(Application.dataPath, "Scripts/Models/CoreTranslations.json");
 
         if (File.Exists(filePath))
@@ -57,6 +58,14 @@ public class TranslationManager : MonoBehaviour
         else
         {
             Debug.LogError("CoreTranslations.json not found at: " + filePath);
+        }
+        */
+
+        string jsonText = Assets.Scripts.Models.CoreTranslationsJson.json;
+        JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
+        if (jsonArray != null)
+        {
+            coreTranslationList = jsonArray.words;
         }
     }
 

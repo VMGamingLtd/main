@@ -121,6 +121,7 @@ public class BuildingCreator : MonoBehaviour
     }
     private void Awake()
     {
+        /*
         string filePath = Path.Combine(Application.dataPath, "Scripts/Models/BuildingsList.json");
 
         if (File.Exists(filePath))
@@ -135,6 +136,14 @@ public class BuildingCreator : MonoBehaviour
         else
         {
             Debug.LogError("BuildingsList.json not found at: " + filePath);
+        }
+        */
+
+        string jsonText = Assets.Scripts.Models.BuildingsListJson.json;
+        JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
+        if (jsonArray != null)
+        {
+            buildingDataList = jsonArray.buildings;
         }
     }
     public void CreateBuilding(GameObject draggedObject, int buildingIndex)
