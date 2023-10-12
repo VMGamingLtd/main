@@ -153,22 +153,7 @@ public class CoroutineManager : MonoBehaviour
     public async UniTask ResetNewGame()
     {
         textObject = loadingBar.transform.GetComponentInChildren<TextMeshProUGUI>();
-        SystemLanguage systemLanguage = Application.systemLanguage;
-        switch (systemLanguage)
-        {
-            case SystemLanguage.Russian:
-                textObject.text = "ИНИЦИАЛИЗАЦИЯ ИГРЫ...";
-                break;
-            case SystemLanguage.Chinese:
-                textObject.text = "游戏初始化中...";
-                break;
-            case SystemLanguage.Slovak:
-                textObject.text = "INICIALIZÁCIA HRY...";
-                break;
-            default: // English by default
-                textObject.text = "INITIALIZING GAME...";
-                break;
-        }
+        textObject.text = translationManager.Translate("InitializingGame");
         newGamePopup.SetActive(true);
         await UniTask.Delay(TimeSpan.FromSeconds(1.5f));
         newGamePopup.GetComponent<Michsky.UI.Shift.ModalWindowManager>().ModalWindowIn();

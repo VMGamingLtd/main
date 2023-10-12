@@ -8,7 +8,12 @@ public class RegisterStatusLoad : MonoBehaviour
     public readonly static string CLASS_NAME = typeof(LoginMenuManager).Name;
 
     public TextMeshProUGUI DisplayedText;
+    private TranslationManager translationManager;
 
+    void Awake()
+    {
+        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+    }
     private enum RegisterStatus
     {
         NotRegistered,
@@ -36,44 +41,10 @@ public class RegisterStatusLoad : MonoBehaviour
         switch(registerStatus)
         {
             case RegisterStatus.NotRegistered:
-                switch(Application.systemLanguage)
-                {
-                    case SystemLanguage.English:
-                        txt = "Not registered";
-                        break;
-                    case SystemLanguage.Russian:
-                        txt = "Не зарегистрирован";
-                        break;
-                    case SystemLanguage.Chinese:
-                        txt = "未注册";
-                        break;
-                    case SystemLanguage.Slovak:
-                        txt = "Neregistrovaný";
-                        break;
-                    default:
-                        txt = "Not registered";
-                        break;
-                }
+                txt = translationManager.Translate("NotRegistered");
                 break;
             case RegisterStatus.Registered:
-                switch(Application.systemLanguage)
-                {
-                    case SystemLanguage.English:
-                        txt = "Registered";
-                        break;
-                    case SystemLanguage.Russian:
-                        txt = "Зарегистрирован";
-                        break;
-                    case SystemLanguage.Chinese:
-                        txt = "挂号的";
-                        break;
-                    case SystemLanguage.Slovak:
-                        txt = "Registrovaný";
-                        break;
-                    default:
-                        txt = "Registered";
-                        break;
-                }
+                txt = translationManager.Translate("Registered");
                 break;
             default:
                 txt = "Error!";

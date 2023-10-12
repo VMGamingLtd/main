@@ -27,6 +27,7 @@ public class GlobalCalculator : MonoBehaviour
     public EquipmentManager equipmentManager;
     public InventoryManager inventoryManager;
     public BuildingManager buildingManager;
+    public TranslationManager translationManager;
 
     public SaveManager saveManager;
     public WeatherManager weatherManager;
@@ -113,7 +114,7 @@ public class GlobalCalculator : MonoBehaviour
         else if (EquipmentManager.slotEquipped[6] == false)
         {
             NoOxygen.SetActive(true);
-            PlayerNeeds[1].text = TranslateErrorMsg();
+            PlayerNeeds[1].text = translationManager.Translate("ERROR");
         }
         else
         {
@@ -125,7 +126,7 @@ public class GlobalCalculator : MonoBehaviour
         if (EquipmentManager.slotEquipped[7] == false)
         {
             NoWater.SetActive(true);
-            PlayerNeeds[2].text = TranslateErrorMsg();
+            PlayerNeeds[2].text = translationManager.Translate("ERROR");
         }
         else
         {
@@ -137,7 +138,7 @@ public class GlobalCalculator : MonoBehaviour
         if (EquipmentManager.slotEquipped[5] == false)
         {
             NoEnergy.SetActive(true);
-            PlayerNeeds[3].text = TranslateErrorMsg();
+            PlayerNeeds[3].text = translationManager.Translate("ERROR");
         }
         else
         {
@@ -149,35 +150,12 @@ public class GlobalCalculator : MonoBehaviour
         if (EquipmentManager.slotEquipped[8] == false)
         {
             NoFood.SetActive(true);
-            PlayerNeeds[4].text = TranslateErrorMsg();
+            PlayerNeeds[4].text = translationManager.Translate("ERROR");
         }
         else
         {
             NoFood.SetActive(false);
             PlayerNeeds[4].text = PlayerResources.PlayerHunger.ToString() + "/m";
-        }
-    }
-    public string TranslateErrorMsg()
-    {
-        if (Application.systemLanguage == SystemLanguage.English)
-        {
-            return "ERROR";
-        }
-        else if (Application.systemLanguage == SystemLanguage.Russian)
-        {
-            return "Ошибка";
-        }
-        else if (Application.systemLanguage == SystemLanguage.Chinese)
-        {
-            return "错误";
-        }
-        else if (Application.systemLanguage == SystemLanguage.Slovak)
-        {
-            return "Chyba";
-        }
-        else
-        {
-            return "ERROR";
         }
     }
     public void UpdateEverySecond()

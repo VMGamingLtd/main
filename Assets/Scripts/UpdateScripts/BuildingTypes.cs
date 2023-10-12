@@ -2,21 +2,23 @@ using TMPro;
 using System;
 using UnityEngine;
 using BuildingManagement;
+using System.Transactions;
+
 public class BuildingTypes : MonoBehaviour
 {
     [SerializeField]
     private TMP_Dropdown dropdown;
     public BuildingManager buildingManager;
-    private string selectedOptionText = "All types";
+    public TranslationManager translationManager;
 
     void OnEnable()
     {
-        selectedOptionText = dropdown.options[dropdown.value].text;
         dropdown.ClearOptions();
         string[] availableClasses = new string[0];
         int classIndex = 0;
 
-        dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString("ALL")));
+        string allTypes = translationManager.Translate("ALLTYPES");
+        dropdown.options.Add(new TMP_Dropdown.OptionData(allTypes));
 
         foreach (var kvp in buildingManager.buildingArrays)
         {
@@ -38,379 +40,35 @@ public class BuildingTypes : MonoBehaviour
         }
         foreach (string buildingType in availableClasses)
         {
-            dropdown.options.Add(new TMP_Dropdown.OptionData(GetLocalizedString(buildingType)));
+            dropdown.options.Add(new TMP_Dropdown.OptionData(translationManager.Translate(buildingType)));
         }
 
-        int selectedOptionIndex = Array.FindIndex(dropdown.options.ToArray(), option => option.text == selectedOptionText);
+        int selectedOptionIndex = Array.FindIndex(dropdown.options.ToArray(), option => option.text == allTypes);
         if (selectedOptionIndex >= 0)
         {
             dropdown.value = selectedOptionIndex;
-            dropdown.captionText.text = selectedOptionText;
+            dropdown.captionText.text = allTypes;
         }
         else
         {
             dropdown.value = 0;
-            selectedOptionText = dropdown.options[0].text;
-            dropdown.captionText.text = selectedOptionText;
+            allTypes = dropdown.options[0].text;
+            dropdown.captionText.text = allTypes;
         }
-    }
-
-    private string GetLocalizedString(string key)
-    {
-        // Get the system language
-        SystemLanguage language = Application.systemLanguage;
-
-        // Replace the localized strings with actual translations based on the system language
-        switch (key)
-        {
-            case "ALL":
-                if (language == SystemLanguage.English)
-                {
-                    return "All Types";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Все типы";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "所有类型";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Všetky typy";
-                }
-                break;
-            case "AGRICULTURE":
-                if (language == SystemLanguage.English)
-                {
-                    return "Agriculture";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Cельское хозяйство";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "农业设施";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Poľnohospodárstvo";
-                }
-                break;
-            case "PUMPINGFACILITY":
-                if (language == SystemLanguage.English)
-                {
-                    return "Pumping facility";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Насосная установка";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "抽水设施";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Čerpacie zariadenie";
-                }
-                break;
-            case "FACTORY":
-                if (language == SystemLanguage.English)
-                {
-                    return "Factory";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Фабрика";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "工厂";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Fabrika";
-                }
-                break;
-            case "COMMFACILITY":
-                if (language == SystemLanguage.English)
-                {
-                    return "Comm facility";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Средства связи";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "通讯设施";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Komunikačné zariadenie";
-                }
-                break;
-            case "STORAGEHOUSE":
-                if (language == SystemLanguage.English)
-                {
-                    return "Storage house";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Складское помещение";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "储藏室";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Skladový dom";
-                }
-                break;
-            case "NAVALFACILITY":
-                if (language == SystemLanguage.English)
-                {
-                    return "Naval facility";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Военно-морской объект";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "海军设施";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Námorné zariadenie";
-                }
-                break;
-            case "OXYGENFACILITY":
-                if (language == SystemLanguage.English)
-                {
-                    return "Oxygen facility";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Кислородная установка";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "制氧设施";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Kyslíkové zariadenie";
-                }
-                break;
-            case "AVIATIONFACILITY":
-                if (language == SystemLanguage.English)
-                {
-                    return "Aviation facility";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Авиационный объект";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "航空设施";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Letecké zariadenie";
-                }
-                break;
-            case "HEATINGFACILITY":
-                if (language == SystemLanguage.English)
-                {
-                    return "Heating facility";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Отопительная установка";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "供暖设施";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Vykurovacie zariadenie";
-                }
-                break;
-            case "COOLINGFACILITY":
-                if (language == SystemLanguage.English)
-                {
-                    return "Cooling facility";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Охлаждающая установка";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "冷却设施";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Chladiace zariadenie";
-                }
-                break;
-            case "POWERPLANT":
-                if (language == SystemLanguage.English)
-                {
-                    return "Powerplant";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Электростанция";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "发电厂";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Elektráreň";
-                }
-                break;
-            case "OXYGENSTATION":
-                if (language == SystemLanguage.English)
-                {
-                    return "Oxygen station";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Кислородная станция";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "氧气站";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Kyslíková stanica";
-                }
-                break;
-            case "MININGRIG":
-                if (language == SystemLanguage.English)
-                {
-                    return "Mining rig";
-                }
-                else if (language == SystemLanguage.Russian)
-                {
-                    return "Горная установка";
-                }
-                else if (language == SystemLanguage.Chinese)
-                {
-                    return "采矿设施";
-                }
-                else if (language == SystemLanguage.Slovak)
-                {
-                    return "Ťažobné zariadenie";
-                }
-                break;
-        }
-
-        return key;
     }
     public void OnDropdownValueChanged()
     {
         TMP_Dropdown.OptionData selectedOption = dropdown.options[dropdown.value];
-
         string optionText = selectedOption.text;
-
-        switch (optionText)
+        CoreTranslations matchedEntry = translationManager.FindEntryBySubstring(optionText);
+        if (matchedEntry != null)
         {
-            case "All Types":
-            case "Все типы":
-            case "所有类型":
-            case "Všetky typy":
-                BuildingManager.ShowBuildingTypes = "ALL";
-                break;
-            case "Agriculture":
-            case "Cельское хозяйство":
-            case "农业设施":
-            case "Poľnohospodárstvo":
-                BuildingManager.ShowBuildingTypes = "AGRICULTURE";
-                break;
-            case "Pumping facility":
-            case "Насосная установка":
-            case "抽水设施":
-            case "Čerpacie zariadenie":
-                BuildingManager.ShowBuildingTypes = "PUMPINGFACILITY";
-                break;
-            case "Factory":
-            case "Фабрика":
-            case "工厂":
-            case "Fabrika":
-                BuildingManager.ShowBuildingTypes = "FACTORY";
-                break;
-            case "Comm facility":
-            case "Средства связи":
-            case "金属":
-            case "Komunikačné zariadenie":
-                BuildingManager.ShowBuildingTypes = "COMMFACILITY";
-                break;
-            case "Storage house":
-            case "Складское помещение":
-            case "储藏室":
-            case "Skladový dom":
-                BuildingManager.ShowBuildingTypes = "STORAGEHOUSE";
-                break;
-            case "Naval facility":
-            case "Военно-морской объект":
-            case "海军设施":
-            case "Námorné zariadenie":
-                BuildingManager.ShowBuildingTypes = "NAVALFACILITY";
-                break;
-            case "Oxygen facility":
-            case "Кислородная установка":
-            case "制氧设施":
-            case "Kyslíkové zariadenie":
-                BuildingManager.ShowBuildingTypes = "OXYGENFACILITY";
-                break;
-            case "Aviation facility":
-            case "Авиационный объект":
-            case "航空设施":
-            case "Letecké zariadenie":
-                BuildingManager.ShowBuildingTypes = "AVIATIONFACILITY";
-                break;
-            case "Heating facility":
-            case "Отопительная установка":
-            case "供暖设施":
-            case "Vykurovacie zariadenie":
-                BuildingManager.ShowBuildingTypes = "HEATINGFACILITY";
-                break;
-            case "Cooling facility":
-            case "Охлаждающая установка":
-            case "冷却设施":
-            case "Chladiace zariadenie":
-                BuildingManager.ShowBuildingTypes = "COOLINGFACILITY";
-                break;
-            case "Powerplant":
-            case "Электростанция":
-            case "发电厂":
-            case "Elektráreň":
-                BuildingManager.ShowBuildingTypes = "POWERPLANT";
-                break;
-            case "Oxygen station":
-            case "Кислород":
-            case "氧气站":
-            case "Kyslíková stanica":
-                BuildingManager.ShowBuildingTypes = "OXYGENSTATION";
-                break;
-            case "Mining rig":
-            case "Кислородная станция":
-            case "采矿设施":
-            case "Ťažobné zariadenie":
-                BuildingManager.ShowBuildingTypes = "MININGRIG";
-                break;
+            // Set InventoryManager.ShowItemTypes to the value of matchedEntry.identifier
+            BuildingManager.ShowBuildingTypes = matchedEntry.identifier;
+        }
+        else
+        {
+            Debug.LogError("BuildingTypes.cs 'matchedEntry' value is null");
         }
         buildingManager.ShowFilteredItems();
     }

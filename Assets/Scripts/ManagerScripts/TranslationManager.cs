@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using System.IO;
-using RecipeManagement;
 using System;
 
 [System.Serializable]
@@ -72,7 +69,6 @@ public class TranslationManager : MonoBehaviour
     public string Translate(string identifier)
     {
         CoreTranslations entry = FindTranslationEntry(identifier);
-
         if (entry != null)
         {
             return Application.systemLanguage switch
@@ -100,79 +96,20 @@ public class TranslationManager : MonoBehaviour
         }
         return null;
     }
-    public void PushTextsIntoFile()
+
+    public CoreTranslations FindEntryBySubstring(string searchString)
     {
-        List<TranslationData> translationDataList = new();
-
-        for (int i = 0; i < translationTexts.Length; i++)
+        foreach (CoreTranslations entry in coreTranslationList)
         {
-            GameObject translationTextObject = translationTexts[i];
-            
-            if (translationTextObject.TryGetComponent<TranslateText>(out var translateTextScript))
+            if (entry.identifier.Contains(searchString) ||
+                entry.english.Contains(searchString) ||
+                entry.russian.Contains(searchString) ||
+                entry.chinese.Contains(searchString) ||
+                entry.slovak.Contains(searchString))
             {
-                TranslationData translationData = new()
-                {
-                    EnglishText = translateTextScript.EnglishText,
-                    RussianText = translateTextScript.RussianText,
-                    ChineseText = translateTextScript.ChineseText,
-                    SlovakText = translateTextScript.SlovakText
-                };
-
-                translationDataList.Add(translationData);
+                return entry;
             }
         }
-
-        TranslationDataArrayWrapper dataArrayWrapper = new()
-        {
-            translations = translationDataList.ToArray()
-        };
-
-        string jsonData = JsonUtility.ToJson(dataArrayWrapper, true);
-
-        string filePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "Translations.json");
-
-        File.WriteAllText(filePath, jsonData);
-
-        Debug.Log("Translations pushed into file: " + filePath);
-    }
-    public void PullTextsFromFile()
-    {
-        string filePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "Translations.json");
-
-        if (File.Exists(filePath))
-        {
-            string jsonData = File.ReadAllText(filePath);
-
-            TranslationDataArrayWrapper dataArrayWrapper = JsonUtility.FromJson<TranslationDataArrayWrapper>(jsonData);
-
-            if (dataArrayWrapper != null)
-            {
-                TranslationData[] translationDataArray = dataArrayWrapper.translations;
-
-                // Iterate through each translationTexts object and update the translation data
-                for (int i = 0; i < translationTexts.Length && i < translationDataArray.Length; i++)
-                {
-                    GameObject translationTextObject = translationTexts[i];
-                    
-                    if (translationTextObject.TryGetComponent<TranslateText>(out var translateTextScript))
-                    {
-                        translateTextScript.EnglishText = translationDataArray[i].EnglishText;
-                        translateTextScript.RussianText = translationDataArray[i].RussianText;
-                        translateTextScript.ChineseText = translationDataArray[i].ChineseText;
-                        translateTextScript.SlovakText = translationDataArray[i].SlovakText;
-                    }
-                }
-
-                Debug.Log("Translations pulled from file: " + filePath);
-            }
-            else
-            {
-                Debug.LogWarning("Failed to parse translation data from file: " + filePath);
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Translation file not found: " + filePath);
-        }
+        return null;
     }
 }

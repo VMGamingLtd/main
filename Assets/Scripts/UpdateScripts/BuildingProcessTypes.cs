@@ -9,9 +9,14 @@ public class BuildingProcessTypes : MonoBehaviour
     [SerializeField]
     private TMP_Dropdown dropdown;
     public BuildingManager buildingManager;
-    public List<string> options = new List<string>{"Electricity", "Production"};
+    public List<string> options = new() { "Electricity", "Production"};
     private string selectedOptionText;
+    private TranslationManager translationManager;
 
+    void Awake()
+    {
+        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+    }
     private void OnEnable()
     {
         dropdown.ClearOptions(); // Clear existing options
@@ -19,17 +24,17 @@ public class BuildingProcessTypes : MonoBehaviour
         // Add the options from the list
         dropdown.AddOptions(options);
 
-        int selectedOptionIndex = options.FindIndex(option => option == selectedOptionText);
+        int selectedOptionIndex = options.FindIndex(option => option == translationManager.Translate(selectedOptionText));
         if (selectedOptionIndex >= 0)
         {
             dropdown.value = selectedOptionIndex;
-            dropdown.captionText.text = selectedOptionText;
+            dropdown.captionText.text = translationManager.Translate(selectedOptionText);
         }
         else
         {
             dropdown.value = 0;
             selectedOptionText = options[0];
-            dropdown.captionText.text = selectedOptionText;
+            dropdown.captionText.text = translationManager.Translate(selectedOptionText);
         }
     }
 

@@ -12,9 +12,9 @@ public class RecipeManager : MonoBehaviour
     public RecipeCreator recipeCreator;
     public EquipmentManager equipmentManager;
 
-    public static string ShowRecipeProducts = "ALL";
-    public static string ShowRecipeTypes = "ALL";
-    public static string ShowRecipeClass = "ALL";
+    public static string ShowRecipeProducts = "ALLBLUEPRINTS";
+    public static string ShowRecipeTypes = "ALLTYPES";
+    public static string ShowRecipeClass = "ALLCLASSES";
 
     public void PopulateInventoryArrays()
     {
@@ -115,9 +115,9 @@ public class RecipeManager : MonoBehaviour
     }
     public void ShowItems(string recipeProduct, string recipeType, string itemClass)
     {
-        bool showAllProducts = recipeProduct == "ALL";
-        bool showAllTypes = recipeType == "ALL";
-        bool showAllClasses = itemClass == "ALL";
+        bool showAllProducts = recipeProduct == "ALLBLUEPRINTS";
+        bool showAllTypes = recipeType == "ALLTYPES";
+        bool showAllClasses = itemClass == "ALLCLASSES";
 
         foreach (var kvp in itemRecipeArrays)
         {

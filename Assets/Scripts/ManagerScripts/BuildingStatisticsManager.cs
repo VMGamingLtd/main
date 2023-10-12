@@ -12,7 +12,7 @@ public class BuildingStatisticsManager : MonoBehaviour
     public Transform objectList;
     public BuildingManager buildingManager;
     public static string BuildingStatisticProcess = "Electricity";
-    public static string BuildingStatisticType = "ALL";
+    public static string BuildingStatisticType = "ALLTYPES";
     public static string BuildingStatisticInterval = "1 second";
     private bool updateUI;
     private CancellationTokenSource updateCancellation;
@@ -27,7 +27,7 @@ public class BuildingStatisticsManager : MonoBehaviour
     {
         updateCancellation?.Cancel();
         updateUI = true;
-        bool showAllTypes = BuildingStatisticType == "ALL";
+        bool showAllTypes = BuildingStatisticType == "ALLTYPES";
         foreach (Transform child in objectList)
         {
             Destroy(child.gameObject);
@@ -65,7 +65,7 @@ public class BuildingStatisticsManager : MonoBehaviour
         updateCancellation = new CancellationTokenSource();
         while (updateUI)
         {
-            bool showAllTypes = BuildingStatisticsManager.BuildingStatisticType == "ALL";
+            bool showAllTypes = BuildingStatisticType == "ALLTYPES";
             await UniTask.Delay(1000, cancellationToken: updateCancellation.Token);
             int currentRowIndex = 0;
 
