@@ -48,11 +48,11 @@ def archiveBuild(platform):
     else:
         raise Exception("Unknown platform: " + platform)
 
-    if platform == "webgl":
-        gaosModelsFolders = os.path.join(Path(gao.devops.config.GAO_BUILD_WEBGL_FOLDER), Path("Scripts/Models"))
-        if not (os.path.exists(gaosModelsFolders) and os.path.isdir(gaosModelsFolders)):
-            print(f"ERROR: release {platform}  - archiveBuild(),  webl build folder {gao.devops.config.GAO_BUILD_WEBGL_FOLDER} does not contain 'Scripts/Models' subfolder, plese copy '../gao/Scripts/Model' folder inside webgl build folder")
-            raise Exception("error calling archiveBuild()")
+    #if platform == "webgl":
+    #    gaosModelsFolders = os.path.join(Path(gao.devops.config.GAO_BUILD_WEBGL_FOLDER), Path("Scripts/Models"))
+    #    if not (os.path.exists(gaosModelsFolders) and os.path.isdir(gaosModelsFolders)):
+    #        print(f"ERROR: release {platform}  - archiveBuild(),  webl build folder {gao.devops.config.GAO_BUILD_WEBGL_FOLDER} does not contain 'Scripts/Models' subfolder, plese copy '../gao/Scripts/Model' folder inside webgl build folder")
+    #        raise Exception("error calling archiveBuild()")
 
     cwd = os.getcwd()
     archivedFolder =  os.path.basename(webglBuildFolder)
