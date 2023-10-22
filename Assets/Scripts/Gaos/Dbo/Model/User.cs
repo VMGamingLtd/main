@@ -13,5 +13,7 @@ namespace Gaos.Dbo.Model
         public string? PasswordSalt;
         public int? DeviceId;
         public Device? Device;
+        public string? EmailVerificationCode;
+        public bool? IsEmailVerified;
     }
 }

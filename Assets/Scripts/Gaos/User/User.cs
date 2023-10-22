@@ -3,6 +3,7 @@
 using UnityEngine;
 using System.Collections;
 using Newtonsoft.Json;
+using Cysharp.Threading.Tasks;
 
 namespace Gaos.User.User
 {
@@ -404,5 +405,104 @@ namespace Gaos.User.User
             }
         }
 
+    }
+
+    public class RecoverPassword
+    {
+        private readonly static string CLASS_NAME = typeof(RecoverPassword).Name;
+
+        public static async UniTask<Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeResponse> SendVerificationCode(string usernameOrEmail)
+        {
+            Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeResponse response;
+            Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeReuqest request = new Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeReuqest() 
+            { 
+                UserNameOrEmail = usernameOrEmail 
+            };
+
+            string requestJsonStr = JsonConvert.SerializeObject(request);
+            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/recoverPassword/sendVerificationCode", requestJsonStr);
+            await apiCall.CallAsync();
+            if (apiCall.IsResponseError)
+            {
+                Debug.LogError($"ERROR: error sending verification code");
+                return null;
+            }
+            else
+            {
+                response = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeResponse>(apiCall.ResponseJsonStr);
+                if (response.IsError == true)
+                {
+                    Debug.LogError($"{CLASS_NAME}: ERROR: error sending verification code: {response.ErrorMessage}");
+                    return null;
+                }
+                else
+                {
+                    return response;
+                }
+            }
+
+        }
+
+        public static async UniTask<Gaos.Routes.Model.UserJson.RecoverPasswordVerifyCodeResponse> VerifyCode(int userId, string verificationCode)
+        {
+            Gaos.Routes.Model.UserJson.RecoverPasswordVerifyCodeRequest request = new Gaos.Routes.Model.UserJson.RecoverPasswordVerifyCodeRequest()
+            {
+                UserId = userId,
+                VerificationCode = verificationCode
+            };
+            string requestJsonStr = JsonConvert.SerializeObject(request);
+            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/recoverPassword/verifyCode", requestJsonStr);
+            await apiCall.CallAsync();
+            if (apiCall.IsResponseError)
+            {
+                Debug.LogError($"ERROR: error verifying code");
+                return null;
+            }
+            else
+            {
+                Gaos.Routes.Model.UserJson.RecoverPasswordVerifyCodeResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.RecoverPasswordVerifyCodeResponse>(apiCall.ResponseJsonStr);
+                if (response.IsError == true)
+                {
+                    Debug.LogError($"{CLASS_NAME}: ERROR: error verifying code: {response.ErrorMessage}");
+                    return null;
+                }
+                else
+                {
+                    return response;
+                }
+            }
+        }
+
+        public static async UniTask<Gaos.Routes.Model.UserJson.RecoverPasswordChangePasswordResponse> ChangePassword(int userId, string password, string passwordVerify, string verificationCode)
+        {
+            Gaos.Routes.Model.UserJson.RecoverPasswordChangePasswordRequest request = new Gaos.Routes.Model.UserJson.RecoverPasswordChangePasswordRequest()
+            {
+                UserId = userId,
+                Password = password,
+                PasswordVerify = passwordVerify,
+                VerificattionCode = verificationCode
+            };
+            string requestJsonStr = JsonConvert.SerializeObject(request);
+            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/recoverPassword/changePassword", requestJsonStr);
+            await apiCall.CallAsync();
+            if (apiCall.IsResponseError)
+            {
+                Debug.LogError($"ERROR: error changing password");
+                return null;
+            }
+            else
+            {
+                Gaos.Routes.Model.UserJson.RecoverPasswordChangePasswordResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.RecoverPasswordChangePasswordResponse>(apiCall.ResponseJsonStr);
+                if (response.IsError == true)
+                {
+                    Debug.LogError($"{CLASS_NAME}: ERROR: error changing password: {response.ErrorMessage}");
+                    return null;
+                }
+                else
+                {
+                    return response;
+                }
+            }
+        }
     }
 }

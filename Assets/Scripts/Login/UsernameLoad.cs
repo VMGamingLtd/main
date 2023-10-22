@@ -12,5 +12,17 @@ public class UsernameLoad : MonoBehaviour
     {
         NameText = GetComponent<TextMeshProUGUI>();
         NameText.text = UserName.userName;
+
+        Assets.Scripts.Login.UserCahngedEvent.OnEvent += OnUserChanged;
+    }
+
+    void OnDisable()
+    {
+        Assets.Scripts.Login.UserCahngedEvent.OnEvent -= OnUserChanged;
+    }
+
+    void OnUserChanged(Assets.Scripts.Login.UserChangedEventPayload payload)
+    {
+        NameText.text = payload.UserName;
     }
 }

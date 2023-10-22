@@ -31,6 +31,12 @@ public class RegisterStatusLoad : MonoBehaviour
         {
             DisplayedText.text = GetRegisterStatusText(RegisterStatus.Registered);
         }
+        Assets.Scripts.Login.UserCahngedEvent.OnEvent += OnUserChanged;
+    }
+
+    private void OnDisable()
+    {
+        Assets.Scripts.Login.UserCahngedEvent.OnEvent -= OnUserChanged;
     }
 
     private string GetRegisterStatusText(RegisterStatus registerStatus)
@@ -54,6 +60,18 @@ public class RegisterStatusLoad : MonoBehaviour
         }
 
         return txt;
+    }
+
+    private void OnUserChanged(Assets.Scripts.Login.UserChangedEventPayload payload)
+    {
+        if (payload.IsGuest)
+        {
+            DisplayedText.text = GetRegisterStatusText(RegisterStatus.NotRegistered);
+        }
+        else
+        {
+            DisplayedText.text = GetRegisterStatusText(RegisterStatus.Registered);
+        }
     }
 
 }

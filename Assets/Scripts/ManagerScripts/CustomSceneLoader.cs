@@ -75,6 +75,8 @@ public class CustomSceneLoader : MonoBehaviour
             var userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
             Debug.Log($"{CLASS_NAME}:{METOD_NAME}: logged in guest user: {userName}");
             UserName.userName = userName;
+            bool isGuest = (bool)Gaos.User.User.GuestLogin.GuestLoginResponse.IsGuest; 
+            Assets.Scripts.Login.UserCahngedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
 
             LoadGuestAsync();
         }

@@ -295,7 +295,9 @@ public class NewUserScreen : MonoBehaviour
 
 
             CoroutineManager.registeredUser = true;
-            UserName.userName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;  
+            UserName.userName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;
+            bool isGuest = (bool)Gaos.User.User.UserRegister.RegisterResponse.User.IsGuest; 
+            Assets.Scripts.Login.UserCahngedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
             //mainUI.SetActive(true);
             //this.gameObject.SetActive(false);
             buttonBack.onClick.Invoke();

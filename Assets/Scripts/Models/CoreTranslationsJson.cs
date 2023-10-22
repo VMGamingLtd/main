@@ -398,6 +398,13 @@ namespace Assets.Scripts.Models
         ""slovak"": ""meno""
       },
       {
+        ""identifier"": ""EmailOrUsername"",
+        ""english"": ""email or username"",
+        ""russian"": ""электронная почта или имя"",
+        ""chinese"": ""电子邮件或用户名"",
+        ""slovak"": ""e-mail alebo meno""
+      },
+      {
         ""identifier"": ""Password"",
         ""english"": ""password"",
         ""russian"": ""пароль"",
@@ -425,6 +432,14 @@ namespace Assets.Scripts.Models
         ""chinese"": ""继续"",
         ""slovak"": ""meno""
       },
+      {
+        ""identifier"": ""Recover"",
+        ""english"": ""Recover"",
+        ""russian"": ""Восстановить"",
+        ""chinese"": ""恢复"",
+        ""slovak"": ""Obnoviť""
+        },
+
       {
         ""identifier"": ""Strength"",
         ""english"": ""Сила"",
