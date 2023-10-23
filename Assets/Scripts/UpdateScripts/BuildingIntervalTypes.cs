@@ -1,15 +1,12 @@
-using TMPro;
-using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using BuildingManagement;
 public class BuildingIntervalTypes : MonoBehaviour
 {
     [SerializeField]
     private TMP_Dropdown dropdown;
     public BuildingManager buildingManager;
-    public List<string> options = new List<string>{"1 second", "10 seconds", "30 seconds", "1 minute", "10 minutes", "30 minutes", "1 hour", "6 hours"};
+    public List<string> options = new() { "1 second", "10 seconds", "30 seconds", "1 minute", "10 minutes", "30 minutes", "1 hour", "6 hours" };
     private string selectedOptionText;
     public static bool BuildingIntervalTypeChanged = false;
 
@@ -247,6 +244,6 @@ public class BuildingIntervalTypes : MonoBehaviour
                 BuildingStatisticsManager.BuildingStatisticInterval = "6 hours";
                 break;
         }
-        BuildingIntervalTypes.BuildingIntervalTypeChanged = true;
+        BuildingIntervalTypeChanged = true;
     }
 }

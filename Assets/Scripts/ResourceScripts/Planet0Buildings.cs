@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 
+[Serializable]
 public static class Planet0Buildings
 {
     public static float Planet0Index = 28.18f;
@@ -32,7 +29,7 @@ public static class Planet0Buildings
     public static bool FurnaceUnlocked;
 
     // available buildings to place
-    public static int Planet0BiofuelGeneratorBlueprint = 2;
+    public static int Planet0BiofuelGeneratorBlueprint = 0;
     public static int Planet0PlantFieldBlueprint = 0;
     public static int Planet0WaterPumpBlueprint = 0;
     public static int Planet0BoilerBlueprint = 0;
@@ -68,19 +65,19 @@ public static class Planet0Buildings
 
     public static float CalculatePlanet0Index()
     {
-    int condition1 = AtmospherePlanet0;
-    int condition2 = AgriLandPlanet0;
-    int condition3 = ForestsPlanet0;
-    int condition4 = WaterPlanet0;
-    int condition5 = FisheriesPlanet0;
-    int condition6 = MineralsPlanet0;
-    int condition7 = RocksPlanet0;
-    int condition8 = FossilFuelsPlanet0;
-    int condition9 = RareElementsPlanet0;
-    int condition10 = GemstonesPlanet0;
+        int condition1 = AtmospherePlanet0;
+        int condition2 = AgriLandPlanet0;
+        int condition3 = ForestsPlanet0;
+        int condition4 = WaterPlanet0;
+        int condition5 = FisheriesPlanet0;
+        int condition6 = MineralsPlanet0;
+        int condition7 = RocksPlanet0;
+        int condition8 = FossilFuelsPlanet0;
+        int condition9 = RareElementsPlanet0;
+        int condition10 = GemstonesPlanet0;
 
-    float result = (float)Math.Round((condition1 + condition2 + condition3 + condition4 + condition5 + condition6 + condition7 + condition8 + condition9 + condition10) / 11.0f, 1);
-    Planet0Buildings.Planet0Index = result;
-    return result;
+        float result = (float)Math.Round((condition1 + condition2 + condition3 + condition4 + condition5 + condition6 + condition7 + condition8 + condition9 + condition10) / 11.0f, 1);
+        Planet0Index = result;
+        return result;
     }
 }

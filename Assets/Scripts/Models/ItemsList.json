@@ -120,6 +120,26 @@
       "itemType": "METALS",
       "itemClass": "CLASS-F",
       "equipable": "false"
+    },
+    {
+      "index": 12,
+      "quantity": 1.0,
+      "stackLimit": 100.0,
+      "itemName": "IronSheet",
+      "itemProduct": "BASIC",
+      "itemType": "METALS",
+      "itemClass": "CLASS-F",
+      "equipable": "false"
+    },
+    {
+      "index": 13,
+      "quantity": 1.0,
+      "stackLimit": 100.0,
+      "itemName": "IronRod",
+      "itemProduct": "PROCESSED",
+      "itemType": "METALS",
+      "itemClass": "CLASS-F",
+      "equipable": "false"
     }
   ]
 }

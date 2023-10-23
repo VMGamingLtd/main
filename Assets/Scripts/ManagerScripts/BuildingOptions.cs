@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using BuildingManagement;
-using TMPro;
+using UnityEngine;
 
 public class BuildingOptions : MonoBehaviour
 {
     private BuildingItemData itemData;
+    private EnergyBuildingItemData itemDataEnergy;
     private BuildingOptionsInterface optionsInterfaceScript;
     private BuildingOptionsWindow buildingOptionsWindow;
     private GameObject refObj;
@@ -24,10 +22,17 @@ public class BuildingOptions : MonoBehaviour
         if (!BuildingManager.isDraggingBuilding)
         {
             itemData = GetComponent<BuildingItemData>();
+            itemDataEnergy = GetComponent<EnergyBuildingItemData>();
             refObj = transform.gameObject;
             buildingOptionsWindow.buildingOptions.SetActive(false);
-            optionsInterfaceScript.StartUpdatingUI(itemData, refObj);
+            if (itemData != null)
+            {
+                optionsInterfaceScript.StartUpdatingUI(itemData, refObj);
+            }
+            else
+            {
+                optionsInterfaceScript.StartUpdatingEnergyUI(itemDataEnergy, refObj);
+            }
         }
-
     }
 }

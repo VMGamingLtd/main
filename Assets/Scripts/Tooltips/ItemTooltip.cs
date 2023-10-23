@@ -18,8 +18,12 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        string objectName = eventData.pointerEnter.transform.name;
-        StartCoroutine (DisplayTooltip(objectName));
+        if (GlobalCalculator.GameStarted)
+        {
+            string objectName = eventData.pointerEnter.transform.name;
+            StartCoroutine(DisplayTooltip(objectName));
+        }
+
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -86,7 +90,7 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 FadeCanvasGroup(tooltipObject, normalizedTime);
                 yield return null;
             }
-        }        
+        }
     }
 
     private void FadeCanvasGroup(GameObject targetObject, float alpha)

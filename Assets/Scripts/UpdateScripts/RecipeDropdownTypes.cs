@@ -1,9 +1,7 @@
-using TMPro;
-using System;
-using UnityEngine;
-using UnityEngine.UI;
 using RecipeManagement;
-using System.Transactions;
+using System;
+using TMPro;
+using UnityEngine;
 
 public class RecipeDropdownTypes : MonoBehaviour
 {

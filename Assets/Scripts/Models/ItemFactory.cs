@@ -1,5 +1,4 @@
 ﻿using ItemManagement;
-using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
@@ -15,6 +14,113 @@ namespace Assets.Scripts.ItemFactory
 
         public GameObject[] slotButtons = new GameObject[11];
         public GameObject[] placeholderImages = new GameObject[11];
+
+        public void RecreateItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass,
+            string prefabName, int index, float stackLimit, bool equipable, int ID, bool isEquipped, RectTransform rectTransform = null)
+        {
+            // if the object was in the general inventory list spawn it there
+            if (rectTransform == null)
+            {
+                GameObject newItem = Instantiate(prefab);
+                newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+                newItem.name = prefabName;
+                newItem.transform.Find("ChildName").name = prefabName;
+                newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
+
+                // we need to give a proper highlight object placeholder so when the object will be dragged, visible possibilities will be shown to player
+                var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
+
+                if (itemType == "PLANTS" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[9]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[9]);
+                }
+                else if (itemType == "ENERGY" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
+                }
+                else if (itemType == "OXYGEN" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
+                }
+                else if (itemType == "LIQUID" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[10]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[10]);
+                }
+                ItemData newItemData = newItem.GetComponent<ItemData>() ?? newItem.AddComponent<ItemData>();
+                newItemData.itemQuantity = quantity;
+                newItemData.itemProduct = itemProduct;
+                newItemData.itemType = itemType;
+                newItemData.itemClass = itemClass;
+                newItemData.itemName = prefabName;
+                newItemData.index = index;
+                newItemData.equipable = equipable;
+                newItemData.stackLimit = stackLimit;
+                newItemData.ID = ID;
+                newItemData.isEquipped = isEquipped;
+                inventoryManager.AddToItemArray(itemProduct, newItem);
+                UpdateItemCountText(newItem, newItemData);
+                newItem.AddComponent<ItemUse>();
+                newItem.transform.localScale = Vector3.one;
+            }
+            else
+            {
+                // if the object is  equipped that means it was in the Inventory tab under the icons of equipped objects, we have to assign it there
+                GameObject newItem = Instantiate(prefab, rectTransform);
+                newItem.name = prefabName;
+                newItem.transform.Find("ChildName").name = prefabName;
+                newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
+
+                // we need to give a proper highlight object placeholder so when the object will be dragged, visible possibilities will be shown to player
+                var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
+
+                if (itemType == "PLANTS" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[9]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[9]);
+                }
+                else if (itemType == "ENERGY" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
+                }
+                else if (itemType == "OXYGEN" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
+                }
+                else if (itemType == "LIQUID" && equipable)
+                {
+                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[10]);
+                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[10]);
+                }
+                ItemData newItemData = newItem.GetComponent<ItemData>() ?? newItem.AddComponent<ItemData>();
+                newItemData.itemQuantity = quantity;
+                newItemData.itemProduct = itemProduct;
+                newItemData.itemType = itemType;
+                newItemData.itemClass = itemClass;
+                newItemData.itemName = prefabName;
+                newItemData.index = index;
+                newItemData.equipable = equipable;
+                newItemData.stackLimit = stackLimit;
+                newItemData.ID = ID;
+                newItemData.isEquipped = isEquipped;
+                inventoryManager.AddToItemArray(itemProduct, newItem);
+                UpdateItemCountText(newItem, newItemData);
+                newItem.AddComponent<ItemUse>();
+
+                // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
+                rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                newItem.transform.SetParent(rectTransform);
+                newItem.transform.SetAsLastSibling();
+                newItem.transform.localPosition = Vector3.one;
+                newItem.transform.localScale = Vector3.one;
+            }
+
+        }
         public void CreateItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable)
         {
             bool itemFound = false;
@@ -107,6 +213,7 @@ namespace Assets.Scripts.ItemFactory
                 newItemData.equipable = equipable;
                 newItemData.stackLimit = stackLimit;
                 newItemData.ID = ItemCreationID++;
+                newItemData.isEquipped = false;
 
                 // Add the new item to the itemArrays dictionary
                 inventoryManager.AddToItemArray(itemProduct, newItem);
@@ -164,6 +271,8 @@ namespace Assets.Scripts.ItemFactory
             newItemData.itemName = prefabName;
             newItemData.equipable = equipable;
             newItemData.stackLimit = stackLimit;
+            newItemData.isEquipped = false;
+
             newItemData.ID = ItemCreationID++;
 
             // Add the new item to the itemArrays dictionary

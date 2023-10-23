@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using RecipeManagement;
-using UnityEngine;
-using TMPro;
 using System;
-using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class RecipeManager : MonoBehaviour
 {
@@ -26,6 +23,41 @@ public class RecipeManager : MonoBehaviour
             { "ASSEMBLED", new GameObject[0] },
             { "BUILDINGS", new GameObject[0] }
         };
+    }
+    public void SortItemRecipeArraysByOrderAdded()
+    {
+        List<Transform> childTransforms = new();
+        foreach (Transform child in transform)
+        {
+            childTransforms.Add(child);
+        }
+
+        // Sort the child GameObjects based on their 'orderAdded' value
+        childTransforms.Sort(CompareByOrderAdded);
+
+        // Remove all child GameObjects from the parent
+        foreach (Transform child in childTransforms)
+        {
+            child.SetParent(null);
+        }
+
+        // Add the sorted child GameObjects back to the parent
+        foreach (Transform child in childTransforms)
+        {
+            child.SetParent(transform);
+        }
+    }
+
+    private int CompareByOrderAdded(Transform t1, Transform t2)
+    {
+        RecipeItemData recipeData1 = t1.GetComponent<RecipeItemData>();
+        RecipeItemData recipeData2 = t2.GetComponent<RecipeItemData>();
+
+        if (recipeData1 != null && recipeData2 != null)
+        {
+            return recipeData1.orderAdded.CompareTo(recipeData2.orderAdded);
+        }
+        return 0;
     }
     void OnEnable()
     {

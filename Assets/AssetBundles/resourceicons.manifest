@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 476124871
+CRC: 421986113
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e44078db99d81850193b06ef41fab40c
+    Hash: 7b711a36ee1cb65e2ac2a596a31f134d
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -16,12 +16,14 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/AssetBundlesRepo/ResourceIcons/Coal.png
+- Assets/AssetBundlesRepo/ResourceIcons/IronSheet.png
 - Assets/AssetBundlesRepo/ResourceIcons/FibrousLeaves.png
 - Assets/AssetBundlesRepo/ResourceIcons/Steam.png
 - Assets/AssetBundlesRepo/ResourceIcons/BatteryCore.png
 - Assets/AssetBundlesRepo/ResourceIcons/DistilledWater.png
 - Assets/AssetBundlesRepo/ResourceIcons/Biofuel.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronOre.png
+- Assets/AssetBundlesRepo/ResourceIcons/IronRod.png
 - Assets/AssetBundlesRepo/ResourceIcons/Wood.png
 - Assets/AssetBundlesRepo/ResourceIcons/Electricity.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronBeam.png

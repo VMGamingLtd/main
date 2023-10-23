@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assets.Scripts.Models
+﻿namespace Assets.Scripts.Models
 {
     public class CoreTranslationsJson
     {
@@ -1061,9 +1055,72 @@ namespace Assets.Scripts.Models
         ""russian"": ""Когда данный предмет заканчивается, из инвентаря автоматически выбирается другой предмет того же типа."",
         ""chinese"": ""当给定的物品用完时，会自动从库存中设置另一件相同类型的物品。"",
         ""slovak"": ""Keď sa daný predmet minie, automaticky sa z inventára nastaví ďalší predmet rovnakého typu.""
+      },
+      {
+        ""identifier"": ""NotEnoughMaterials"",
+        ""english"": ""Not enough materials!"",
+        ""russian"": ""Недостаточно материалов!"",
+        ""chinese"": ""材料不够！"",
+        ""slovak"": ""Nedostatok materiálov!""
+      },
+      {
+        ""identifier"": ""AutomateBattery"",
+        ""english"": ""Automate battery production"",
+        ""russian"": ""Автоматизируйте производство аккумуляторов"",
+        ""chinese"": ""实现电池生产自动化"",
+        ""slovak"": ""Automatizujte výrobu batérií""
+      },
+      {
+        ""identifier"": ""BuildBase"",
+        ""english"": ""Build and place the first building"",
+        ""russian"": ""Постройте и разместите свое первое здание"",
+        ""chinese"": ""建造并放置第一座建筑物"",
+        ""slovak"": ""Postavte a umiestnite svoju prvú budovu""
+      },
+      {
+        ""identifier"": ""CraftAndUseWater"",
+        ""english"": ""Craft and use distilled water"",
+        ""russian"": ""Создайте и используйте дистиллированную воду"",
+        ""chinese"": ""让我们制作并使用蒸馏水!"",
+        ""slovak"": ""Pripravte a použite destilovanú vodu""
+      },
+      {
+        ""identifier"": ""CraftBattery"",
+        ""english"": ""Craft a battery"",
+        ""russian"": ""Создайте батарею"",
+        ""chinese"": ""做电池吧！"",
+        ""slovak"": ""Vyrobte batériu!""
+      },
+      {
+        ""identifier"": ""IronSheet"",
+        ""english"": ""Iron sheet"",
+        ""russian"": ""Железный лист"",
+        ""chinese"": ""铁皮"",
+        ""slovak"": ""Železný plech""
+      },
+      {
+        ""identifier"": ""IronSheetDesc"",
+        ""english"": ""Material required for building advanced metal products."",
+        ""russian"": ""Материал, необходимый для изготовления современных металлических изделий."",
+        ""chinese"": ""这是制造先进金属产品所需的常见材料。"",
+        ""slovak"": ""Materiál potrebný na výrobu pokročilých kovových výrobkov.""
+      },
+      {
+        ""identifier"": ""IronRod"",
+        ""english"": ""Iron rod"",
+        ""russian"": ""Железный стержень"",
+        ""chinese"": ""铁棒"",
+        ""slovak"": ""Železná tyč""
+      },
+      {
+        ""identifier"": ""IronRodDesc"",
+        ""english"": ""Standard component of metallurgical products."",
+        ""russian"": ""Стандартный компонент металлургической продукции."",
+        ""chinese"": ""铁棒是冶金产品的标准件。"",
+        ""slovak"": ""Bežný prvok hutníckych výrobkov.""
       }
     ]
   }
-" ;
+";
     }
 }

@@ -1,4 +1,3 @@
-using UnityEngine;
 public static class PlayerResources
 {
     public static float PlayerOxygen = 0f;

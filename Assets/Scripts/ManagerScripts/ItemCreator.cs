@@ -1,11 +1,7 @@
-using System.Collections;
+using Assets.Scripts.ItemFactory;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using TMPro;
-using System.Globalization;
-using Assets.Scripts.ItemFactory;
-using System.IO;
 
 namespace ItemManagement
 {
@@ -21,6 +17,7 @@ namespace ItemManagement
         public string itemName;
         public bool equipable;
     }
+    [Serializable]
     public class ItemData : MonoBehaviour
     {
         public int ID;
@@ -32,6 +29,7 @@ namespace ItemManagement
         public string itemClass;
         public string itemName;
         public bool equipable;
+        public bool isEquipped;
     }
     public class ItemCreator : MonoBehaviour
     {
@@ -48,30 +46,17 @@ namespace ItemManagement
 
         private void Awake()
         {
-            /*
-            string filePath = Path.Combine(Application.dataPath, "Scripts/Models/ItemsList.json");
-
-            if (File.Exists(filePath))
-            {
-                string jsonText = File.ReadAllText(filePath);
-                ItemDataJsonArray itemDataArray = JsonUtility.FromJson<ItemDataJsonArray>(jsonText);
-                if (itemDataArray != null)
-                {
-                    itemDataList = itemDataArray.items;
-                }
-            }
-            else
-            {
-                Debug.LogError("ItemsList.json not found at: " + filePath);
-            }
-            */
-
             string jsonText = Assets.Scripts.Models.ItemsListJson.json;
             ItemDataJsonArray itemDataArray = JsonUtility.FromJson<ItemDataJsonArray>(jsonText);
             if (itemDataArray != null)
             {
                 itemDataList = itemDataArray.items;
             }
+        }
+        public void Recreateitem(float quantity, string itemProduct, string itemType, string itemClass, string itemName,
+            int index, float stackLimit, bool equipable, int ID, bool isEquipped, RectTransform rectTransform = null)
+        {
+            itemFactory.RecreateItem(quantity, itemTemplate, itemProduct, itemType, itemClass, itemName, index, stackLimit, equipable, ID, isEquipped, rectTransform);
         }
         public void CreateItem(int itemIndex, float? quantity = null)
         {

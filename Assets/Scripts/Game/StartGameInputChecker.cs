@@ -1,9 +1,7 @@
-using System.Collections;
-using UnityEngine.UI;
-using System.Collections.Generic;
-using UnityEngine;
 using ItemManagement;
 using RecipeManagement;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class StartGameInputChecker : MonoBehaviour
 {
@@ -33,8 +31,8 @@ public class StartGameInputChecker : MonoBehaviour
         recipeManager.PopulateInventoryArrays();
         recipeCreator.CreateRecipe(0);
         recipeCreator.CreateRecipe(2);
-        recipeCreator.CreateRecipe(4);
         recipeCreator.CreateRecipe(6);
+        recipeCreator.CreateRecipe(4);
 
         //initialize starting resources
         Credits.ResetCredits();
@@ -45,7 +43,7 @@ public class StartGameInputChecker : MonoBehaviour
         // test purposes
         //itemCreator.CreateItem(3);
         //itemCreator.CreateItem(6);
-        //itemCreator.CreateItem(2);
+        //itemCreator.CreateItem(2, 20);
 
         equipmentManager.InitStartEquip();
 

@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using BuildingManagement;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class BuildingStatisticsManager : MonoBehaviour
 {
@@ -41,18 +40,35 @@ public class BuildingStatisticsManager : MonoBehaviour
 
                 foreach (GameObject item in itemArray)
                 {
-                    BuildingItemData itemData = item.GetComponent<BuildingItemData>();
-                    bool showItem =
-                    (showAllTypes || BuildingStatisticType == itemData.buildingType);
-                    if (showItem)
+                    if (kvp.Key == "POWERPLANT")
                     {
-                        GameObject rowObject = Instantiate(RowObject, objectList);
-                        rowObject.SetActive(true);
-                        UpperGraphManager upperGraphManager = rowObject.transform.Find("GraphObject/UPPERGRAPHMANAGER").GetComponent<UpperGraphManager>();
-                        rowObject.transform.position = Vector3.zero;
-                        UpdateRowWithDataOnce(rowObject, itemData, item);
-                        UpdateGraph(upperGraphManager, itemData);
+                        EnergyBuildingItemData itemDataEnergy = item.GetComponent<EnergyBuildingItemData>();
+                        bool showItem = showAllTypes || BuildingStatisticType == itemDataEnergy.buildingType;
+                        if (showItem)
+                        {
+                            GameObject rowObject = Instantiate(RowObject, objectList);
+                            rowObject.SetActive(true);
+                            UpperGraphManager upperGraphManager = rowObject.transform.Find("GraphObject/UPPERGRAPHMANAGER").GetComponent<UpperGraphManager>();
+                            rowObject.transform.position = Vector3.zero;
+                            UpdateRowWithEnergyDataOnce(rowObject, itemDataEnergy, item);
+                            UpdateEnergyGraph(upperGraphManager, itemDataEnergy);
+                        }
                     }
+                    else
+                    {
+                        BuildingItemData itemData = item.GetComponent<BuildingItemData>();
+                        bool showItem = showAllTypes || BuildingStatisticType == itemData.buildingType;
+                        if (showItem)
+                        {
+                            GameObject rowObject = Instantiate(RowObject, objectList);
+                            rowObject.SetActive(true);
+                            UpperGraphManager upperGraphManager = rowObject.transform.Find("GraphObject/UPPERGRAPHMANAGER").GetComponent<UpperGraphManager>();
+                            rowObject.transform.position = Vector3.zero;
+                            UpdateRowWithDataOnce(rowObject, itemData, item);
+                            UpdateGraph(upperGraphManager, itemData);
+                        }
+                    }
+
 
                 }
             }
@@ -66,7 +82,7 @@ public class BuildingStatisticsManager : MonoBehaviour
         while (updateUI)
         {
             bool showAllTypes = BuildingStatisticType == "ALLTYPES";
-            await UniTask.Delay(1000, cancellationToken: updateCancellation.Token);
+            await UniTask.Delay(200, cancellationToken: updateCancellation.Token);
             int currentRowIndex = 0;
 
             if (buildingManager.buildingArrays != null && buildingManager.buildingArrays.Count > 0)
@@ -77,12 +93,25 @@ public class BuildingStatisticsManager : MonoBehaviour
 
                     foreach (GameObject item in itemArray)
                     {
-                        BuildingItemData itemData = item.GetComponent<BuildingItemData>();
-                        bool showItem =
-                        (showAllTypes || BuildingStatisticType == itemData.buildingType);
-                        if (showItem)
+                        if (kvp.Key == "POWERPLANT")
                         {
-                            UpdateRowObjectsWithData(itemData, ref currentRowIndex);
+                            EnergyBuildingItemData itemData = item.GetComponent<EnergyBuildingItemData>();
+                            bool showItem =
+                            (showAllTypes || BuildingStatisticType == itemData.buildingType);
+                            if (showItem)
+                            {
+                                UpdateRowObjectsWithEnergyData(itemData, ref currentRowIndex);
+                            }
+                        }
+                        else
+                        {
+                            BuildingItemData itemData = item.GetComponent<BuildingItemData>();
+                            bool showItem =
+                            (showAllTypes || BuildingStatisticType == itemData.buildingType);
+                            if (showItem)
+                            {
+                                UpdateRowObjectsWithData(itemData, ref currentRowIndex);
+                            }
                         }
                     }
                 }
@@ -102,7 +131,20 @@ public class BuildingStatisticsManager : MonoBehaviour
             currentRowIndex++;
         }
     }
-    private void UpdateGraph(UpperGraphManager upperGraphManager, BuildingItemData itemData)
+    private void UpdateRowObjectsWithEnergyData(EnergyBuildingItemData itemData, ref int currentRowIndex)
+    {
+        int objectListCount = objectList.childCount;
+        if (currentRowIndex < objectListCount)
+        {
+            Transform rowTransform = objectList.GetChild(currentRowIndex);
+            GameObject rowObject = rowTransform.gameObject;
+            UpperGraphManager upperGraphManager = rowObject.transform.Find("GraphObject/UPPERGRAPHMANAGER").GetComponent<UpperGraphManager>();
+            UpdateRowWithEnergyData(rowObject, itemData);
+            UpdateEnergyGraph(upperGraphManager, itemData);
+            currentRowIndex++;
+        }
+    }
+    private void UpdateEnergyGraph(UpperGraphManager upperGraphManager, EnergyBuildingItemData itemData)
     {
         if (BuildingStatisticInterval == "1 second")
         {
@@ -137,16 +179,61 @@ public class BuildingStatisticsManager : MonoBehaviour
             upperGraphManager.FillGraph(itemData.powerCycleData.sixHourCycle);
         }
     }
+    private void UpdateGraph(UpperGraphManager upperGraphManager, BuildingItemData itemData)
+    {
+        if (BuildingStatisticInterval == "1 second")
+        {
+            upperGraphManager.FillGraph(itemData.powerConsumptionCycleData.secondCycle);
+        }
+        else if (BuildingStatisticInterval == "10 seconds")
+        {
+            upperGraphManager.FillGraph(itemData.powerConsumptionCycleData.tenSecondCycle);
+        }
+        else if (BuildingStatisticInterval == "30 seconds")
+        {
+            upperGraphManager.FillGraph(itemData.powerConsumptionCycleData.thirtySecondCycle);
+        }
+        else if (BuildingStatisticInterval == "1 minute")
+        {
+            upperGraphManager.FillGraph(itemData.powerConsumptionCycleData.minuteCycle);
+        }
+        else if (BuildingStatisticInterval == "10 minutes")
+        {
+            upperGraphManager.FillGraph(itemData.powerConsumptionCycleData.tenMinuteCycle);
+        }
+        else if (BuildingStatisticInterval == "30 minutes")
+        {
+            upperGraphManager.FillGraph(itemData.powerConsumptionCycleData.thirtyMinuteCycle);
+        }
+        else if (BuildingStatisticInterval == "1 hour")
+        {
+            upperGraphManager.FillGraph(itemData.powerConsumptionCycleData.hourCycle);
+        }
+        else if (BuildingStatisticInterval == "6 hours")
+        {
+            upperGraphManager.FillGraph(itemData.powerConsumptionCycleData.sixHourCycle);
+        }
+    }
     private void UpdateRowWithDataOnce(GameObject rowObject, BuildingItemData itemData, GameObject item)
     {
         TextMeshProUGUI buildingNameText = rowObject.transform.Find("Name").GetComponent<TextMeshProUGUI>();
         Image rowImage = rowObject.transform.Find("Icon/Image").GetComponent<Image>();
         TextMeshProUGUI powerOutputText = rowObject.transform.Find("ProductionCount").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI consumptionOutputText = rowObject.transform.Find("ConsumptionCount").GetComponent<TextMeshProUGUI>();
-        string spriteName = item.name.Replace("(Clone)","").Replace(" (UnityEngine.GameObject)", "");
+        string spriteName = itemData.spriteIconName;
+        buildingNameText.text = itemData.buildingName;
+        consumptionOutputText.text = itemData.powerConsumption.ToString();
+        rowImage.sprite = AssignSpriteToSlot(spriteName);
+    }
+    private void UpdateRowWithEnergyDataOnce(GameObject rowObject, EnergyBuildingItemData itemData, GameObject item)
+    {
+        TextMeshProUGUI buildingNameText = rowObject.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+        Image rowImage = rowObject.transform.Find("Icon/Image").GetComponent<Image>();
+        TextMeshProUGUI powerOutputText = rowObject.transform.Find("ProductionCount").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI consumptionOutputText = rowObject.transform.Find("ConsumptionCount").GetComponent<TextMeshProUGUI>();
+        string spriteName = itemData.spriteIconName;
         buildingNameText.text = itemData.buildingName;
         powerOutputText.text = itemData.actualPowerOutput.ToString();
-        consumptionOutputText.text = itemData.powerConsumption.ToString();
         rowImage.sprite = AssignSpriteToSlot(spriteName);
     }
 
@@ -154,8 +241,13 @@ public class BuildingStatisticsManager : MonoBehaviour
     {
         TextMeshProUGUI powerOutputText = rowObject.transform.Find("ProductionCount").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI consumptionOutputText = rowObject.transform.Find("ConsumptionCount").GetComponent<TextMeshProUGUI>();
-        powerOutputText.text = itemData.actualPowerOutput.ToString();
         consumptionOutputText.text = itemData.powerConsumption.ToString();
+    }
+    private void UpdateRowWithEnergyData(GameObject rowObject, EnergyBuildingItemData itemData)
+    {
+        TextMeshProUGUI powerOutputText = rowObject.transform.Find("ProductionCount").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI consumptionOutputText = rowObject.transform.Find("ConsumptionCount").GetComponent<TextMeshProUGUI>();
+        powerOutputText.text = itemData.actualPowerOutput.ToString();
     }
 
     private Sprite AssignSpriteToSlot(string spriteName)

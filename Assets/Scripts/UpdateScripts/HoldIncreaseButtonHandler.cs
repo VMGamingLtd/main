@@ -1,12 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using BuildingManagement;
+using System.Collections;
 using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
 public class HoldIncreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private BuildingItemData itemData;
+    private EnergyBuildingItemData itemDataEnergy;
     public BuildingOptionsInterface buildingOptionsInterface;
     private GameObject refObj;
     public TextMeshProUGUI efficiency;
@@ -29,10 +29,11 @@ public class HoldIncreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPo
     {
         refObj = buildingOptionsInterface.mainObj;
         itemData = refObj.GetComponent<BuildingItemData>();
+        itemDataEnergy = refObj.GetComponent<EnergyBuildingItemData>();
         float quantityBaseInput;
-        if (itemData.buildingType == "POWERPLANT")
+        if (itemDataEnergy != null)
         {
-            if (itemData.basePowerOutput == 99999)
+            if (itemDataEnergy.basePowerOutput == 99999)
             {
                 quantityBaseInput = 2f;
             }
@@ -40,16 +41,16 @@ public class HoldIncreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPo
             {
                 quantityBaseInput = 0.5f;
             }
-            int consumedSlots = itemData.consumedSlotCount;
-            while (isHoldingButton && itemData.efficiencySetting < 200)
+            int consumedSlots = itemDataEnergy.consumedSlotCount;
+            while (isHoldingButton && itemDataEnergy.efficiencySetting < 200)
             {
                 for (int i = 0; i < consumedSlots; i++)
                 {
-                    itemData.consumedItems[i].quantity += quantityBaseInput / 100f;
+                    itemDataEnergy.consumedItems[i].quantity += quantityBaseInput / 100f;
                 }
-                itemData.efficiencySetting++;
-                itemData.totalTime -= 0.05f;
-                itemData.powerOutput += (int)(itemData.basePowerOutput / 100f);
+                itemDataEnergy.efficiencySetting++;
+                itemDataEnergy.totalTime -= 0.05f;
+                itemDataEnergy.powerOutput += (int)(itemDataEnergy.basePowerOutput / 100f);
                 yield return new WaitForSeconds(0.1f); // Repeat every 1 second (adjust as needed).
             }
         }

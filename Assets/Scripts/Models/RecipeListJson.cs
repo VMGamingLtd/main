@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assets.Scripts.Models
+﻿namespace Assets.Scripts.Models
 {
     internal class RecipeListJson
     {
@@ -129,12 +123,12 @@ namespace Assets.Scripts.Models
     },
     {
       ""index"": 7,
-      ""recipeName"": ""Wood"",
+      ""recipeName"": ""Steam"",
       ""recipeProduct"": ""BASIC"",
-      ""recipeType"": ""PLANTS"",
+      ""recipeType"": ""GAS"",
       ""itemClass"": ""CLASS-F"",
-      ""experience"": 2,
-      ""productionTime"": 4,
+      ""experience"": 1,
+      ""productionTime"": 2,
       ""outputValue"": 2,
       ""hasRequirements"": false
     },
@@ -151,6 +145,17 @@ namespace Assets.Scripts.Models
     },
     {
       ""index"": 9,
+      ""recipeName"": ""Wood"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""PLANTS"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 2,
+      ""productionTime"": 4,
+      ""outputValue"": 2,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 10,
       ""recipeName"": ""Coal"",
       ""recipeProduct"": ""BASIC"",
       ""recipeType"": ""MINERALS"",
@@ -161,7 +166,7 @@ namespace Assets.Scripts.Models
       ""hasRequirements"": false
     },
     {
-      ""index"": 10,
+      ""index"": 11,
       ""recipeName"": ""IronBeam"",
       ""recipeProduct"": ""PROCESSED"",
       ""recipeType"": ""METALS"",
@@ -178,7 +183,7 @@ namespace Assets.Scripts.Models
           ""quantity"": 6
         },
         {
-          ""index"": 9,
+          ""index"": 10,
           ""name"": ""Coal"",
           ""product"": ""BASIC"",
           ""quantity"": 2
@@ -186,7 +191,7 @@ namespace Assets.Scripts.Models
       ]
     },
     {
-      ""index"": 11,
+      ""index"": 12,
       ""recipeName"": ""BiofuelGenerator"",
       ""recipeProduct"": ""BUILDINGS"",
       ""recipeType"": ""POWERPLANT"",
@@ -197,16 +202,72 @@ namespace Assets.Scripts.Models
       ""hasRequirements"": true,
       ""childDataList"": [
         {
-          ""index"": 10,
+          ""index"": 11,
           ""name"": ""IronBeam"",
           ""product"": ""PROCESSED"",
           ""quantity"": 4
         },
         {
-          ""index"": 7,
+          ""index"": 9,
           ""name"": ""Wood"",
           ""product"": ""BASIC"",
           ""quantity"": 4
+        },
+        {
+          ""index"": 14,
+          ""name"": ""IronRod"",
+          ""product"": ""PROCESSED"",
+          ""quantity"": 4
+        }
+      ]
+    },
+    {
+      ""index"": 13,
+      ""recipeName"": ""IronSheet"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""METALS"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 2,
+      ""productionTime"": 4,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 8,
+          ""name"": ""IronOre"",
+          ""product"": ""BASIC"",
+          ""quantity"": 4
+        },
+        {
+          ""index"": 10,
+          ""name"": ""Coal"",
+          ""product"": ""BASIC"",
+          ""quantity"": 2
+        }
+      ]
+    },
+    {
+      ""index"": 14,
+      ""recipeName"": ""IronRod"",
+      ""recipeProduct"": ""PROCESSED"",
+      ""recipeType"": ""METALS"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 4,
+      ""productionTime"": 6,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 13,
+          ""name"": ""IronSheet"",
+          ""product"": ""BASIC"",
+          ""quantity"": 1
+        },
+        {
+          ""index"": 10,
+          ""name"": ""Coal"",
+          ""product"": ""BASIC"",
+          ""quantity"": 1
         }
       ]
     }

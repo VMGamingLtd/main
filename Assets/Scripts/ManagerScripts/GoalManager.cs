@@ -1,7 +1,5 @@
 using Cysharp.Threading.Tasks;
 using RecipeManagement;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GoalManager : MonoBehaviour
@@ -20,6 +18,30 @@ public class GoalManager : MonoBehaviour
     {
         recipeCreator = GameObject.Find("RecipeCreatorList").GetComponent<RecipeCreator>();
         buttonManager = GameObject.Find("BUTTONMANAGER").GetComponent<ButtonManager>();
+    }
+
+    public void UpdateCurrentGoal()
+    {
+        if (fourthGoal)
+        {
+            ChangeGoal("AutomateBattery");
+        }
+        else if (thirdGoal)
+        {
+            ChangeGoal("AutomateBattery");
+        }
+        else if (secondGoal)
+        {
+            ChangeGoal("BuildBase");
+        }
+        else if (firstGoal)
+        {
+            ChangeGoal("CraftAndUseWater");
+        }
+        else
+        {
+            ChangeGoal("CraftBattery");
+        }
     }
     public void ChangeGoal(string GoalName)
     {
@@ -43,11 +65,13 @@ public class GoalManager : MonoBehaviour
     {
         goalAnimation.Play("Success");
         await UniTask.Delay(1000);
-        recipeCreator.CreateRecipe(7);
         recipeCreator.CreateRecipe(8);
         recipeCreator.CreateRecipe(9);
         recipeCreator.CreateRecipe(10);
         recipeCreator.CreateRecipe(11);
+        recipeCreator.CreateRecipe(12);
+        recipeCreator.CreateRecipe(13);
+        recipeCreator.CreateRecipe(14);
         ChangeGoal("BuildBase");
         goalAnimation.Play("Idle");
         secondGoal = true;

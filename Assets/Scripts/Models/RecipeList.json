@@ -198,6 +198,56 @@
           "quantity": 4
         }
       ]
+    },
+    {
+      "index": 12,
+      "recipeName": "IronSheet",
+      "recipeProduct": "BASIC",
+      "recipeType": "METALS",
+      "itemClass": "CLASS-F",
+      "experience": 2,
+      "productionTime": 4,
+      "outputValue": 1,
+      "hasRequirements": true,
+      "childDataList": [
+        {
+          "index": 8,
+          "name": "IronOre",
+          "product": "BASIC",
+          "quantity": 4
+        },
+        {
+          "index": 9,
+          "name": "Coal",
+          "product": "BASIC",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "recipeName": "IronRod",
+      "recipeProduct": "PROCESSED",
+      "recipeType": "METALS",
+      "itemClass": "CLASS-F",
+      "experience": 4,
+      "productionTime": 6,
+      "outputValue": 1,
+      "hasRequirements": true,
+      "childDataList": [
+        {
+          "index": 12,
+          "name": "IronSheet",
+          "product": "BASIC",
+          "quantity": 1
+        },
+        {
+          "index": 9,
+          "name": "Coal",
+          "product": "BASIC",
+          "quantity": 1
+        }
+      ]
     }
   ]
 }
