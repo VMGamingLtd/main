@@ -1,9 +1,9 @@
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using BuildingManagement;
 using System;
-using System.IO;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace BuildingManagement
 {
@@ -22,20 +22,19 @@ namespace BuildingManagement
         public int basePowerOutput;
         public int powerConsumption;
     }
-
     [System.Serializable]
-    public class BuildingItemData : MonoBehaviour
+    public class EnergyBuildingItemData : MonoBehaviour
     {
         public int index;
+        public int ID;
+        public string spriteIconName;
         public string buildingType;
         public string buildingName;
         public string buildingClass;
         public Vector3 buildingPosition;
         public List<SlotItemData> consumedItems;
         public List<SlotItemData> producedItems;
-        public PowerCycle powerCycleData = new PowerCycle();
-        public PowerConsumptionCycle powerConsumptionCycleData = new PowerConsumptionCycle();
-        public ProductionCycle productionCycleData = new ProductionCycle();
+        public PowerCycle powerCycleData = new();
         public int consumedSlotCount;
         public float timer;
         public float totalTime;
@@ -45,6 +44,38 @@ namespace BuildingManagement
         public int powerOutput;
         public int basePowerOutput;
         public int actualPowerOutput;
+        public int efficiency;
+        public int efficiencySetting;
+        public int buildingCount;
+        public bool isPaused;
+
+        public EnergyBuildingItemData()
+        {
+            consumedItems = new List<SlotItemData>();
+            producedItems = new List<SlotItemData>();
+        }
+    }
+
+    [System.Serializable]
+    public class BuildingItemData : MonoBehaviour
+    {
+        public int index;
+        public int ID;
+        public string spriteIconName;
+        public string buildingType;
+        public string buildingName;
+        public string buildingClass;
+        public Vector3 buildingPosition;
+        public List<SlotItemData> consumedItems;
+        public List<SlotItemData> producedItems;
+        public PowerConsumptionCycle powerConsumptionCycleData = new();
+        public ProductionCycle productionCycleData = new();
+        public int consumedSlotCount;
+        public float timer;
+        public float totalTime;
+        public int secondCycleCount;
+        public int minuteCycleCount;
+        public int hourCycleCount;
         public int powerConsumption;
         public int actualPowerConsumption;
         public int producedSlotCount;
@@ -110,9 +141,14 @@ public class BuildingCreator : MonoBehaviour
     public GameObject buildingTemplate;
     public GameObject newItemParent;
     public BuildingManager buildingManager;
+    public BuildingIncrementor buildingIncrementor;
     public TranslationManager translationManager;
     private BuildingItemData itemData;
+    private EnergyBuildingItemData itemDataEnergy;
     private List<BuildingDataJson> buildingDataList;
+    private GameObject objectTemplate;
+    public RectTransform BuildingArea;
+    public static int BuildingUniqueID;
 
     [Serializable]
     private class JsonArray
@@ -121,24 +157,7 @@ public class BuildingCreator : MonoBehaviour
     }
     private void Awake()
     {
-        /*
-        string filePath = Path.Combine(Application.dataPath, "Scripts/Models/BuildingsList.json");
-
-        if (File.Exists(filePath))
-        {
-            string jsonText = File.ReadAllText(filePath);
-            JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
-            if (jsonArray != null)
-            {
-                buildingDataList = jsonArray.buildings;
-            }
-        }
-        else
-        {
-            Debug.LogError("BuildingsList.json not found at: " + filePath);
-        }
-        */
-
+        objectTemplate = GameObject.Find("BuildingCreatorList/BuildingTemplate");
         string jsonText = Assets.Scripts.Models.BuildingsListJson.json;
         JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
         if (jsonArray != null)
@@ -146,6 +165,59 @@ public class BuildingCreator : MonoBehaviour
             buildingDataList = jsonArray.buildings;
         }
     }
+
+    public void RecreateEnergyBuilding(int index, string buildingName, string buildingType, string buildingClass, int consumedSlotCount,
+        List<SlotItemData> consumedItems, float totalTime, int basePowerOutput, float timer, int actualPowerOutput, int powerOutput, int efficiency,
+        int efficiencySetting, int buildingCount, bool isPaused, Vector3 buildingPosition, int secondCycleCount, int minuteCycleCount, int hourCycleCount,
+        PowerCycle powerCycleData, string spriteIconName, int ID)
+    {
+        RecreateEnergyBuilding(objectTemplate, index, buildingName, buildingType, buildingClass, consumedSlotCount, consumedItems, totalTime,
+            basePowerOutput, timer, actualPowerOutput, powerOutput, efficiency, efficiencySetting, buildingCount, isPaused, buildingPosition,
+            secondCycleCount, minuteCycleCount, hourCycleCount, powerCycleData, spriteIconName, ID);
+    }
+
+    private void RecreateEnergyBuilding(GameObject objectTemplate, int index, string buildingName, string buildingType, string buildingClass, int consumedSlotCount,
+          List<SlotItemData> consumedItems, float totalTime, int basePowerOutput, float timer, int actualPowerOutput, int powerOutput, int efficiency, int efficiencySetting,
+          int buildingCount, bool isPaused, Vector3 buildingPosition, int secondCycleCount, int minuteCycleCount, int hourCycleCount, PowerCycle powerCycleData, string spriteIconName,
+          int ID)
+    {
+        GameObject newBuilding = Instantiate(objectTemplate, BuildingArea);
+        itemDataEnergy = newBuilding.AddComponent<EnergyBuildingItemData>();
+        itemDataEnergy.buildingType = buildingType;
+        itemDataEnergy.buildingPosition = buildingPosition;
+        newBuilding.transform.localPosition = buildingPosition;
+        itemDataEnergy.index = index;
+        newBuilding.name = spriteIconName;
+        itemDataEnergy.buildingClass = buildingClass;
+        itemDataEnergy.consumedSlotCount = consumedSlotCount;
+        itemDataEnergy.consumedItems = consumedItems;
+        itemDataEnergy.totalTime = totalTime;
+        itemDataEnergy.basePowerOutput = basePowerOutput;
+        itemDataEnergy.actualPowerOutput = actualPowerOutput;
+        itemDataEnergy.powerOutput = powerOutput;
+        itemDataEnergy.efficiencySetting = 100;
+        itemDataEnergy.timer = timer;
+        itemDataEnergy.efficiency = efficiency;
+        itemDataEnergy.efficiencySetting = efficiencySetting;
+        itemDataEnergy.buildingCount = buildingCount;
+        itemDataEnergy.isPaused = isPaused;
+        itemDataEnergy.secondCycleCount = secondCycleCount;
+        itemDataEnergy.minuteCycleCount = minuteCycleCount;
+        itemDataEnergy.hourCycleCount = hourCycleCount;
+        itemDataEnergy.powerCycleData = powerCycleData;
+        itemDataEnergy.spriteIconName = spriteIconName;
+        itemDataEnergy.ID = ID;
+        newBuilding.tag = "Energy";
+        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+        itemDataEnergy.buildingName = buildingName;
+        newBuilding.AddComponent<EnergyBuildingCycles>();
+        newBuilding.AddComponent<DragAndDropBuildings>();
+        buildingManager.AddToItemArray(buildingType, newBuilding);
+        buildingIncrementor.InitializeBuildingCounts();
+        newBuilding.transform.localScale = Vector3.one;
+        newBuilding.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(spriteIconName);
+    }
+
     public void CreateBuilding(GameObject draggedObject, int buildingIndex)
     {
         var itemData = buildingDataList[buildingIndex];
@@ -156,94 +228,127 @@ public class BuildingCreator : MonoBehaviour
                     itemData.buildingType,
                     itemData.buildingClass,
                     itemData.consumedSlotCount,
-                    itemData.consumedItems.ToArray(),
+                    itemData.consumedItems,
                     itemData.producedSlotCount,
-                    itemData.producedItems.ToArray(),
+                    itemData.producedItems,
                     itemData.totalTime,
                     itemData.basePowerOutput,
                     itemData.powerConsumption);
     }
-
-    private void CreateBuilding(GameObject draggedObject, 
-                                int index, 
-                                string buildingName, 
+    private void CreateBuilding(GameObject draggedObject,
+                                int index,
+                                string buildingName,
                                 string buildingType,
                                 string buildingClass,
-                                int consumedSlotCount, 
-                                SlotItemData[] slotItemData,
+                                int consumedSlotCount,
+                                List<SlotItemData> slotItemData,
                                 int producedSlotCount,
-                                SlotItemData[] producedItemData,
+                                List<SlotItemData> producedItemData,
                                 float totalTime,
                                 int powerOutput,
                                 int powerConsumption)
     {
-        itemData = draggedObject.AddComponent<BuildingItemData>();
-        itemData.buildingType = buildingType;
-        itemData.buildingPosition = draggedObject.GetComponent<RectTransform>().anchoredPosition3D;
-        itemData.index = index;
-        draggedObject.name = buildingName;
-        itemData.buildingClass = buildingClass;
-        itemData.consumedSlotCount = consumedSlotCount;
-        itemData.producedSlotCount = producedSlotCount;
-        itemData.consumedItems = new List<SlotItemData>(slotItemData);
-        itemData.producedItems = new List<SlotItemData>(producedItemData);
-        itemData.totalTime = totalTime;
-        itemData.powerOutput = powerOutput;
-        itemData.powerConsumption = powerConsumption;
-        itemData.efficiencySetting = 100;
-        itemData.isPaused = false;
-
-        if (draggedObject.name == "BiofuelGenerator")
+        if (buildingType == "POWERPLANT")
         {
-            Planet0Buildings.Planet0BiofuelGenerator++;
-            Planet0Buildings.Planet0BiofuelGeneratorBlueprint--;
-            itemData.buildingCount = Planet0Buildings.Planet0BiofuelGenerator;
+            itemDataEnergy = draggedObject.AddComponent<EnergyBuildingItemData>();
+            itemDataEnergy.buildingType = buildingType;
+            itemDataEnergy.buildingPosition = draggedObject.GetComponent<RectTransform>().anchoredPosition3D;
+            itemDataEnergy.index = index;
+            draggedObject.name = buildingName;
+            itemDataEnergy.buildingClass = buildingClass;
+            itemDataEnergy.consumedSlotCount = consumedSlotCount;
+            itemDataEnergy.consumedItems = slotItemData;
+            itemDataEnergy.producedItems = producedItemData;
+            itemDataEnergy.totalTime = totalTime;
+            itemDataEnergy.powerOutput = powerOutput;
+            itemDataEnergy.efficiencySetting = 100;
+            itemDataEnergy.isPaused = false;
+            BuildingUniqueID++;
+            itemDataEnergy.ID = BuildingUniqueID;
+            itemDataEnergy.spriteIconName = draggedObject.transform.Find("Icon").GetComponent<Image>().sprite.name;
+            if (draggedObject.name == "BiofuelGenerator")
+            {
+                Planet0Buildings.Planet0BiofuelGenerator++;
+                Planet0Buildings.Planet0BiofuelGeneratorBlueprint--;
+                itemDataEnergy.buildingCount = Planet0Buildings.Planet0BiofuelGenerator;
+                draggedObject.tag = "Energy";
+            }
+            translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+            string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
+            itemDataEnergy.buildingName = $"{titleText} #{itemDataEnergy.buildingCount}";
+            draggedObject.AddComponent<EnergyBuildingCycles>();
         }
-        else if (draggedObject.name == "WaterPump")
+        else
         {
-            Planet0Buildings.Planet0WaterPump++;
-            Planet0Buildings.Planet0WaterPumpBlueprint--;
-            itemData.buildingCount = Planet0Buildings.Planet0WaterPump;
+            itemData = draggedObject.AddComponent<BuildingItemData>();
+            itemData.buildingType = buildingType;
+            itemData.buildingPosition = draggedObject.GetComponent<RectTransform>().anchoredPosition3D;
+            itemData.index = index;
+            draggedObject.name = buildingName;
+            itemData.buildingClass = buildingClass;
+            itemData.consumedSlotCount = consumedSlotCount;
+            itemData.producedSlotCount = producedSlotCount;
+            itemData.consumedItems = slotItemData;
+            itemData.producedItems = producedItemData;
+            itemData.totalTime = totalTime;
+            itemData.powerConsumption = powerConsumption;
+            itemData.efficiencySetting = 100;
+            itemData.isPaused = false;
+            BuildingUniqueID++;
+            itemData.ID = BuildingUniqueID;
+            itemData.spriteIconName = draggedObject.transform.Find("Icon").GetComponent<Image>().sprite.name;
+            if (draggedObject.name == "WaterPump")
+            {
+                Planet0Buildings.Planet0WaterPump++;
+                Planet0Buildings.Planet0WaterPumpBlueprint--;
+                itemData.buildingCount = Planet0Buildings.Planet0WaterPump;
+                draggedObject.tag = "NoConsume";
+            }
+            else if (draggedObject.name == "PlantField")
+            {
+                Planet0Buildings.Planet0PlantField++;
+                Planet0Buildings.Planet0PlantFieldBlueprint--;
+                itemData.buildingCount = Planet0Buildings.Planet0PlantField;
+                draggedObject.tag = "NoConsume";
+            }
+            else if (draggedObject.name == "Boiler")
+            {
+                Planet0Buildings.Planet0Boiler++;
+                Planet0Buildings.Planet0BoilerBlueprint--;
+                itemData.buildingCount = Planet0Buildings.Planet0Boiler;
+                draggedObject.tag = "Consume";
+            }
+            else if (draggedObject.name == "SteamGenerator")
+            {
+                Planet0Buildings.Planet0SteamGenerator++;
+                Planet0Buildings.Planet0SteamGeneratorBlueprint--;
+                itemDataEnergy.buildingCount = Planet0Buildings.Planet0SteamGenerator;
+                draggedObject.tag = "Energy";
+            }
+            else if (draggedObject.name == "Furnace")
+            {
+                Planet0Buildings.Planet0Furnace++;
+                Planet0Buildings.Planet0FurnaceBlueprint--;
+                itemData.buildingCount = Planet0Buildings.Planet0Furnace;
+                draggedObject.tag = "Consume";
+            }
+            translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+            string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
+            itemData.buildingName = $"{titleText} #{itemData.buildingCount}";
+            draggedObject.AddComponent<BuildingCycles>();
         }
-        else if (draggedObject.name == "PlantField")
-        {
-            Planet0Buildings.Planet0PlantField++;
-            Planet0Buildings.Planet0PlantFieldBlueprint--;
-            itemData.buildingCount = Planet0Buildings.Planet0PlantField;
-        }
-        else if (draggedObject.name == "Boiler")
-        {
-            Planet0Buildings.Planet0Boiler++;
-            Planet0Buildings.Planet0BoilerBlueprint--;
-            itemData.buildingCount = Planet0Buildings.Planet0Boiler;
-        }
-        else if (draggedObject.name == "SteamGenerator")
-        {
-            Planet0Buildings.Planet0SteamGenerator++;
-            Planet0Buildings.Planet0SteamGeneratorBlueprint--;
-            itemData.buildingCount = Planet0Buildings.Planet0SteamGenerator;
-        }
-        else if (draggedObject.name == "Furnace")
-        {
-            Planet0Buildings.Planet0Furnace++;
-            Planet0Buildings.Planet0FurnaceBlueprint--;
-            itemData.buildingCount = Planet0Buildings.Planet0Furnace;
-        }
-
-        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
-        string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
-        itemData.buildingName = $"{titleText} #{itemData.buildingCount}";
-
-        // Add the item to the building manager's item array
         buildingManager.AddToItemArray(buildingType, draggedObject);
-
-        // Adding this class will start corotuine on the building object itself
-        draggedObject.AddComponent<BuildingCycles>();
-
+        buildingIncrementor.InitializeBuildingCounts();
         if (GoalManager.thirdGoal == false)
         {
             GoalManager goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();
             _ = goalManager.SetFourthGoal();
         }
+    }
+
+    private Sprite AssignSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("buildingicons", spriteName);
+        return sprite;
     }
 }

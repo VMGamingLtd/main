@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assets.Scripts.Models
+﻿namespace Assets.Scripts.Models
 {
     public class ItemsListJson
     {
@@ -94,21 +88,21 @@ namespace Assets.Scripts.Models
     },
     {
       ""index"": 8,
-      ""quantity"": 2.0,
-      ""stackLimit"": 100.0,
-      ""itemName"": ""Wood"",
-      ""itemProduct"": ""BASIC"",
-      ""itemType"": ""PLANTS"",
-      ""itemClass"": ""CLASS-F"",
-      ""equipable"": ""false""
-    },
-    {
-      ""index"": 9,
       ""quantity"": 4.0,
       ""stackLimit"": 100.0,
       ""itemName"": ""IronOre"",
       ""itemProduct"": ""BASIC"",
       ""itemType"": ""MINERALS"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 9,
+      ""quantity"": 2.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""Wood"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""PLANTS"",
       ""itemClass"": ""CLASS-F"",
       ""equipable"": ""false""
     },
@@ -127,6 +121,36 @@ namespace Assets.Scripts.Models
       ""quantity"": 1.0,
       ""stackLimit"": 100.0,
       ""itemName"": ""IronBeam"",
+      ""itemProduct"": ""PROCESSED"",
+      ""itemType"": ""METALS"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 12,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""BiofuelGenerator"",
+      ""itemProduct"": ""BUILDING"",
+      ""itemType"": ""POWERPLANT"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 13,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""IronSheet"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""METALS"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 14,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""IronRod"",
       ""itemProduct"": ""PROCESSED"",
       ""itemType"": ""METALS"",
       ""itemClass"": ""CLASS-F"",

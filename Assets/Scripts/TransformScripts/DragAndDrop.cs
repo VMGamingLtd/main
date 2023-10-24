@@ -1,10 +1,10 @@
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Reflection;
 using ItemManagement;
-using TMPro;
 using System.Globalization;
+using System.Reflection;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -37,7 +37,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
         if (eventData.pointerEnter != null && InventoryManager.endingDrag == true)
         {
             SelectedObj = eventData.pointerEnter.transform.parent.gameObject;
-            selectedObjName = SelectedObj.name.Replace("(Clone)","");
+            selectedObjName = SelectedObj.name.Replace("(Clone)", "");
         }
     }
 
@@ -46,7 +46,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
         InventoryManager.endingDrag = true;
         draggedObj = transform.gameObject;
         originalParentName = transform.parent.name;
-        draggedObjectName = gameObject.name.Replace("(Clone)","");
+        draggedObjectName = gameObject.name.Replace("(Clone)", "");
 
         // first we check what are we dragging 
         if (originalParentName == "OxygenButton" || originalParentName == "EnergyButton" || originalParentName == "HelmetButton" ||
@@ -95,9 +95,11 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             CheckHighlightObject(eventData);
         }
     }
-    private void EquipSlot(GameObject highlightObj, RectTransform objectRectTransform, RectTransform highlightRectTransform, int slotIndex, string playerResourceName, float playerResourceValue)
+    private void EquipSlot(GameObject highlightObj, RectTransform objectRectTransform, RectTransform highlightRectTransform,
+        int slotIndex, string playerResourceName, float playerResourceValue, string objectName, ItemData itemData)
     {
-        EquipmentManager.slotEquippedName[slotIndex] = "";
+        itemData.isEquipped = true;
+        EquipmentManager.slotEquippedName[slotIndex] = objectName;
         EquipmentManager.slotEquipped[slotIndex] = true;
 
         // Use reflection to set the player resource value
@@ -135,14 +137,12 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             int selectedObjID = 0;
             float selectedObjQuantity = 0f;
             float selectedObjStackLimit = 0f;
-            ItemData itemData1 = draggedObj.GetComponent<ItemData>();
-            if (itemData1 != null)
+            if (draggedObj.TryGetComponent<ItemData>(out var itemData1))
             {
                 draggedObjID = itemData1.ID;
                 draggedObjQuantity = itemData1.itemQuantity;
             }
-            ItemData itemData2 = SelectedObj.GetComponent<ItemData>();
-            if (itemData2 != null)
+            if (SelectedObj.TryGetComponent<ItemData>(out var itemData2))
             {
                 selectedObjID = itemData2.ID;
                 selectedObjQuantity = itemData2.itemQuantity;
@@ -169,13 +169,13 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                         InventoryManager inventoryManager = draggedObj.transform.parent.GetComponent<InventoryManager>();
                         inventoryManager.DestroySpecificItem(draggedObjectName, itemData1.itemProduct, itemData1.ID);
                         itemData2.itemQuantity += draggedObjQuantity;
-                    }                
+                    }
                     TextMeshProUGUI newCountText = SelectedObj.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                     if (newCountText != null)
                     {
                         newCountText.text = itemData2.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
                     }
-                }             
+                }
             }
             Destroy(cloneObject);
             previousHighlightObject = null;
@@ -195,7 +195,8 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             {
                 if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "OxygenTank" && GlobalCalculator.isPlayerInBiologicalBiome == false)
                 {
-                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 6, "PlayerOxygen", 0.05f);
+                    ItemData itemData = draggedObj.GetComponent<ItemData>();
+                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 6, "PlayerOxygen", 0.05f, draggedObjectName, itemData);
                     audioManager.PlayOxygenSlotSound();
                 }
                 else
@@ -207,7 +208,8 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             {
                 if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "Battery")
                 {
-                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 5, "PlayerEnergy", 0.0166f);
+                    ItemData itemData = draggedObj.GetComponent<ItemData>();
+                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 5, "PlayerEnergy", 0.0166f, draggedObjectName, itemData);
                     audioManager.PlayEnergySlotSound();
                 }
             }
@@ -215,7 +217,8 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             {
                 if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "DistilledWater")
                 {
-                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 7, "PlayerWater", 0.001f);
+                    ItemData itemData = draggedObj.GetComponent<ItemData>();
+                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 7, "PlayerWater", 0.001f, draggedObjectName, itemData);
                     audioManager.PlayWaterSlotSound();
 
                     /// <summary>
@@ -233,7 +236,8 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             {
                 if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "FibrousLeaves")
                 {
-                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 8, "PlayerHunger", 0.2f);
+                    ItemData itemData = draggedObj.GetComponent<ItemData>();
+                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 8, "PlayerHunger", 0.2f, draggedObjectName, itemData);
                     audioManager.PlayHungerSlotSound();
                 }
             }
@@ -249,8 +253,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                     GameObject noEnergyObjects = GameObject.Find("NoEnergyObjects");
                     if (noEnergyObjects != null)
                     {
-                        ActivateObjects activateScript = noEnergyObjects.GetComponent<ActivateObjects>();
-                        if (activateScript != null)
+                        if (noEnergyObjects.TryGetComponent<ActivateObjects>(out var activateScript))
                         {
                             activateScript.ActivateAllObjects();
                         }

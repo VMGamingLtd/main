@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CanvasGroupFader : MonoBehaviour
@@ -30,5 +29,6 @@ public class CanvasGroupFader : MonoBehaviour
             canvasGroup.alpha = currentAlpha;
             yield return null;
         }
+        gameObject.SetActive(false);
     }
 }

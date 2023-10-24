@@ -1,16 +1,19 @@
+using BuildingManagement;
 using Cysharp.Threading.Tasks;
+using ItemManagement;
+using System.Globalization;
+using System.Threading;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using BuildingManagement;
-using TMPro;
-using System.Globalization;
-using ItemManagement;
 
 public class BuildingCycles : MonoBehaviour
 {
     private Image fillImg;
-    private Color pauseImg;
-    private Color electricImg;
+    private Color pauseImgColor;
+    private Image pauseImage;
+    private Color electricImgColor;
+    private Image electricImage;
     private GameObject obj;
     private InventoryManager inventoryManagerRef;
     private CoroutineManager coroutineManagerRef;
@@ -18,6 +21,8 @@ public class BuildingCycles : MonoBehaviour
     private BuildingItemData itemData;
     private new Animation animation;
     public float currentFillAmount;
+    private CancellationTokenSource cts = null;
+    private CancellationToken cancellationToken;
 
     private void InitializeBuildingData()
     {
@@ -29,16 +34,20 @@ public class BuildingCycles : MonoBehaviour
         Transform fillImgObj = obj.transform.Find("FillImg");
         fillImg = fillImgObj.GetComponent<Image>();
         coroutineManagerRef = buildingManager.coroutineManagerRef;
-        Color pauseImg = obj.transform.Find("PauseImage").GetComponent<Image>().color;
+        pauseImage = obj.transform.Find("PauseImage").GetComponent<Image>();
+        pauseImgColor = pauseImage.color;
         if (itemData.powerConsumption > 0)
         {
-            Color electricImg = obj.transform.Find("NoElectricityImage").GetComponent<Image>().color;
+            electricImage = transform.Find("NoElectricityImage").GetComponent<Image>();
+            electricImgColor = electricImage.color;
         }
+        // we have to generate cancellation token for async task in order to stop it later
+        cts = new CancellationTokenSource();
+        cancellationToken = cts.Token;
 
     }
     private async UniTask FinalizeBuildingData()
     {
-        itemData.actualPowerOutput = itemData.powerOutput;
         currentFillAmount = Mathf.Lerp(0f, 1f, itemData.timer / itemData.totalTime);
         fillImg.fillAmount = currentFillAmount;
         itemData.timer += Time.deltaTime;
@@ -49,35 +58,34 @@ public class BuildingCycles : MonoBehaviour
     private void PauseMode()
     {
         itemData.efficiency = 0;
-        itemData.actualPowerOutput = 0;
-        pauseImg = ButtonColors.fadedCol;
-        electricImg = ButtonColors.invisibleCol;
+        pauseImgColor = ButtonColors.fadedCol;
+        pauseImage.color = pauseImgColor;
+        electricImgColor = ButtonColors.invisibleCol;
+        electricImage.color = electricImgColor;
+        cts.Cancel();
         return;
     }
     private async UniTask NoElectricityMode()
     {
         itemData.efficiency = 0;
-        itemData.actualPowerOutput = 0;
-        pauseImg = ButtonColors.invisibleCol;
-        electricImg = ButtonColors.halfFadedCol;
+        pauseImgColor = ButtonColors.invisibleCol;
+        pauseImage.color = pauseImgColor;
+        electricImgColor = ButtonColors.halfFadedCol;
+        electricImage.color = electricImgColor;
         await NotEnoughMaterials();
         return;
     }
-    private async UniTaskVoid Start()
+    public async UniTaskVoid Start()
     {
         InitializeBuildingData();
         await UniTask.DelayFrame(10);
-        if (obj.CompareTag("Energy"))
+        if (obj.CompareTag("NoConsume"))
         {
-            await StartBuildingCycleEnergy();
-        }
-        else if (obj.CompareTag("NoConsume"))
-        {
-            await StartNoConsumeCycle();
+            await StartNoConsumeCycle(cancellationToken);
         }
         else if (obj.CompareTag("Consume"))
         {
-            await StartConsumeCycle();
+            await StartConsumeCycle(cancellationToken);
         }
     }
 
@@ -85,100 +93,27 @@ public class BuildingCycles : MonoBehaviour
     {
         itemData = obj.GetComponent<BuildingItemData>();
         itemData.efficiency = 0;
-        itemData.actualPowerOutput = 0;
         animation = GetComponent<Animation>();
         animation.Play("NotEnoughMaterialsBuilding");
         await UniTask.DelayFrame(60);
         animation.Stop();
-        if (obj.CompareTag("Energy"))
+        if (obj.CompareTag("NoConsume"))
         {
-            await StartBuildingCycleEnergy();
-        }
-        else if (obj.CompareTag("NoConsume"))
-        {
-            await StartNoConsumeCycle();
+            await StartNoConsumeCycle(cancellationToken);
         }
         else if (obj.CompareTag("Consume"))
         {
-            await StartConsumeCycle();
+            await StartConsumeCycle(cancellationToken);
         }
     }
 
-    public async UniTask StartBuildingCycleEnergy()
+    public async UniTask StartNoConsumeCycle(CancellationToken cancellationToken)
     {
-        int consumedSlots = itemData.consumedSlotCount;
-        float[] getResources = new float[consumedSlots];
-
-        for (int i = 0; i < consumedSlots; i++)
+        // the whole UniTask will be killed here when the cts.Cancel() is called
+        if (cancellationToken.IsCancellationRequested)
         {
-            getResources[i] = inventoryManagerRef.GetItemQuantity(itemData.consumedItems[i].itemName, itemData.consumedItems[i].itemQuality);
-        }
-
-        bool hasEnoughResources = true;
-        for (int i = 0; i < consumedSlots; i++)
-        {
-            if (getResources[i] < itemData.consumedItems[i].quantity)
-            {
-                hasEnoughResources = false;
-                break;
-            }
-        }
-
-        if (hasEnoughResources)
-        {
-            for (int i = 0; i < consumedSlots; i++)
-            {
-                var item = itemData.consumedItems[i];
-                inventoryManagerRef.ReduceItemQuantity(itemData.consumedItems[i].itemName, itemData.consumedItems[i].itemQuality, itemData.consumedItems[i].quantity);
-                UpdateUITextForConsumable(item.itemName, item.itemQuality);
-            }
-        }
-        else
-        {
-            await NotEnoughMaterials();
             return;
         }
-
-        // Resume the process if it was paused
-        if (itemData.isPaused)
-        {
-            itemData.efficiency = itemData.efficiencySetting;
-            itemData.isPaused = false;
-            pauseImg -= new Color(0f, 0f, 0f, 0.1f);
-        }
-        else
-        {
-            currentFillAmount = 0f;
-        }
-
-        while (itemData.timer < itemData.totalTime && itemData.efficiencySetting > 0)
-        {
-            // If the building process is paused, end the cycle
-            if (itemData.isPaused)
-            {
-                itemData.efficiency = 0;
-                itemData.actualPowerOutput = 0;
-                pauseImg += new Color(0f, 0f, 0f, 0.1f);
-                return;
-            }
-            await FinalizeBuildingData();
-        }
-
-        fillImg.fillAmount = 0f;
-        itemData.timer = 0f;
-        currentFillAmount = 0f;
-
-        if (itemData.efficiency == 0)
-        {
-            await NotEnoughMaterials();
-        }
-        else
-        {
-            await StartBuildingCycleEnergy();
-        }
-    }
-    public async UniTask StartNoConsumeCycle()
-    {
         // this step is important during unpause, as it helps the process to continue from where it ended without restart
         if (itemData.isPaused)
         {
@@ -228,11 +163,16 @@ public class BuildingCycles : MonoBehaviour
         }
         else
         {
-            await StartNoConsumeCycle();
+            await StartNoConsumeCycle(cancellationToken);
         }
     }
-    public async UniTask StartConsumeCycle()
+    public async UniTask StartConsumeCycle(CancellationToken cancellationToken)
     {
+        // the whole UniTask will be killed here when the cts.Cancel() is called
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
         // this step is important during unpause, as it helps the process to continue from where it ended without restart
         if (itemData.isPaused)
         {
@@ -315,7 +255,7 @@ public class BuildingCycles : MonoBehaviour
         }
         else
         {
-            await StartConsumeCycle();
+            await StartConsumeCycle(cancellationToken);
         }
     }
 

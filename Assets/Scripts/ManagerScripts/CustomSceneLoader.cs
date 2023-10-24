@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
+using System;
 
 public class CustomSceneLoader : MonoBehaviour
 {
@@ -8,7 +9,6 @@ public class CustomSceneLoader : MonoBehaviour
     public readonly static string CLASS_NAME = typeof(CustomSceneLoader).Name;
     public string sceneName;
     private CoroutineManager coroutineManager;
-
 
     private void OnEnable()
     {
@@ -20,24 +20,24 @@ public class CustomSceneLoader : MonoBehaviour
     {
         await LoadSceneUniTask(sceneName);
     }
-
     private async UniTask LoadSceneUniTask(string sceneName)
     {
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        await UniTask.Delay(TimeSpan.FromSeconds(1));
 
-        // Wait for the scene to be fully loaded
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
         while (!asyncLoad.isDone)
         {
-            // You can check the progress if needed
-            //float progress = asyncLoad.progress;
-
-            await UniTask.Yield(); // Yield to the Unity main thread
+            await UniTask.Yield();
         }
-
 
         coroutineManager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
 
+        await UniTask.Delay(TimeSpan.FromSeconds(1));
+
         await coroutineManager.LoadSaveSlots();
+
+        _ = SceneManager.UnloadSceneAsync("First");
     }
 
     public void OnRergisterDeviceComplete()

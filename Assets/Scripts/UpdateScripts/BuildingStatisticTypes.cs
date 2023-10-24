@@ -1,10 +1,8 @@
-using TMPro;
-using System;
-using UnityEngine;
-using UnityEngine.UI;
 using BuildingManagement;
 using Cysharp.Threading.Tasks;
-using System.Transactions;
+using System;
+using TMPro;
+using UnityEngine;
 
 public class BuildingStatisticTypes : MonoBehaviour
 {
@@ -30,15 +28,29 @@ public class BuildingStatisticTypes : MonoBehaviour
 
             foreach (GameObject item in itemArray)
             {
-                BuildingItemData itemData = item.GetComponent<BuildingItemData>();
-
-                // Check if the item class is not already added to availableClasses
-                if (!Array.Exists(availableClasses, element => element == itemData.buildingType))
+                if (kvp.Key == "POWERPLANT")
                 {
-                    // Resize the availableClasses array and add the item class
-                    Array.Resize(ref availableClasses, availableClasses.Length + 1);
-                    availableClasses[classIndex] = itemData.buildingType;
-                    classIndex++;
+                    EnergyBuildingItemData itemDataEnergy = item.GetComponent<EnergyBuildingItemData>();
+                    // Check if the item class is not already added to availableClasses
+                    if (!Array.Exists(availableClasses, element => element == itemDataEnergy.buildingType))
+                    {
+                        // Resize the availableClasses array and add the item class
+                        Array.Resize(ref availableClasses, availableClasses.Length + 1);
+                        availableClasses[classIndex] = itemDataEnergy.buildingType;
+                        classIndex++;
+                    }
+                }
+                else
+                {
+                    BuildingItemData itemData = item.GetComponent<BuildingItemData>();
+                    // Check if the item class is not already added to availableClasses
+                    if (!Array.Exists(availableClasses, element => element == itemData.buildingType))
+                    {
+                        // Resize the availableClasses array and add the item class
+                        Array.Resize(ref availableClasses, availableClasses.Length + 1);
+                        availableClasses[classIndex] = itemData.buildingType;
+                        classIndex++;
+                    }
                 }
             }
         }

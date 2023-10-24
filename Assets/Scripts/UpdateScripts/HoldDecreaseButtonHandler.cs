@@ -1,12 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using BuildingManagement;
+using System.Collections;
 using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
 public class HoldDecreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private BuildingItemData itemData;
+    private EnergyBuildingItemData itemDataEnergy;
     public BuildingOptionsInterface buildingOptionsInterface;
     private GameObject refObj;
     public TextMeshProUGUI efficiency;
@@ -28,11 +28,12 @@ public class HoldDecreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPo
     {
         refObj = buildingOptionsInterface.mainObj;
         itemData = refObj.GetComponent<BuildingItemData>();
+        itemDataEnergy = refObj.GetComponent<EnergyBuildingItemData>();
         float quantityBaseInput;
-        if (itemData.buildingType == "POWERPLANT")
+        if (itemDataEnergy != null)
         {
-            int consumedSlots = itemData.consumedSlotCount;
-            if (itemData.basePowerOutput == 99999)
+            int consumedSlots = itemDataEnergy.consumedSlotCount;
+            if (itemDataEnergy.basePowerOutput == 99999)
             {
                 quantityBaseInput = 2f;
             }
@@ -40,14 +41,14 @@ public class HoldDecreaseButtonHandler : MonoBehaviour, IPointerDownHandler, IPo
             {
                 quantityBaseInput = 0.5f;
             }
-            while (isHoldingButton && itemData.efficiencySetting > 1)
+            while (isHoldingButton && itemDataEnergy.efficiencySetting > 1)
             {
-                itemData.efficiencySetting--;
-                itemData.totalTime += 0.05f;
-                itemData.powerOutput -= (int)(itemData.basePowerOutput / 100f);
+                itemDataEnergy.efficiencySetting--;
+                itemDataEnergy.totalTime += 0.05f;
+                itemDataEnergy.powerOutput -= (int)(itemDataEnergy.basePowerOutput / 100f);
                 for (int i = 0; i < consumedSlots; i++)
                 {
-                    itemData.consumedItems[i].quantity -= quantityBaseInput / 100f;
+                    itemDataEnergy.consumedItems[i].quantity -= quantityBaseInput / 100f;
                 }
                 yield return new WaitForSeconds(0.1f);
             }

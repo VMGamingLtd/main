@@ -1,16 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using BuildingManagement;
-using UnityEngine;
-using TMPro;
 using System;
-using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class BuildingCycleCount
 {
-    public List<int> tenCycleCounts = new List<int> { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120 };
-    public List<int> thirtyCycleCounts = new List<int> { 30, 60, 90, 120 };
-    public List<int> sixHourCounts = new List<int> { 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108, 114, 120 };
+    public List<int> tenCycleCounts = new() { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120 };
+    public List<int> thirtyCycleCounts = new() { 30, 60, 90, 120 };
+    public List<int> sixHourCounts = new() { 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108, 114, 120 };
 }
 public class BuildingManager : MonoBehaviour
 {
@@ -56,17 +53,25 @@ public class BuildingManager : MonoBehaviour
 
                 foreach (GameObject item in itemArray)
                 {
-                    BuildingItemData itemData = item.GetComponent<BuildingItemData>();
-                    UpdateBuildingCycles(itemData);
+                    if (kvp.Key == "POWERPLANT")
+                    {
+                        EnergyBuildingItemData itemDataEnergy = item.GetComponent<EnergyBuildingItemData>();
+                        UpdateEnergyBuildingCycles(itemDataEnergy);
+                    }
+                    else
+                    {
+                        BuildingItemData itemData = item.GetComponent<BuildingItemData>();
+                        UpdateBuildingCycles(itemData);
+                    }
+
                 }
             }
         }
     }
-    public void UpdateBuildingCycles(BuildingItemData itemData)
+    public void UpdateEnergyBuildingCycles(EnergyBuildingItemData itemData)
     {
         // Shift the elements in the secondCycle array to the right (oldest values will be discarded)
         ShiftAndFillCycle(itemData.powerCycleData.secondCycle, itemData.actualPowerOutput);
-        ShiftAndFillCycle(itemData.powerConsumptionCycleData.secondCycle, itemData.actualPowerConsumption);
         itemData.secondCycleCount++;
 
         // Add actualPowerOutput to the first element of the 10s cycle array
@@ -125,6 +130,11 @@ public class BuildingManager : MonoBehaviour
         {
             itemData.hourCycleCount = 0;
         }
+    }
+    public void UpdateBuildingCycles(BuildingItemData itemData)
+    {
+        ShiftAndFillCycle(itemData.powerConsumptionCycleData.secondCycle, itemData.actualPowerConsumption);
+        itemData.secondCycleCount++;
     }
     private void ShiftAndFillCycle(float[] cycleArray, float value)
     {

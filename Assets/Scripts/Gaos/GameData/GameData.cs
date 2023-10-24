@@ -1,8 +1,7 @@
 using Gaos.Routes.Model.GameDataJson;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Newtonsoft.Json;
+using System.Collections;
+using UnityEngine;
 
 
 namespace Gaos.GameData
@@ -18,13 +17,15 @@ namespace Gaos.GameData
         {
             const string METHOD_NAME = "Get()";
 
-            Gaos.Routes.Model.GameDataJson.UserGameDataGetRequest request = new Gaos.Routes.Model.GameDataJson.UserGameDataGetRequest();
-            request.UserId = Gaos.Context.Authentication.GetUserId();
-            request.SlotId = slotId;
+            UserGameDataGetRequest request = new()
+            {
+                UserId = Context.Authentication.GetUserId(),
+                SlotId = slotId
+            };
 
             string requestJsonStr = JsonConvert.SerializeObject(request);
 
-            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/gameData/userGameDataGet", requestJsonStr);
+            Api.ApiCall apiCall = new("api/gameData/userGameDataGet", requestJsonStr);
             yield return apiCall.Call();
 
             if (apiCall.IsResponseError)
@@ -32,16 +33,16 @@ namespace Gaos.GameData
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting game data");
                 onUserGameDataGetComplete(null);
 
-            } 
+            }
             else
             {
-                Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse>(apiCall.ResponseJsonStr);
+                UserGameDataGetResponse response = JsonConvert.DeserializeObject<UserGameDataGetResponse>(apiCall.ResponseJsonStr);
                 if (response.IsError == true)
                 {
                     Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting game data: {response.ErrorMessage}");
                     onUserGameDataGetComplete(null);
                     yield break;
-                }   
+                }
                 onUserGameDataGetComplete(response);
             }
 
@@ -56,16 +57,16 @@ namespace Gaos.GameData
 
         public delegate void OnUserGameDataSaveComplete(UserGameDataSaveResponse response);
 
-        public static IEnumerator Save(int slotId, Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete)
+        public static IEnumerator Save(int slotId, UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete)
         {
             const string METHOD_NAME = "Save()";
 
-            request.UserId = Gaos.Context.Authentication.GetUserId();
+            request.UserId = Context.Authentication.GetUserId();
             request.SlotId = slotId;
 
             string requestJsonStr = JsonConvert.SerializeObject(request);
 
-            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/gameData/userGameDataSave", requestJsonStr);
+            Api.ApiCall apiCall = new("api/gameData/userGameDataSave", requestJsonStr);
             yield return apiCall.Call();
 
             if (apiCall.IsResponseError)
@@ -73,10 +74,10 @@ namespace Gaos.GameData
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error saving game data");
                 onUserGameDataSaveComplete(null);
 
-            } 
+            }
             else
             {
-                Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse>(apiCall.ResponseJsonStr);
+                UserGameDataSaveResponse response = JsonConvert.DeserializeObject<UserGameDataSaveResponse>(apiCall.ResponseJsonStr);
                 if (response.IsError == true)
                 {
                     Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error saving game data: {response.ErrorMessage}");

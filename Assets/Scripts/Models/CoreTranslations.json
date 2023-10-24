@@ -975,11 +975,25 @@
         "slovak": "Úloha"
       },
       {
+        "identifier": "CraftBattery",
+        "english": "Craft a battery",
+        "russian": "Создайте батарею",
+        "chinese": "做电池吧！",
+        "slovak": "Vyrobte batériu!"
+      },
+      {
         "identifier": "CraftBatteryDesc",
         "english": "Your suit needs energy to function. Craft all necessary materials in order to craft battery (<color=yellow>Fibrous leaves</color> + <color=yellow>Biofuel</color> + <color=yellow>Battery Core</color>).",
         "russian": "Ваш скафандр нуждается в энергии, чтобы функционировать. Создайте все необходимые материалы для изготовления батареи (<color=yellow>Волокнистые листья</color> + <color=yellow>Биотопливо</color> + <color=yellow>Ядро батареи</color>).",
         "chinese": "你的宇航服需要能量才能正常工作。 制作所有这些物品来制作电池 (<color=yellow>纤维叶</color> + <color=yellow>生物燃料</color> + <color=yellow>电芯</color>).",
         "slovak": "Váš oblek potrebuje energiu na fungovanie. Najprv vyrobte všetky potrebné veci, aby ste mohli zostrojiť batériu. (<color=yellow>Vláknité listy</color> + <color=yellow>Biopalivo</color> + <color=yellow>Jadro batérie</color>)."
+      },
+      {
+        "identifier": "CraftAndUseWater",
+        "english": "Craft and use distilled water",
+        "russian": "Создайте и используйте дистиллированную воду",
+        "chinese": "让我们制作并使用蒸馏水!",
+        "slovak": "Pripravte a použite destilovanú vodu"
       },
       {
         "identifier": "CraftAndUseWaterDesc",
@@ -989,11 +1003,25 @@
         "slovak": "Vytvorte <color=yellow>[Destilovanú vodu]</color> a prejdite do menu <color=yellow>[Inventár]</color>. Potiahnite jej ikonu do <color=yellow>[Zásobníka vody]</color>."
       },
       {
+        "identifier": "BuildBase",
+        "english": "Build and place the first building",
+        "russian": "Постройте и разместите свое первое здание",
+        "chinese": "建造并放置第一座建筑物",
+        "slovak": "Postavte a umiestnite svoju prvú budovu"
+      },
+      {
         "identifier": "BuildBaseDesc",
         "english": "Build a <color=yellow>Biofuel Generator</color> in the <color=yellow>[Production]</color> tab. Then go to the <color=yellow>[Base]</color> tab and drag its icon inside the construction grid.",
         "russian": "Создайте <color=yellow>Генератор биотоплива</color> на вкладке <color=yellow>[Производство]</color>. Затем перейдите на вкладку <color=yellow>[Base]</color> и перетащите ее значок внутрь сетки построения.",
         "chinese": "在<color=yellow>[生产]</color>选项卡中构建<color=yellow>生物燃料发电机</color>。然后转到<color=yellow>[基地建设]</color>选项卡并将其图标拖动到构造网格内。",
         "slovak": "Zostavte <color=yellow>Generátor biopalív</color> na karte <color=yellow>[Produkcia]</color>. Potom prejdite na kartu <color=yellow>[Základňa]</color> a presuňte jej ikonu do konštrukčnej mriežky."
+      },
+      {
+        "identifier": "AutomateBattery",
+        "english": "Automate battery production",
+        "russian": "Автоматизируйте производство аккумуляторов",
+        "chinese": "实现电池生产自动化",
+        "slovak": "Automatizujte výrobu batérií"
       },
       {
         "identifier": "BiologySkill",
@@ -1046,10 +1074,45 @@
       },
       {
         "identifier": "AutoUseDesc",
-        "english": "AWhen a given item runs out, another item of the same type is automatically set from the inventory.",
+        "english": "When a given item runs out, another item of the same type is automatically set from the inventory.",
         "russian": "Когда данный предмет заканчивается, из инвентаря автоматически выбирается другой предмет того же типа.",
         "chinese": "当给定的物品用完时，会自动从库存中设置另一件相同类型的物品。",
         "slovak": "Keď sa daný predmet minie, automaticky sa z inventára nastaví ďalší predmet rovnakého typu."
+      },
+      {
+        "identifier": "NotEnoughMaterials",
+        "english": "Not enough materials!",
+        "russian": "Недостаточно материалов!",
+        "chinese": "材料不够！",
+        "slovak": "Nedostatok materiálov!"
+      },
+      {
+        "identifier": "IronSheet",
+        "english": "Iron sheet",
+        "russian": "Железный лист",
+        "chinese": "铁皮",
+        "slovak": "Železný plech"
+      },
+      {
+        "identifier": "IronSheetDesc",
+        "english": "Material required for building advanced metal products.",
+        "russian": "Материал, необходимый для изготовления современных металлических изделий.",
+        "chinese": "这是制造先进金属产品所需的常见材料。",
+        "slovak": "Materiál potrebný na výrobu pokročilých kovových výrobkov."
+      },
+      {
+        "identifier": "IronRod",
+        "english": "Iron rod",
+        "russian": "Железный стержень",
+        "chinese": "铁棒",
+        "slovak": "Železná tyč"
+      },
+      {
+        "identifier": "IronRodDesc",
+        "english": "Standard component of metallurgical products.",
+        "russian": "Стандартный компонент металлургической продукции.",
+        "chinese": "铁棒是冶金产品的标准件。",
+        "slovak": "Bežný prvok hutníckych výrobkov."
       }
     ]
   }

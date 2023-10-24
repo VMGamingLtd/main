@@ -11,7 +11,7 @@ public class TooltipFollowMouse : MonoBehaviour
     private void Awake()
     {
         tooltipRect = GetComponent<RectTransform>();
-        canvasRect = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        canvasRect = GameObject.Find("TooltipCanvas").GetComponent<RectTransform>();
         tooltipRect = transform.GetComponent<RectTransform>();
     }
     private void Update()

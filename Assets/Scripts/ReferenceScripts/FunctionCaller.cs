@@ -1,5 +1,6 @@
-using UnityEngine;
+using RecipeManagement;
 using System.Collections;
+using UnityEngine;
 
 public class FunctionCaller : MonoBehaviour
 {
@@ -12,8 +13,14 @@ public class FunctionCaller : MonoBehaviour
     }
     public void CallFunctionByName()
     {
+        RecipeItemData recipeData = gameObject.GetComponent<RecipeItemData>();
         buildingBar = GameObject.Find("Planet0Production").GetComponent<BuildingBarPlanet0>();
-        string functionName = "Create" + gameObject.name;
+        bool result = buildingBar.StartRecipeCreation(recipeData);
+        if (!result)
+        {
+            StartCoroutine(errorCoroutine());
+        }
+        /*string functionName = "Create" + gameObject.name;
         // Use reflection to call the function based on the provided function name
         System.Reflection.MethodInfo method = typeof(BuildingBarPlanet0).GetMethod(functionName);
         if (method != null)
@@ -30,7 +37,7 @@ public class FunctionCaller : MonoBehaviour
         else
         {
             Debug.LogError("Function '" + functionName + "' not found.");
-        }
+        }*/
     }
 
     private void OnDisable()

@@ -1,8 +1,7 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System;
-using System.IO;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace RecipeManagement
@@ -33,6 +32,7 @@ namespace RecipeManagement
     public class RecipeItemData : MonoBehaviour
     {
         public int index;
+        public int orderAdded;
         public string recipeName;
         public string recipeProduct;
         public string recipeType;
@@ -41,6 +41,7 @@ namespace RecipeManagement
         public float productionTime;
         public float outputValue;
         public bool hasRequirements;
+        public List<ChildData> childData;
     }
     public class RecipeCreator : MonoBehaviour
     {
@@ -48,6 +49,7 @@ namespace RecipeManagement
         public RecipeManager recipeManager;
         public List<RecipeDataJson> recipeDataList;
         private TranslationManager translationManager;
+        public static int recipeOrderAdded;
 
         [Serializable]
         private class JsonArray
@@ -56,29 +58,18 @@ namespace RecipeManagement
         }
         private void Awake()
         {
-            /*
-            string filePath = Path.Combine(Application.dataPath, "Scripts/Models/RecipeList.json");
-
-            if (File.Exists(filePath))
-            {
-                string jsonText = File.ReadAllText(filePath);
-                JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
-                if (jsonArray != null)
-                {
-                    recipeDataList = jsonArray.recipes;
-                }
-            }
-            else
-            {
-                Debug.LogError("RecipeList.json not found at: " + filePath);
-            }
-            */
             string jsonText = Assets.Scripts.Models.RecipeListJson.json;
             JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
             if (jsonArray != null)
             {
                 recipeDataList = jsonArray.recipes;
             }
+        }
+        public void RecreateRecipe(string recipeProduct, string recipeType, string itemClass, string recipeName, int index,
+            int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, int orderAdded)
+        {
+            RecreateRecipe(recipeTemplate, recipeProduct, recipeType, itemClass, recipeName, index,
+                experience, productionTime, outputValue, hasRequirements, childDataList, orderAdded);
         }
         public void CreateRecipe(int recipeIndex)
         {
@@ -94,10 +85,9 @@ namespace RecipeManagement
                         itemData.productionTime,
                         itemData.outputValue,
                         itemData.hasRequirements,
-                        itemData.childDataList.ToArray());
+                        itemData.childDataList);
         }
-
-        private void CreateRecipe(GameObject template,
+        private void RecreateRecipe(GameObject template,
                                     string recipeProduct,
                                     string recipeType,
                                     string itemClass,
@@ -107,7 +97,8 @@ namespace RecipeManagement
                                     float productionTime,
                                     float outputValue,
                                     bool hasRequirements,
-                                    ChildData[] childData)
+                                    List<ChildData> childDataList,
+                                    int orderAdded)
         {
             // RecipeTemplate attribute injection
             GameObject newItem = Instantiate(template);
@@ -140,7 +131,7 @@ namespace RecipeManagement
                     if (childTransform != null)
                     {
                         GameObject childObject = childTransform.gameObject;
-                        ChildData child = (i < childData.Length) ? childData[i] : null;
+                        ChildData child = (i < childDataList.Count) ? childDataList[i] : null;
 
                         if (child != null)
                         {
@@ -167,6 +158,87 @@ namespace RecipeManagement
             newRecipeData.productionTime = productionTime;
             newRecipeData.outputValue = outputValue;
             newRecipeData.hasRequirements = hasRequirements;
+            newRecipeData.childData = childDataList;
+            newRecipeData.orderAdded = orderAdded;
+            //recipeManager.itemRecipeArrays[recipeProduct].Add(newItem);
+            recipeManager.AddToItemArray(recipeProduct, newItem);
+
+            newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+            newItem.transform.localScale = Vector3.one;
+        }
+        private void CreateRecipe(GameObject template,
+                                    string recipeProduct,
+                                    string recipeType,
+                                    string itemClass,
+                                    string recipeName,
+                                    int index,
+                                    int experience,
+                                    float productionTime,
+                                    float outputValue,
+                                    bool hasRequirements,
+                                    List<ChildData> childDataList)
+        {
+            // RecipeTemplate attribute injection
+            GameObject newItem = Instantiate(template);
+            newItem.name = recipeName;
+            newItem.transform.Find("RecipeNameHolder").name = recipeName;
+            translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+            newItem.transform.Find("Content/Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(recipeName);
+            Transform CountHeader = newItem.transform.Find("Content/Header/CountHeader/CountValue");
+            CountHeader.name = recipeName;
+            CountHeader.GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
+
+            newItem.transform.Find("Content/Cost/EXP").GetComponent<TextMeshProUGUI>().text = experience.ToString() + "XP";
+            newItem.transform.Find("Content/Cost/TimeValue").GetComponent<TextMeshProUGUI>().text = productionTime.ToString() + "s";
+            newItem.transform.Find("Content/Image/CountValue").GetComponent<TextMeshProUGUI>().text = outputValue.ToString();
+            newItem.transform.Find("Content/Image/Image").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeName, recipeProduct);
+
+            // ProductCost is a child with additional material display objects that is only available if the item has some material requirements
+            GameObject productCost = newItem.transform.Find("ProductCost").gameObject;
+
+            if (!hasRequirements)
+            {
+                productCost.SetActive(false);
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    string childName = "Product" + (i + 1);
+                    Transform childTransform = productCost.transform.Find(childName);
+                    if (childTransform != null)
+                    {
+                        GameObject childObject = childTransform.gameObject;
+                        ChildData child = (i < childDataList.Count) ? childDataList[i] : null;
+
+                        if (child != null)
+                        {
+                            childObject.transform.Find("Image").GetComponent<Image>().sprite = AssignChildSlot(child.name);
+                            childObject.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
+                            childObject.transform.Find("ChildName").name = child.name;
+                            childObject.transform.Find(child.name).GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
+                        }
+                        else
+                        {
+                            childObject.SetActive(false);
+                        }
+                    }
+                }
+            }
+            // Initialize RecipeItemData component that will hold all recipe data througout the game
+            RecipeItemData newRecipeData = newItem.GetComponent<RecipeItemData>() ?? newItem.AddComponent<RecipeItemData>();
+            newRecipeData.recipeName = recipeName;
+            newRecipeData.recipeProduct = recipeProduct;
+            newRecipeData.recipeType = recipeType;
+            newRecipeData.itemClass = itemClass;
+            newRecipeData.index = index;
+            newRecipeData.experience = experience;
+            newRecipeData.productionTime = productionTime;
+            newRecipeData.outputValue = outputValue;
+            newRecipeData.hasRequirements = hasRequirements;
+            newRecipeData.childData = childDataList;
+            newRecipeData.orderAdded = recipeOrderAdded++;
+            //recipeManager.itemRecipeArrays[recipeProduct].Add(newItem);
             recipeManager.AddToItemArray(recipeProduct, newItem);
 
             newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);

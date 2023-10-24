@@ -1,12 +1,13 @@
-using System.Collections.Generic;
-using UnityEngine;
-using System.IO;
-using Newtonsoft.Json;
-using ItemManagement;
-using RecipeManagement;
-using System.Linq;
-using System;
 using Assets.Scripts.ItemFactory;
+using BuildingManagement;
+using ItemManagement;
+using Newtonsoft.Json;
+using RecipeManagement;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
@@ -15,8 +16,8 @@ public class SaveManager : MonoBehaviour
     private string filePath;
     public InventoryManager inventoryManager;
     public RecipeManager recipeManager;
+    public BuildingManager buildingManager;
     private SaveDataModel currentSaveData;
-
     public class SaveDataModel
     {
         public string title;
@@ -32,33 +33,7 @@ public class SaveManager : MonoBehaviour
         public string planet0Name;
         public string planet0Weather;
         public int planet0UV;
-        public int atmospherePlanet0;
-        public int agriLandPlanet0;
-        public int forestsPlanet0;
-        public int waterPlanet0;
-        public int fisheriesPlanet0;
-        public int mineralsPlanet0;
-        public int rocksPlanet0;
-        public int fossilFuelsPlanet0;
-        public int rareElementsPlanet0;
-        public int gemstonesPlanet0;
-        public int planet0BiofuelGenerator;
-        public int planet0BiofuelGeneratorBlueprint;
-        public int planet0WaterPump;
-        public int planet0WaterPumpBlueprint;
-        public int planet0PlantField;
-        public int planet0PlantFieldBlueprint;
-        public int planet0Boiler;
-        public int planet0BoilerBlueprint;
-        public int planet0SteamGenerator;
-        public int planet0SteamGeneratorBlueprint;
-        public int planet0Furnace;
-        public int planet0FurnaceBlueprint;
         public string planet0WindStatus;
-        public float playerOxygen;
-        public float playerWater;
-        public float playerEnergy;
-        public float playerHunger;
         public string MenuButtonTypeOn;
         public int playerLevel;
         public int playerCurrentExp;
@@ -68,59 +43,212 @@ public class SaveManager : MonoBehaviour
         public int hours;
         public int minutes;
         public int seconds;
-        public int Planet0CurrentElectricity;
-        public int Planet0CurrentConsumption;
-        public int Planet0MaxElectricity;
         public bool registeredUser;
         public bool firstGoal;
         public bool secondGoal;
         public bool thirdGoal;
+        public bool fourthGoal;
         public bool isPlayerInBiologicalBiome;
         public bool isDraggingBuilding;
         public bool autoConsumption;
+        public bool plantFieldUnlocked;
+        public bool waterPumpUnlocked;
         public float credits;
         public string inventoryTitle;
-        public InventoryItemData[] basicInventoryObjects;
-        public InventoryItemData[] processedInventoryObjects;
-        public InventoryItemData[] enhancedInventoryObjects;
-        public InventoryItemData[] assembledInventoryObjects;
+        public ItemDataModel[] basicInventoryObjects;
+        public ItemDataModel[] processedInventoryObjects;
+        public ItemDataModel[] enhancedInventoryObjects;
+        public ItemDataModel[] assembledInventoryObjects;
         public string recipeTitle;
-        public RecipeData[] basicRecipeObjects;
-        public RecipeData[] processedRecipeObjects;
-        public RecipeData[] enhancedRecipeObjects;
-        public RecipeData[] assembledRecipeObjects;
+        public RecipeItemDataModel[] basicRecipeObjects;
+        public RecipeItemDataModel[] processedRecipeObjects;
+        public RecipeItemDataModel[] enhancedRecipeObjects;
+        public RecipeItemDataModel[] assembledRecipeObjects;
+        public RecipeItemDataModel[] buildingRecipeObjects;
         public string BuildingStatisticProcess;
         public string BuildingStatisticType;
         public string BuildingStatisticInterval;
+        public string[] slotEquippedName;
         public bool BuildingStatisticTypeChanged;
         public bool BuildingIntervalTypeChanged;
         public bool[] slotEquipped;
         public int ItemCreationID;
+        public int BuildingUniqueID;
+        public int RecipeOrderAdded;
+        public BuildingItemDataModel[] agriculture;
+        public BuildingItemDataModel[] pumpingFacility;
+        public BuildingItemDataModel[] factory;
+        public BuildingItemDataModel[] commFacility;
+        public BuildingItemDataModel[] storageHouse;
+        public BuildingItemDataModel[] navalFacility;
+        public BuildingItemDataModel[] oxygenFacility;
+        public BuildingItemDataModel[] aviationFacility;
+        public BuildingItemDataModel[] heatingFacility;
+        public BuildingItemDataModel[] coolingFacility;
+        public EnergyBuildingItemDataModel[] powerplant;
+        public BuildingItemDataModel[] oxygenStation;
+        public BuildingItemDataModel[] miningRig;
+        public Dictionary<string, object> Planet0StaticVariables = new();
+        public Dictionary<string, object> PlayerResourcesStaticVariables = new();
     }
 
-    public class InventoryItemData
+    [Serializable]
+    public class ItemDataModel
     {
         public int ID;
         public int index;
         public float stackLimit;
-        public string itemName;
+        public float itemQuantity;
+        public string itemProduct;
         public string itemType;
         public string itemClass;
-        public string itemProduct;
-        public float itemQuantity;
+        public string itemName;
         public bool equipable;
+        public bool isEquipped;
     }
-    public class RecipeData
+    [Serializable]
+    public class RecipeItemDataModel
     {
         public int index;
+        public int orderAdded;
         public string recipeName;
+        public string recipeProduct;
         public string recipeType;
         public string itemClass;
-        public string itemProduct;
         public int experience;
         public float productionTime;
         public float outputValue;
         public bool hasRequirements;
+        public List<ChildData> childData;
+    }
+    [System.Serializable]
+    public class EnergyBuildingItemDataModel
+    {
+        public int index;
+        public int ID;
+        public string spriteIconName;
+        public string buildingType;
+        public string buildingName;
+        public string buildingClass;
+        public Vector3 buildingPosition;
+        public List<SlotItemData> consumedItems;
+        public PowerCycle powerCycleData = new();
+        public int consumedSlotCount;
+        public float timer;
+        public float totalTime;
+        public int secondCycleCount;
+        public int minuteCycleCount;
+        public int hourCycleCount;
+        public int powerOutput;
+        public int basePowerOutput;
+        public int actualPowerOutput;
+        public int producedSlotCount;
+        public int efficiency;
+        public int efficiencySetting;
+        public int buildingCount;
+        public bool isPaused;
+    }
+    [System.Serializable]
+    public class BuildingItemDataModel
+    {
+        public int index;
+        public int ID;
+        public string spriteIconName;
+        public string buildingType;
+        public string buildingName;
+        public string buildingClass;
+        public Vector3 buildingPosition;
+        public List<SlotItemData> consumedItems;
+        public List<SlotItemData> producedItems;
+        public PowerConsumptionCycle powerConsumptionCycleData = new();
+        public ProductionCycle productionCycleData = new();
+        public int consumedSlotCount;
+        public float timer;
+        public float totalTime;
+        public int secondCycleCount;
+        public int minuteCycleCount;
+        public int hourCycleCount;
+        public int powerOutput;
+        public int basePowerOutput;
+        public int actualPowerOutput;
+        public int powerConsumption;
+        public int actualPowerConsumption;
+        public int producedSlotCount;
+        public int efficiency;
+        public int efficiencySetting;
+        public int buildingCount;
+        public bool isPaused;
+    }
+
+    /// <summary>
+    /// Searches a class and stores all variables from it into an object.
+    /// </summary>
+    /// <param name="staticClassType"></param>
+    public void AssignFromStaticClass(Type staticClassType)
+    {
+        FieldInfo[] fields = staticClassType.GetFields(BindingFlags.Public | BindingFlags.Static);
+        FieldInfo[] thisFields = GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+
+        foreach (FieldInfo field in fields)
+        {
+            // only PUBLIC STATIC variables
+            if (field.IsPublic && field.IsStatic)
+            {
+                FieldInfo correspondingField = Array.Find(thisFields, f => f.Name == field.Name);
+                correspondingField?.SetValue(this, field.GetValue(null));
+            }
+        }
+    }
+    public static void LoadStaticVariablesFromModel(SaveDataModel saveDataModel)
+    {
+        Type class1Type = typeof(Planet0Buildings);
+        foreach (var kvp in saveDataModel.Planet0StaticVariables)
+        {
+            FieldInfo field = class1Type.GetField(kvp.Key, BindingFlags.Public | BindingFlags.Static);
+            if (field != null)
+            {
+                //Debug.Log($"{kvp.Key} / {kvp.Value} / {kvp.Value.GetType()}");
+                // Convert the value to float before setting
+                if (kvp.Value is double doubleValue)
+                {
+                    field.SetValue(null, (float)doubleValue);
+                }
+                else if (kvp.Value is float floatValue)
+                {
+                    field.SetValue(null, floatValue);
+                }
+                else if (kvp.Value is int intValue)
+                {
+                    field.SetValue(null, intValue);
+                }
+                else if (kvp.Value is long longValue)
+                {
+                    field.SetValue(null, (int)longValue);
+                }
+            }
+        }
+
+        Type class2Type = typeof(PlayerResources);
+        foreach (var kvp in saveDataModel.PlayerResourcesStaticVariables)
+        {
+            FieldInfo field = class2Type.GetField(kvp.Key, BindingFlags.Public | BindingFlags.Static);
+            if (field != null)
+            {
+                // Convert the value to float before setting
+                if (kvp.Value is double doubleValue)
+                {
+                    field.SetValue(null, (float)doubleValue);
+                }
+                else if (kvp.Value is float floatValue)
+                {
+                    field.SetValue(null, floatValue);
+                }
+                else if (kvp.Value is int intValue)
+                {
+                    field.SetValue(null, intValue);
+                }
+            }
+        }
     }
 
     private void Start()
@@ -128,7 +256,6 @@ public class SaveManager : MonoBehaviour
         // Set the file path to the persistent data path with the file name
         filePath = Path.Combine(Application.persistentDataPath, FileName);
 
-        // Load the save data from the file
         if (File.Exists(filePath))
         {
             string jsonString = File.ReadAllText(filePath);
@@ -142,6 +269,12 @@ public class SaveManager : MonoBehaviour
 
     public string SerializeGameData()
     {
+        // Create the custom settings with the custom contract resolver
+        var settings = new JsonSerializerSettings
+        {
+            ContractResolver = new CustomContractResolver()
+        };
+
         currentSaveData.username = UserName.userName;
         currentSaveData.password = Password.password;
         currentSaveData.email = Email.email;
@@ -152,31 +285,9 @@ public class SaveManager : MonoBehaviour
         currentSaveData.showItemClass = InventoryManager.ShowItemClass;
         currentSaveData.showRecipeClass = RecipeManager.ShowRecipeClass;
         currentSaveData.planet0Name = Planet0Name.planet0Name;
-        currentSaveData.atmospherePlanet0 = Planet0Buildings.AtmospherePlanet0;
         currentSaveData.planet0WindStatus = WindManager.Planet0WindStatus;
         currentSaveData.planet0UV = WeatherManager.planet0UV;
         currentSaveData.planet0Weather = WeatherManager.planet0Weather;
-        currentSaveData.agriLandPlanet0 = Planet0Buildings.AgriLandPlanet0;
-        currentSaveData.forestsPlanet0 = Planet0Buildings.ForestsPlanet0;
-        currentSaveData.waterPlanet0 = Planet0Buildings.WaterPlanet0;
-        currentSaveData.fisheriesPlanet0 = Planet0Buildings.FisheriesPlanet0;
-        currentSaveData.mineralsPlanet0 = Planet0Buildings.MineralsPlanet0;
-        currentSaveData.rocksPlanet0 = Planet0Buildings.RocksPlanet0;
-        currentSaveData.fossilFuelsPlanet0 = Planet0Buildings.FossilFuelsPlanet0;
-        currentSaveData.rareElementsPlanet0 = Planet0Buildings.RareElementsPlanet0;
-        currentSaveData.gemstonesPlanet0 = Planet0Buildings.GemstonesPlanet0;
-        currentSaveData.planet0BiofuelGenerator = Planet0Buildings.Planet0BiofuelGenerator;
-        currentSaveData.planet0BiofuelGeneratorBlueprint = Planet0Buildings.Planet0BiofuelGeneratorBlueprint;
-        currentSaveData.planet0WaterPump = Planet0Buildings.Planet0WaterPump;
-        currentSaveData.planet0WaterPumpBlueprint = Planet0Buildings.Planet0WaterPumpBlueprint;
-        currentSaveData.planet0PlantField = Planet0Buildings.Planet0PlantField;
-        currentSaveData.planet0PlantFieldBlueprint = Planet0Buildings.Planet0PlantFieldBlueprint;
-        currentSaveData.planet0Boiler = Planet0Buildings.Planet0Boiler;
-        currentSaveData.planet0BoilerBlueprint = Planet0Buildings.Planet0BoilerBlueprint;
-        currentSaveData.planet0SteamGenerator = Planet0Buildings.Planet0SteamGenerator;
-        currentSaveData.planet0SteamGeneratorBlueprint = Planet0Buildings.Planet0SteamGeneratorBlueprint;
-        currentSaveData.planet0Furnace = Planet0Buildings.Planet0Furnace;
-        currentSaveData.planet0FurnaceBlueprint = Planet0Buildings.Planet0FurnaceBlueprint;
         currentSaveData.playerLevel = Level.PlayerLevel;
         currentSaveData.playerCurrentExp = Level.PlayerCurrentExp;
         currentSaveData.playerMaxExp = Level.PlayerMaxExp;
@@ -185,236 +296,768 @@ public class SaveManager : MonoBehaviour
         currentSaveData.hours = GlobalCalculator.hours;
         currentSaveData.minutes = GlobalCalculator.minutes;
         currentSaveData.seconds = GlobalCalculator.seconds;
-        currentSaveData.playerOxygen = PlayerResources.PlayerOxygen;
-        currentSaveData.playerWater = PlayerResources.PlayerWater;
-        currentSaveData.playerEnergy = PlayerResources.PlayerEnergy;
-        currentSaveData.playerHunger = PlayerResources.PlayerHunger;
         currentSaveData.registeredUser = CoroutineManager.registeredUser;
         currentSaveData.firstGoal = GoalManager.firstGoal;
-        currentSaveData.firstGoal = GoalManager.secondGoal;
-        currentSaveData.firstGoal = GoalManager.thirdGoal;
+        currentSaveData.secondGoal = GoalManager.secondGoal;
+        currentSaveData.thirdGoal = GoalManager.thirdGoal;
+        currentSaveData.fourthGoal = GoalManager.fourthGoal;
         currentSaveData.isPlayerInBiologicalBiome = GlobalCalculator.isPlayerInBiologicalBiome;
         currentSaveData.credits = Credits.credits;
         currentSaveData.MenuButtonTypeOn = ButtonManager.MenuButtonTypeOn;
         currentSaveData.isDraggingBuilding = BuildingManager.isDraggingBuilding;
-        currentSaveData.Planet0MaxElectricity = Planet0Buildings.Planet0CurrentElectricity;
-        currentSaveData.Planet0CurrentConsumption = Planet0Buildings.Planet0CurrentConsumption;
-        currentSaveData.Planet0MaxElectricity = Planet0Buildings.Planet0MaxElectricity;
         currentSaveData.BuildingStatisticProcess = BuildingStatisticsManager.BuildingStatisticProcess;
         currentSaveData.BuildingStatisticType = BuildingStatisticsManager.BuildingStatisticType;
         currentSaveData.BuildingStatisticInterval = BuildingStatisticsManager.BuildingStatisticInterval;
         currentSaveData.BuildingIntervalTypeChanged = BuildingIntervalTypes.BuildingIntervalTypeChanged;
         currentSaveData.BuildingStatisticTypeChanged = BuildingStatisticTypes.BuildingStatisticTypeChanged;
         currentSaveData.ItemCreationID = ItemFactory.ItemCreationID;
+        currentSaveData.BuildingUniqueID = BuildingCreator.BuildingUniqueID;
+        currentSaveData.RecipeOrderAdded = RecipeCreator.recipeOrderAdded;
         currentSaveData.autoConsumption = EquipmentManager.autoConsumption;
+
+        // Planet0Building class storage
+        Type staticClassType = typeof(Planet0Buildings);
+        FieldInfo[] fields = staticClassType.GetFields(BindingFlags.Public | BindingFlags.Static);
+
+        foreach (FieldInfo field in fields)
+        {
+            currentSaveData.Planet0StaticVariables[field.Name] = field.GetValue(null);
+        }
+
+        // PlayerResources class storage
+        Type staticClassType2 = typeof(PlayerResources);
+        FieldInfo[] fields2 = staticClassType2.GetFields(BindingFlags.Public | BindingFlags.Static);
+
+        foreach (FieldInfo field in fields2)
+        {
+            currentSaveData.PlayerResourcesStaticVariables[field.Name] = field.GetValue(null);
+        }
 
         // slot equip array
         currentSaveData.slotEquipped = EquipmentManager.slotEquipped;
+        currentSaveData.slotEquippedName = EquipmentManager.slotEquippedName;
 
         // Access the itemArrays dictionary through the inventoryManager reference
         Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;
 
-        currentSaveData.basicInventoryObjects = new InventoryItemData[itemArrays["BASIC"].Length];
+        currentSaveData.basicInventoryObjects = new ItemDataModel[itemArrays["BASIC"].Length];
 
         for (int i = 0; i < itemArrays["BASIC"].Length; i++)
         {
             GameObject itemGameObject = itemArrays["BASIC"][i];
-            string itemName = itemGameObject.name.Replace("(Clone)", "");
-
-            InventoryItemData itemData = new()
-            {
-                itemName = itemName
-            };
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
-            itemData.ID = itemDataComponent.ID;
-            itemData.itemName = itemDataComponent.itemName;
-            itemData.index = itemDataComponent.index;
-            itemData.stackLimit = itemDataComponent.stackLimit;
-            itemData.itemType = itemDataComponent.itemType;
-            itemData.itemProduct = itemDataComponent.itemProduct;
-            itemData.itemClass = itemDataComponent.itemClass;
-            itemData.itemQuantity = itemDataComponent.itemQuantity;
+            itemDataComponent.itemName = itemDataComponent.itemName.Replace("(Clone)", "");
+            ItemDataModel itemData = new()
+            {
+                ID = itemDataComponent.ID,
+                index = itemDataComponent.index,
+                stackLimit = itemDataComponent.stackLimit,
+                itemQuantity = itemDataComponent.itemQuantity,
+                itemProduct = itemDataComponent.itemProduct,
+                itemType = itemDataComponent.itemType,
+                itemClass = itemDataComponent.itemClass,
+                itemName = itemDataComponent.itemName,
+                equipable = itemDataComponent.equipable,
+                isEquipped = itemDataComponent.isEquipped
+            };
 
             currentSaveData.basicInventoryObjects[i] = itemData;
         }
 
-        currentSaveData.processedInventoryObjects = new InventoryItemData[itemArrays["PROCESSED"].Length];
+        currentSaveData.processedInventoryObjects = new ItemDataModel[itemArrays["PROCESSED"].Length];
 
         for (int i = 0; i < itemArrays["PROCESSED"].Length; i++)
         {
             GameObject itemGameObject = itemArrays["PROCESSED"][i];
-            string itemName = itemGameObject.name.Replace("(Clone)", "");
-
-            InventoryItemData itemData = new()
-            {
-                itemName = itemName
-            };
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
-            itemData.ID = itemDataComponent.ID;
-            itemData.itemName = itemDataComponent.itemName;
-            itemData.index = itemDataComponent.index;
-            itemData.stackLimit = itemDataComponent.stackLimit;
-            itemData.itemType = itemDataComponent.itemType;
-            itemData.itemProduct = itemDataComponent.itemProduct;
-            itemData.itemClass = itemDataComponent.itemClass;
-            itemData.itemQuantity = itemDataComponent.itemQuantity;
+            itemDataComponent.itemName = itemDataComponent.itemName.Replace("(Clone)", "");
+            ItemDataModel itemData = new()
+            {
+                ID = itemDataComponent.ID,
+                index = itemDataComponent.index,
+                stackLimit = itemDataComponent.stackLimit,
+                itemQuantity = itemDataComponent.itemQuantity,
+                itemProduct = itemDataComponent.itemProduct,
+                itemType = itemDataComponent.itemType,
+                itemClass = itemDataComponent.itemClass,
+                itemName = itemDataComponent.itemName,
+                equipable = itemDataComponent.equipable,
+                isEquipped = itemDataComponent.isEquipped
+            };
 
             currentSaveData.processedInventoryObjects[i] = itemData;
         }
-        currentSaveData.enhancedInventoryObjects = new InventoryItemData[itemArrays["ENHANCED"].Length];
+        currentSaveData.enhancedInventoryObjects = new ItemDataModel[itemArrays["ENHANCED"].Length];
 
         for (int i = 0; i < itemArrays["ENHANCED"].Length; i++)
         {
             GameObject itemGameObject = itemArrays["ENHANCED"][i];
-            string itemName = itemGameObject.name.Replace("(Clone)", "");
-
-            InventoryItemData itemData = new()
-            {
-                itemName = itemName
-            };
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
-            itemData.ID = itemDataComponent.ID;
-            itemData.itemName = itemDataComponent.itemName;
-            itemData.index = itemDataComponent.index;
-            itemData.stackLimit = itemDataComponent.stackLimit;
-            itemData.itemType = itemDataComponent.itemType;
-            itemData.itemProduct = itemDataComponent.itemProduct;
-            itemData.itemClass = itemDataComponent.itemClass;
-            itemData.itemQuantity = itemDataComponent.itemQuantity;
+            itemDataComponent.itemName = itemDataComponent.itemName.Replace("(Clone)", "");
+            ItemDataModel itemData = new()
+            {
+                ID = itemDataComponent.ID,
+                index = itemDataComponent.index,
+                stackLimit = itemDataComponent.stackLimit,
+                itemQuantity = itemDataComponent.itemQuantity,
+                itemProduct = itemDataComponent.itemProduct,
+                itemType = itemDataComponent.itemType,
+                itemClass = itemDataComponent.itemClass,
+                itemName = itemDataComponent.itemName,
+                equipable = itemDataComponent.equipable,
+                isEquipped = itemDataComponent.isEquipped
+            };
 
             currentSaveData.enhancedInventoryObjects[i] = itemData;
         }
-        currentSaveData.assembledInventoryObjects = new InventoryItemData[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.assembledInventoryObjects = new ItemDataModel[itemArrays["ASSEMBLED"].Length];
 
         for (int i = 0; i < itemArrays["ASSEMBLED"].Length; i++)
         {
             GameObject itemGameObject = itemArrays["ASSEMBLED"][i];
-            string itemName = itemGameObject.name.Replace("(Clone)", "");
-
-            InventoryItemData itemData = new()
-            {
-                itemName = itemName
-            };
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
-            itemData.ID = itemDataComponent.ID;
-            itemData.itemName = itemDataComponent.itemName;
-            itemData.index = itemDataComponent.index;
-            itemData.stackLimit = itemDataComponent.stackLimit;
-            itemData.itemType = itemDataComponent.itemType;
-            itemData.itemProduct = itemDataComponent.itemProduct;
-            itemData.itemClass = itemDataComponent.itemClass;
-            itemData.itemQuantity = itemDataComponent.itemQuantity;
+            itemDataComponent.itemName = itemDataComponent.itemName.Replace("(Clone)", "");
+            ItemDataModel itemData = new()
+            {
+                ID = itemDataComponent.ID,
+                index = itemDataComponent.index,
+                stackLimit = itemDataComponent.stackLimit,
+                itemQuantity = itemDataComponent.itemQuantity,
+                itemProduct = itemDataComponent.itemProduct,
+                itemType = itemDataComponent.itemType,
+                itemClass = itemDataComponent.itemClass,
+                itemName = itemDataComponent.itemName,
+                equipable = itemDataComponent.equipable,
+                isEquipped = itemDataComponent.isEquipped
+            };
 
             currentSaveData.assembledInventoryObjects[i] = itemData;
         }
 
-        // Access the itemArrays dictionary through the inventoryManager reference
+        // Access the itemRecipeArrays dictionary through the RecipeManager reference
         Dictionary<string, GameObject[]> itemRecipeArrays = recipeManager.itemRecipeArrays;
 
-        currentSaveData.basicRecipeObjects = new RecipeData[itemRecipeArrays["BASIC"].Length];
+        currentSaveData.basicRecipeObjects = new RecipeItemDataModel[itemRecipeArrays["BASIC"].Length];
 
         for (int i = 0; i < itemRecipeArrays["BASIC"].Length; i++)
         {
             GameObject itemGameObject = itemRecipeArrays["BASIC"][i];
-            string itemName = itemGameObject.name.Replace("(Clone)", "");
-
-            RecipeData itemData = new()
-            {
-                recipeName = itemName
-            };
             RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
-            itemData.recipeName = itemDataComponent.recipeName;
-            itemData.index = itemDataComponent.index;
-            itemData.recipeType = itemDataComponent.recipeType;
-            itemData.itemProduct = itemDataComponent.recipeProduct;
-            itemData.itemClass = itemDataComponent.itemClass;
-            itemData.experience = itemDataComponent.experience;
-            itemData.productionTime = itemDataComponent.productionTime;
-            itemData.outputValue = itemDataComponent.outputValue;
-            itemData.hasRequirements = itemDataComponent.hasRequirements;
+            itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
+            RecipeItemDataModel recipeData = new()
+            {
+                index = itemDataComponent.index,
+                orderAdded = itemDataComponent.orderAdded,
+                recipeName = itemDataComponent.recipeName,
+                recipeProduct = itemDataComponent.recipeProduct,
+                recipeType = itemDataComponent.recipeType,
+                itemClass = itemDataComponent.itemClass,
+                experience = itemDataComponent.experience,
+                productionTime = itemDataComponent.productionTime,
+                outputValue = itemDataComponent.outputValue,
+                hasRequirements = itemDataComponent.hasRequirements,
+                childData = itemDataComponent.childData
+            };
 
-            currentSaveData.basicRecipeObjects[i] = itemData;
+            currentSaveData.basicRecipeObjects[i] = recipeData;
         }
 
-        currentSaveData.processedRecipeObjects = new RecipeData[itemRecipeArrays["PROCESSED"].Length];
+        currentSaveData.processedRecipeObjects = new RecipeItemDataModel[itemRecipeArrays["PROCESSED"].Length];
 
         for (int i = 0; i < itemRecipeArrays["PROCESSED"].Length; i++)
         {
             GameObject itemGameObject = itemRecipeArrays["PROCESSED"][i];
-            string itemName = itemGameObject.name.Replace("(Clone)", "");
-
-            RecipeData itemData = new()
-            {
-                recipeName = itemName
-            };
             RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
-            itemData.recipeName = itemDataComponent.recipeName;
-            itemData.index = itemDataComponent.index;
-            itemData.recipeType = itemDataComponent.recipeType;
-            itemData.itemProduct = itemDataComponent.recipeProduct;
-            itemData.itemClass = itemDataComponent.itemClass;
-            itemData.experience = itemDataComponent.experience;
-            itemData.productionTime = itemDataComponent.productionTime;
-            itemData.outputValue = itemDataComponent.outputValue;
-            itemData.hasRequirements = itemDataComponent.hasRequirements;
+            itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
+            RecipeItemDataModel recipeData = new()
+            {
+                index = itemDataComponent.index,
+                orderAdded = itemDataComponent.orderAdded,
+                recipeName = itemDataComponent.recipeName,
+                recipeProduct = itemDataComponent.recipeProduct,
+                recipeType = itemDataComponent.recipeType,
+                itemClass = itemDataComponent.itemClass,
+                experience = itemDataComponent.experience,
+                productionTime = itemDataComponent.productionTime,
+                outputValue = itemDataComponent.outputValue,
+                hasRequirements = itemDataComponent.hasRequirements,
+                childData = itemDataComponent.childData
+            };
 
-            currentSaveData.processedRecipeObjects[i] = itemData;
+            currentSaveData.processedRecipeObjects[i] = recipeData;
         }
-        currentSaveData.enhancedRecipeObjects = new RecipeData[itemRecipeArrays["ENHANCED"].Length];
+        currentSaveData.enhancedRecipeObjects = new RecipeItemDataModel[itemRecipeArrays["ENHANCED"].Length];
 
         for (int i = 0; i < itemRecipeArrays["ENHANCED"].Length; i++)
         {
             GameObject itemGameObject = itemRecipeArrays["ENHANCED"][i];
-            string itemName = itemGameObject.name.Replace("(Clone)", "");
-
-            RecipeData itemData = new()
-            {
-                recipeName = itemName
-            };
             RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
-            itemData.recipeName = itemDataComponent.recipeName;
-            itemData.index = itemDataComponent.index;
-            itemData.recipeType = itemDataComponent.recipeType;
-            itemData.itemProduct = itemDataComponent.recipeProduct;
-            itemData.itemClass = itemDataComponent.itemClass;
-            itemData.experience = itemDataComponent.experience;
-            itemData.productionTime = itemDataComponent.productionTime;
-            itemData.outputValue = itemDataComponent.outputValue;
-            itemData.hasRequirements = itemDataComponent.hasRequirements;
+            itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
+            RecipeItemDataModel recipeData = new()
+            {
+                index = itemDataComponent.index,
+                orderAdded = itemDataComponent.orderAdded,
+                recipeName = itemDataComponent.recipeName,
+                recipeProduct = itemDataComponent.recipeProduct,
+                recipeType = itemDataComponent.recipeType,
+                itemClass = itemDataComponent.itemClass,
+                experience = itemDataComponent.experience,
+                productionTime = itemDataComponent.productionTime,
+                outputValue = itemDataComponent.outputValue,
+                hasRequirements = itemDataComponent.hasRequirements,
+                childData = itemDataComponent.childData
+            };
 
-            currentSaveData.enhancedRecipeObjects[i] = itemData;
+            currentSaveData.enhancedRecipeObjects[i] = recipeData;
         }
-        currentSaveData.assembledRecipeObjects = new RecipeData[itemRecipeArrays["ASSEMBLED"].Length];
+        currentSaveData.assembledRecipeObjects = new RecipeItemDataModel[itemRecipeArrays["ASSEMBLED"].Length];
 
         for (int i = 0; i < itemRecipeArrays["ASSEMBLED"].Length; i++)
         {
             GameObject itemGameObject = itemRecipeArrays["ASSEMBLED"][i];
-            string itemName = itemGameObject.name.Replace("(Clone)", "");
-
-            RecipeData itemData = new()
-            {
-                recipeName = itemName
-            };
             RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
-            itemData.recipeName = itemDataComponent.recipeName;
-            itemData.index = itemDataComponent.index;
-            itemData.recipeType = itemDataComponent.recipeType;
-            itemData.itemProduct = itemDataComponent.recipeProduct;
-            itemData.itemClass = itemDataComponent.itemClass;
-            itemData.experience = itemDataComponent.experience;
-            itemData.productionTime = itemDataComponent.productionTime;
-            itemData.outputValue = itemDataComponent.outputValue;
-            itemData.hasRequirements = itemDataComponent.hasRequirements;
+            itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
+            RecipeItemDataModel recipeData = new()
+            {
+                index = itemDataComponent.index,
+                orderAdded = itemDataComponent.orderAdded,
+                recipeName = itemDataComponent.recipeName,
+                recipeProduct = itemDataComponent.recipeProduct,
+                recipeType = itemDataComponent.recipeType,
+                itemClass = itemDataComponent.itemClass,
+                experience = itemDataComponent.experience,
+                productionTime = itemDataComponent.productionTime,
+                outputValue = itemDataComponent.outputValue,
+                hasRequirements = itemDataComponent.hasRequirements,
+                childData = itemDataComponent.childData
+            };
 
-            currentSaveData.assembledRecipeObjects[i] = itemData;
+            currentSaveData.assembledRecipeObjects[i] = recipeData;
+        }
+        currentSaveData.buildingRecipeObjects = new RecipeItemDataModel[itemRecipeArrays["BUILDINGS"].Length];
+
+        for (int i = 0; i < itemRecipeArrays["BUILDINGS"].Length; i++)
+        {
+            GameObject itemGameObject = itemRecipeArrays["BUILDINGS"][i];
+            RecipeItemData itemDataComponent = itemGameObject.GetComponent<RecipeItemData>();
+            itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
+            RecipeItemDataModel recipeData = new()
+            {
+                index = itemDataComponent.index,
+                orderAdded = itemDataComponent.orderAdded,
+                recipeName = itemDataComponent.recipeName,
+                recipeProduct = itemDataComponent.recipeProduct,
+                recipeType = itemDataComponent.recipeType,
+                itemClass = itemDataComponent.itemClass,
+                experience = itemDataComponent.experience,
+                productionTime = itemDataComponent.productionTime,
+                outputValue = itemDataComponent.outputValue,
+                hasRequirements = itemDataComponent.hasRequirements,
+                childData = itemDataComponent.childData
+            };
+
+            currentSaveData.buildingRecipeObjects[i] = recipeData;
         }
 
-        string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented);
+        // Access the buildingArrays dictionary through the BuildingManager reference
+        Dictionary<string, GameObject[]> buildingArrays = buildingManager.buildingArrays;
+
+        currentSaveData.agriculture = new BuildingItemDataModel[buildingArrays["AGRICULTURE"].Length];
+
+        for (int i = 0; i < buildingArrays["AGRICULTURE"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["AGRICULTURE"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.agriculture[i] = buildingData;
+        }
+
+        currentSaveData.pumpingFacility = new BuildingItemDataModel[buildingArrays["PUMPINGFACILITY"].Length];
+
+        for (int i = 0; i < buildingArrays["PUMPINGFACILITY"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["PUMPINGFACILITY"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.pumpingFacility[i] = buildingData;
+        }
+
+        currentSaveData.factory = new BuildingItemDataModel[buildingArrays["FACTORY"].Length];
+
+        for (int i = 0; i < buildingArrays["FACTORY"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["FACTORY"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.factory[i] = buildingData;
+        }
+
+        currentSaveData.commFacility = new BuildingItemDataModel[buildingArrays["COMMFACILITY"].Length];
+
+        for (int i = 0; i < buildingArrays["COMMFACILITY"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["COMMFACILITY"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.commFacility[i] = buildingData;
+        }
+
+        currentSaveData.storageHouse = new BuildingItemDataModel[buildingArrays["STORAGEHOUSE"].Length];
+
+        for (int i = 0; i < buildingArrays["STORAGEHOUSE"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["STORAGEHOUSE"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.storageHouse[i] = buildingData;
+        }
+
+        currentSaveData.navalFacility = new BuildingItemDataModel[buildingArrays["NAVALFACILITY"].Length];
+
+        for (int i = 0; i < buildingArrays["NAVALFACILITY"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["NAVALFACILITY"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.navalFacility[i] = buildingData;
+        }
+
+        currentSaveData.oxygenFacility = new BuildingItemDataModel[buildingArrays["OXYGENFACILITY"].Length];
+
+        for (int i = 0; i < buildingArrays["OXYGENFACILITY"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["OXYGENFACILITY"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.oxygenFacility[i] = buildingData;
+        }
+
+        currentSaveData.aviationFacility = new BuildingItemDataModel[buildingArrays["AVIATIONFACILITY"].Length];
+
+        for (int i = 0; i < buildingArrays["AVIATIONFACILITY"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["AVIATIONFACILITY"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.aviationFacility[i] = buildingData;
+        }
+
+        currentSaveData.heatingFacility = new BuildingItemDataModel[buildingArrays["HEATINGFACILITY"].Length];
+
+        for (int i = 0; i < buildingArrays["HEATINGFACILITY"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["HEATINGFACILITY"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.heatingFacility[i] = buildingData;
+        }
+
+        currentSaveData.coolingFacility = new BuildingItemDataModel[buildingArrays["COOLINGFACILITY"].Length];
+
+        for (int i = 0; i < buildingArrays["COOLINGFACILITY"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["COOLINGFACILITY"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.coolingFacility[i] = buildingData;
+        }
+
+        currentSaveData.powerplant = new EnergyBuildingItemDataModel[buildingArrays["POWERPLANT"].Length];
+
+        for (int i = 0; i < buildingArrays["POWERPLANT"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["POWERPLANT"][i];
+            EnergyBuildingItemData itemDataComponent = itemGameObject.GetComponent<EnergyBuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            EnergyBuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                powerCycleData = itemDataComponent.powerCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerOutput = itemDataComponent.powerOutput,
+                basePowerOutput = itemDataComponent.basePowerOutput,
+                actualPowerOutput = itemDataComponent.actualPowerOutput,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.powerplant[i] = buildingData;
+        }
+
+        currentSaveData.oxygenStation = new BuildingItemDataModel[buildingArrays["OXYGENSTATION"].Length];
+
+        for (int i = 0; i < buildingArrays["OXYGENSTATION"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["OXYGENSTATION"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.oxygenStation[i] = buildingData;
+        }
+
+        currentSaveData.miningRig = new BuildingItemDataModel[buildingArrays["MININGRIG"].Length];
+
+        for (int i = 0; i < buildingArrays["MININGRIG"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["MININGRIG"][i];
+            BuildingItemData itemDataComponent = itemGameObject.GetComponent<BuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            BuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                producedItems = itemDataComponent.producedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                productionCycleData = itemDataComponent.productionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                secondCycleCount = itemDataComponent.secondCycleCount,
+                minuteCycleCount = itemDataComponent.minuteCycleCount,
+                hourCycleCount = itemDataComponent.hourCycleCount,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                producedSlotCount = itemDataComponent.producedSlotCount,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused
+            };
+
+            currentSaveData.miningRig[i] = buildingData;
+        }
+
+        string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented, settings);
         return jsonString;
 
     }
-
-
     public void SaveToJsonFile()
     {
         string jsonString = SerializeGameData();
@@ -450,34 +1093,36 @@ public class SaveManager : MonoBehaviour
 
         // fill in game data
 
-        Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest userGameDataSaveRequest= new Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest();
-
-        userGameDataSaveRequest.UserId = Gaos.Context.Authentication.GetUserId();
-        userGameDataSaveRequest.SlotId = slotId;
-
-        userGameDataSaveRequest.GameDataJson = SerializeGameData();
+        Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest userGameDataSaveRequest = new()
+        {
+            UserId = Gaos.Context.Authentication.GetUserId(),
+            SlotId = slotId,
+            GameDataJson = SerializeGameData()
+        };
 
         StartCoroutine(Gaos.GameData.UserGameDataSave.Save(slotId, userGameDataSaveRequest, OnUserGameDataSaveComplete));
 
     }
 
-    public  void OnUserGameDataSaveComplete(Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response)
+    public void OnUserGameDataSaveComplete(Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response)
     {
         string responseString = JsonConvert.SerializeObject(response);
         Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3100: OnUserGameDataSaveComplete(): {responseString}");
 
 
-        StartCoroutine(Gaos.GameData.UserGameDataGet.Get(1,OnUserGameDataGetComplete));
+        //StartCoroutine(Gaos.GameData.UserGameDataGet.Get(1, OnUserGameDataGetComplete));
     }
     public static void OnUserGameDataGetComplete(Gaos.Routes.Model.GameDataJson.UserGameDataGetResponse response)
     {
-        SaveDataModel gameData = JsonConvert.DeserializeObject<SaveDataModel>(response.GameDataJson);
-        string gameDataStr = JsonConvert.SerializeObject(gameData);
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3300: saveDataModel: {gameDataStr}");
-
-
-
-        // DON'T FORGET TO SWITCH 'GlobalCalculator.GameStarted' bool to true when game is loaded!!!
-        // Also BuildingIncrementor has to be re-initialized!
+        if (response.GameDataJson != null)
+        {
+            SaveDataModel gameData = JsonConvert.DeserializeObject<SaveDataModel>(response.GameDataJson);
+            string gameDataStr = JsonConvert.SerializeObject(gameData);
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3300: saveDataModel: {gameDataStr}");
+        }
+        else
+        {
+            Debug.Log("Nothing found!");
+        }
     }
 }

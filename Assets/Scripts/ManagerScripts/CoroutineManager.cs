@@ -1,12 +1,17 @@
+using Cysharp.Threading.Tasks;
+using Gaos.GameData;
+using Gaos.Routes.Model.GameDataJson;
+using ItemManagement;
+using Newtonsoft.Json;
+using RecipeManagement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using ItemManagement;
-using RecipeManagement;
+using System.Globalization;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System;
+using static SaveManager;
 
 public class CoroutineManager : MonoBehaviour
 {
@@ -16,12 +21,22 @@ public class CoroutineManager : MonoBehaviour
     public InventoryManager inventoryManager;
     public BuildingIncrementor buildingIncrementor;
     public ProductionCreator productionCreator;
+    public SaveManager saveManager;
     public GameObject RecipeList;
     public GameObject loadingBar;
     public GameObject saveSlots;
+    public TextMeshProUGUI saveSlot1Title;
+    public TextMeshProUGUI saveSlot1Desc;
+    public TextMeshProUGUI saveSlot2Title;
+    public TextMeshProUGUI saveSlot2Desc;
+    public TextMeshProUGUI saveSlot3Title;
+    public TextMeshProUGUI saveSlot3Desc;
+    public TextMeshProUGUI saveSlot4Title;
+    public TextMeshProUGUI saveSlot4Desc;
     public GameObject loginMenu;
     public GameObject newGamePopup;
     public GameObject levelUpObject;
+    public GameObject legal;
     private TextMeshProUGUI textObject;
 
     public TextMeshProUGUI levelText;
@@ -33,7 +48,8 @@ public class CoroutineManager : MonoBehaviour
 
     // data for server
     public static bool registeredUser = false;
-    public static bool[] AllCoroutineBooleans = new bool[12];
+    public static bool manualProduction = false;
+    public static bool[] AllCoroutineBooleans = new bool[15];
     public static int IndexNumber;
 
     public Image imageToFill;
@@ -55,12 +71,43 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] CoalTexts;
     public TextMeshProUGUI[] IronBeamTexts;
     public TextMeshProUGUI[] BiofuelGeneratorTexts;
+    public TextMeshProUGUI[] IronSheetTexts;
+    public TextMeshProUGUI[] IronRodTexts;
 
-    // OnEnable is only for testing purposes! Has to be deleted in official launch!
-    /*void OnEnable()
+    private void CheckSlotData()
     {
-        ResetNewGame();
-    }*/
+        StartCoroutine(UserGameDataGet.Get(1, CallSaveSlot1Data));
+    }
+
+    private void CallSaveSlot1Data(UserGameDataGetResponse response)
+    {
+        if (response != null)
+        {
+            if (response.GameDataJson != null)
+            {
+                SaveDataModel gameData = JsonConvert.DeserializeObject<SaveDataModel>(response.GameDataJson);
+                string saveName = gameData.username;
+                int seconds = gameData.seconds;
+                int minutes = gameData.minutes;
+                int hours = gameData.hours;
+                string description = hours.ToString() + "h " + minutes.ToString() + "m " + seconds.ToString() + "s ";
+
+
+                saveSlot1Title.text = saveName;
+                saveSlot1Desc.text = description;
+
+                saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+                legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+            }
+            saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+            legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+        }
+        else
+        {
+            saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+            legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+        }
+    }
     public void InitializeResourceMap()
     {
         resourceTextMap = new Dictionary<string, TextMeshProUGUI[]>
@@ -70,62 +117,23 @@ public class CoroutineManager : MonoBehaviour
             { "Biofuel", BiofuelTexts },
             { "DistilledWater", DistilledWaterTexts },
             { "BatteryCore", BatteryCoreTexts },
+            { "PlanetStats", PlanetStatsTexts },
             { "Battery", BatteryTexts },
             { "Steam", SteamTexts },
             { "Wood", WoodTexts },
             { "IronOre", IronOreTexts },
             { "Coal", CoalTexts },
             { "IronBeam", IronBeamTexts },
-            { "BiofuelGenerator", BiofuelGeneratorTexts }
+            { "BiofuelGenerator", BiofuelGeneratorTexts },
+            { "IronSheet", IronSheetTexts },
+            { "IronRod", IronRodTexts }
         };
     }
 
     public void StopRunningCoroutine()
     {
-        if (IndexNumber == 0)
-        {
-            StartCoroutine("StopCreateFibrousLeaves");
-        }
-        else if (IndexNumber == 1)
-        {
-            StartCoroutine("StopCreateWater");
-        }
-        else if (IndexNumber == 2)
-        {
-            StartCoroutine("StopCreateBiofuel");
-        }
-        else if (IndexNumber == 3)
-        {
-            StartCoroutine("StopCreateDistilledWater");
-        }
-        else if (IndexNumber == 4)
-        {
-            StartCoroutine("StopCreateBattery");
-        }
-        else if (IndexNumber == 5)
-        {
-            StartCoroutine("StopCreateOxygenTanks");
-        }
-        else if (IndexNumber == 6)
-        {
-            StartCoroutine("StopCreateBatteryCore");
-        }
-        else if (IndexNumber == 7)
-        {
-            StartCoroutine("StopCreateWood");
-        }
-        else if (IndexNumber == 8)
-        {
-            StartCoroutine("StopCreateIronOre");
-        }
-        else if (IndexNumber == 9)
-        {
-            StartCoroutine("StopCreateCoal");
-        }
-        else if (IndexNumber == 10)
-        {
-            StartCoroutine("StopCreateBiofuelGenerator");
-        }
+        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == IndexNumber);
+        StartCoroutine("StopRunningCreateRecipe", recipeData);
     }
 
     IEnumerator WaitForLoadingBar()
@@ -138,8 +146,8 @@ public class CoroutineManager : MonoBehaviour
 
         if (registeredUser == false)
         {
-            loginMenu.SetActive (true);
-            loadingBar.SetActive (false);
+            loginMenu.SetActive(true);
+            loadingBar.SetActive(false);
             saveSlots.SetActive(false);
         }
         else
@@ -147,6 +155,40 @@ public class CoroutineManager : MonoBehaviour
             saveSlots.SetActive(true);
             loadingBar.SetActive(false);
             loginMenu.SetActive(false);
+        }
+    }
+    /// <summary>
+    /// Uses 'resourceTextMap' dictionary strings to update all respective bound text fields in UI to the current value of the item
+    /// </summary>
+    /// <param name="consumableName"></param>
+    /// <param name="quality"></param>
+    public void UpdateQuantityTexts(string consumableName, string quality)
+    {
+        if (resourceTextMap.TryGetValue(consumableName, out TextMeshProUGUI[] currentTextArray))
+        {
+            string currentResource = inventoryManager.GetItemQuantity(consumableName, quality).ToString("F2", CultureInfo.InvariantCulture);
+            for (int i = 0; i < currentTextArray.Length; i++)
+            {
+                currentTextArray[i].text = currentResource;
+            }
+        }
+        else
+        {
+            Debug.LogError($"Text array for '{consumableName}' not found.");
+        }
+    }
+    public void UpdateBuildingText(string consumableName, string resourceQuantity)
+    {
+        if (resourceTextMap.TryGetValue(consumableName, out TextMeshProUGUI[] currentTextArray))
+        {
+            for (int i = 0; i < currentTextArray.Length; i++)
+            {
+                currentTextArray[i].text = resourceQuantity;
+            }
+        }
+        else
+        {
+            Debug.LogError($"Text array for '{consumableName}' not found.");
         }
     }
 
@@ -157,11 +199,11 @@ public class CoroutineManager : MonoBehaviour
         newGamePopup.SetActive(true);
         await UniTask.Delay(TimeSpan.FromSeconds(1.5f));
         newGamePopup.GetComponent<Michsky.UI.Shift.ModalWindowManager>().ModalWindowIn();
-        loadingBar.SetActive (false);
+        loadingBar.SetActive(false);
     }
     public IEnumerator LoadSaveSlots()
     {
-        saveSlots.SetActive(true);
+        CheckSlotData();
         loadingBar.SetActive(false);
         loginMenu.SetActive(false);
         yield return null;
@@ -211,306 +253,43 @@ public class CoroutineManager : MonoBehaviour
             itemCreator.CreateItem(childData.index, childData.quantity);
         }
     }
-    public IEnumerator CreateFibrousLeaves()
+    public IEnumerator CreateRecipe(RecipeItemData recipeData)
     {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 0);
-
-        float timer = 0f;
-        float fillTimePlanet0bb = 2f;
-
-        GameObject fillBarObject = RecipeList.transform.Find("FibrousLeaves/FillBckg/FillBar").gameObject;
-        imageToFill = fillBarObject.GetComponent<Image>();
-
-        // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-        if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-        while (timer < fillTimePlanet0bb)
+        bool allItemsMet = true;
+        if (recipeData.childData.Count > 0)
         {
-            currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-            imageToFill.fillAmount = currentFillAmountPlanet0bb;
-            timer += Time.deltaTime;
-            yield return null;
+            List<ChildData> recipeDataChildList = recipeData.childData;
+            for (int i = 0; i < recipeDataChildList.Count; i++)
+            {
+                bool isQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[i].name, recipeDataChildList[i].product, recipeDataChildList[i].quantity);
+                if (!isQuantityMet)
+                {
+                    allItemsMet = false;
+                    break;
+                }
+            }
         }
-        imageToFill.fillAmount = 0f;
-
-        itemCreator.CreateItem(0);
-        Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-        currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-        int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-        int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-        float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-        ExpBar.fillAmount = fillAmount;
-
-        if (playerCurrentExp >= playerMaxExp)
-        {
-            LevelUp(playerMaxExp);
-        }
-
-        
-
-        string currentPlantResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-
-        for (int i = 0; i < FibrousLeavesTexts.Length; i++)
-        {
-            FibrousLeavesTexts[i].text = currentPlantResource;
-        }
-        StartCoroutine("CreateFibrousLeaves");
-    }
-
-    public IEnumerator StopCreateFibrousLeaves()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateFibrousLeaves");
-        AllCoroutineBooleans[0] = false;
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-
-    public IEnumerator CreateWater()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 1);
-
-        float timer = 0f;
-        float fillTimePlanet0bb = 2f;
-
-        GameObject fillBarObject = RecipeList.transform.Find("Water/FillBckg/FillBar").gameObject;
-        imageToFill = fillBarObject.GetComponent<Image>();
-
-        // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-        if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-        while (timer < fillTimePlanet0bb)
-        {
-            currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-            imageToFill.fillAmount = currentFillAmountPlanet0bb;
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        itemCreator.CreateItem(1);
-        Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-        currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-
-        int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-        int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-        float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-        ExpBar.fillAmount = fillAmount;
-
-        if (playerCurrentExp >= playerMaxExp)
-        {
-            LevelUp(playerMaxExp);
-        }
-
-        string currentWaterResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-
-        for (int i = 0; i < WaterTexts.Length; i++)
-        {
-            WaterTexts[i].text = currentWaterResource;
-        }
-        imageToFill.fillAmount = 0f;
-
-        StartCoroutine("CreateWater");
-    }
-
-    public IEnumerator StopCreateWater()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateWater");
-        AllCoroutineBooleans[1] = false;
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-    public IEnumerator CreateWood()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 7);
-
-        float timer = 0f;
-        float fillTimePlanet0bb = 6f;
-
-        GameObject fillBarObject = RecipeList.transform.Find("Wood/FillBckg/FillBar").gameObject;
-        imageToFill = fillBarObject.GetComponent<Image>();
-
-        // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-        if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-        while (timer < fillTimePlanet0bb)
-        {
-            currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-            imageToFill.fillAmount = currentFillAmountPlanet0bb;
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        imageToFill.fillAmount = 0f;
-
-        itemCreator.CreateItem(8);
-        Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-        currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-        int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-        int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-        float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-        ExpBar.fillAmount = fillAmount;
-
-        if (playerCurrentExp >= playerMaxExp)
-        {
-            LevelUp(playerMaxExp);
-        }
-
-        string currentWoodResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-
-        for (int i = 0; i < WoodTexts.Length; i++)
-        {
-            WoodTexts[i].text = currentWoodResource;
-        }
-        StartCoroutine("CreateWood");
-    }
-    public IEnumerator StopCreateWood()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateWood");
-        AllCoroutineBooleans[7] = false;
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-
-    public IEnumerator CreateIronOre()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 8);
-
-        float timer = 0f;
-        float fillTimePlanet0bb = 6f;
-
-        GameObject fillBarObject = RecipeList.transform.Find("IronOre/FillBckg/FillBar").gameObject;
-        imageToFill = fillBarObject.GetComponent<Image>();
-
-        // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-        if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-        while (timer < fillTimePlanet0bb)
-        {
-            currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-            imageToFill.fillAmount = currentFillAmountPlanet0bb;
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        imageToFill.fillAmount = 0f;
-
-        itemCreator.CreateItem(9);
-        Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-        currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-
-        int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-        int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-        float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-        ExpBar.fillAmount = fillAmount;
-
-        if (playerCurrentExp >= playerMaxExp)
-        {
-            LevelUp(playerMaxExp);
-        }
-
-        string currentIronOreResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-
-        for (int i = 0; i < IronOreTexts.Length; i++)
-        {
-            IronOreTexts[i].text = currentIronOreResource;
-        }
-        StartCoroutine("CreateIronOre");
-    }
-    public IEnumerator StopCreateIronOre()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateIronOre");
-        AllCoroutineBooleans[8] = false;
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-
-    public IEnumerator CreateCoal()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 9);
-
-        float timer = 0f;
-        float fillTimePlanet0bb = 6f;
-
-        GameObject fillBarObject = RecipeList.transform.Find("Coal/FillBckg/FillBar").gameObject;
-        imageToFill = fillBarObject.GetComponent<Image>();
-
-        // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-        if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-        while (timer < fillTimePlanet0bb)
-        {
-            currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-            imageToFill.fillAmount = currentFillAmountPlanet0bb;
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        imageToFill.fillAmount = 0f;
-
-        itemCreator.CreateItem(10);
-        Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-        currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-        int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-        int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-        float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-        ExpBar.fillAmount = fillAmount;
-
-        if (playerCurrentExp >= playerMaxExp)
-        {
-            LevelUp(playerMaxExp);
-        }
-
-        string currentCoalResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-
-        for (int i = 0; i < CoalTexts.Length; i++)
-        {
-            CoalTexts[i].text = currentCoalResource;
-        }
-        StartCoroutine("CreateCoal");
-    }
-    public IEnumerator StopCreateCoal()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateCoal");
-        AllCoroutineBooleans[9] = false;
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-
-    public IEnumerator CreateIronBeam()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 10);
-        List<ChildData> recipeDataChildList = recipeData.childDataList;
-        bool isIronOreQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-        bool isCoalQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product, recipeDataChildList[1].quantity);
-        bool isQuantityMet = isIronOreQuantityMet && isCoalQuantityMet;
-        if (isQuantityMet)
+        if (allItemsMet)
         {
             float timer = 0f;
-            float fillTimePlanet0bb = 8f;
-            AllCoroutineBooleans[10] = true;
-
-            GameObject fillBarObject = RecipeList.transform.Find("IronBeam/FillBckg/FillBar").gameObject;
+            float fillTimePlanet0bb = recipeData.productionTime;
+            AllCoroutineBooleans[recipeData.index] = true;
+            string searchString = recipeData.recipeName + "/FillBckg/FillBar";
+            GameObject fillBarObject = RecipeList.transform.Find(searchString).gameObject;
             imageToFill = fillBarObject.GetComponent<Image>();
 
-            inventoryManager.ReduceItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-            inventoryManager.ReduceItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product, recipeDataChildList[1].quantity);
+            if (recipeData.childData.Count > 0)
+            {
+                List<ChildData> recipeDataChildList = recipeData.childData;
+                for (int i = 0; i < recipeDataChildList.Count; i++)
+                {
+                    inventoryManager.ReduceItemQuantity(recipeDataChildList[i].name, recipeDataChildList[i].product, recipeDataChildList[i].quantity);
+                    UpdateQuantityTexts(recipeDataChildList[i].name, recipeDataChildList[i].product);
+                }
+            }
 
             // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-            if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-            string currentIronOreResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-
-            for (int i = 0; i < IronOreTexts.Length; i++)
-            {
-                IronOreTexts[i].text = currentIronOreResource;
-            }
-
-            string currentCoalResource = inventoryManager.GetItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product).ToString();
-
-            for (int i = 0; i < CoalTexts.Length; i++)
-            {
-                CoalTexts[i].text = currentCoalResource;
-            }
+            if (!manualProduction) productionCreator.EnlistManualProduction(recipeData);
 
             while (timer < fillTimePlanet0bb)
             {
@@ -520,7 +299,7 @@ public class CoroutineManager : MonoBehaviour
                 yield return null;
             }
             imageToFill.fillAmount = 0f;
-            itemCreator.CreateItem(10);
+
 
             Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
             currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
@@ -528,491 +307,77 @@ public class CoroutineManager : MonoBehaviour
             int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
             float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
             ExpBar.fillAmount = fillAmount;
-
-            if (playerCurrentExp >= playerMaxExp)
-            {
-                LevelUp(playerMaxExp);
-            }
-
-            string currentIronBeamResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-
-            for (int i = 0; i < IronBeamTexts.Length; i++)
-            {
-                IronBeamTexts[i].text = currentIronBeamResource;
-            }
-            StartCoroutine("CreateIronBeam");
-
-        }
-        else
-        {
-            productionCreator.DelistManualProduction();
-            AllCoroutineBooleans[10] = false;
-        }
-    }
-
-    public IEnumerator StopCreateIronBeam()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateIronBeam");
-        List<ChildData> recipeDataChildList = recipeCreator.recipeDataList.Find(recipe => recipe.index == 10)?.childDataList;
-        ReturnMaterials(recipeDataChildList);
-        string currentIronOreResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-        string currentCoalResource = inventoryManager.GetItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product).ToString();
-
-        for (int i = 0; i < IronOreTexts.Length; i++)
-        {
-            IronOreTexts[i].text = currentIronOreResource;
-        }
-        for (int i = 0; i < CoalTexts.Length; i++)
-        {
-            CoalTexts[i].text = currentCoalResource;
-        }
-
-        AllCoroutineBooleans[10] = false;
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-
-    public IEnumerator CreateBiofuel()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 2);
-        List<ChildData> recipeDataChildList = recipeData.childDataList;
-        bool isQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-        if (isQuantityMet)
-        {
-            float timer = 0f;
-            float fillTimePlanet0bb = 3f;
-            AllCoroutineBooleans[2] = true;
-
-            GameObject fillBarObject = RecipeList.transform.Find("Biofuel/FillBckg/FillBar").gameObject;
-            imageToFill = fillBarObject.GetComponent<Image>();
-
-            // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-            if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-            inventoryManager.ReduceItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-
-            string currentPlantResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-
-            for (int i = 0; i < FibrousLeavesTexts.Length; i++)
-            {
-                FibrousLeavesTexts[i].text = currentPlantResource;
-            }
-
-            while (timer < fillTimePlanet0bb)
-            {
-                currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-                imageToFill.fillAmount = currentFillAmountPlanet0bb;
-                timer += Time.deltaTime;
-                yield return null;
-            }
-            imageToFill.fillAmount = 0f;
-            itemCreator.CreateItem(2);
-
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-            currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-            int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-            int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-            float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-            ExpBar.fillAmount = fillAmount;
-
-            if (playerCurrentExp >= playerMaxExp)
-            {
-                LevelUp(playerMaxExp);
-            }
-
-            string currentBiofuelResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-
-            for (int i = 0; i < BiofuelTexts.Length; i++)
-            {
-                BiofuelTexts[i].text = currentBiofuelResource;
-            }
-            StartCoroutine("CreateBiofuel");
-
-        }
-        else
-        {
-            productionCreator.DelistManualProduction();
-            AllCoroutineBooleans[2] = false;
-        }
-    }
-
-    public IEnumerator StopCreateBiofuel()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateBiofuel");
-        List<ChildData> recipeDataChildList = recipeCreator.recipeDataList.Find(recipe => recipe.index == 2)?.childDataList;
-        ReturnMaterials(recipeDataChildList);
-
-        string currentPlantResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-
-        for (int i = 0; i < FibrousLeavesTexts.Length; i++)
-        {
-            FibrousLeavesTexts[i].text = currentPlantResource;
-        }
-
-        AllCoroutineBooleans[2] = false;
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-
-    public IEnumerator CreateDistilledWater()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 3);
-        List<ChildData> recipeDataChildList = recipeData.childDataList;
-        bool isQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-        if (isQuantityMet)
-        {
-            float timer = 0f;
-            float fillTimePlanet0bb = 3f;
-            AllCoroutineBooleans[3] = true;
-
-            GameObject fillBarObject = RecipeList.transform.Find("DistilledWater/FillBckg/FillBar").gameObject;
-            imageToFill = fillBarObject.GetComponent<Image>();
-
-            // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-            if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-            inventoryManager.ReduceItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-
-            string currentWaterResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-
-            for (int i = 0; i < WaterTexts.Length; i++)
-            {
-                WaterTexts[i].text = currentWaterResource;
-            }
-
-            while (timer < fillTimePlanet0bb)
-            {
-                currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-                imageToFill.fillAmount = currentFillAmountPlanet0bb;
-                timer += Time.deltaTime;
-                yield return null;
-            }
-            itemCreator.CreateItem(3);
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-            currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-            int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-            int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-            float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-            ExpBar.fillAmount = fillAmount;
-
-            if (playerCurrentExp >= playerMaxExp)
-            {
-                LevelUp(playerMaxExp);
-            }
-
-            imageToFill.fillAmount = 0f;
-
-            string currentDistilledWaterResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-
-            for (int i = 0; i < DistilledWaterTexts.Length; i++)
-            {
-                DistilledWaterTexts[i].text = currentDistilledWaterResource;
-            }
-
-            StartCoroutine("CreateDistilledWater");
-        }
-        else
-        {
-            productionCreator.DelistManualProduction();
-            AllCoroutineBooleans[3] = false;
-        }
-    }
-
-    public IEnumerator StopCreateDistilledWater()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateDistilledWater");
-        List<ChildData> recipeDataChildList = recipeCreator.recipeDataList.Find(recipe => recipe.index == 3)?.childDataList;
-        AllCoroutineBooleans[3] = false;
-        ReturnMaterials(recipeDataChildList);
-
-        string currentWaterResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-
-        for (int i = 0; i < WaterTexts.Length; i++)
-        {
-            WaterTexts[i].text = currentWaterResource;
-        }
-
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-    public IEnumerator CreateBatteryCore()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 6);
-        List<ChildData> recipeDataChildList = recipeData.childDataList;
-        bool isQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-        if (isQuantityMet)
-        {
-            float timer = 0f;
-            float fillTimePlanet0bb = 6f;
-            AllCoroutineBooleans[6] = true;
-
-            GameObject fillBarObject = RecipeList.transform.Find("BatteryCore/FillBckg/FillBar").gameObject;
-            imageToFill = fillBarObject.GetComponent<Image>();
-
-            // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-            if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-            inventoryManager.ReduceItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-
-            string currentBiofuelResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-
-            for (int i = 0; i < BiofuelTexts.Length; i++)
-            {
-                BiofuelTexts[i].text = currentBiofuelResource;
-            }
-
-            while (timer < fillTimePlanet0bb)
-            {
-                currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-                imageToFill.fillAmount = currentFillAmountPlanet0bb;
-                timer += Time.deltaTime;
-                yield return null;
-            }
-
-            itemCreator.CreateItem(6);
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-            currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-
-            int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-            int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-            float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-            ExpBar.fillAmount = fillAmount;
-
-            if (playerCurrentExp >= playerMaxExp)
-            {
-                LevelUp(playerMaxExp);
-            }
-
-            imageToFill.fillAmount = 0f;
-
-            string currentBatteryCoreResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-
-            for (int i = 0; i < BatteryCoreTexts.Length; i++)
-            {
-                BatteryCoreTexts[i].text = currentBatteryCoreResource;
-            }
-            StartCoroutine("CreateBatteryCore");
-        }
-        else
-        {
-            productionCreator.DelistManualProduction();
-            AllCoroutineBooleans[6] = false;
-        }
-    }
-    public IEnumerator StopCreateBatteryCore()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateBatteryCore");
-        List<ChildData> recipeDataChildList = recipeCreator.recipeDataList.Find(recipe => recipe.index == 6)?.childDataList;
-        AllCoroutineBooleans[6] = false;
-        ReturnMaterials(recipeDataChildList);
-
-        string currentBiofuelResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-
-        for (int i = 0; i < BiofuelTexts.Length; i++)
-        {
-            BiofuelTexts[i].text = currentBiofuelResource;
-        }
-
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-
-    public IEnumerator CreateBattery()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 4);
-        List<ChildData> recipeDataChildList = recipeData.childDataList;
-        bool isBiofuelQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-        bool isBatteryCoreQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product, recipeDataChildList[1].quantity);
-        bool isQuantityMet = isBatteryCoreQuantityMet && isBiofuelQuantityMet;
-        if (isQuantityMet)
-        {
-            float timer = 0f;
-            float fillTimePlanet0bb = 8f;
-            AllCoroutineBooleans[4] = true;
-
-            GameObject fillBarObject = RecipeList.transform.Find("Battery/FillBckg/FillBar").gameObject;
-            imageToFill = fillBarObject.GetComponent<Image>();
-
-            // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-            if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-            inventoryManager.ReduceItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-            inventoryManager.ReduceItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product, recipeDataChildList[1].quantity);
-            
-            string currentBiofuelResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-            string currentBatteryCoreResource = inventoryManager.GetItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product).ToString();
-
-            for (int i = 0; i < BiofuelTexts.Length; i++)
-            {
-                BiofuelTexts[i].text = currentBiofuelResource;
-            }
-            for (int i = 0; i < BatteryCoreTexts.Length; i++)
-            {
-                BatteryCoreTexts[i].text = currentBatteryCoreResource;
-            }
-            
-            while (timer < fillTimePlanet0bb)
-            {
-                currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-                imageToFill.fillAmount = currentFillAmountPlanet0bb;
-                timer += Time.deltaTime;
-                yield return null;
-            }
-
-            itemCreator.CreateItem(4);
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-            currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-            int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-            int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-            float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-            ExpBar.fillAmount = fillAmount;
-
-            if (playerCurrentExp >= playerMaxExp)
-            {
-                LevelUp(playerMaxExp);
-            }
-            imageToFill.fillAmount = 0f;
-            string currentBatteryResource = inventoryManager.GetItemQuantity(recipeData.recipeName, recipeData.recipeProduct).ToString();
-            for (int i = 0; i < BatteryTexts.Length; i++)
-            {
-                BatteryTexts[i].text = currentBatteryResource;
-            }
-            StartCoroutine("CreateBattery");
 
             /// <summary>
             /// First goal finished and switched to true.
             /// </summary>
             /// <value>true</value>
-            if (GoalManager.firstGoal == false)
+            if (GoalManager.firstGoal == false && recipeData.recipeName == "Battery")
             {
                 GoalManager goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();
                 _ = goalManager.SetSecondGoal();
             }
-        }
-        else
-        {
-            productionCreator.DelistManualProduction();
-            AllCoroutineBooleans[4] = false;
-        }
-    }
-    public IEnumerator StopCreateBattery()
-    {
-        productionCreator.DelistManualProduction();
-        StopCoroutine("CreateBattery");
-        List<ChildData> recipeDataChildList = recipeCreator.recipeDataList.Find(recipe => recipe.index == 4)?.childDataList;
-        AllCoroutineBooleans[4] = false;
-        ReturnMaterials(recipeDataChildList);
-
-        string currentBiofuelResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-        string currentBatteryCoreResource = inventoryManager.GetItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product).ToString();
-
-        for (int i = 0; i < BiofuelTexts.Length; i++)
-        {
-            BiofuelTexts[i].text = currentBiofuelResource;
-        }
-        for (int i = 0; i < BatteryCoreTexts.Length; i++)
-        {
-            BatteryCoreTexts[i].text = currentBatteryCoreResource;
-        }
-        
-        imageToFill.fillAmount = 0f;
-        yield return null;
-    }
-
-    public IEnumerator CreateBiofuelGenerator()
-    {
-        RecipeDataJson recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.index == 11);
-        List<ChildData> recipeDataChildList = recipeData.childDataList;
-        bool isIronBeamQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-        bool isWoodQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product, recipeDataChildList[1].quantity);
-        bool isQuantityMet = isWoodQuantityMet && isIronBeamQuantityMet;
-        if (isQuantityMet)
-        {
-            float timer = 0f;
-            float fillTimePlanet0bb = 30f;
-            AllCoroutineBooleans[11] = true;
-
-            GameObject fillBarObject = RecipeList.transform.Find("BiofuelGenerator/FillBckg/FillBar").gameObject;
-            imageToFill = fillBarObject.GetComponent<Image>();
-
-            // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-            if (ProductionCreator.manualRowID == 0) productionCreator.EnlistManualProduction(recipeData);
-
-            inventoryManager.ReduceItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product, recipeDataChildList[0].quantity);
-            inventoryManager.ReduceItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product, recipeDataChildList[1].quantity);
-
-            string currentIronBeamResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-            string currentWoodResource = inventoryManager.GetItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product).ToString();
-
-            for (int i = 0; i < IronBeamTexts.Length; i++)
-            {
-                IronBeamTexts[i].text = currentIronBeamResource;
-            }
-            for (int i = 0; i < WoodTexts.Length; i++)
-            {
-                WoodTexts[i].text = currentWoodResource;
-            }
-
-            while (timer < fillTimePlanet0bb)
-            {
-                currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
-                imageToFill.fillAmount = currentFillAmountPlanet0bb;
-                timer += Time.deltaTime;
-                yield return null;
-            }
-
-            Planet0Buildings.Planet0BiofuelGenerator++;
-            buildingIncrementor.buildingCounts[0].text = Planet0Buildings.Planet0BiofuelGenerator.ToString();
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-            currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-            int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-            int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
-            float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
-            ExpBar.fillAmount = fillAmount;
 
             if (playerCurrentExp >= playerMaxExp)
             {
                 LevelUp(playerMaxExp);
             }
-            imageToFill.fillAmount = 0f;
-            string currentBiofuelGeneratorResource = Planet0Buildings.Planet0BiofuelGenerator.ToString();
-            for (int i = 0; i < BiofuelGeneratorTexts.Length; i++)
+
+            if (recipeData.recipeProduct == "BUILDINGS")
             {
-                BiofuelGeneratorTexts[i].text = currentBiofuelGeneratorResource;
+                if (recipeData.recipeName == "BiofuelGenerator")
+                {
+                    Planet0Buildings.Planet0BiofuelGeneratorBlueprint++;
+                    buildingIncrementor.buildingCounts[0].text = Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString();
+                    UpdateBuildingText(recipeData.recipeName, Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString());
+                }
             }
-            StartCoroutine("CreateBiofuelGenerator");
+            else
+            {
+                itemCreator.CreateItem(recipeData.index);
+                UpdateQuantityTexts(recipeData.recipeName, recipeData.recipeProduct);
+            }
+            StartCoroutine("CreateRecipe", recipeData);
+
         }
         else
         {
             productionCreator.DelistManualProduction();
-            AllCoroutineBooleans[11] = false;
+            AllCoroutineBooleans[recipeData.index] = false;
         }
     }
-    public IEnumerator StopCreateBiofuelGenerator()
+    public IEnumerator StopCreateRecipe(RecipeItemData recipeData)
     {
         productionCreator.DelistManualProduction();
-        StopCoroutine("CreateBiofuelGenerator");
-        AllCoroutineBooleans[11] = false;
-        List<ChildData> recipeDataChildList = recipeCreator.recipeDataList.Find(recipe => recipe.index == 11)?.childDataList;
-        ReturnMaterials(recipeDataChildList);
-
-        string currentIronBeamResource = inventoryManager.GetItemQuantity(recipeDataChildList[0].name, recipeDataChildList[0].product).ToString();
-        string currentWoodResource = inventoryManager.GetItemQuantity(recipeDataChildList[1].name, recipeDataChildList[1].product).ToString();
-
-        for (int i = 0; i < IronBeamTexts.Length; i++)
+        StopCoroutine("CreateRecipe");
+        if (recipeData.childData.Count > 0)
         {
-            IronBeamTexts[i].text = currentIronBeamResource;
+            List<ChildData> recipeDataChildList = recipeData.childData;
+            ReturnMaterials(recipeDataChildList);
+            for (int i = 0; i < recipeDataChildList.Count; i++)
+            {
+                UpdateQuantityTexts(recipeDataChildList[i].name, recipeDataChildList[i].product);
+            }
         }
-        for (int i = 0; i < WoodTexts.Length; i++)
-        {
-             WoodTexts[i].text = currentWoodResource;
-        }
+        AllCoroutineBooleans[recipeData.index] = false;
         imageToFill.fillAmount = 0f;
         yield return null;
     }
-
+    public IEnumerator StopRunningCreateRecipe(RecipeDataJson recipeData)
+    {
+        productionCreator.DelistManualProduction();
+        StopCoroutine("CreateRecipe");
+        if (recipeData.childDataList.Count > 0)
+        {
+            List<ChildData> recipeDataChildList = recipeData.childDataList;
+            ReturnMaterials(recipeDataChildList);
+            for (int i = 0; i < recipeDataChildList.Count; i++)
+            {
+                UpdateQuantityTexts(recipeDataChildList[i].name, recipeDataChildList[i].product);
+            }
+        }
+        AllCoroutineBooleans[recipeData.index] = false;
+        imageToFill.fillAmount = 0f;
+        yield return null;
+    }
 }

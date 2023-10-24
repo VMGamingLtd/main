@@ -1,9 +1,9 @@
+using ItemManagement;
+using System.Globalization;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
-using ItemManagement;
-using TMPro;
-using System.Globalization;
 
 public class EquipmentManager : MonoBehaviour
 {
@@ -39,10 +39,9 @@ public class EquipmentManager : MonoBehaviour
             {
                 if (i == 5)
                 {
-                    Transform targetChild = EnergySlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("(Clone)"));
-                    if (targetChild != null && targetChild.name == "Battery(Clone)")
+                    Transform targetChild = EnergySlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("Battery"));
+                    if (targetChild != null && targetChild.name == "Battery")
                     {
-                        string targetChildName = targetChild.name.Replace("(Clone)", "");
                         ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null && itemData.itemQuantity > PlayerResources.PlayerEnergy)
                         {
@@ -67,7 +66,7 @@ public class EquipmentManager : MonoBehaviour
                                     activateScript?.ActivateAllObjects();
                                 }
                                 targetChild.parent.transform.Find("EmptyButton").GetComponent<Image>().gameObject.SetActive(true);
-                                inventoryManager.DestroySpecificItem(targetChildName, itemData.itemProduct, itemData.ID);
+                                inventoryManager.DestroySpecificItem(targetChild.name, itemData.itemProduct, itemData.ID);
                                 Destroy(targetChild.gameObject);
                                 globalCalculator.UpdatePlayerConsumption();
                             }
@@ -76,10 +75,9 @@ public class EquipmentManager : MonoBehaviour
                 }
                 if (i == 6 && GlobalCalculator.isPlayerInBiologicalBiome == false)
                 {
-                    Transform targetChild = OxygenSlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("(Clone)"));
-                    if (targetChild != null && targetChild.name == "OxygenTank(Clone)")
+                    Transform targetChild = OxygenSlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("OxygenTank"));
+                    if (targetChild != null && targetChild.name == "OxygenTank")
                     {
-                        string targetChildName = targetChild.name.Replace("(Clone)", "");
                         ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null)
                         {
@@ -90,10 +88,9 @@ public class EquipmentManager : MonoBehaviour
                 }
                 if (i == 7)
                 {
-                    Transform targetChild = WaterSlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("(Clone)"));
-                    if (targetChild != null && targetChild.name == "DistilledWater(Clone)")
+                    Transform targetChild = WaterSlot.transform.Cast<Transform>().FirstOrDefault(child => child.name.Contains("DistilledWater"));
+                    if (targetChild != null)
                     {
-                        string targetChildName = targetChild.name.Replace("(Clone)", "");
                         ItemData itemData = targetChild.GetComponent<ItemData>();
                         if (itemData != null && itemData.itemQuantity > PlayerResources.PlayerWater)
                         {
@@ -112,7 +109,7 @@ public class EquipmentManager : MonoBehaviour
                                 slotEquippedName[7] = "";
                                 PlayerResources.PlayerWater = 0f;
                                 targetChild.parent.transform.Find("EmptyButton").GetComponent<Image>().gameObject.SetActive(true);
-                                inventoryManager.DestroySpecificItem(targetChildName, itemData.itemProduct, itemData.ID);
+                                inventoryManager.DestroySpecificItem(targetChild.name, itemData.itemProduct, itemData.ID);
                                 Destroy(targetChild.gameObject);
                                 globalCalculator.UpdatePlayerConsumption();
                             }

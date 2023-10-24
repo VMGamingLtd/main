@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using ItemManagement;
-using UnityEngine;
-using TMPro;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using TMPro;
+using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -28,6 +27,41 @@ public class InventoryManager : MonoBehaviour
             { "ENHANCED", new GameObject[0] },
             { "ASSEMBLED", new GameObject[0] }
         };
+    }
+    public void SortItemRecipeArraysByOrderAdded()
+    {
+        List<Transform> childTransforms = new();
+        foreach (Transform child in transform)
+        {
+            childTransforms.Add(child);
+        }
+
+        // Sort the child GameObjects based on their 'orderAdded' value
+        childTransforms.Sort(CompareByOrderAdded);
+
+        // Remove all child GameObjects from the parent
+        foreach (Transform child in childTransforms)
+        {
+            child.SetParent(null);
+        }
+
+        // Add the sorted child GameObjects back to the parent
+        foreach (Transform child in childTransforms)
+        {
+            child.SetParent(transform);
+        }
+    }
+
+    private int CompareByOrderAdded(Transform t1, Transform t2)
+    {
+        ItemData ItemData1 = t1.GetComponent<ItemData>();
+        ItemData ItemData2 = t2.GetComponent<ItemData>();
+
+        if (ItemData1 != null && ItemData2 != null)
+        {
+            return ItemData1.ID.CompareTo(ItemData2.ID);
+        }
+        return 0;
     }
     public void AddToItemArray(string itemProduct, GameObject item)
     {
@@ -147,7 +181,7 @@ public class InventoryManager : MonoBehaviour
 
         return totalQuantity;
     }
-    
+
     public void AddItemQuantity(string prefabName, string itemProduct, float quantity, int? index = null) // changes quantity of already instantiated product if it doesn't exist, creates new one
     {
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))

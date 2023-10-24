@@ -1,8 +1,8 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections;
-using TMPro;
 
 
 public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -104,7 +104,7 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
                 BuildingManager.isDraggingBuilding = false;
             }
         }
-        
+
     }
     public IEnumerator AttachDragAndDropBuildingsWithDelay(GameObject draggedObject)
     {

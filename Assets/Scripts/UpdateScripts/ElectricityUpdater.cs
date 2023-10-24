@@ -1,8 +1,7 @@
-using System.Collections;
-using UnityEngine;
-using TMPro;
 using BuildingManagement;
 using Cysharp.Threading.Tasks; // Import UniTask namespace
+using TMPro;
+using UnityEngine;
 
 public class ElectricityUpdater : MonoBehaviour
 {
@@ -62,7 +61,7 @@ public class ElectricityUpdater : MonoBehaviour
             // Iterate through each POWERPLANT building and get the BuildingItemData component
             foreach (GameObject powerPlant in powerPlants)
             {
-                BuildingItemData itemData = powerPlant.GetComponent<BuildingItemData>();
+                EnergyBuildingItemData itemData = powerPlant.GetComponent<EnergyBuildingItemData>();
 
                 if (itemData.efficiency > 0)
                 {

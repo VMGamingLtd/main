@@ -1,7 +1,7 @@
-using TMPro;
-using System;
-using UnityEngine;
 using RecipeManagement;
+using System;
+using TMPro;
+using UnityEngine;
 public class BuildingBlueprintTypes : MonoBehaviour
 {
     [SerializeField]

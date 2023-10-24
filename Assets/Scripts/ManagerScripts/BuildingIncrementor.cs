@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class BuildingIncrementor : MonoBehaviour
 {
@@ -17,12 +15,12 @@ public class BuildingIncrementor : MonoBehaviour
         if (Planet0Buildings.FurnaceUnlocked) buildings[5].SetActive(true);
     }
     public void InitializeBuildingCounts()
-    { 
+    {
         buildingCounts[0].text = Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString();
         buildingCounts[1].text = Planet0Buildings.Planet0PlantFieldBlueprint.ToString();
         buildingCounts[2].text = Planet0Buildings.Planet0WaterPumpBlueprint.ToString();
         buildingCounts[3].text = Planet0Buildings.Planet0BoilerBlueprint.ToString();
         buildingCounts[4].text = Planet0Buildings.Planet0SteamGeneratorBlueprint.ToString();
         buildingCounts[5].text = Planet0Buildings.Planet0FurnaceBlueprint.ToString();
-    } 
+    }
 }

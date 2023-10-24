@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
-using UnityEngine;
-using TMPro;
 using System;
 using System.Globalization;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class GlobalCalculator : MonoBehaviour
 {
@@ -62,26 +60,20 @@ public class GlobalCalculator : MonoBehaviour
                 timer -= delayTime;
                 seconds++;
 
-                /*if (seconds == 10 || seconds == 20 || seconds == 30 || seconds == 40 || seconds  == 50 )
+                if (seconds == 0 || seconds == 5 || seconds == 10 || seconds == 15 || seconds == 20 || seconds == 25 || seconds == 30 || seconds == 35 ||
+                    seconds == 40 || seconds == 45 || seconds == 50 || seconds == 55)
                 {
                     saveManager.TestSaveGameDataOnServer();
-                }*/
+                }
 
                 if (seconds > 59)
                 {
                     seconds = 0;
                     minutes++;
                     UpdatePlayerConsumption();
-                    //saveManager.TestSaveGameDataOnServer();
-                    if (false) // @@@@@@@@@@@@@@@@@@@@@@@ temporarily disabled
-                    {
-                        weatherManager.SetUVAmount();
-                    }
-                    StartCoroutine(rotateImage.RotateOverTime(0.5f));
-                    if (false) // @@@@@@@@@@@@@@@@@@@@@@@ temporarily disabled   
-                    {
-                        daylightSemicircle.RunAllCoroutines();
-                    }
+                    //weatherManager.SetUVAmount();
+                    //StartCoroutine(rotateImage.RotateOverTime(0.5f));
+                    //daylightSemicircle.RunAllCoroutines();
                 }
                 if (minutes > 59)
                 {
