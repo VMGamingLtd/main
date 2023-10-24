@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using ItemManagement;
 using RecipeManagement;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class StartGameInputChecker : MonoBehaviour
     public RecipeCreator recipeCreator;
     public GameObject NewGamePopup;
     public GameObject MainUI;
+    public GameObject Account;
     public Button buttonToClick;
     public Button productionTabClick;
     public EquipmentManager equipmentManager;
@@ -38,7 +40,7 @@ public class StartGameInputChecker : MonoBehaviour
         Credits.ResetCredits();
         Credits.AddCredits(42);
 
-        MainUI.SetActive(true);
+        _ = LoadMenus();
 
         // test purposes
         //itemCreator.CreateItem(3);
@@ -60,6 +62,32 @@ public class StartGameInputChecker : MonoBehaviour
         CoroutineManager.ResetAllCoroutineBooleans();
 
         buildingIncrementor.InitializeBuildingCounts();
+    }
+
+    private async UniTask LoadMenus()
+    {
+        MainUI.SetActive(true);
+        buttonToClick.onClick.Invoke();
+        productionTabClick.onClick.Invoke();
+        CanvasGroup mainCanvasGroup = MainUI.GetComponent<CanvasGroup>();
+        CanvasGroup accountCanvasGroup = Account.GetComponent<CanvasGroup>();
+        float totalTime = 0.5f;
+        float currentTime = 0f;
+        float currentAlpha = 0f;
+        float targetAlpha = 1f;
+
+        while (currentTime < totalTime)
+        {
+            currentTime += Time.deltaTime;
+            float t = currentTime / totalTime;
+            mainCanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, t);
+            accountCanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, t);
+            await UniTask.Yield();
+        }
+        mainCanvasGroup.interactable = true;
+        accountCanvasGroup.interactable = true;
+        GlobalCalculator.GameStarted = true;
+
     }
 }
 

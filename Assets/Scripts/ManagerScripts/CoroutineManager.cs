@@ -81,21 +81,24 @@ public class CoroutineManager : MonoBehaviour
 
     private void CallSaveSlot1Data(UserGameDataGetResponse response)
     {
-        if (response.GameDataJson != null)
+        if (response != null)
         {
-            SaveDataModel gameData = JsonConvert.DeserializeObject<SaveDataModel>(response.GameDataJson);
-            string saveName = gameData.username;
-            int seconds = gameData.seconds;
-            int minutes = gameData.minutes;
-            int hours = gameData.hours;
-            string description = hours.ToString() + "h " + minutes.ToString() + "m " + seconds.ToString() + "s ";
+            if (response.GameDataJson != null)
+            {
+                SaveDataModel gameData = JsonConvert.DeserializeObject<SaveDataModel>(response.GameDataJson);
+                string saveName = gameData.username;
+                int seconds = gameData.seconds;
+                int minutes = gameData.minutes;
+                int hours = gameData.hours;
+                string description = hours.ToString() + "h " + minutes.ToString() + "m " + seconds.ToString() + "s ";
 
 
-            saveSlot1Title.text = saveName;
-            saveSlot1Desc.text = description;
+                saveSlot1Title.text = saveName;
+                saveSlot1Desc.text = description;
 
-            saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
-            legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+                saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+                legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+            }
         }
         else
         {
