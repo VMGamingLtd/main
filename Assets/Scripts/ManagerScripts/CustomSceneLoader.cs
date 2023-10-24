@@ -1,7 +1,7 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
 using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CustomSceneLoader : MonoBehaviour
 {
@@ -63,7 +63,7 @@ public class CustomSceneLoader : MonoBehaviour
         {
             Debug.LogError($"{CLASS_NAME}:{METOD_NAME}: device registration failed");
             throw new System.Exception("device registration failed");
-        }   
+        }
 
     }
 
@@ -75,8 +75,8 @@ public class CustomSceneLoader : MonoBehaviour
             var userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
             Debug.Log($"{CLASS_NAME}:{METOD_NAME}: logged in guest user: {userName}");
             UserName.userName = userName;
-            bool isGuest = (bool)Gaos.User.User.GuestLogin.GuestLoginResponse.IsGuest; 
-            Assets.Scripts.Login.UserCahngedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
+            bool isGuest = (bool)Gaos.User.User.GuestLogin.GuestLoginResponse.IsGuest;
+            Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
 
             LoadGuestAsync();
         }

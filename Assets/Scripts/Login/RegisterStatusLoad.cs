@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -31,12 +29,12 @@ public class RegisterStatusLoad : MonoBehaviour
         {
             DisplayedText.text = GetRegisterStatusText(RegisterStatus.Registered);
         }
-        Assets.Scripts.Login.UserCahngedEvent.OnEvent += OnUserChanged;
+        Assets.Scripts.Login.UserChangedEvent.OnEvent += OnUserChanged;
     }
 
     private void OnDisable()
     {
-        Assets.Scripts.Login.UserCahngedEvent.OnEvent -= OnUserChanged;
+        Assets.Scripts.Login.UserChangedEvent.OnEvent -= OnUserChanged;
     }
 
     private string GetRegisterStatusText(RegisterStatus registerStatus)
@@ -44,7 +42,7 @@ public class RegisterStatusLoad : MonoBehaviour
         const string METHOD_NAME = "GetRegisterStatusText()";
         string txt = "";
 
-        switch(registerStatus)
+        switch (registerStatus)
         {
             case RegisterStatus.NotRegistered:
                 txt = translationManager.Translate("NotRegistered");
@@ -55,7 +53,7 @@ public class RegisterStatusLoad : MonoBehaviour
             default:
                 txt = "Error!";
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: missing translation for: {registerStatus}");
-                break;  
+                break;
 
         }
 

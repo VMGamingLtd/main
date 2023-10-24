@@ -1,6 +1,4 @@
 using Gaos.Routes.Model.UserJson;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,10 +45,10 @@ public class NewUserScreen : MonoBehaviour
     {
         const string METHOD_NAME = "GetErrorMessage()";
         string msg = "Error!";
-        switch(errorKind)
+        switch (errorKind)
         {
             case RegisterResponseErrorKind.UsernameExistsError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please choose a different username!";
@@ -70,7 +68,7 @@ public class NewUserScreen : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.UserNameIsEmptyError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please enter your username!";
@@ -90,7 +88,7 @@ public class NewUserScreen : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.EmailIsEmptyError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please enter your email!";
@@ -110,7 +108,7 @@ public class NewUserScreen : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.IncorrectEmailError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "The email has wrong format!";
@@ -130,7 +128,7 @@ public class NewUserScreen : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.EmailExistsError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please choose a diffrent email!";
@@ -150,7 +148,7 @@ public class NewUserScreen : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.PasswordIsEmptyError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Please enter the password!";
@@ -169,7 +167,7 @@ public class NewUserScreen : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.PasswordsDoNotMatchError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Passwords do not match!";
@@ -189,7 +187,7 @@ public class NewUserScreen : MonoBehaviour
                 }
                 break;
             case RegisterResponseErrorKind.InternalError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Internal error!";
@@ -211,7 +209,7 @@ public class NewUserScreen : MonoBehaviour
             default:
                 msg = "Error!";
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: missing translation for: {errorKind}");
-                break;  
+                break;
 
         }
 
@@ -221,10 +219,10 @@ public class NewUserScreen : MonoBehaviour
     private string GetErrorMessae(ErrorKind errorKimd)
     {
         string msg = "Error!";
-        switch(errorKimd)
+        switch (errorKimd)
         {
             case ErrorKind.PasswordsDoNotMatch:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Passwords do not match!";
@@ -250,7 +248,7 @@ public class NewUserScreen : MonoBehaviour
 
         return msg;
 
-    } 
+    }
 
 
     private bool VerifyIfPasswordsAreSame()
@@ -276,7 +274,7 @@ public class NewUserScreen : MonoBehaviour
             errorText.text = GetErrorMessae(ErrorKind.PasswordsDoNotMatch);
             return;
         }
-        
+
         buttonCreate.interactable = false;
         buttonBack.interactable = false;
         StartCoroutine(Gaos.User.User.UserRegister.Register(userNameTextInput.text, emailTextInput.text, passwordTextInput.text, OnUserRegisterComplete));
@@ -296,8 +294,8 @@ public class NewUserScreen : MonoBehaviour
 
             CoroutineManager.registeredUser = true;
             UserName.userName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;
-            bool isGuest = (bool)Gaos.User.User.UserRegister.RegisterResponse.User.IsGuest; 
-            Assets.Scripts.Login.UserCahngedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
+            bool isGuest = (bool)Gaos.User.User.UserRegister.RegisterResponse.User.IsGuest;
+            Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
             //mainUI.SetActive(true);
             //this.gameObject.SetActive(false);
             buttonBack.onClick.Invoke();

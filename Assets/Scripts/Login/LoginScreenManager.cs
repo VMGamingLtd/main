@@ -1,6 +1,4 @@
 using Gaos.Routes.Model.UserJson;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,10 +36,10 @@ public class LoginScreenManager : MonoBehaviour
     {
         const string METHOD_NAME = "GetErrorMessage()";
         string msg = "Error!";
-        switch(errorKind)
+        switch (errorKind)
         {
             case LoginResponseErrorKind.IncorrectUserNameOrEmailError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Incorrect username";
@@ -61,7 +59,7 @@ public class LoginScreenManager : MonoBehaviour
                 }
                 break;
             case LoginResponseErrorKind.IncorrectPasswordError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Wrong password";
@@ -81,7 +79,7 @@ public class LoginScreenManager : MonoBehaviour
                 }
                 break;
             case LoginResponseErrorKind.InternalError:
-                switch(Application.systemLanguage)
+                switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
                         msg = "Internal error!";
@@ -103,7 +101,7 @@ public class LoginScreenManager : MonoBehaviour
             default:
                 msg = "Error!";
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: missing translation for: {errorKind}");
-                break;  
+                break;
 
         }
 
@@ -133,8 +131,8 @@ public class LoginScreenManager : MonoBehaviour
 
             CoroutineManager.registeredUser = true;
             UserName.userName = Gaos.User.User.UserLogin.LoginResponse.UserName;
-            bool isGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest; 
-            Assets.Scripts.Login.UserCahngedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
+            bool isGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest;
+            Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
             //mainUI.SetActive(true);
             //this.gameObject.SetActive(false);
             buttonBack.onClick.Invoke();

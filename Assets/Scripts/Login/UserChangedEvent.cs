@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assets.Scripts.Login
+﻿namespace Assets.Scripts.Login
 {
     public class UserChangedEventPayload
     {
@@ -12,7 +6,7 @@ namespace Assets.Scripts.Login
         public bool IsGuest { get; set; }
     }
 
-    public  class UserCahngedEvent
+    public class UserChangedEvent
     {
         public delegate void EventHandler(UserChangedEventPayload payload);
         public static event EventHandler OnEvent;
