@@ -1088,7 +1088,6 @@ public class SaveManager : MonoBehaviour
 
     public void TestSaveGameDataOnServer()
     {
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000: TestSaveGameDataOnServer()");
         int slotId = 1;
 
         // fill in game data
@@ -1107,7 +1106,6 @@ public class SaveManager : MonoBehaviour
     public void OnUserGameDataSaveComplete(Gaos.Routes.Model.GameDataJson.UserGameDataSaveResponse response)
     {
         string responseString = JsonConvert.SerializeObject(response);
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3100: OnUserGameDataSaveComplete(): {responseString}");
 
 
         //StartCoroutine(Gaos.GameData.UserGameDataGet.Get(1, OnUserGameDataGetComplete));
@@ -1118,7 +1116,6 @@ public class SaveManager : MonoBehaviour
         {
             SaveDataModel gameData = JsonConvert.DeserializeObject<SaveDataModel>(response.GameDataJson);
             string gameDataStr = JsonConvert.SerializeObject(gameData);
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3300: saveDataModel: {gameDataStr}");
         }
         else
         {

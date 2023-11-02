@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
+using ModelsRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -49,8 +50,10 @@ public class CustomSceneLoader : MonoBehaviour
             {
                 var userName = Gaos.Context.Authentication.GetUserName();
                 var isGuest = Gaos.Context.Authentication.GetIsGuest();
-                Debug.Log($"{CLASS_NAME}:{METOD_NAME}: user is already logged in om this device: userName: {userName}, isGuest: {isGuest}");
                 UserName.userName = userName;
+                Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
+                ModelsRx.ContextRx.UserRx.UserName = userName;
+                ModelsRx.ContextRx.UserRx.IsGuest = isGuest;
 
                 LoadGuestAsync();
             }
@@ -73,11 +76,11 @@ public class CustomSceneLoader : MonoBehaviour
         if (Gaos.User.User.GuestLogin.IsLoggedIn == true)
         {
             var userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
-            Debug.Log($"{CLASS_NAME}:{METOD_NAME}: logged in guest user: {userName}");
             UserName.userName = userName;
             bool isGuest = (bool)Gaos.User.User.GuestLogin.GuestLoginResponse.IsGuest;
             Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
-
+            ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
+            ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.GuestLogin.GuestLoginResponse.IsGuest;
             LoadGuestAsync();
         }
         else

@@ -298,6 +298,8 @@ public class NewUserScreen : MonoBehaviour
             Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
             //mainUI.SetActive(true);
             //this.gameObject.SetActive(false);
+            ModelsRx.ContextRx.UserRx.UserName =  Gaos.User.User.UserRegister.RegisterResponse.User.Name; 
+            ModelsRx.ContextRx.UserRx.IsGuest =  (bool)Gaos.User.User.UserRegister.RegisterResponse.User.IsGuest; 
             buttonBack.onClick.Invoke();
         }
         else

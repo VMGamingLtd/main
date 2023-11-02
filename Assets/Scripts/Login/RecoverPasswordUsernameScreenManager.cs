@@ -36,7 +36,7 @@ public class RecoverPasswordUsernameScreenManager : MonoBehaviour
     {
     }
 
-    private void ClearErrorText()
+    public void ClearErrorText()
     {
         errorText.text = "";
     }
@@ -177,7 +177,6 @@ public class RecoverPasswordUsernameScreenManager : MonoBehaviour
 
     public void OnRecoverButtonClick()
     {
-        Debug.Log($"{CLASS_NAME}:OnRecoverButtonClick(): called, @@@@@@@@@@ cp 100");
         OnRecoverButtonClickAsync().Forget();
     }
 
