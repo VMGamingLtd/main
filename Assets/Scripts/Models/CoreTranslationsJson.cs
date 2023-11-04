@@ -315,6 +315,13 @@
         ""slovak"": ""Západ""
       },
       {
+        ""identifier"": ""Sunny"",
+        ""english"": ""Sunny"",
+        ""russian"": ""Солнечно"",
+        ""chinese"": ""晴朗"",
+        ""slovak"": ""Slnečno""
+      },
+      {
         ""identifier"": ""BuildingsStatistics"",
         ""english"": ""Buildings statistics"",
         ""russian"": ""Статистика построек"",
@@ -750,6 +757,27 @@
         ""slovak"": ""Zbroje""
       },
       {
+        ""identifier"": ""HELMET"",
+        ""english"": ""Helmet"",
+        ""russian"": ""Шлем"",
+        ""chinese"": ""头盔"",
+        ""slovak"": ""Prilba""
+      },
+      {
+        ""identifier"": ""SUIT"",
+        ""english"": ""Suit"",
+        ""russian"": ""Костюм"",
+        ""chinese"": ""太空服"",
+        ""slovak"": ""Oblek""
+      },
+      {
+        ""identifier"": ""FABRICATOR"",
+        ""english"": ""Fabricator"",
+        ""russian"": ""Производитель"",
+        ""chinese"": ""制造商"",
+        ""slovak"": ""Výrobník""
+      },
+      {
         ""identifier"": ""ENERGY"",
         ""english"": ""Energy"",
         ""russian"": ""Энергия"",
@@ -923,6 +951,13 @@
         ""russian"": ""Класс-S"",
         ""chinese"": ""等级-S"",
         ""slovak"": ""Trieda-S""
+      },
+      {
+        ""identifier"": ""Exploration"",
+        ""english"": ""Exploration"",
+        ""russian"": ""Исследование"",
+        ""chinese"": ""勘探"",
+        ""slovak"": ""Prieskum""
       },
       {
         ""identifier"": ""Production"",

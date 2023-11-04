@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Globalization;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class WeatherManager : MonoBehaviour
 {
@@ -15,9 +15,11 @@ public class WeatherManager : MonoBehaviour
     public TextMeshProUGUI planet0UVText;
     public TextMeshProUGUI planet0WeatherText;
     public TextMeshProUGUI planet0TemperatureText;
+    private TranslationManager translationManager;
 
     void Awake()
     {
+        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
         float fillAmount = Mathf.Clamp01(planet0UV / maxPlanet0UV);
         StartCoroutine(FillOverTime(fillAmount));
         UpdateWeather(planet0Temperature, planet0Weather);
@@ -54,15 +56,16 @@ public class WeatherManager : MonoBehaviour
     }
     public void UpdateWeather(float temperature, string weather)
     {
+
         planet0Temperature = temperature;
         planet0Weather = weather;
-        planet0WeatherText.text = planet0Weather;
+        planet0WeatherText.text = translationManager.Translate(weather);
         planet0TemperatureText.text = GetFormattedTemperatureString(planet0Temperature);
 
     }
     private string GetFormattedTemperatureString(float temperature)
     {
-        RegionInfo regionInfo = new RegionInfo(CultureInfo.CurrentCulture.Name);
+        RegionInfo regionInfo = new(CultureInfo.CurrentCulture.Name);
         string formatSpecifier = regionInfo.IsMetric ? "F1" : "F0";
 
         CultureInfo cultureInfo = (CultureInfo)CultureInfo.CurrentCulture.Clone();

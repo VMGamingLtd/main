@@ -15,7 +15,6 @@ public class StartGameInputChecker : MonoBehaviour
     public GameObject MainUI;
     public GameObject Account;
     public Button buttonToClick;
-    public Button productionTabClick;
     public EquipmentManager equipmentManager;
     private GlobalCalculator globalCalculator;
     public BuildingIncrementor buildingIncrementor;
@@ -49,11 +48,8 @@ public class StartGameInputChecker : MonoBehaviour
 
         equipmentManager.InitStartEquip();
 
-        // force button click action to open the Production menu that the button is set for
+        // force button click action to open the Exploration menu that the button is set for
         buttonToClick.onClick.Invoke();
-
-        // after the Production menu is open we also want to display the Overview tab as the first one
-        productionTabClick.onClick.Invoke();
 
         // enable first achievement when starting new game
         AchievementManager.EnableAchievement(ref AchievementManager.achievement1, true);
@@ -68,7 +64,6 @@ public class StartGameInputChecker : MonoBehaviour
     {
         MainUI.SetActive(true);
         buttonToClick.onClick.Invoke();
-        productionTabClick.onClick.Invoke();
         CanvasGroup mainCanvasGroup = MainUI.GetComponent<CanvasGroup>();
         CanvasGroup accountCanvasGroup = Account.GetComponent<CanvasGroup>();
         float totalTime = 0.5f;
