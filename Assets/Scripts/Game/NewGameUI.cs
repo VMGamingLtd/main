@@ -20,7 +20,6 @@ public class NewGameUI : MonoBehaviour
     public GameObject MainUI;
     public GameObject Account;
     public Button buttonToClick;
-    public Button productionTabClick;
     public BuildingIncrementor buildingIncrementor;
     public RectTransform[] equipButtons = new RectTransform[9];
     private TranslationManager translationManager;
@@ -290,7 +289,6 @@ public class NewGameUI : MonoBehaviour
         MainUI.SetActive(true);
         await UniTask.DelayFrame(10);
         buttonToClick.onClick.Invoke();
-        productionTabClick.onClick.Invoke();
         await UniTask.DelayFrame(50);
         CanvasGroup mainCanvasGroup = MainUI.GetComponent<CanvasGroup>();
         CanvasGroup accountCanvasGroup = Account.GetComponent<CanvasGroup>();

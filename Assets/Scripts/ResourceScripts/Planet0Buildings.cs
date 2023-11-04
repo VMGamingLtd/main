@@ -45,6 +45,9 @@ public static class Planet0Buildings
     public static int Planet0SteamGenerator = 0;
     public static int Planet0Furnace = 0;
 
+    // player movement
+    public static bool PlayerMovement;
+
     public static string AddBuildingCount(ref int buildingName, int amount)
     {
         buildingName += amount;
