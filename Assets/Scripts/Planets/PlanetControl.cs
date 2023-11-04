@@ -60,9 +60,7 @@ public class PlanetControl : MonoBehaviour
             float newSize = mainCamera.orthographicSize - zoomInput * zoomSpeed;
             newSize = Mathf.Clamp(newSize, minZoomSize, maxZoomSize);
             mainCamera.orthographicSize = newSize;
-            InteractWithRenderTexture.currentZoomLevel = Mathf.InverseLerp(minZoomSize, maxZoomSize, newSize);
-            InteractWithRenderTexture.currentZoomLevel = Mathf.Clamp(InteractWithRenderTexture.currentZoomLevel, 0.4f, 1.6f);
-            Debug.Log(InteractWithRenderTexture.currentZoomLevel);
+            InteractWithRenderTexture.currentZoomLevel = newSize / 10;
         }
 
         lastTouchPos = GetTouchPosition();

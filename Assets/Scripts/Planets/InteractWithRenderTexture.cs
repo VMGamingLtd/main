@@ -3,13 +3,12 @@ using UnityEngine;
 public class InteractWithRenderTexture : MonoBehaviour
 {
     public LayerMask interactionLayer;
-    private float xOffset = -0.5f;
-    private float yOffset = -0.4f;
     private Camera renderCamera;
     private float distanceFromSurface = 0.1f;
     public GameObject markerPrefab;
     private LineRendererController lineRendererController;
-    public static float currentZoomLevel = 1f;
+    public static float currentZoomLevel = 0.5f;
+    public static bool IsMoveEnabled = false;
 
     void Start()
     {
@@ -21,11 +20,15 @@ public class InteractWithRenderTexture : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
         {
+            if (!IsMoveEnabled)
+                return;
+
             Vector3 mousePosition = Input.mousePosition;
 
             // Cast a ray from the camera
             Ray ray = renderCamera.ScreenPointToRay(mousePosition);
-
+            float xOffset = currentZoomLevel * -1;
+            float yOffset = currentZoomLevel * -1 + 0.05f;
             // Apply the offsets to the ray's origin as Overlay canvas always makes an offset to actual viewport
             Vector3 offset = renderCamera.transform.TransformVector(new Vector3(xOffset, yOffset, 0));
             ray.origin += offset;
