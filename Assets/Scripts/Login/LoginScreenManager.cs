@@ -135,6 +135,8 @@ public class LoginScreenManager : MonoBehaviour
             Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
             //mainUI.SetActive(true);
             //this.gameObject.SetActive(false);
+            ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.UserLogin.LoginResponse.UserName;
+            ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest; 
             buttonBack.onClick.Invoke();
         }
         else

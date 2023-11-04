@@ -17,6 +17,7 @@ public class RecoverPasswordUsernameScreenManager : MonoBehaviour
     public GameObject infoTextGameObject;
 
     public TMP_InputField passwordOrUsernameTextInput;
+    public TMP_InputField passwordOrUsernameTextInput_placeholder;
 
     public GameObject emailOrUserNameGameObject;
 
@@ -35,7 +36,7 @@ public class RecoverPasswordUsernameScreenManager : MonoBehaviour
     {
     }
 
-    private void ClearErrorText()
+    public void ClearErrorText()
     {
         errorText.text = "";
     }
@@ -70,7 +71,7 @@ public class RecoverPasswordUsernameScreenManager : MonoBehaviour
     {
         button.interactable = true;
     }
-
+    
     private string GetErrorMessage(Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeErrorKind errorKind)
     {
         string msg = "";
@@ -176,7 +177,6 @@ public class RecoverPasswordUsernameScreenManager : MonoBehaviour
 
     public void OnRecoverButtonClick()
     {
-        Debug.Log($"{CLASS_NAME}:OnRecoverButtonClick(): called, @@@@@@@@@@ cp 100");
         OnRecoverButtonClickAsync().Forget();
     }
 

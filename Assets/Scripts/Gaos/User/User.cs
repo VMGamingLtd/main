@@ -424,7 +424,7 @@ namespace Gaos.User.User
             await apiCall.CallAsync();
             if (apiCall.IsResponseError)
             {
-                Debug.LogError($"ERROR: error sending verification code");
+                Debug.Log($"ERROR: error sending verification code");
                 return null;
             }
             else
@@ -432,8 +432,8 @@ namespace Gaos.User.User
                 response = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeResponse>(apiCall.ResponseJsonStr);
                 if (response.IsError == true)
                 {
-                    Debug.LogError($"{CLASS_NAME}: ERROR: error sending verification code: {response.ErrorMessage}");
-                    return null;
+                    Debug.Log($"{CLASS_NAME}: ERROR: error sending verification code: {response.ErrorMessage}");
+                    return response;
                 }
                 else
                 {
@@ -455,7 +455,7 @@ namespace Gaos.User.User
             await apiCall.CallAsync();
             if (apiCall.IsResponseError)
             {
-                Debug.LogError($"ERROR: error verifying code");
+                Debug.Log($"ERROR: error verifying code");
                 return null;
             }
             else
@@ -463,8 +463,8 @@ namespace Gaos.User.User
                 Gaos.Routes.Model.UserJson.RecoverPasswordVerifyCodeResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.RecoverPasswordVerifyCodeResponse>(apiCall.ResponseJsonStr);
                 if (response.IsError == true)
                 {
-                    Debug.LogError($"{CLASS_NAME}: ERROR: error verifying code: {response.ErrorMessage}");
-                    return null;
+                    Debug.Log($"{CLASS_NAME}: ERROR: error verifying code: {response.ErrorMessage}");
+                    return response;
                 }
                 else
                 {
@@ -487,7 +487,7 @@ namespace Gaos.User.User
             await apiCall.CallAsync();
             if (apiCall.IsResponseError)
             {
-                Debug.LogError($"ERROR: error changing password");
+                Debug.Log($"ERROR: error changing password");
                 return null;
             }
             else
@@ -495,8 +495,8 @@ namespace Gaos.User.User
                 Gaos.Routes.Model.UserJson.RecoverPasswordChangePasswordResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.UserJson.RecoverPasswordChangePasswordResponse>(apiCall.ResponseJsonStr);
                 if (response.IsError == true)
                 {
-                    Debug.LogError($"{CLASS_NAME}: ERROR: error changing password: {response.ErrorMessage}");
-                    return null;
+                    Debug.Log($"{CLASS_NAME}: ERROR: error changing password: {response.ErrorMessage}");
+                    return response;
                 }
                 else
                 {

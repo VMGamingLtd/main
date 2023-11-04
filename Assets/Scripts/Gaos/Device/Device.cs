@@ -69,8 +69,6 @@ namespace Gaos.Device.Device
         {
             const string METHOD_NAME = "RegisterDevice()";
 
-            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: registering device ...");
-
             int maxTryCount = 20;
 
             while (true)
