@@ -75,3 +75,4 @@ crashlytics-build.properties
 # Our settings
 .swp
 .idea/
+.vscode/
