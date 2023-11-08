@@ -22,7 +22,7 @@ public class Planet : MonoBehaviour
     ShapeGenerator shapeGenerator = new();
     ColourGenerator colourGenerator = new();
 
-    private void OnValidate()
+    private void Start()
     {
         GeneratePlanet();
     }
