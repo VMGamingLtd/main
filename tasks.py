@@ -31,10 +31,10 @@ def release_bundles_to_local(c, platform = "webgl", version = "0.0.1", bundles_v
     releaseBundles(None, platform, version, isLocal = True, bundlesVersion = "2", isForced = is_forced)
 
 @task
-def release_bundles_to_test_server(c, platform = "webgl", version = "0.0.1", bundles_version = "2", is_forced = False):
+def release_bundles_to_test_server(c, platform = "webgl", version = "0.0.1", bundles_version = "1", is_forced = False):
     bundlesVersion = bundles_version
     sconn = gao.devops.connection.connectionTestServer()
-    releaseBundles(sconn, platform, version, isLocal = False, bundlesVersion = "2", isForced = is_forced)
+    releaseBundles(sconn, platform, version, isLocal = False, bundlesVersion = "1", isForced = is_forced)
 
 # publish 
 
@@ -89,11 +89,11 @@ def stop_nginx_on_local(c):
 # mongo
 
 @task
-def drop_gaos_database_on_local(c):
+def drop_gaos_mongo_database_on_local(c):
     gao.devops.mongo.drop_gaos_database(c, isLocal = True)
 
 @task
-def drop_gaos_database_on_test_server(c):
+def drop_gaos_mongo_database_on_test_server(c):
     sconn = gao.devops.connection.connectionTestServer()
-    gao.devops.mongo.drop_gaos_database(sconn, isLocal = True)
+    gao.devops.mongo.drop_gaos_database(sconn, isLocal = False)
 

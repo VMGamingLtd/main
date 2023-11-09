@@ -3,13 +3,18 @@ import shutil
 import tarfile
 import tempfile
 from gao.devops.config import LOCAL_TEST_ENVIRONMENT_DOCUMENT_ROOT, LOCAL_TEST_ENVIRONMENT_NGINX_CONF
-from gao.devops.common import runCommands
+from gao.devops.common import runCommands, removeFolder
 
 def update(sconn, isLocal = False):
+
+    removeFolder("../nginx_conf/html/.vs")
+    removeFolder("../nginx_conf/html/.vscode")
+    removeFolder("../nginx_conf/html/.idea")
+
     if isLocal:
        commandStr = f"""
             echo "INFO: stop nginx.exe"
-            taskkill /F /IM nginx.exe & set errorlevel=0
+            taskkill /F /IM nginx.exe 2>$nul & set errorlevel=0
 
             echo "INFO: remove document root"
             rd /s /q ..\\nginx\\html

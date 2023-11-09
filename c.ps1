@@ -51,8 +51,8 @@
 
 ## Mongo
 
-#invoke drop-gaos-database-on-local
-#invoke drop-gaos-database-on-test-local
+#invoke drop-gaos-mongo-database-on-local
+#invoke drop-gaos-mongo-database-on-test-server
 
 ## Gaos
 
