@@ -7,6 +7,7 @@
 #invoke update-nginx-on-test-server
 
 #python -m venv .venv
+#.venv\Scripts\Activate.ps1
 #pip install -r requirements.txt
 
 #.venv\Scripts\Activate.ps1
