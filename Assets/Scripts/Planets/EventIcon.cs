@@ -3,30 +3,29 @@ using UnityEngine.UI;
 
 public class EventIcon : MonoBehaviour
 {
-    [SerializeField] private RenderTexture renderTexture;
-    [SerializeField] private Transform explorationArea;
-    [SerializeField] private GameObject iconPrefab;
-    [SerializeField] private Sprite iconSprite;
+    private EventObjectContainer eventObjectContainer;
+    private RenderTexture renderTexture;
+    private Transform explorationArea;
+    private GameObject iconPrefab;
     private Camera renderCamera;
     private GameObject iconInstance;
 
     void Start()
     {
-        if (explorationArea != null)
-        {
-            renderCamera = GameObject.Find("CameraParent/PlanetCamera").GetComponent<Camera>();
-            iconInstance = Instantiate(iconPrefab, explorationArea);
-            iconInstance.transform.Find("Image/Icon").GetComponent<Image>().sprite = iconSprite;
-        }
+        eventObjectContainer = GameObject.Find("PlanetParent").GetComponent<EventObjectContainer>();
+        explorationArea = eventObjectContainer.ExplorationAreaRef;
+        iconPrefab = eventObjectContainer.EventObject;
+        renderCamera = GameObject.Find("CameraParent/PlanetCamera").GetComponent<Camera>();
+        iconInstance = Instantiate(iconPrefab, explorationArea);
+        renderTexture = renderCamera.targetTexture;
+        Sprite sprite = AssignSpriteToSlot(transform.name);
+        iconInstance.transform.Find("Image/Icon").GetComponent<Image>().sprite = sprite;
     }
 
     void Update()
     {
         if (renderTexture != null && iconInstance != null)
         {
-            RenderTexture.active = renderTexture;
-
-            // Capture the pixel position within the RenderTexture
             Vector2 pixelPosition = renderCamera.WorldToScreenPoint(transform.position);
 
             Vector2 viewportPosition = new(
@@ -34,10 +33,13 @@ public class EventIcon : MonoBehaviour
                 pixelPosition.y - 430f
             );
 
-            // Set the position of the icon
             iconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
-
-            RenderTexture.active = null;
         }
+    }
+
+    private Sprite AssignSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
+        return sprite;
     }
 }

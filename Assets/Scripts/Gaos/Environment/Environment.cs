@@ -1,9 +1,9 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Gaos.Environment
 {
-    public class Environment: MonoBehaviour
+    public class Environment : MonoBehaviour
     {
         public static Dictionary<string, string> GetEnvironment_(string envName)
         {
@@ -36,7 +36,7 @@ namespace Gaos.Environment
         public static Dictionary<string, string> GetEnvironment()
         {
             //return Environment.GetEnvironment_("Development");
-            return Environment.GetEnvironment_("Development");
+            return GetEnvironment_("Development");
         }
 
     }

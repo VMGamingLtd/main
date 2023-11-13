@@ -18,14 +18,17 @@ public class StartGameInputChecker : MonoBehaviour
     public EquipmentManager equipmentManager;
     private GlobalCalculator globalCalculator;
     public BuildingIncrementor buildingIncrementor;
+    private Planet planet;
 
     // Update is called once per frame
     public void startGameCheckForUsername()
     {
         globalCalculator = GameObject.Find("GlobalCalculator").GetComponent<GlobalCalculator>();
+        planet = GameObject.Find("PlanetParent/StartPlanet").GetComponent<Planet>();
         globalCalculator.UpdatePlayerConsumption();
         GlobalCalculator.GameStarted = true;
         NewGamePopup.SetActive(false);
+        planet.GeneratePlanet();
 
         inventoryManager.PopulateInventoryArrays();
         buildingManager.PopulateBuildingArrays();

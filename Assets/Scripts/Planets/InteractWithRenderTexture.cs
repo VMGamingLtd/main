@@ -8,7 +8,6 @@ public class InteractWithRenderTexture : MonoBehaviour
     public GameObject markerPrefab;
     private LineRendererController lineRendererController;
     public static float currentZoomLevel = 0.5f;
-    public static bool IsMoveEnabled = false;
 
     void Start()
     {
@@ -20,7 +19,7 @@ public class InteractWithRenderTexture : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
         {
-            if (!IsMoveEnabled)
+            if (!InteractionManager.IsMoveEnabled)
                 return;
 
             Vector3 mousePosition = Input.mousePosition;
@@ -28,7 +27,7 @@ public class InteractWithRenderTexture : MonoBehaviour
             // Cast a ray from the camera
             Ray ray = renderCamera.ScreenPointToRay(mousePosition);
             float xOffset = currentZoomLevel * -1;
-            float yOffset = currentZoomLevel * -1 + 0.05f;
+            float yOffset = currentZoomLevel * -1;
             // Apply the offsets to the ray's origin as Overlay canvas always makes an offset to actual viewport
             Vector3 offset = renderCamera.transform.TransformVector(new Vector3(xOffset, yOffset, 0));
             ray.origin += offset;
@@ -43,6 +42,8 @@ public class InteractWithRenderTexture : MonoBehaviour
                 StartCoroutine(lineRendererController.UpdateLineRenderer());
 
                 lineRendererController.StartMovement();
+                InteractionManager.IsMoveEnabled = false;
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             }
         }
     }

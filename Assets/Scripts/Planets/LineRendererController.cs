@@ -15,7 +15,7 @@ public class LineRendererController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         lineRenderer.positionCount = 0;
-        Vector3 startPos = transform.position;
+        Vector3 startPos = GameObject.Find("PlanetParent/StartPlanet/Player").transform.position;
         endPos = GameObject.Find("Marker(Clone)").transform.position;
         planetCenter = GameObject.Find("PlanetParent").transform.position;
         pathPoints = CurvedPathGenerator.CalculateCurvedPath(startPos, endPos, planetCenter);

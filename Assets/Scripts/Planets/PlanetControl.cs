@@ -15,6 +15,7 @@ public class PlanetControl : MonoBehaviour
     public float zoomSpeed = 1.0f;
     private float minZoomSize = 3.0f;
     private float maxZoomSize = 8.0f;
+    private float touchZoomSensitivity = 0.1f;
 
     void Start()
     {
@@ -86,8 +87,8 @@ public class PlanetControl : MonoBehaviour
             float prevTouchDeltaMag = (prevTouch1Pos - prevTouch2Pos).magnitude;
             float touchDeltaMag = (touch1.position - touch2.position).magnitude;
 
-            // Calculate the pinch zoom input
-            return touchDeltaMag - prevTouchDeltaMag;
+            // Calculate the pinch zoom input with sensitivity
+            return touchZoomSensitivity * (touchDeltaMag - prevTouchDeltaMag);
         }
 
         return 0;

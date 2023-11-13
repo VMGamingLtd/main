@@ -30,6 +30,7 @@ public class NewGameUI : MonoBehaviour
     private GlobalCalculator globalCalculator;
     private ButtonManager buttonManager;
     private BuildingCreator buildingCreator;
+    private Planet planet;
 
 
     void Awake()
@@ -50,6 +51,7 @@ public class NewGameUI : MonoBehaviour
         globalCalculator = GameObject.Find("GlobalCalculator").GetComponent<GlobalCalculator>();
         buttonManager = GameObject.Find("BUTTONMANAGER").GetComponent<ButtonManager>();
         buildingCreator = GameObject.Find("BuildingCreatorList").GetComponent<BuildingCreator>();
+        planet = GameObject.Find("PlanetParent/StartPlanet").GetComponent<Planet>();
 
         if (response != null)
         {
@@ -281,6 +283,7 @@ public class NewGameUI : MonoBehaviour
             globalCalculator.UpdatePlayerConsumption();
             buildingIncrementor.InitializeBuildingCounts();
             saveSlots.SetActive(false);
+            planet.OnColourSettingsUpdated();
             _ = LoadMenus();
         }
     }

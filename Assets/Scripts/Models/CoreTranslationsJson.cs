@@ -1168,6 +1168,13 @@
         ""russian"": ""Стандартный компонент металлургической продукции."",
         ""chinese"": ""铁棒是冶金产品的标准件。"",
         ""slovak"": ""Bežný prvok hutníckych výrobkov.""
+      },
+      {
+        ""identifier"": ""Movement"",
+        ""english"": ""Movement"",
+        ""russian"": ""Движение"",
+        ""chinese"": ""移动"",
+        ""slovak"": ""Pohyb""
       }
     ]
   }

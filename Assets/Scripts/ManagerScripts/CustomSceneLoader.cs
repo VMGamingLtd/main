@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using System;
-using ModelsRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -24,6 +23,9 @@ public class CustomSceneLoader : MonoBehaviour
     private async UniTask LoadSceneUniTask(string sceneName)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(1));
+
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+            await AssetBundleManager.LoadAllAssetBundles();
 
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 

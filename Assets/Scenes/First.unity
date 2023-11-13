@@ -605,9 +605,9 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 60.604877
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 5.061138
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -654,12 +654,12 @@ MonoBehaviour:
   _adjustMode: 2
   _verticalSnapMode: 1
   _horizontalSnapMode: 1
-  _mainAreaWidth: 1.7777778
+  _mainAreaWidth: 1.8
   _mainAreaHeight: 1
   _verticalFOV: 60
-  _horizontalFOV: 91.49284
+  _horizontalFOV: 92.20423
   _verticalSize: 5
-  _horizontalSize: 8.888889
+  _horizontalSize: 9
 --- !u!114 &344391839
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -22,11 +22,6 @@ public class Planet : MonoBehaviour
     ShapeGenerator shapeGenerator = new();
     ColourGenerator colourGenerator = new();
 
-    private void Start()
-    {
-        GeneratePlanet();
-    }
-
     void Initialize()
     {
         shapeGenerator.UpdateSettings(shapeSettings);
@@ -89,6 +84,7 @@ public class Planet : MonoBehaviour
             if (meshFilters[i].gameObject.activeSelf)
             {
                 terrainFaces[i].ConstructMesh();
+                SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 2);
             }
         }
 
@@ -106,6 +102,77 @@ public class Planet : MonoBehaviour
             }
         }
     }
+
+    public void SpawnEventObjectsOnSurface(Mesh mesh, int numberOfObjects)
+    {
+        for (int i = 0; i < numberOfObjects; i++)
+        {
+            // Get a random point on the mesh surface
+            Vector3 randomPoint = GetRandomPointOnMesh(mesh);
+
+            // Use the ShapeGenerator to calculate the elevation at the random point
+            float elevation = shapeGenerator.CaulculateUnscaledElevation(randomPoint.normalized);
+
+            // Create a new empty GameObject
+            GameObject eventObject = new("EventObject");
+
+            // Set the position of the eventObject at the random point
+            eventObject.transform.position = randomPoint;
+
+            // Make the new object a child of the planet's GameObject
+            eventObject.transform.parent = transform;
+
+            // Optionally, add the eventObject to a list or collection for further reference
+            // gameObjects.Add(eventObject);
+
+            // Move the object on the z-axis by adding 3.6 to its current z position
+            eventObject.transform.position += new Vector3(0f, 0f, 3.6f);
+
+            if (elevation < 0.0f)
+            {
+                Debug.Log("Ocean EventObject at elevation: " + elevation);
+                eventObject.name = "Fish";
+
+            }
+            else if (elevation < 0.02f)
+            {
+                Debug.Log("Land EventObject at elevation: " + elevation);
+                eventObject.name = "FibrousLeaves";
+            }
+            else
+            {
+                Debug.Log("Mountain EventObject at elevation: " + elevation);
+                eventObject.name = "IronOre";
+            }
+            eventObject.AddComponent<EventIcon>();
+        }
+    }
+
+    Vector3 GetRandomPointOnMesh(Mesh mesh)
+    {
+        // Get a random triangle from the mesh
+        int triangleIndex = Random.Range(0, mesh.triangles.Length / 3);
+        int vertexIndex1 = mesh.triangles[triangleIndex * 3];
+        int vertexIndex2 = mesh.triangles[triangleIndex * 3 + 1];
+        int vertexIndex3 = mesh.triangles[triangleIndex * 3 + 2];
+
+        // Get random barycentric coordinates
+        float u = Random.Range(0f, 1f);
+        float v = Random.Range(0f, 1f - u);
+
+        // Calculate the barycentric coordinates for the third vertex
+        float w = 1 - u - v;
+
+        // Calculate the random point on the triangle using barycentric coordinates
+        Vector3 vertex1 = mesh.vertices[vertexIndex1];
+        Vector3 vertex2 = mesh.vertices[vertexIndex2];
+        Vector3 vertex3 = mesh.vertices[vertexIndex3];
+
+        Vector3 randomPoint = u * vertex1 + v * vertex2 + w * vertex3;
+
+        return randomPoint;
+    }
+
 }
 
 
