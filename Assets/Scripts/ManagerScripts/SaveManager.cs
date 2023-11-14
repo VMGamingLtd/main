@@ -90,6 +90,14 @@ public class SaveManager : MonoBehaviour
         public BuildingItemDataModel[] miningRig;
         public Dictionary<string, object> Planet0StaticVariables = new();
         public Dictionary<string, object> PlayerResourcesStaticVariables = new();
+        public List<EventIconModel> EventObjects = new();
+    }
+
+    [Serializable]
+    public class EventIconModel
+    {
+        public string Name;
+        public Vector3 position;
     }
 
     [Serializable]
@@ -336,6 +344,20 @@ public class SaveManager : MonoBehaviour
         // slot equip array
         currentSaveData.slotEquipped = EquipmentManager.slotEquipped;
         currentSaveData.slotEquippedName = EquipmentManager.slotEquippedName;
+
+        // store all Planet event objects with their coordinates
+        currentSaveData.EventObjects.Clear();
+        Planet planet = GameObject.Find("PlanetParent/StartPlanet").GetComponent<Planet>();
+        foreach (GameObject eventObject in planet.eventObjects)
+        {
+            EventIconModel itemData = new()
+            {
+                Name = eventObject.name,
+                position = eventObject.transform.position,
+            };
+
+            currentSaveData.EventObjects.Add(itemData);
+        }
 
         // Access the itemArrays dictionary through the inventoryManager reference
         Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;

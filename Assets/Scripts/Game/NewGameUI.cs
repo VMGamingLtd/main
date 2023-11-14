@@ -98,6 +98,12 @@ public class NewGameUI : MonoBehaviour
             EquipmentManager.autoConsumption = gameData.autoConsumption;
             LoadStaticVariablesFromModel(gameData);
 
+            for (int i = 0; i < gameData.EventObjects.Count; i++)
+            {
+                EventIconModel iconModel = gameData.EventObjects[i];
+                planet.RecreateEventObject(iconModel.Name, iconModel.position);
+            }
+
             // assign current goal
             goalManager.UpdateCurrentGoal();
 

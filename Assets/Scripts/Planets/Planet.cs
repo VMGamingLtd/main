@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 public class Planet : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Planet : MonoBehaviour
 
     public ShapeSettings shapeSettings;
     public ColourSettings colourSettings;
+    public List<GameObject> eventObjects = new();
 
     [HideInInspector]
     public bool shapeSettingsFoldout;
@@ -103,6 +105,15 @@ public class Planet : MonoBehaviour
         }
     }
 
+    public void RecreateEventObject(string Name, Vector3 position)
+    {
+        GameObject eventObject = new(Name);
+        eventObject.transform.parent = transform;
+        eventObject.transform.position = position;
+        eventObject.AddComponent<EventIcon>();
+        eventObjects.Add(eventObject);
+    }
+
     public void SpawnEventObjectsOnSurface(Mesh mesh, int numberOfObjects)
     {
         for (int i = 0; i < numberOfObjects; i++)
@@ -121,9 +132,6 @@ public class Planet : MonoBehaviour
 
             // Make the new object a child of the planet's GameObject
             eventObject.transform.parent = transform;
-
-            // Optionally, add the eventObject to a list or collection for further reference
-            // gameObjects.Add(eventObject);
 
             // Move the object on the z-axis by adding 3.6 to its current z position
             eventObject.transform.position += new Vector3(0f, 0f, 3.6f);
@@ -145,6 +153,7 @@ public class Planet : MonoBehaviour
                 eventObject.name = "IronOre";
             }
             eventObject.AddComponent<EventIcon>();
+            eventObjects.Add(eventObject);
         }
     }
 
