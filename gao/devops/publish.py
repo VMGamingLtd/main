@@ -86,6 +86,8 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
                 os.mkdir(f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
             shutil.rmtree(f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
             shutil.copytree(f"{LOCAL_RELEASE_FOLDER}/{releaseSubfolder}/{version}/build", f"{LOCAL_PUBLISH_WEBGL_FOLDER}")
+            print(f"INFO: copy AssetBundles build to html document root")
+            shutil.copytree(f"{LOCAL_RELEASE_FOLDER}/{releaseSubfolder}/{version}/AssetBundles/{bundlesVersion}", f"{LOCAL_PUBLISH_WEBGL_FOLDER}/AssetBundles")
 
         print(f"INFO: finsished publishing of build: platform: {platform}, version: {version}, bundles version: 1")
 
@@ -143,7 +145,7 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
             rm build.tar.gz
             echo "{version}" > version.txt
 
-            echo "INFO: extract build archive"
+            echo "INFO: extract asset bundles archive"
 
             cp {tmpFolderServer}/AssetBundles.tar.gz .
             tar -xvf AssetBundles.tar.gz
@@ -159,6 +161,7 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
                 fi
                 rm -rf {PUBLISH_WEBGL_FOLDER}/*
                 cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/build/* {PUBLISH_WEBGL_FOLDER}
+                cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/AssetBundles {PUBLISH_WEBGL_FOLDER}/AssetBundles
             fi
 
             echo "INFO: set permissions"
@@ -209,6 +212,7 @@ def publish(sconn, platform, version, bundlesVersion, **kwargs):
                     fi
                     rm -rf {PUBLISH_WEBGL_FOLDER}/*
                     cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/build/* {PUBLISH_WEBGL_FOLDER}
+                    cp -r {PUBLISH_FOLDER}/{releaseSubfolder}/AssetBundles {PUBLISH_WEBGL_FOLDER}
                 fi
 
                 echo "INFO: set permissions"
