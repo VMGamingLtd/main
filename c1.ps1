@@ -12,5 +12,5 @@
 
 #.venv\Scripts\Activate.ps1
 #invoke drop-gaos-mongo-database-on-test-server
-#invoke release-to-local --platform="webgl" --version="0.0.1" --is-forced
-#invoke publish-to-test-server --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build
+invoke release-to-local --platform="webgl" --version="0.0.1" --is-forced
+invoke publish-to-test-server --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build
