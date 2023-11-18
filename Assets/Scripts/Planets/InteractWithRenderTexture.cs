@@ -7,12 +7,14 @@ public class InteractWithRenderTexture : MonoBehaviour
     private float distanceFromSurface = 0.1f;
     public GameObject markerPrefab;
     private LineRendererController lineRendererController;
+    private GameObject planet;
     public static float currentZoomLevel = 0.5f;
 
     void Start()
     {
         lineRendererController = GameObject.Find("PlanetParent/StartPlanet/Player").GetComponent<LineRendererController>();
         renderCamera = GameObject.Find("CameraParent/PlanetCamera").GetComponent<Camera>();
+        planet = GameObject.Find("PlanetParent/StartPlanet");
     }
 
     void Update()
@@ -39,6 +41,8 @@ public class InteractWithRenderTexture : MonoBehaviour
                 Destroy(oldMarker);
 
                 Instantiate(markerPrefab, destinationPosition, Quaternion.identity);
+                GameObject newMarker = GameObject.Find("Marker(Clone)");
+                newMarker.transform.parent = planet.transform;
                 StartCoroutine(lineRendererController.UpdateLineRenderer());
 
                 lineRendererController.StartMovement();

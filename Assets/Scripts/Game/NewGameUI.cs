@@ -75,6 +75,7 @@ public class NewGameUI : MonoBehaviour
             Level.PlayerMaxExp = gameData.playerMaxExp;
             Level.SkillPoints = gameData.skillPoints;
             Level.StatPoints = gameData.statPoints;
+            Level.PlayerMovementSpeed = gameData.playerMovementSpeed;
             GlobalCalculator.hours = gameData.hours;
             GlobalCalculator.minutes = gameData.minutes;
             GlobalCalculator.seconds = gameData.seconds;

@@ -542,6 +542,7 @@ PlayerSettings:
   openGLRequireES31AEP: 0
   openGLRequireES32: 0
   m_TemplateCustomTags:
+    HIDE_FULL_SCREEN_BUTTON: true
     PRODUCT_DESCRIPTION: 
   mobileMTRendering:
     Android: 1
@@ -803,7 +804,7 @@ PlayerSettings:
   webGLDebugSymbols: 0
   webGLEmscriptenArgs: 
   webGLModulesDirectory: 
-  webGLTemplate: APPLICATION:Default
+  webGLTemplate: PROJECT:MasterTemplate
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
   webGLCompressionFormat: 1
@@ -852,7 +853,7 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform:
     Android: 3
     Standalone: 3
-    WebGL: 3
+    WebGL: 6
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Template3D

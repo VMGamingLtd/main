@@ -9,6 +9,8 @@ public class EventIcon : MonoBehaviour
     private GameObject iconPrefab;
     private Camera renderCamera;
     private GameObject iconInstance;
+    [SerializeField]
+    private float sphericalRadius = 3.6f;
 
     void Start()
     {
@@ -20,20 +22,45 @@ public class EventIcon : MonoBehaviour
         renderTexture = renderCamera.targetTexture;
         Sprite sprite = AssignSpriteToSlot(transform.name);
         iconInstance.transform.Find("Image/Icon").GetComponent<Image>().sprite = sprite;
+        iconInstance.name = transform.name;
     }
 
     void Update()
     {
         if (renderTexture != null && iconInstance != null)
         {
-            Vector2 pixelPosition = renderCamera.WorldToScreenPoint(transform.position);
+            float distanceToCamera = Vector3.Distance(transform.position, renderCamera.transform.position);
 
-            Vector2 viewportPosition = new(
-                pixelPosition.x - 510f,
-                pixelPosition.y - 430f
-            );
-
-            iconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
+            // Check if the sprite is outside the spherical radius
+            if (distanceToCamera > sphericalRadius && transform.name != "Player")
+            {
+                iconInstance.SetActive(false);
+            }
+            else if (distanceToCamera > sphericalRadius && transform.name == "Player")
+            {
+                iconInstance.SetActive(true);
+                _ = iconInstance.GetComponent<Image>().color = Color.red;
+                _ = iconInstance.GetComponent<Button>().interactable = false;
+                Vector2 pixelPosition = renderCamera.WorldToScreenPoint(transform.position);
+                Vector2 viewportPosition = new(
+                    pixelPosition.x - 510f,
+                    pixelPosition.y - 430f
+                );
+                iconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
+            }
+            else
+            {
+                // Sprite is within the desired range, make sure it's active
+                iconInstance.SetActive(true);
+                _ = iconInstance.GetComponent<Image>().color = Color.white;
+                _ = iconInstance.GetComponent<Button>().interactable = true;
+                Vector2 pixelPosition = renderCamera.WorldToScreenPoint(transform.position);
+                Vector2 viewportPosition = new(
+                    pixelPosition.x - 510f,
+                    pixelPosition.y - 430f
+                );
+                iconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
+            }
         }
     }
 

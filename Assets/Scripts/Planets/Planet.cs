@@ -86,7 +86,7 @@ public class Planet : MonoBehaviour
             if (meshFilters[i].gameObject.activeSelf)
             {
                 terrainFaces[i].ConstructMesh();
-                SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 2);
+                SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 4);
             }
         }
 

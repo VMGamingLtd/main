@@ -1,8 +1,8 @@
-using TMPro;
-using UnityEngine;
-using System;
-using UniRx;
 using ModelsRx;
+using System;
+using TMPro;
+using UniRx;
+using UnityEngine;
 
 public class UsernameLoad : MonoBehaviour
 {

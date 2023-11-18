@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public static class Level
 {
     public static int PlayerLevel = 1;
@@ -9,6 +5,7 @@ public static class Level
     public static int PlayerMaxExp = 40;
     public static int SkillPoints = 0;
     public static int StatPoints = 0;
+    public static float PlayerMovementSpeed = 0.2f;
 
     public static int AddCurrentResource(ref int currentResourceSet, int amount)
     {

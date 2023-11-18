@@ -54,6 +54,7 @@ public class SaveManager : MonoBehaviour
         public bool plantFieldUnlocked;
         public bool waterPumpUnlocked;
         public float credits;
+        public float playerMovementSpeed;
         public string inventoryTitle;
         public ItemDataModel[] basicInventoryObjects;
         public ItemDataModel[] processedInventoryObjects;
@@ -301,6 +302,7 @@ public class SaveManager : MonoBehaviour
         currentSaveData.playerMaxExp = Level.PlayerMaxExp;
         currentSaveData.skillPoints = Level.SkillPoints;
         currentSaveData.statPoints = Level.StatPoints;
+        currentSaveData.playerMovementSpeed = Level.PlayerMovementSpeed;
         currentSaveData.hours = GlobalCalculator.hours;
         currentSaveData.minutes = GlobalCalculator.minutes;
         currentSaveData.seconds = GlobalCalculator.seconds;

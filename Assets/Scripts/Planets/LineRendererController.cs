@@ -9,14 +9,13 @@ public class LineRendererController : MonoBehaviour
     private static Vector3 endPos;
     private static Vector3[] pathPoints;
     private Coroutine movementCoroutine;
-    private float movementSpeed = 0.1f;
 
     public IEnumerator UpdateLineRenderer()
     {
         yield return new WaitForSeconds(0.1f);
         lineRenderer.positionCount = 0;
         Vector3 startPos = GameObject.Find("PlanetParent/StartPlanet/Player").transform.position;
-        endPos = GameObject.Find("Marker(Clone)").transform.position;
+        endPos = GameObject.Find("PlanetParent/StartPlanet/Marker(Clone)").transform.position;
         planetCenter = GameObject.Find("PlanetParent").transform.position;
         pathPoints = CurvedPathGenerator.CalculateCurvedPath(startPos, endPos, planetCenter);
         lineRenderer.positionCount = pathPoints.Length;
@@ -51,9 +50,11 @@ public class LineRendererController : MonoBehaviour
                 Vector3 direction = (point - transform.position).normalized;
 
                 // Move the player along the direction
-                transform.position += movementSpeed * Time.deltaTime * direction;
+                transform.position += Level.PlayerMovementSpeed * Time.deltaTime * direction;
 
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.5f);
+
+                UpdateLine();
             }
 
             currentIndex++;
@@ -71,5 +72,17 @@ public class LineRendererController : MonoBehaviour
         pathPoints = null;
         endPos = Vector3.zero;
         Planet0Buildings.PlayerMovement = false;
+    }
+
+    private void UpdateLine()
+    {
+        Debug.Log("Recalculated line!");
+        lineRenderer.positionCount = 0;
+        Vector3 startPos = GameObject.Find("PlanetParent/StartPlanet/Player").transform.position;
+        endPos = GameObject.Find("PlanetParent/StartPlanet/Marker(Clone)").transform.position;
+        planetCenter = GameObject.Find("PlanetParent").transform.position;
+        pathPoints = CurvedPathGenerator.CalculateCurvedPath(startPos, endPos, planetCenter);
+        lineRenderer.positionCount = pathPoints.Length;
+        lineRenderer.SetPositions(pathPoints);
     }
 }
