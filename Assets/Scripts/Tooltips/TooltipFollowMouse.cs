@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class TooltipFollowMouse : MonoBehaviour
 {
@@ -24,14 +23,14 @@ public class TooltipFollowMouse : MonoBehaviour
         float yPosition = localPoint.y + yOffset;
 
         float yAdjustment = SmoothYAdjustment(yPosition);
+        //float xAdjustment = SmoothXAdjustment(xPosition);
 
-
-        if (xPosition > 600f)
+        if (xPosition > 0f)
         {
             xPosition -= tooltipRect.rect.width / 1.8f + xOffset;
         }
 
-
+        //xPosition += xAdjustment;
         yPosition += yAdjustment;
 
 

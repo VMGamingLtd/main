@@ -1120,6 +1120,20 @@
         "russian": "Движение",
         "chinese": "移动",
         "slovak": "Pohyb"
+      },
+      {
+        "identifier": "Weather",
+        "english": "Weather",
+        "russian": "Погода",
+        "chinese": "天气",
+        "slovak": "Počasie"
+      },
+      {
+        "identifier": "Route",
+        "english": "Route",
+        "russian": "Маршрут",
+        "chinese": "路线",
+        "slovak": "Trasa"
       }
     ]
   }

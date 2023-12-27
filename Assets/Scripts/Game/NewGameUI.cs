@@ -26,6 +26,7 @@ public class NewGameUI : MonoBehaviour
     private RecipeCreator recipeCreator;
     private ItemCreator itemCreator;
     private CoroutineManager coroutineManager;
+    private EquipmentManager equipmentManager;
     private GoalManager goalManager;
     private GlobalCalculator globalCalculator;
     private ButtonManager buttonManager;
@@ -47,6 +48,7 @@ public class NewGameUI : MonoBehaviour
         recipeCreator = GameObject.Find("RecipeCreatorList").GetComponent<RecipeCreator>();
         itemCreator = GameObject.Find("ItemCreatorList").GetComponent<ItemCreator>();
         coroutineManager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
+        equipmentManager = GameObject.Find("EquipmentManager").GetComponent<EquipmentManager>();
         goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();
         globalCalculator = GameObject.Find("GlobalCalculator").GetComponent<GlobalCalculator>();
         buttonManager = GameObject.Find("BUTTONMANAGER").GetComponent<ButtonManager>();
@@ -70,12 +72,6 @@ public class NewGameUI : MonoBehaviour
             WindManager.Planet0WindStatus = gameData.planet0WindStatus;
             WeatherManager.planet0UV = gameData.planet0UV;
             WeatherManager.planet0Weather = gameData.planet0Weather;
-            Level.PlayerLevel = gameData.playerLevel;
-            Level.PlayerCurrentExp = gameData.playerCurrentExp;
-            Level.PlayerMaxExp = gameData.playerMaxExp;
-            Level.SkillPoints = gameData.skillPoints;
-            Level.StatPoints = gameData.statPoints;
-            Level.PlayerMovementSpeed = gameData.playerMovementSpeed;
             GlobalCalculator.hours = gameData.hours;
             GlobalCalculator.minutes = gameData.minutes;
             GlobalCalculator.seconds = gameData.seconds;
@@ -145,6 +141,7 @@ public class NewGameUI : MonoBehaviour
             }
             // sort recipes by orderAdded
             recipeManager.SortItemRecipeArraysByOrderAdded();
+
 
             // Deserialize Items
             for (int i = 0; i < gameData.basicInventoryObjects.Length; i++)
@@ -231,30 +228,95 @@ public class NewGameUI : MonoBehaviour
             for (int i = 0; i < gameData.assembledInventoryObjects.Length; i++)
             {
                 ItemDataModel itemData = gameData.assembledInventoryObjects[i];
-                if (itemData.isEquipped)
+                if (itemData != null)
                 {
-                    if (itemData.itemType == "ENERGY")
+                    if (itemData.isEquipped)
+                    {
+                        if (itemData.itemType == "ENERGY")
+                        {
+                            itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                            itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
+                        }
+                        if (itemData.itemType == "LIQUID")
+                        {
+                            itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                            itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
+                        }
+                        if (itemData.itemType == "PLANTS" || itemData.itemType == "FLESH")
+                        {
+                            itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                            itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
+                        }
+                    }
+                    else
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
-                        itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
+                        itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped);
                     }
-                    if (itemData.itemType == "LIQUID")
-                    {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
-                        itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
-                    }
-                    if (itemData.itemType == "PLANTS" || itemData.itemType == "FLESH")
-                    {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
-                        itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
-                    }
-                }
-                else
-                {
-                    itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
-                    itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped);
                 }
             }
+            for (int i = 0; i < gameData.suitInventoryObjects.Length; i++)
+            {
+                SuitDataModel suitData = gameData.suitInventoryObjects[i];
+                if (suitData != null)
+                {
+                    if (suitData.isEquipped)
+                    {
+                        itemCreator.RecreateSuit(suitData.itemQuantity, suitData.itemProduct, suitData.itemType, suitData.itemClass, suitData.itemName, suitData.index, suitData.stackLimit,
+                            suitData.equipable, suitData.ID, suitData.isEquipped, suitData.physicalProtection, suitData.fireProtection, suitData.coldProtection, suitData.gasProtection,
+                            suitData.explosionProtection, suitData.shieldPoints, suitData.hitPoints, suitData.energyCapacity, suitData.durability, suitData.maxDurability, suitData.inventorySlots,
+                            suitData.strength, suitData.perception, suitData.intelligence, suitData.agility, suitData.charisma, suitData.willpower, equipButtons[1]);
+                    }
+                    else
+                    {
+                        itemCreator.RecreateSuit(suitData.itemQuantity, suitData.itemProduct, suitData.itemType, suitData.itemClass, suitData.itemName, suitData.index, suitData.stackLimit,
+                            suitData.equipable, suitData.ID, suitData.isEquipped, suitData.physicalProtection, suitData.fireProtection, suitData.coldProtection, suitData.gasProtection,
+                            suitData.explosionProtection, suitData.shieldPoints, suitData.hitPoints, suitData.energyCapacity, suitData.durability, suitData.maxDurability,
+                            suitData.inventorySlots, suitData.strength, suitData.perception, suitData.intelligence, suitData.agility, suitData.charisma, suitData.willpower);
+                    }
+                }
+            }
+            for (int i = 0; i < gameData.helmetInventoryObjects.Length; i++)
+            {
+                HelmetDataModel helmetData = gameData.helmetInventoryObjects[i];
+                if (helmetData != null)
+                {
+                    if (helmetData.isEquipped)
+                    {
+                        itemCreator.RecreateHelmet(helmetData.itemQuantity, helmetData.itemProduct, helmetData.itemType, helmetData.itemClass, helmetData.itemName, helmetData.index, helmetData.stackLimit,
+                            helmetData.equipable, helmetData.ID, helmetData.isEquipped, helmetData.physicalProtection, helmetData.fireProtection, helmetData.coldProtection, helmetData.gasProtection,
+                            helmetData.explosionProtection, helmetData.shieldPoints, helmetData.hitPoints, helmetData.durability, helmetData.maxDurability, helmetData.strength, helmetData.perception,
+                            helmetData.intelligence, helmetData.agility, helmetData.charisma, helmetData.willpower, helmetData.visibilityRadius, helmetData.explorationRadius, helmetData.pickupRadius, equipButtons[0]);
+                    }
+                    else
+                    {
+                        itemCreator.RecreateHelmet(helmetData.itemQuantity, helmetData.itemProduct, helmetData.itemType, helmetData.itemClass, helmetData.itemName, helmetData.index, helmetData.stackLimit,
+                            helmetData.equipable, helmetData.ID, helmetData.isEquipped, helmetData.physicalProtection, helmetData.fireProtection, helmetData.coldProtection, helmetData.gasProtection,
+                            helmetData.explosionProtection, helmetData.shieldPoints, helmetData.hitPoints, helmetData.durability, helmetData.maxDurability, helmetData.strength, helmetData.perception,
+                            helmetData.intelligence, helmetData.agility, helmetData.charisma, helmetData.willpower, helmetData.visibilityRadius, helmetData.explorationRadius, helmetData.pickupRadius);
+                    }
+                }
+            }
+            for (int i = 0; i < gameData.toolInventoryObjects.Length; i++)
+            {
+                ToolDataModel toolData = gameData.toolInventoryObjects[i];
+                if (toolData != null)
+                {
+                    if (toolData.isEquipped)
+                    {
+                        itemCreator.RecreateTool(toolData.itemQuantity, toolData.itemProduct, toolData.itemType, toolData.itemClass, toolData.itemName, toolData.index, toolData.stackLimit,
+                            toolData.equipable, toolData.ID, toolData.isEquipped, toolData.durability, toolData.maxDurability, toolData.strength, toolData.perception,
+                            toolData.intelligence, toolData.agility, toolData.charisma, toolData.willpower, toolData.productionSpeed, toolData.materialCost, toolData.outcomeRate, equipButtons[2]);
+                    }
+                    else
+                    {
+                        itemCreator.RecreateTool(toolData.itemQuantity, toolData.itemProduct, toolData.itemType, toolData.itemClass, toolData.itemName, toolData.index, toolData.stackLimit,
+                            toolData.equipable, toolData.ID, toolData.isEquipped, toolData.durability, toolData.maxDurability, toolData.strength, toolData.perception,
+                            toolData.intelligence, toolData.agility, toolData.charisma, toolData.willpower, toolData.productionSpeed, toolData.materialCost, toolData.outcomeRate);
+                    }
+                }
+            }
+
             // deserialize buildings
             for (int i = 0; i < gameData.powerplant.Length; i++)
             {
@@ -290,6 +352,9 @@ public class NewGameUI : MonoBehaviour
             globalCalculator.UpdatePlayerConsumption();
             buildingIncrementor.InitializeBuildingCounts();
             saveSlots.SetActive(false);
+            inventoryManager.CalculateInventorySlots();
+            equipmentManager.RefreshStats();
+            equipmentManager.RefreshRecipeStats();
             planet.OnColourSettingsUpdated();
             _ = LoadMenus();
         }

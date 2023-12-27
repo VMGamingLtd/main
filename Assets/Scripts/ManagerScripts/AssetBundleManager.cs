@@ -51,6 +51,8 @@ public static class AssetBundleManager
         loadedAssetBundles.Add("resourceicons", bundle);
         bundle = await loadAssetBundleWebgl("skillicons");
         loadedAssetBundles.Add("skillicons", bundle);
+        bundle = await loadAssetBundleWebgl("equipmenticons");
+        loadedAssetBundles.Add("equipmenticons", bundle);
     }
 
     public async static UniTask<AssetBundle> loadAssetBundleWebgl(string bundleName)

@@ -37,18 +37,17 @@ public class InteractWithRenderTexture : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, interactionLayer))
             {
                 Vector3 destinationPosition = hit.point + hit.normal * distanceFromSurface;
-                GameObject oldMarker = GameObject.Find("Marker(Clone)");
+                GameObject oldMarker = GameObject.Find("PlanetParent/StartPlanet/Marker(Clone)");
                 Destroy(oldMarker);
 
-                Instantiate(markerPrefab, destinationPosition, Quaternion.identity);
-                GameObject newMarker = GameObject.Find("Marker(Clone)");
-                newMarker.transform.parent = planet.transform;
+                Instantiate(markerPrefab, destinationPosition, Quaternion.identity, planet.transform);
+
                 StartCoroutine(lineRendererController.UpdateLineRenderer());
 
-                lineRendererController.StartMovement();
                 InteractionManager.IsMoveEnabled = false;
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             }
         }
     }
+
 }

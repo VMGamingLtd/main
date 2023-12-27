@@ -1,6 +1,6 @@
+using ItemManagement;
 using System.Collections.Generic;
 using UnityEngine;
-using ItemManagement;
 
 public class MessageObjects : MonoBehaviour
 {
@@ -17,13 +17,15 @@ public class MessageObjects : MonoBehaviour
             {"OxygenTankEquipFail", OxygenTankEquipFail},
             {"ServerConnectionLost", ServerConnectionLost},
             {"IncorrectCredentials", IncorrectCredentials},
-            {"SplitWindow", SplitWindow}
+            {"SplitWindow", SplitWindow},
+            {"SplitItemFail", SplitItemFail}
         };
     }
     public GameObject OxygenTankEquipFail;
     public GameObject ServerConnectionLost;
     public GameObject IncorrectCredentials;
     public GameObject SplitWindow;
+    public GameObject SplitItemFail;
 
     public void DisplaySplitWindow(ItemData itemData, string objName)
     {
@@ -41,11 +43,28 @@ public class MessageObjects : MonoBehaviour
         {
             string objName = sliderManager.GetCurrentObjName();
             string objProduct = sliderManager.GetCurrentItemProduct();
+            string objType = sliderManager.GetCurrentItemType();
             int objID = sliderManager.GetCurrentObjID();
             int index = sliderManager.GetCurrentObjIndex();
 
             inventoryManager.ReduceSplitItemQuantity(objName, objProduct, quantity, objID);
-            itemCreator.SplitItem(index, quantity);
+            if (objType == "FABRICATOR")
+            {
+                itemCreator.SplitTool(index, quantity);
+            }
+            else if (objType == "HELMET")
+            {
+                itemCreator.SplitHelmet(index, quantity);
+            }
+            else if (objType == "SUIT")
+            {
+                itemCreator.SplitSuit(index, quantity);
+            }
+            else
+            {
+                itemCreator.SplitItem(index, quantity);
+            }
+
         }
         HideAllMessages();
     }

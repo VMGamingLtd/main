@@ -11,6 +11,8 @@ public class InventoryManager : MonoBehaviour
     public Dictionary<string, GameObject[]> itemArrays;
     public ItemCreator itemCreator;
     public EquipmentManager equipmentManager;
+    public TextMeshProUGUI UsedSlots;
+    public TextMeshProUGUI FreeSlots;
 
     // this variable is for DragAndDrop.cs that is in every item so it is better nested here
     public static bool endingDrag = false;
@@ -18,6 +20,27 @@ public class InventoryManager : MonoBehaviour
     public static string ShowItemProducts = "ALLITEMS";
     public static string ShowItemTypes = "ALLTYPES";
     public static string ShowItemClass = "ALLCLASSES";
+
+    public void CalculateInventorySlots()
+    {
+        int totalCount = 0;
+        foreach (var kvp in itemArrays)
+        {
+            string key = kvp.Key;
+            GameObject[] gameObjects = kvp.Value;
+            foreach (var gameObject in gameObjects)
+            {
+                ItemData itemData = gameObject.GetComponent<ItemData>();
+                if (itemData != null && itemData.isEquipped == false)
+                {
+                    totalCount++;
+                }
+            }
+        }
+        Player.UsedInventorySlots = totalCount;
+        UsedSlots.text = totalCount.ToString();
+        FreeSlots.text = Player.InventorySlots.ToString();
+    }
     public void PopulateInventoryArrays()
     {
         itemArrays = new Dictionary<string, GameObject[]>
@@ -97,12 +120,7 @@ public class InventoryManager : MonoBehaviour
             itemArrays.Add(itemProduct, itemArray);
         }
 
-        // Get or add the ItemData component to the item
-        ItemData itemData = item.GetComponent<ItemData>();
-        if (itemData == null)
-        {
-            _ = item.AddComponent<ItemData>();
-        }
+        CalculateInventorySlots();
     }
 
     public void RemoveFromItemArray(string itemProduct, GameObject item)
@@ -130,15 +148,8 @@ public class InventoryManager : MonoBehaviour
                 // Update the itemArray reference in the dictionary
                 itemArrays[itemProduct] = newArray;
             }
-            else
-            {
-                Debug.LogWarning("Item not found in the item array for the specified item type.");
-            }
         }
-        else
-        {
-            Debug.LogWarning("Item type not found in the itemArrays dictionary.");
-        }
+        CalculateInventorySlots();
     }
     public bool CheckItemQuantity(string prefabName, string itemProduct, float quantityThreshold)
     {
@@ -150,7 +161,7 @@ public class InventoryManager : MonoBehaviour
                 {
                     ItemData itemData = item.GetComponent<ItemData>();
 
-                    if (itemData != null && itemData.itemQuantity >= quantityThreshold)
+                    if (itemData != null && itemData.quantity >= quantityThreshold)
                     {
                         return true;
                     }
@@ -173,7 +184,7 @@ public class InventoryManager : MonoBehaviour
                     ItemData itemData = item.GetComponent<ItemData>();
                     if (itemData != null)
                     {
-                        totalQuantity += itemData.itemQuantity;
+                        totalQuantity += itemData.quantity;
                     }
                 }
             }
@@ -182,7 +193,7 @@ public class InventoryManager : MonoBehaviour
         return totalQuantity;
     }
 
-    public void AddItemQuantity(string prefabName, string itemProduct, float quantity, int? index = null) // changes quantity of already instantiated product if it doesn't exist, creates new one
+    public void AddItemQuantity(string prefabName, string itemProduct, float quantity, int? index = null)
     {
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
         {
@@ -191,15 +202,15 @@ public class InventoryManager : MonoBehaviour
                 if (itemPrefab.name == prefabName)
                 {
                     ItemData itemData = itemPrefab.GetComponent<ItemData>();
-                    itemData.itemQuantity += quantity;
+                    itemData.quantity += quantity;
 
                     TextMeshProUGUI countText = itemPrefab.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                     if (countText != null)
                     {
-                        countText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                        countText.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
                     }
 
-                    return; // Exit the function since item was found and quantity was updated
+                    return;
                 }
             }
         }
@@ -219,12 +230,12 @@ public class InventoryManager : MonoBehaviour
                     ItemData itemData = itemPrefab.GetComponent<ItemData>();
                     if (itemData.ID == objID)
                     {
-                        itemData.itemQuantity -= quantity;
+                        itemData.quantity -= quantity;
 
                         TextMeshProUGUI countText = itemPrefab.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                         if (countText != null)
                         {
-                            countText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                            countText.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
                         }
                         return;
                     }
@@ -245,7 +256,6 @@ public class InventoryManager : MonoBehaviour
 
                     if (itemData.ID == ID)
                     {
-                        Debug.Log($"Deleting item with ID {itemData.ID}");
                         itemArrays[itemProduct] = itemArrays[itemProduct].Where(item => item != itemPrefab).ToArray();
                         Destroy(itemPrefab);
                         return;
@@ -263,16 +273,16 @@ public class InventoryManager : MonoBehaviour
                 if (itemPrefab.name == prefabName)
                 {
                     ItemData itemData = itemPrefab.GetComponent<ItemData>();
-                    itemData.itemQuantity -= quantity;
+                    itemData.quantity -= quantity;
 
                     TextMeshProUGUI countText = itemPrefab.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                     if (countText != null)
                     {
-                        countText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                        countText.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
                     }
 
                     // Ensure the item quantity doesn't go below zero
-                    if (itemData.itemQuantity <= 0)
+                    if (itemData.quantity <= 0)
                     {
                         itemArrays[itemProduct] = itemArrays[itemProduct].Where(item => item != itemPrefab).ToArray();
                         Destroy(itemPrefab);

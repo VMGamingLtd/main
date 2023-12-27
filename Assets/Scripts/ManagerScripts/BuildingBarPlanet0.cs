@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BuildingBarPlanet0 : MonoBehaviour
 {
-
-
     public CoroutineManager coroutineManager;
     public InventoryManager inventoryManager;
 
@@ -61,5 +59,4 @@ public class BuildingBarPlanet0 : MonoBehaviour
     {
         coroutineManager.InitializeResourceMap();
     }
-
 }

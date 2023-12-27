@@ -26,6 +26,9 @@ public class GlobalCalculator : MonoBehaviour
     public InventoryManager inventoryManager;
     public BuildingManager buildingManager;
     public TranslationManager translationManager;
+    public TrackManager trackManager;
+
+    private LineRendererController lineRendererController;
 
     public SaveManager saveManager;
     public WeatherManager weatherManager;
@@ -44,6 +47,7 @@ public class GlobalCalculator : MonoBehaviour
     void Start()
     {
         timer = 0f;
+        lineRendererController = GameObject.Find("PlanetParent/StartPlanet/Player").GetComponent<LineRendererController>();
     }
 
     /// <summary>
@@ -93,6 +97,10 @@ public class GlobalCalculator : MonoBehaviour
     public void DeductPlayerConsumption()
     {
         equipmentManager.DeductFromEquip();
+    }
+    public void RecalculateInventorySlots()
+    {
+        inventoryManager.CalculateInventorySlots();
     }
     public void UpdatePlayerConsumption()
     {
@@ -152,7 +160,6 @@ public class GlobalCalculator : MonoBehaviour
     }
     public void UpdateEverySecond()
     {
-        //DateDisplay.text = $"{GlobalCalculator.days.ToString("00")}:{GlobalCalculator.hours.ToString("00")}:{GlobalCalculator.minutes.ToString("00")}:{GlobalCalculator.seconds.ToString("00")}";
         DateTime currentTime = DateTime.Now;
         string timeString = currentTime.ToString("HH:mm:ss");
         timeText.text = timeString;
@@ -175,6 +182,23 @@ public class GlobalCalculator : MonoBehaviour
             DeductPlayerConsumption();
         }
 
+        if (PlayerResources.PlayerMovement)
+        {
+            if (PlayerResources.PlayerCurrentTravelProgress == 100)
+            {
+                PlayerResources.PlayerMovement = false;
+                trackManager.ResetAllData();
+                trackManager.Loader.SetActive(false);
+                return;
+            }
+            trackManager.Loader.SetActive(true);
+            trackManager.UpdateTravelSpeed(PlayerResources.PlayerMovementSpeed);
+            trackManager.CurrentProgress.text = PlayerResources.PlayerCurrentTravelProgress.ToString("F2") + "%";
+            trackManager.UpdateArrivalTime(PlayerResources.PlayerRemainingTravelTime);
+            trackManager.UpdateDistance(PlayerResources.PlayerRemainingDistance);
+
+
+        }
     }
 
     public bool IsBreathableAir()

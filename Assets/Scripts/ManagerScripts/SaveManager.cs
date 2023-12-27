@@ -35,11 +35,6 @@ public class SaveManager : MonoBehaviour
         public int planet0UV;
         public string planet0WindStatus;
         public string MenuButtonTypeOn;
-        public int playerLevel;
-        public int playerCurrentExp;
-        public int playerMaxExp;
-        public int skillPoints;
-        public int statPoints;
         public int hours;
         public int minutes;
         public int seconds;
@@ -60,6 +55,9 @@ public class SaveManager : MonoBehaviour
         public ItemDataModel[] processedInventoryObjects;
         public ItemDataModel[] enhancedInventoryObjects;
         public ItemDataModel[] assembledInventoryObjects;
+        public SuitDataModel[] suitInventoryObjects;
+        public HelmetDataModel[] helmetInventoryObjects;
+        public ToolDataModel[] toolInventoryObjects;
         public string recipeTitle;
         public RecipeItemDataModel[] basicRecipeObjects;
         public RecipeItemDataModel[] processedRecipeObjects;
@@ -90,6 +88,7 @@ public class SaveManager : MonoBehaviour
         public BuildingItemDataModel[] oxygenStation;
         public BuildingItemDataModel[] miningRig;
         public Dictionary<string, object> Planet0StaticVariables = new();
+        public Dictionary<string, object> PlayerStaticVariables = new();
         public Dictionary<string, object> PlayerResourcesStaticVariables = new();
         public List<EventIconModel> EventObjects = new();
     }
@@ -99,6 +98,97 @@ public class SaveManager : MonoBehaviour
     {
         public string Name;
         public Vector3 position;
+    }
+
+    [Serializable]
+    public class SuitDataModel
+    {
+        public int ID;
+        public int index;
+        public float stackLimit;
+        public float itemQuantity;
+        public string itemProduct;
+        public string itemType;
+        public string itemClass;
+        public string itemName;
+        public bool equipable;
+        public bool isEquipped;
+        public int physicalProtection;
+        public int fireProtection;
+        public int coldProtection;
+        public int gasProtection;
+        public int explosionProtection;
+        public int shieldPoints;
+        public int hitPoints;
+        public int energyCapacity;
+        public int durability;
+        public int maxDurability;
+        public int inventorySlots;
+        public int strength;
+        public int perception;
+        public int intelligence;
+        public int agility;
+        public int charisma;
+        public int willpower;
+    }
+
+    [Serializable]
+    public class HelmetDataModel
+    {
+        public int ID;
+        public int index;
+        public float stackLimit;
+        public float itemQuantity;
+        public string itemProduct;
+        public string itemType;
+        public string itemClass;
+        public string itemName;
+        public bool equipable;
+        public bool isEquipped;
+        public int physicalProtection;
+        public int fireProtection;
+        public int coldProtection;
+        public int gasProtection;
+        public int explosionProtection;
+        public int shieldPoints;
+        public int hitPoints;
+        public int durability;
+        public int maxDurability;
+        public int strength;
+        public int perception;
+        public int intelligence;
+        public int agility;
+        public int charisma;
+        public int willpower;
+        public int visibilityRadius;
+        public int explorationRadius;
+        public int pickupRadius;
+    }
+
+    [Serializable]
+    public class ToolDataModel
+    {
+        public int ID;
+        public int index;
+        public float stackLimit;
+        public float itemQuantity;
+        public string itemProduct;
+        public string itemType;
+        public string itemClass;
+        public string itemName;
+        public bool equipable;
+        public bool isEquipped;
+        public int durability;
+        public int maxDurability;
+        public int strength;
+        public int perception;
+        public int intelligence;
+        public int agility;
+        public int charisma;
+        public int willpower;
+        public float productionSpeed;
+        public float materialCost;
+        public float outcomeRate;
     }
 
     [Serializable]
@@ -210,10 +300,9 @@ public class SaveManager : MonoBehaviour
     }
     public static void LoadStaticVariablesFromModel(SaveDataModel saveDataModel)
     {
-        Type class1Type = typeof(Planet0Buildings);
         foreach (var kvp in saveDataModel.Planet0StaticVariables)
         {
-            FieldInfo field = class1Type.GetField(kvp.Key, BindingFlags.Public | BindingFlags.Static);
+            FieldInfo field = typeof(Planet0Buildings).GetField(kvp.Key, BindingFlags.Public | BindingFlags.Static);
             if (field != null)
             {
                 //Debug.Log($"{kvp.Key} / {kvp.Value} / {kvp.Value.GetType()}");
@@ -236,11 +325,9 @@ public class SaveManager : MonoBehaviour
                 }
             }
         }
-
-        Type class2Type = typeof(PlayerResources);
         foreach (var kvp in saveDataModel.PlayerResourcesStaticVariables)
         {
-            FieldInfo field = class2Type.GetField(kvp.Key, BindingFlags.Public | BindingFlags.Static);
+            FieldInfo field = typeof(PlayerResources).GetField(kvp.Key, BindingFlags.Public | BindingFlags.Static);
             if (field != null)
             {
                 // Convert the value to float before setting
@@ -255,6 +342,27 @@ public class SaveManager : MonoBehaviour
                 else if (kvp.Value is int intValue)
                 {
                     field.SetValue(null, intValue);
+                }
+            }
+        }
+        foreach (var kvp in saveDataModel.PlayerStaticVariables)
+        {
+            FieldInfo field = typeof(Player).GetField(kvp.Key, BindingFlags.Public | BindingFlags.Static);
+            if (field != null)
+            {
+                // Convert the value to float before setting
+                if (kvp.Value is double doubleValue)
+                {
+                    field.SetValue(null, (float)doubleValue);
+                }
+                else if (kvp.Value is float floatValue)
+                {
+                    field.SetValue(null, floatValue);
+                }
+                // since we use mainly Integers, JSON saves them as longs
+                else if (kvp.Value is long intValue)
+                {
+                    field.SetValue(null, (int)intValue);
                 }
             }
         }
@@ -297,12 +405,6 @@ public class SaveManager : MonoBehaviour
         currentSaveData.planet0WindStatus = WindManager.Planet0WindStatus;
         currentSaveData.planet0UV = WeatherManager.planet0UV;
         currentSaveData.planet0Weather = WeatherManager.planet0Weather;
-        currentSaveData.playerLevel = Level.PlayerLevel;
-        currentSaveData.playerCurrentExp = Level.PlayerCurrentExp;
-        currentSaveData.playerMaxExp = Level.PlayerMaxExp;
-        currentSaveData.skillPoints = Level.SkillPoints;
-        currentSaveData.statPoints = Level.StatPoints;
-        currentSaveData.playerMovementSpeed = Level.PlayerMovementSpeed;
         currentSaveData.hours = GlobalCalculator.hours;
         currentSaveData.minutes = GlobalCalculator.minutes;
         currentSaveData.seconds = GlobalCalculator.seconds;
@@ -326,8 +428,7 @@ public class SaveManager : MonoBehaviour
         currentSaveData.autoConsumption = EquipmentManager.autoConsumption;
 
         // Planet0Building class storage
-        Type staticClassType = typeof(Planet0Buildings);
-        FieldInfo[] fields = staticClassType.GetFields(BindingFlags.Public | BindingFlags.Static);
+        FieldInfo[] fields = typeof(Planet0Buildings).GetFields(BindingFlags.Public | BindingFlags.Static);
 
         foreach (FieldInfo field in fields)
         {
@@ -335,12 +436,21 @@ public class SaveManager : MonoBehaviour
         }
 
         // PlayerResources class storage
-        Type staticClassType2 = typeof(PlayerResources);
-        FieldInfo[] fields2 = staticClassType2.GetFields(BindingFlags.Public | BindingFlags.Static);
+        FieldInfo[] fields2 = typeof(PlayerResources).GetFields(BindingFlags.Public | BindingFlags.Static);
 
         foreach (FieldInfo field in fields2)
         {
             currentSaveData.PlayerResourcesStaticVariables[field.Name] = field.GetValue(null);
+        }
+
+        // Player class storage
+        // ATTENTION, THIS CLASS USES ONLY INTEGERS, BUT JSON CONVERTS THEM AS INT64, SO DURING DESERIALIZATION
+        // WE HAVE TO CONVERT THEM FROM LONG(INT64 TO INT - SEE ROW #301)!
+        FieldInfo[] fields3 = typeof(Player).GetFields(BindingFlags.Public | BindingFlags.Static);
+
+        foreach (FieldInfo field in fields3)
+        {
+            currentSaveData.PlayerStaticVariables[field.Name] = field.GetValue(null);
         }
 
         // slot equip array
@@ -376,7 +486,7 @@ public class SaveManager : MonoBehaviour
                 ID = itemDataComponent.ID,
                 index = itemDataComponent.index,
                 stackLimit = itemDataComponent.stackLimit,
-                itemQuantity = itemDataComponent.itemQuantity,
+                itemQuantity = itemDataComponent.quantity,
                 itemProduct = itemDataComponent.itemProduct,
                 itemType = itemDataComponent.itemType,
                 itemClass = itemDataComponent.itemClass,
@@ -400,7 +510,7 @@ public class SaveManager : MonoBehaviour
                 ID = itemDataComponent.ID,
                 index = itemDataComponent.index,
                 stackLimit = itemDataComponent.stackLimit,
-                itemQuantity = itemDataComponent.itemQuantity,
+                itemQuantity = itemDataComponent.quantity,
                 itemProduct = itemDataComponent.itemProduct,
                 itemType = itemDataComponent.itemType,
                 itemClass = itemDataComponent.itemClass,
@@ -423,7 +533,7 @@ public class SaveManager : MonoBehaviour
                 ID = itemDataComponent.ID,
                 index = itemDataComponent.index,
                 stackLimit = itemDataComponent.stackLimit,
-                itemQuantity = itemDataComponent.itemQuantity,
+                itemQuantity = itemDataComponent.quantity,
                 itemProduct = itemDataComponent.itemProduct,
                 itemType = itemDataComponent.itemType,
                 itemClass = itemDataComponent.itemClass,
@@ -434,28 +544,138 @@ public class SaveManager : MonoBehaviour
 
             currentSaveData.enhancedInventoryObjects[i] = itemData;
         }
+
+        // assembled general inventory objects
         currentSaveData.assembledInventoryObjects = new ItemDataModel[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.suitInventoryObjects = new SuitDataModel[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.helmetInventoryObjects = new HelmetDataModel[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.toolInventoryObjects = new ToolDataModel[itemArrays["ASSEMBLED"].Length];
 
         for (int i = 0; i < itemArrays["ASSEMBLED"].Length; i++)
         {
             GameObject itemGameObject = itemArrays["ASSEMBLED"][i];
-            ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
-            itemDataComponent.itemName = itemDataComponent.itemName.Replace("(Clone)", "");
-            ItemDataModel itemData = new()
+            if (itemGameObject.TryGetComponent(out ItemData itemDataComponent))
             {
-                ID = itemDataComponent.ID,
-                index = itemDataComponent.index,
-                stackLimit = itemDataComponent.stackLimit,
-                itemQuantity = itemDataComponent.itemQuantity,
-                itemProduct = itemDataComponent.itemProduct,
-                itemType = itemDataComponent.itemType,
-                itemClass = itemDataComponent.itemClass,
-                itemName = itemDataComponent.itemName,
-                equipable = itemDataComponent.equipable,
-                isEquipped = itemDataComponent.isEquipped
-            };
+                itemDataComponent.itemName = itemDataComponent.itemName.Replace("(Clone)", "");
+                if (itemDataComponent.itemType == "SUIT")
+                {
+                    SuitData suitDataComponent = itemGameObject.GetComponent<SuitData>();
+                    SuitDataModel suitData = new()
+                    {
+                        ID = suitDataComponent.ID,
+                        index = suitDataComponent.index,
+                        stackLimit = suitDataComponent.stackLimit,
+                        itemQuantity = suitDataComponent.quantity,
+                        itemProduct = suitDataComponent.itemProduct,
+                        itemType = suitDataComponent.itemType,
+                        itemClass = suitDataComponent.itemClass,
+                        itemName = suitDataComponent.itemName,
+                        equipable = suitDataComponent.equipable,
+                        isEquipped = suitDataComponent.isEquipped,
+                        physicalProtection = suitDataComponent.physicalProtection,
+                        fireProtection = suitDataComponent.fireProtection,
+                        coldProtection = suitDataComponent.coldProtection,
+                        gasProtection = suitDataComponent.gasProtection,
+                        explosionProtection = suitDataComponent.explosionProtection,
+                        shieldPoints = suitDataComponent.shieldPoints,
+                        hitPoints = suitDataComponent.hitPoints,
+                        energyCapacity = suitDataComponent.energyCapacity,
+                        durability = suitDataComponent.durability,
+                        maxDurability = suitDataComponent.maxDurability,
+                        inventorySlots = suitDataComponent.inventorySlots,
+                        strength = suitDataComponent.strength,
+                        perception = suitDataComponent.perception,
+                        intelligence = suitDataComponent.intelligence,
+                        agility = suitDataComponent.agility,
+                        charisma = suitDataComponent.charisma,
+                        willpower = suitDataComponent.willpower
+                    };
+                    currentSaveData.suitInventoryObjects[i] = suitData;
+                }
+                else if (itemDataComponent.itemType == "HELMET")
+                {
+                    HelmetData helmetDataComponent = itemGameObject.GetComponent<HelmetData>();
+                    HelmetDataModel helmetData = new()
+                    {
+                        ID = helmetDataComponent.ID,
+                        index = helmetDataComponent.index,
+                        stackLimit = helmetDataComponent.stackLimit,
+                        itemQuantity = helmetDataComponent.quantity,
+                        itemProduct = helmetDataComponent.itemProduct,
+                        itemType = helmetDataComponent.itemType,
+                        itemClass = helmetDataComponent.itemClass,
+                        itemName = helmetDataComponent.itemName,
+                        equipable = helmetDataComponent.equipable,
+                        isEquipped = helmetDataComponent.isEquipped,
+                        physicalProtection = helmetDataComponent.physicalProtection,
+                        fireProtection = helmetDataComponent.fireProtection,
+                        coldProtection = helmetDataComponent.coldProtection,
+                        gasProtection = helmetDataComponent.gasProtection,
+                        explosionProtection = helmetDataComponent.explosionProtection,
+                        shieldPoints = helmetDataComponent.shieldPoints,
+                        hitPoints = helmetDataComponent.hitPoints,
+                        durability = helmetDataComponent.durability,
+                        maxDurability = helmetDataComponent.maxDurability,
+                        strength = helmetDataComponent.strength,
+                        perception = helmetDataComponent.perception,
+                        intelligence = helmetDataComponent.intelligence,
+                        agility = helmetDataComponent.agility,
+                        charisma = helmetDataComponent.charisma,
+                        willpower = helmetDataComponent.willpower,
+                        visibilityRadius = helmetDataComponent.visibilityRadius,
+                        explorationRadius = helmetDataComponent.explorationRadius,
+                        pickupRadius = helmetDataComponent.pickupRadius
+                    };
+                    currentSaveData.helmetInventoryObjects[i] = helmetData;
+                }
+                else if (itemDataComponent.itemType == "FABRICATOR")
+                {
+                    ToolData toolDataComponent = itemGameObject.GetComponent<ToolData>();
+                    ToolDataModel toolData = new()
+                    {
+                        ID = toolDataComponent.ID,
+                        index = toolDataComponent.index,
+                        stackLimit = toolDataComponent.stackLimit,
+                        itemQuantity = toolDataComponent.quantity,
+                        itemProduct = toolDataComponent.itemProduct,
+                        itemType = toolDataComponent.itemType,
+                        itemClass = toolDataComponent.itemClass,
+                        itemName = toolDataComponent.itemName,
+                        equipable = toolDataComponent.equipable,
+                        isEquipped = toolDataComponent.isEquipped,
+                        durability = toolDataComponent.durability,
+                        maxDurability = toolDataComponent.maxDurability,
+                        strength = toolDataComponent.strength,
+                        perception = toolDataComponent.perception,
+                        intelligence = toolDataComponent.intelligence,
+                        agility = toolDataComponent.agility,
+                        charisma = toolDataComponent.charisma,
+                        willpower = toolDataComponent.willpower,
+                        productionSpeed = toolDataComponent.productionSpeed,
+                        materialCost = toolDataComponent.materialCost,
+                        outcomeRate = toolDataComponent.outcomeRate
+                    };
+                    currentSaveData.toolInventoryObjects[i] = toolData;
+                }
+                else
+                {
+                    ItemDataModel itemData = new()
+                    {
+                        ID = itemDataComponent.ID,
+                        index = itemDataComponent.index,
+                        stackLimit = itemDataComponent.stackLimit,
+                        itemQuantity = itemDataComponent.quantity,
+                        itemProduct = itemDataComponent.itemProduct,
+                        itemType = itemDataComponent.itemType,
+                        itemClass = itemDataComponent.itemClass,
+                        itemName = itemDataComponent.itemName,
+                        equipable = itemDataComponent.equipable,
+                        isEquipped = itemDataComponent.isEquipped
+                    };
+                    currentSaveData.assembledInventoryObjects[i] = itemData;
+                }
 
-            currentSaveData.assembledInventoryObjects[i] = itemData;
+            }
         }
 
         // Access the itemRecipeArrays dictionary through the RecipeManager reference

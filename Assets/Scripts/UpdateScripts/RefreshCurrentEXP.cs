@@ -8,6 +8,6 @@ public class RefreshCurrentEXP : MonoBehaviour
     void Start()
     {
         textField = GetComponent<TextMeshProUGUI>();
-        textField.text = Level.PlayerCurrentExp.ToString();
+        textField.text = Player.PlayerCurrentExp.ToString();
     }
 }

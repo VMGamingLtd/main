@@ -1,4 +1,5 @@
 using ItemManagement;
+using RecipeManagement;
 using System.Globalization;
 using System.Linq;
 using TMPro;
@@ -12,6 +13,7 @@ public class EquipmentManager : MonoBehaviour
     public static bool autoConsumption;
     public GlobalCalculator globalCalculator;
     public InventoryManager inventoryManager;
+    public StatsManager statsManager;
 
     public GameObject HelmetSlot;
     public GameObject SuitSlot;
@@ -29,6 +31,177 @@ public class EquipmentManager : MonoBehaviour
         {
             slotEquipped[i] = false;
         }
+        RefreshStats();
+    }
+
+    public void RefreshRecipeStats()
+    {
+        CoroutineManager coroutineManager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
+        RecipeCreator recipeCreator = GameObject.Find("RecipeCreatorList").GetComponent<RecipeCreator>();
+        var recipeList = recipeCreator.recipeDataList;
+
+        // the dictionary maps have to be refreshed each time you work with them as they are not using static arrays
+        coroutineManager.InitializeProductionTimeMap();
+        coroutineManager.InitializeMaterialCostMap();
+        coroutineManager.InitializeProductionOutcomeMap();
+
+        string[] keys = {
+            "FibrousLeaves", "Water", "Biofuel", "DistilledWater", "Battery",
+            "OxygenTank", "BatteryCore", "Steam", "IronOre", "Wood",
+            "Coal", "IronBeam", "BiofuelGenerator", "IronSheet", "IronRod"
+        };
+
+        for (int i = 0; i < keys.Length; i++)
+        {
+            coroutineManager.UpdateProductionTextsForKey(keys[i], recipeList[i].productionTime / Player.ProductionSpeed);
+        }
+        for (int i = 0; i < recipeList.Count; i++)
+        {
+            foreach (var childData in recipeList[i].childDataList)
+            {
+                float updatedQuantity = childData.quantity / Player.MaterialCost;
+                coroutineManager.UpdateMaterialCostTextsForKey(childData.name, updatedQuantity);
+            }
+        }
+        for (int i = 0; i < keys.Length; i++)
+        {
+            coroutineManager.UpdateProductionOutcomeTextsForKey(keys[i], recipeList[i].outputValue * Player.OutcomeRate);
+        }
+    }
+
+    public void RefreshStats()
+    {
+        statsManager.RefreshStats();
+    }
+    public void EquipHelmet(HelmetData itemData)
+    {
+        if (itemData != null)
+        {
+            Player.PhysicalProtection += itemData.physicalProtection;
+            Player.FireProtection += itemData.fireProtection;
+            Player.ColdProtection += itemData.coldProtection;
+            Player.GasProtection += itemData.gasProtection;
+            Player.ExplosionProtection += itemData.explosionProtection;
+            Player.ShieldPoints += itemData.shieldPoints;
+            Player.HitPoints += itemData.hitPoints;
+            Player.Strength += itemData.strength;
+            Player.Perception += itemData.perception;
+            Player.Intelligence += itemData.intelligence;
+            Player.Agility += itemData.agility;
+            Player.Charisma += itemData.charisma;
+            Player.Willpower += itemData.willpower;
+            Player.ExplorationRadius += itemData.explorationRadius;
+            Player.VisibilityRadius += itemData.visibilityRadius;
+            Player.PickupRadius += itemData.pickupRadius;
+        }
+        RefreshStats();
+    }
+
+    public void EquipSuit(SuitData itemData)
+    {
+        if (itemData != null)
+        {
+            Player.PhysicalProtection += itemData.physicalProtection;
+            Player.FireProtection += itemData.fireProtection;
+            Player.ColdProtection += itemData.coldProtection;
+            Player.GasProtection += itemData.gasProtection;
+            Player.ExplosionProtection += itemData.explosionProtection;
+            Player.ShieldPoints += itemData.shieldPoints;
+            Player.HitPoints += itemData.hitPoints;
+            Player.EnergyCapacity += itemData.energyCapacity;
+            Player.InventorySlots += itemData.inventorySlots;
+            Player.Strength += itemData.strength;
+            Player.Perception += itemData.perception;
+            Player.Intelligence += itemData.intelligence;
+            Player.Agility += itemData.agility;
+            Player.Charisma += itemData.charisma;
+            Player.Willpower += itemData.willpower;
+        }
+        RefreshStats();
+    }
+    public void EquipTool(ToolData itemData)
+    {
+        if (itemData != null)
+        {
+            Player.Strength += itemData.strength;
+            Player.Perception += itemData.perception;
+            Player.Intelligence += itemData.intelligence;
+            Player.Agility += itemData.agility;
+            Player.Charisma += itemData.charisma;
+            Player.Willpower += itemData.willpower;
+            Player.ProductionSpeed += itemData.productionSpeed;
+            Player.MaterialCost += itemData.materialCost;
+            Player.OutcomeRate += itemData.outcomeRate;
+        }
+        RefreshStats();
+        RefreshRecipeStats();
+    }
+
+    public void UnequipHelmet(HelmetData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = false;
+            Player.PhysicalProtection -= itemData.physicalProtection;
+            Player.FireProtection -= itemData.fireProtection;
+            Player.ColdProtection -= itemData.coldProtection;
+            Player.GasProtection -= itemData.gasProtection;
+            Player.ExplosionProtection -= itemData.explosionProtection;
+            Player.ShieldPoints -= itemData.shieldPoints;
+            Player.HitPoints -= itemData.hitPoints;
+            Player.Strength -= itemData.strength;
+            Player.Perception -= itemData.perception;
+            Player.Intelligence -= itemData.intelligence;
+            Player.Agility -= itemData.agility;
+            Player.Charisma -= itemData.charisma;
+            Player.Willpower -= itemData.willpower;
+            Player.ExplorationRadius -= itemData.explorationRadius;
+            Player.VisibilityRadius -= itemData.visibilityRadius;
+            Player.PickupRadius -= itemData.pickupRadius;
+        }
+        statsManager.RefreshStats();
+    }
+
+    public void UnequipSuit(SuitData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = false;
+            Player.PhysicalProtection -= itemData.physicalProtection;
+            Player.FireProtection -= itemData.fireProtection;
+            Player.ColdProtection -= itemData.coldProtection;
+            Player.GasProtection -= itemData.gasProtection;
+            Player.ExplosionProtection -= itemData.explosionProtection;
+            Player.ShieldPoints -= itemData.shieldPoints;
+            Player.HitPoints -= itemData.hitPoints;
+            Player.EnergyCapacity -= itemData.energyCapacity;
+            Player.InventorySlots -= itemData.inventorySlots;
+            Player.Strength -= itemData.strength;
+            Player.Perception -= itemData.perception;
+            Player.Intelligence -= itemData.intelligence;
+            Player.Agility -= itemData.agility;
+            Player.Charisma -= itemData.charisma;
+            Player.Willpower -= itemData.willpower;
+        }
+        statsManager.RefreshStats();
+    }
+
+    public void UnequipTool(ToolData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = false;
+            Player.Strength -= itemData.strength;
+            Player.Perception -= itemData.perception;
+            Player.Intelligence -= itemData.intelligence;
+            Player.Agility -= itemData.agility;
+            Player.Charisma -= itemData.charisma;
+            Player.Willpower -= itemData.willpower;
+            Player.ProductionSpeed -= itemData.productionSpeed;
+            Player.MaterialCost -= itemData.materialCost;
+            Player.OutcomeRate -= itemData.outcomeRate;
+        }
+        statsManager.RefreshStats();
     }
 
     public void DeductFromEquip()
@@ -43,13 +216,13 @@ public class EquipmentManager : MonoBehaviour
                     if (targetChild != null && targetChild.name == "Battery")
                     {
                         ItemData itemData = targetChild.GetComponent<ItemData>();
-                        if (itemData != null && itemData.itemQuantity > PlayerResources.PlayerEnergy)
+                        if (itemData != null && itemData.quantity > PlayerResources.PlayerEnergy)
                         {
-                            itemData.itemQuantity -= PlayerResources.PlayerEnergy;
+                            itemData.quantity -= PlayerResources.PlayerEnergy;
                             TextMeshProUGUI newCountTextEnergy = itemData.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                             if (newCountTextEnergy != null)
                             {
-                                newCountTextEnergy.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                                newCountTextEnergy.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
                             }
                         }
                         else
@@ -92,13 +265,13 @@ public class EquipmentManager : MonoBehaviour
                     if (targetChild != null)
                     {
                         ItemData itemData = targetChild.GetComponent<ItemData>();
-                        if (itemData != null && itemData.itemQuantity > PlayerResources.PlayerWater)
+                        if (itemData != null && itemData.quantity > PlayerResources.PlayerWater)
                         {
-                            itemData.itemQuantity -= PlayerResources.PlayerWater;
+                            itemData.quantity -= PlayerResources.PlayerWater;
                             TextMeshProUGUI newCountTextWater = itemData.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                             if (newCountTextWater != null)
                             {
-                                newCountTextWater.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                                newCountTextWater.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
                             }
                         }
                         else

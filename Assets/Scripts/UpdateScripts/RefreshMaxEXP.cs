@@ -8,6 +8,6 @@ public class RefreshMaxEXP : MonoBehaviour
     void Start()
     {
         textField = GetComponent<TextMeshProUGUI>();
-        textField.text = Level.PlayerMaxExp.ToString();
+        textField.text = Player.PlayerMaxExp.ToString();
     }
 }

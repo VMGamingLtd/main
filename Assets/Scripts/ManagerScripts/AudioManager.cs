@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -10,12 +8,17 @@ public class AudioManager : MonoBehaviour
     public AudioClip oxygenSlotClip;
     public AudioClip waterSlotClip;
     public AudioClip hungerSlotClip;
+    public AudioClip equipClip;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
     }
 
+    public void PlayerEquipSlotSound()
+    {
+        audioSource.PlayOneShot(equipClip);
+    }
     public void PlayUnequipSlotSound()
     {
         audioSource.PlayOneShot(unequipClip);

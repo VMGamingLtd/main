@@ -75,30 +75,11 @@ namespace RecipeManagement
         {
             var itemData = recipeDataList[recipeIndex];
 
-            CreateRecipe(recipeTemplate,
-                        itemData.recipeProduct,
-                        itemData.recipeType,
-                        itemData.itemClass,
-                        itemData.recipeName,
-                        itemData.index,
-                        itemData.experience,
-                        itemData.productionTime,
-                        itemData.outputValue,
-                        itemData.hasRequirements,
-                        itemData.childDataList);
+            CreateRecipe(recipeTemplate, itemData.recipeProduct, itemData.recipeType, itemData.itemClass, itemData.recipeName, itemData.index,
+                itemData.experience, itemData.productionTime, itemData.outputValue, itemData.hasRequirements, itemData.childDataList);
         }
-        private void RecreateRecipe(GameObject template,
-                                    string recipeProduct,
-                                    string recipeType,
-                                    string itemClass,
-                                    string recipeName,
-                                    int index,
-                                    int experience,
-                                    float productionTime,
-                                    float outputValue,
-                                    bool hasRequirements,
-                                    List<ChildData> childDataList,
-                                    int orderAdded)
+        private void RecreateRecipe(GameObject template, string recipeProduct, string recipeType, string itemClass, string recipeName, int index,
+            int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, int orderAdded)
         {
             // RecipeTemplate attribute injection
             GameObject newItem = Instantiate(template);
@@ -113,6 +94,7 @@ namespace RecipeManagement
             newItem.transform.Find("Content/Cost/EXP").GetComponent<TextMeshProUGUI>().text = experience.ToString() + "XP";
             newItem.transform.Find("Content/Cost/TimeValue").GetComponent<TextMeshProUGUI>().text = productionTime.ToString() + "s";
             newItem.transform.Find("Content/Image/CountValue").GetComponent<TextMeshProUGUI>().text = outputValue.ToString();
+            newItem.transform.Find("Content/Image/CountValue").GetComponent<AddToProductionOutcomeTextArray>().AssignTextToCoroutineManagerArray(recipeName);
             newItem.transform.Find("Content/Image/Image").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeName, recipeProduct);
 
             // ProductCost is a child with additional material display objects that is only available if the item has some material requirements
@@ -137,6 +119,7 @@ namespace RecipeManagement
                         {
                             childObject.transform.Find("Image").GetComponent<Image>().sprite = AssignChildSlot(child.name);
                             childObject.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
+                            childObject.transform.Find("Quantity").GetComponent<AddToMaterialCostTextArray>().AssignTextToCoroutineManagerArray(child.name);
                             childObject.transform.Find("ChildName").name = child.name;
                             childObject.transform.Find(child.name).GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
                         }
@@ -166,17 +149,8 @@ namespace RecipeManagement
             newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
             newItem.transform.localScale = Vector3.one;
         }
-        private void CreateRecipe(GameObject template,
-                                    string recipeProduct,
-                                    string recipeType,
-                                    string itemClass,
-                                    string recipeName,
-                                    int index,
-                                    int experience,
-                                    float productionTime,
-                                    float outputValue,
-                                    bool hasRequirements,
-                                    List<ChildData> childDataList)
+        private void CreateRecipe(GameObject template, string recipeProduct, string recipeType, string itemClass, string recipeName,
+            int index, int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList)
         {
             // RecipeTemplate attribute injection
             GameObject newItem = Instantiate(template);
@@ -188,9 +162,13 @@ namespace RecipeManagement
             CountHeader.name = recipeName;
             CountHeader.GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
 
+            Transform TimeValue = newItem.transform.Find("Content/Cost/TimeValue");
+            TimeValue.GetComponent<AddToProductionTimeTextArray>().AssignTextToCoroutineManagerArray(recipeName);
+
             newItem.transform.Find("Content/Cost/EXP").GetComponent<TextMeshProUGUI>().text = experience.ToString() + "XP";
             newItem.transform.Find("Content/Cost/TimeValue").GetComponent<TextMeshProUGUI>().text = productionTime.ToString() + "s";
             newItem.transform.Find("Content/Image/CountValue").GetComponent<TextMeshProUGUI>().text = outputValue.ToString();
+            newItem.transform.Find("Content/Image/CountValue").GetComponent<AddToProductionOutcomeTextArray>().AssignTextToCoroutineManagerArray(recipeName);
             newItem.transform.Find("Content/Image/Image").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeName, recipeProduct);
 
             // ProductCost is a child with additional material display objects that is only available if the item has some material requirements
@@ -215,8 +193,10 @@ namespace RecipeManagement
                         {
                             childObject.transform.Find("Image").GetComponent<Image>().sprite = AssignChildSlot(child.name);
                             childObject.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
+                            childObject.transform.Find("Quantity").GetComponent<AddToMaterialCostTextArray>().AssignTextToCoroutineManagerArray(child.name);
                             childObject.transform.Find("ChildName").name = child.name;
                             childObject.transform.Find(child.name).GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
+
                         }
                         else
                         {

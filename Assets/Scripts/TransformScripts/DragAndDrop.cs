@@ -95,6 +95,48 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             CheckHighlightObject(eventData);
         }
     }
+    private void EquipHelmet(GameObject highlightObj, RectTransform objectRectTransform, RectTransform highlightRectTransform,
+        int slotIndex, string objectName, HelmetData itemData)
+    {
+        itemData.isEquipped = true;
+        EquipmentManager.slotEquippedName[slotIndex] = objectName;
+        EquipmentManager.slotEquipped[slotIndex] = true;
+        equipmentManager.EquipHelmet(itemData);
+
+        highlightObj.transform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+
+        objectRectTransform.SetParent(highlightRectTransform);
+        objectRectTransform.SetAsLastSibling();
+        objectRectTransform.localPosition = Vector3.zero;
+    }
+    private void EquipSuit(GameObject highlightObj, RectTransform objectRectTransform, RectTransform highlightRectTransform,
+        int slotIndex, string objectName, SuitData itemData)
+    {
+        itemData.isEquipped = true;
+        EquipmentManager.slotEquippedName[slotIndex] = objectName;
+        EquipmentManager.slotEquipped[slotIndex] = true;
+        equipmentManager.EquipSuit(itemData);
+
+        highlightObj.transform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+
+        objectRectTransform.SetParent(highlightRectTransform);
+        objectRectTransform.SetAsLastSibling();
+        objectRectTransform.localPosition = Vector3.zero;
+    }
+    private void EquipTool(GameObject highlightObj, RectTransform objectRectTransform, RectTransform highlightRectTransform,
+        int slotIndex, string objectName, ToolData itemData)
+    {
+        itemData.isEquipped = true;
+        EquipmentManager.slotEquippedName[slotIndex] = objectName;
+        EquipmentManager.slotEquipped[slotIndex] = true;
+        equipmentManager.EquipTool(itemData);
+
+        highlightObj.transform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+
+        objectRectTransform.SetParent(highlightRectTransform);
+        objectRectTransform.SetAsLastSibling();
+        objectRectTransform.localPosition = Vector3.zero;
+    }
     private void EquipSlot(GameObject highlightObj, RectTransform objectRectTransform, RectTransform highlightRectTransform,
         int slotIndex, string playerResourceName, float playerResourceValue, string objectName, ItemData itemData)
     {
@@ -140,12 +182,12 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             if (draggedObj.TryGetComponent<ItemData>(out var itemData1))
             {
                 draggedObjID = itemData1.ID;
-                draggedObjQuantity = itemData1.itemQuantity;
+                draggedObjQuantity = itemData1.quantity;
             }
             if (SelectedObj.TryGetComponent<ItemData>(out var itemData2))
             {
                 selectedObjID = itemData2.ID;
-                selectedObjQuantity = itemData2.itemQuantity;
+                selectedObjQuantity = itemData2.quantity;
                 selectedObjStackLimit = itemData2.stackLimit;
             }
             if (draggedObjID != selectedObjID)
@@ -156,24 +198,31 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                     if (totalStackQuantity > selectedObjStackLimit)
                     {
                         float remainingStackQuantity = totalStackQuantity - selectedObjStackLimit;
-                        itemData1.itemQuantity = remainingStackQuantity;
+                        itemData1.quantity = remainingStackQuantity;
                         TextMeshProUGUI newCountText2 = draggedObj.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                         if (newCountText2 != null)
                         {
-                            newCountText2.text = itemData1.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                            newCountText2.text = itemData1.quantity.ToString("F2", CultureInfo.InvariantCulture);
                         }
-                        itemData2.itemQuantity = selectedObjStackLimit;
+                        itemData2.quantity = selectedObjStackLimit;
+
+                        /*if (quantityText.EndsWith(".00"))
+                        {
+                            quantityText = quantityText[..^3];
+                        }
+
+                        existingCountText.text = quantityText;*/
                     }
                     else
                     {
                         InventoryManager inventoryManager = draggedObj.transform.parent.GetComponent<InventoryManager>();
                         inventoryManager.DestroySpecificItem(draggedObjectName, itemData1.itemProduct, itemData1.ID);
-                        itemData2.itemQuantity += draggedObjQuantity;
+                        itemData2.quantity += draggedObjQuantity;
                     }
                     TextMeshProUGUI newCountText = SelectedObj.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                     if (newCountText != null)
                     {
-                        newCountText.text = itemData2.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                        newCountText.text = itemData2.quantity.ToString("F2", CultureInfo.InvariantCulture);
                     }
                 }
             }
@@ -191,7 +240,34 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             RectTransform objectRectTransform = gameObject.GetComponent<RectTransform>();
 
             // *dragging from INVENTORY to EQUIPMENT SLOTS*
-            if (highlightObj.name == "OxygenButton")
+            if (highlightObj.name == "HelmetButton")
+            {
+                if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "CAS-901")
+                {
+                    HelmetData itemData = draggedObj.GetComponent<HelmetData>();
+                    EquipHelmet(highlightObj, objectRectTransform, highlightRectTransform, 0, draggedObjectName, itemData);
+                    audioManager.PlayerEquipSlotSound();
+                }
+            }
+            else if (highlightObj.name == "SuitButton")
+            {
+                if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "CAS-101")
+                {
+                    SuitData itemData = draggedObj.GetComponent<SuitData>();
+                    EquipSuit(highlightObj, objectRectTransform, highlightRectTransform, 1, draggedObjectName, itemData);
+                    audioManager.PlayerEquipSlotSound();
+                }
+            }
+            else if (highlightObj.name == "LeftHandButton")
+            {
+                if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "FAB-1")
+                {
+                    ToolData itemData = draggedObj.GetComponent<ToolData>();
+                    EquipTool(highlightObj, objectRectTransform, highlightRectTransform, 2, draggedObjectName, itemData);
+                    audioManager.PlayerEquipSlotSound();
+                }
+            }
+            else if (highlightObj.name == "OxygenButton")
             {
                 if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "OxygenTank" && GlobalCalculator.isPlayerInBiologicalBiome == false)
                 {
@@ -245,11 +321,34 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             // *dragging from EQUIPMENT SLOTS back into INVENTORY*
             else if (highlightObj.name == "InventoryContent")
             {
-                if (originalParentName == "EnergyButton")
+                if (originalParentName == "HelmetButton")
+                {
+                    EquipmentManager.slotEquipped[0] = false;
+                    EquipmentManager.slotEquippedName[0] = "";
+                    HelmetData itemData = draggedObj.GetComponent<HelmetData>();
+                    equipmentManager.UnequipHelmet(itemData);
+                }
+                else if (originalParentName == "SuitButton")
+                {
+                    EquipmentManager.slotEquipped[1] = false;
+                    EquipmentManager.slotEquippedName[1] = "";
+                    SuitData itemData = draggedObj.GetComponent<SuitData>();
+                    equipmentManager.UnequipSuit(itemData);
+                }
+                else if (originalParentName == "LeftHandButton")
+                {
+                    EquipmentManager.slotEquipped[2] = false;
+                    EquipmentManager.slotEquippedName[2] = "";
+                    ToolData itemData = draggedObj.GetComponent<ToolData>();
+                    equipmentManager.UnequipTool(itemData);
+                }
+                else if (originalParentName == "EnergyButton")
                 {
                     EquipmentManager.slotEquipped[5] = false;
                     EquipmentManager.slotEquippedName[5] = "";
                     PlayerResources.PlayerEnergy = 0f;
+                    ItemData itemData = draggedObj.GetComponent<ItemData>();
+                    itemData.isEquipped = false;
                     GameObject noEnergyObjects = GameObject.Find("NoEnergyObjects");
                     if (noEnergyObjects != null)
                     {
@@ -264,18 +363,24 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                     EquipmentManager.slotEquipped[6] = false;
                     EquipmentManager.slotEquippedName[6] = "";
                     PlayerResources.PlayerOxygen = 0f;
+                    ItemData itemData = draggedObj.GetComponent<ItemData>();
+                    itemData.isEquipped = false;
                 }
                 else if (originalParentName == "WaterButton")
                 {
                     EquipmentManager.slotEquipped[7] = false;
                     EquipmentManager.slotEquippedName[7] = "";
                     PlayerResources.PlayerWater = 0f;
+                    ItemData itemData = draggedObj.GetComponent<ItemData>();
+                    itemData.isEquipped = false;
                 }
                 else if (originalParentName == "HungerButton")
                 {
                     EquipmentManager.slotEquipped[8] = false;
                     EquipmentManager.slotEquippedName[8] = "";
                     PlayerResources.PlayerHunger = 0f;
+                    ItemData itemData = draggedObj.GetComponent<ItemData>();
+                    itemData.isEquipped = false;
                 }
                 emptyButton?.GetComponent<Image>()?.gameObject.SetActive(true);
                 Transform inventoryManagerObj = highlightObj.transform.Find("List/INVENTORYMANAGER");
@@ -287,7 +392,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
             globalCalculator.UpdatePlayerConsumption();
             DeactivateHighlightObject();
         }
-
+        globalCalculator.RecalculateInventorySlots();
         Destroy(cloneObject);
         previousHighlightObject = null;
         InventoryManager.endingDrag = false;
@@ -307,7 +412,6 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
 
         return null;
     }
-
 
     private void DeactivateHighlightObject()
     {

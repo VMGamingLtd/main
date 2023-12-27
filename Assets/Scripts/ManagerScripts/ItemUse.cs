@@ -1,7 +1,6 @@
+using ItemManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using ItemManagement;
-using TMPro;
 
 public class ItemUse : MonoBehaviour, IPointerClickHandler
 {
@@ -13,11 +12,25 @@ public class ItemUse : MonoBehaviour, IPointerClickHandler
     {
         if (Splitter.isSplitting && eventData.pointerEnter.transform.parent != null)
         {
-            string objName = transform.name.Replace("(Clone)","");
+            string objName = transform.name.Replace("(Clone)", "");
             itemObject = eventData.pointerEnter.transform.parent.gameObject;
             ItemData itemData = itemObject.GetComponent<ItemData>();
             messageObjects = GameObject.Find("MessageCanvas/MESSAGEOBJECTS").GetComponent<MessageObjects>();
-            messageObjects.DisplaySplitWindow(itemData, objName);
+            if (itemData.quantity < 2)
+            {
+                if (itemData.itemType == "SUIT" || itemData.itemType == "HELMET" || itemData.itemType == "FABRICATOR")
+                {
+                    messageObjects.DisplayMessage("SplitItemFail");
+                }
+                else
+                {
+                    messageObjects.DisplaySplitWindow(itemData, objName);
+                }
+            }
+            else
+            {
+                messageObjects.DisplaySplitWindow(itemData, objName);
+            }
             Splitter.isSplitting = false;
             Splitter.isAwaitingInput = false;
             //StartCoroutine(SingleClickRoutine(itemObject));

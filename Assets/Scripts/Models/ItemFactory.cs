@@ -9,11 +9,12 @@ namespace Assets.Scripts.ItemFactory
     public class ItemFactory : MonoBehaviour
     {
         public InventoryManager inventoryManager;
+        public EquipmentManager equipmentManager;
         public static int ItemCreationID = 0;
         private float remainingQuantity;
 
-        public GameObject[] slotButtons = new GameObject[11];
-        public GameObject[] placeholderImages = new GameObject[11];
+        public GameObject[] slotButtons = new GameObject[9];
+        public GameObject[] placeholderImages = new GameObject[9];
 
         public void RecreateItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass,
             string prefabName, int index, float stackLimit, bool equipable, int ID, bool isEquipped, RectTransform rectTransform = null)
@@ -22,45 +23,9 @@ namespace Assets.Scripts.ItemFactory
             if (rectTransform == null)
             {
                 GameObject newItem = Instantiate(prefab);
-                newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
-                newItem.name = prefabName;
-                newItem.transform.Find("ChildName").name = prefabName;
-                newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
-
-                // we need to give a proper highlight object placeholder so when the object will be dragged, visible possibilities will be shown to player
-                var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
-
-                if (itemType == "PLANTS" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[9]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[9]);
-                }
-                else if (itemType == "ENERGY" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
-                }
-                else if (itemType == "OXYGEN" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
-                }
-                else if (itemType == "LIQUID" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[10]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[10]);
-                }
+                InitiatePrefab(newItem, prefabName, itemType, equipable);
                 ItemData newItemData = newItem.GetComponent<ItemData>() ?? newItem.AddComponent<ItemData>();
-                newItemData.itemQuantity = quantity;
-                newItemData.itemProduct = itemProduct;
-                newItemData.itemType = itemType;
-                newItemData.itemClass = itemClass;
-                newItemData.itemName = prefabName;
-                newItemData.index = index;
-                newItemData.equipable = equipable;
-                newItemData.stackLimit = stackLimit;
-                newItemData.ID = ID;
-                newItemData.isEquipped = isEquipped;
+                FillGeneralItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, isEquipped, ID);
                 inventoryManager.AddToItemArray(itemProduct, newItem);
                 UpdateItemCountText(newItem, newItemData);
                 newItem.AddComponent<ItemUse>();
@@ -70,56 +35,17 @@ namespace Assets.Scripts.ItemFactory
             {
                 // if the object is  equipped that means it was in the Inventory tab under the icons of equipped objects, we have to assign it there
                 GameObject newItem = Instantiate(prefab, rectTransform);
-                newItem.name = prefabName;
-                newItem.transform.Find("ChildName").name = prefabName;
-                newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
-
-                // we need to give a proper highlight object placeholder so when the object will be dragged, visible possibilities will be shown to player
-                var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
-
-                if (itemType == "PLANTS" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[9]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[9]);
-                }
-                else if (itemType == "ENERGY" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
-                }
-                else if (itemType == "OXYGEN" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
-                }
-                else if (itemType == "LIQUID" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[10]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[10]);
-                }
+                InitiatePrefab(newItem, prefabName, itemType, equipable);
                 ItemData newItemData = newItem.GetComponent<ItemData>() ?? newItem.AddComponent<ItemData>();
-                newItemData.itemQuantity = quantity;
-                newItemData.itemProduct = itemProduct;
-                newItemData.itemType = itemType;
-                newItemData.itemClass = itemClass;
-                newItemData.itemName = prefabName;
-                newItemData.index = index;
-                newItemData.equipable = equipable;
-                newItemData.stackLimit = stackLimit;
-                newItemData.ID = ID;
-                newItemData.isEquipped = isEquipped;
+                FillGeneralItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, isEquipped, ID);
                 inventoryManager.AddToItemArray(itemProduct, newItem);
                 UpdateItemCountText(newItem, newItemData);
                 newItem.AddComponent<ItemUse>();
 
                 // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
                 rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
-                newItem.transform.SetParent(rectTransform);
-                newItem.transform.SetAsLastSibling();
-                newItem.transform.localPosition = Vector3.one;
-                newItem.transform.localScale = Vector3.one;
+                AlignObject(newItem, rectTransform);
             }
-
         }
         public void CreateItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable)
         {
@@ -130,16 +56,16 @@ namespace Assets.Scripts.ItemFactory
                 foreach (GameObject item in itemArray)
                 {
                     ItemData existingItemData = item.GetComponent<ItemData>();
-                    if (item.name == prefabName && existingItemData.itemQuantity < existingItemData.stackLimit)
+                    if (item.name == prefabName && existingItemData.quantity < existingItemData.stackLimit)
                     {
                         // The item already exists, increment the quantity for the rest of the quantity order
-                        existingItemData.itemQuantity += quantity;
+                        existingItemData.quantity += quantity;
                         spliRemainingQuantity = false;
-                        if (existingItemData.itemQuantity > existingItemData.stackLimit)
+                        if (existingItemData.quantity > existingItemData.stackLimit)
                         {
                             spliRemainingQuantity = true;
-                            remainingQuantity = existingItemData.itemQuantity - existingItemData.stackLimit;
-                            existingItemData.itemQuantity -= remainingQuantity;
+                            remainingQuantity = existingItemData.quantity - existingItemData.stackLimit;
+                            existingItemData.quantity -= remainingQuantity;
                         }
                         UpdateItemCountText(item, existingItemData);
                         itemFound = true;
@@ -151,14 +77,14 @@ namespace Assets.Scripts.ItemFactory
                     foreach (GameObject item in itemArray)
                     {
                         ItemData existingItemData = item.GetComponent<ItemData>();
-                        if (item.name == prefabName && existingItemData.itemQuantity < existingItemData.stackLimit)
+                        if (item.name == prefabName && existingItemData.quantity < existingItemData.stackLimit)
                         {
-                            existingItemData.itemQuantity += remainingQuantity;
-                            if (existingItemData.itemQuantity > existingItemData.stackLimit)
+                            existingItemData.quantity += remainingQuantity;
+                            if (existingItemData.quantity > existingItemData.stackLimit)
                             {
-                                float newRemainingQuantity = existingItemData.itemQuantity - existingItemData.stackLimit;
+                                float newRemainingQuantity = existingItemData.quantity - existingItemData.stackLimit;
                                 SplitItem(newRemainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable);
-                                existingItemData.itemQuantity -= remainingQuantity;
+                                existingItemData.quantity -= remainingQuantity;
                             }
                             UpdateItemCountText(item, existingItemData);
                             break;
@@ -170,110 +96,401 @@ namespace Assets.Scripts.ItemFactory
             {
                 // Create the item once and set the initial quantity
                 GameObject newItem = Instantiate(prefab);
-                newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
-
-                // ItemTemplate attribute injection
-                newItem.name = prefabName;
-                newItem.transform.Find("ChildName").name = prefabName;
-                newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
-
-                // we need to give a proper highlight object placeholder so when the object will be dragged, visible possibilities will be shown to player
-                var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
-
-                if (itemType == "PLANTS" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[9]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[9]);
-                }
-                else if (itemType == "ENERGY" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
-                }
-                else if (itemType == "OXYGEN" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
-                }
-                else if (itemType == "LIQUID" && equipable)
-                {
-                    dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[10]);
-                    dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[10]);
-                }
-
-
-                // Get or add the ItemData component to the new item
+                InitiatePrefab(newItem, prefabName, itemType, equipable);
                 ItemData newItemData = newItem.GetComponent<ItemData>() ?? newItem.AddComponent<ItemData>();
-                newItemData.itemQuantity = quantity;
-                newItemData.itemProduct = itemProduct;
-                newItemData.itemType = itemType;
-                newItemData.itemClass = itemClass;
-                newItemData.itemName = prefabName;
-                newItemData.index = index;
-                newItemData.equipable = equipable;
-                newItemData.stackLimit = stackLimit;
-                newItemData.ID = ItemCreationID++;
-                newItemData.isEquipped = false;
-
-                // Add the new item to the itemArrays dictionary
+                FillGeneralItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, false);
                 inventoryManager.AddToItemArray(itemProduct, newItem);
-
-                // Update the CountInventory text
                 UpdateItemCountText(newItem, newItemData);
                 newItem.AddComponent<ItemUse>();
                 newItem.transform.localScale = Vector3.one;
             }
         }
+
+        public void RecreateSuit(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            int ID, bool isEquipped, int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection, int shieldPoints, int hitPoints,
+            int energyCapacity, int durability, int maxDurability, int inventorySlots, int strength, int perception, int intelligence, int agility, int charisma, int willpower,
+            RectTransform rectTransform = null)
+        {
+            // if the object was in the general inventory list spawn it there
+            if (rectTransform == null)
+            {
+                GameObject newItem = Instantiate(prefab);
+                InitiatePrefab(newItem, prefabName, itemType, equipable);
+                SuitData newItemData = newItem.GetComponent<SuitData>() ?? newItem.AddComponent<SuitData>();
+                FillSuitItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, isEquipped, physicalProtection, fireProtection,
+                    coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, energyCapacity, durability, maxDurability, inventorySlots, strength, perception,
+                    intelligence, agility, charisma, willpower, ID);
+                inventoryManager.AddToItemArray(itemProduct, newItem);
+                UpdateItemCountText(newItem, newItemData);
+                newItem.AddComponent<ItemUse>();
+                newItem.transform.localScale = Vector3.one;
+            }
+            else
+            {
+                // if the object is  equipped that means it was in the Inventory tab under the icons of equipped objects, we have to assign it there
+                GameObject newItem = Instantiate(prefab, rectTransform);
+                InitiatePrefab(newItem, prefabName, itemType, equipable);
+                SuitData newItemData = newItem.GetComponent<SuitData>() ?? newItem.AddComponent<SuitData>();
+                FillSuitItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, isEquipped, physicalProtection, fireProtection,
+                    coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, energyCapacity, durability, maxDurability, inventorySlots, strength, perception,
+                    intelligence, agility, charisma, willpower, ID);
+                inventoryManager.AddToItemArray(itemProduct, newItem);
+                UpdateItemCountText(newItem, newItemData);
+                newItem.AddComponent<ItemUse>();
+
+                // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
+                rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                AlignObject(newItem, rectTransform);
+            }
+        }
+
+        public void RecreateHelmet(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            int ID, bool isEquipped, int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection, int shieldPoints, int hitPoints, int durability,
+            int maxDurability, int strength, int perception, int intelligence, int agility, int charisma, int willpower, int visibilityRadius, int explorationRadius, int pickupRadius,
+            RectTransform rectTransform = null)
+        {
+            // if the object was in the general inventory list spawn it there
+            if (rectTransform == null)
+            {
+                GameObject newItem = Instantiate(prefab);
+                InitiatePrefab(newItem, prefabName, itemType, equipable);
+                HelmetData newItemData = newItem.GetComponent<HelmetData>() ?? newItem.AddComponent<HelmetData>();
+                FillHelmetItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, isEquipped, physicalProtection, fireProtection,
+                    coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, durability, maxDurability, strength, perception, intelligence, agility,
+                    charisma, willpower, visibilityRadius, explorationRadius, pickupRadius, ID);
+                inventoryManager.AddToItemArray(itemProduct, newItem);
+                UpdateItemCountText(newItem, newItemData);
+                newItem.AddComponent<ItemUse>();
+            }
+            else
+            {
+                // if the object is  equipped that means it was in the Inventory tab under the icons of equipped objects, we have to assign it there
+                GameObject newItem = Instantiate(prefab, rectTransform);
+                InitiatePrefab(newItem, prefabName, itemType, equipable);
+                HelmetData newItemData = newItem.GetComponent<HelmetData>() ?? newItem.AddComponent<HelmetData>();
+                FillHelmetItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, isEquipped, physicalProtection, fireProtection,
+                    coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, durability, maxDurability, strength, perception, intelligence, agility,
+                    charisma, willpower, visibilityRadius, explorationRadius, pickupRadius, ID);
+                inventoryManager.AddToItemArray(itemProduct, newItem);
+                UpdateItemCountText(newItem, newItemData);
+                newItem.AddComponent<ItemUse>();
+
+                // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
+                rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                AlignObject(newItem, rectTransform);
+            }
+        }
+
+        public void RecreateTool(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            int ID, bool isEquipped, int durability, int maxDurability, int strength, int perception, int intelligence, int agility, int charisma, int willpower, float productionSpeed,
+            float materialCost, float outcomeRate, RectTransform rectTransform = null)
+        {
+            // if the object was in the general inventory list spawn it there
+            if (rectTransform == null)
+            {
+                GameObject newItem = Instantiate(prefab);
+                InitiatePrefab(newItem, prefabName, itemType, equipable);
+                ToolData newItemData = newItem.GetComponent<ToolData>() ?? newItem.AddComponent<ToolData>();
+                FillToolData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, isEquipped, durability, maxDurability, strength, perception,
+                        intelligence, agility, charisma, willpower, productionSpeed, materialCost, outcomeRate, ID);
+                inventoryManager.AddToItemArray(itemProduct, newItem);
+                UpdateItemCountText(newItem, newItemData);
+                newItem.AddComponent<ItemUse>();
+            }
+            else
+            {
+                // if the object is  equipped that means it was in the Inventory tab under the icons of equipped objects, we have to assign it there
+                GameObject newItem = Instantiate(prefab, rectTransform);
+                InitiatePrefab(newItem, prefabName, itemType, equipable);
+                ToolData newItemData = newItem.GetComponent<ToolData>() ?? newItem.AddComponent<ToolData>();
+                FillToolData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, isEquipped, durability, maxDurability, strength, perception,
+                        intelligence, agility, charisma, willpower, productionSpeed, materialCost, outcomeRate, ID);
+                inventoryManager.AddToItemArray(itemProduct, newItem);
+                UpdateItemCountText(newItem, newItemData);
+                newItem.AddComponent<ItemUse>();
+
+                // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
+                rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                AlignObject(newItem, rectTransform);
+            }
+        }
+
+        public void CreateSuit(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection, int shieldPoints, int hitPoints, int energyCapacity,
+            int durability, int maxDurability, int inventorySlots, int strength, int perception, int intelligence, int agility, int charisma, int willpower, RectTransform rectTransform = null)
+        {
+            bool itemFound = false;
+            bool spliRemainingQuantity = true;
+            if (inventoryManager.itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray) && itemArray.Length > 0)
+            {
+                foreach (GameObject item in itemArray)
+                {
+                    SuitData existingItemData = item.GetComponent<SuitData>();
+                    if (item.name == prefabName && existingItemData.quantity < existingItemData.stackLimit)
+                    {
+                        // The item already exists, increment the quantity for the rest of the quantity order
+                        existingItemData.quantity += quantity;
+                        spliRemainingQuantity = false;
+                        if (existingItemData.quantity > existingItemData.stackLimit)
+                        {
+                            spliRemainingQuantity = true;
+                            remainingQuantity = existingItemData.quantity - existingItemData.stackLimit;
+                            existingItemData.quantity -= remainingQuantity;
+                        }
+                        UpdateItemCountText(item, existingItemData);
+                        itemFound = true;
+                        break;
+                    }
+                }
+                if (spliRemainingQuantity)
+                {
+                    foreach (GameObject item in itemArray)
+                    {
+                        SuitData existingItemData = item.GetComponent<SuitData>();
+                        if (item.name == prefabName && existingItemData.quantity < existingItemData.stackLimit)
+                        {
+                            existingItemData.quantity += remainingQuantity;
+                            if (existingItemData.quantity > existingItemData.stackLimit)
+                            {
+                                float newRemainingQuantity = existingItemData.quantity - existingItemData.stackLimit;
+                                SplitSuit(newRemainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, physicalProtection, fireProtection,
+                                    coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, energyCapacity, durability, maxDurability, inventorySlots, strength,
+                                    perception, intelligence, agility, charisma, willpower);
+                                existingItemData.quantity -= remainingQuantity;
+                            }
+                            UpdateItemCountText(item, null, existingItemData);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!itemFound)
+            {
+                if (rectTransform != null)
+                {
+                    // CREATING AND ALSO EQUIPPING THE ITEM RIGHT AWAY (Start game situation)
+                    GameObject newItem = Instantiate(prefab, rectTransform);
+                    InitiatePrefab(newItem, prefabName, itemType, equipable);
+                    SuitData newItemData = newItem.GetComponent<SuitData>() ?? newItem.AddComponent<SuitData>();
+                    FillSuitItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, true, physicalProtection, fireProtection,
+                        coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, energyCapacity, durability, maxDurability, inventorySlots, strength, perception,
+                        intelligence, agility, charisma, willpower, null);
+                    inventoryManager.AddToItemArray(itemProduct, newItem);
+                    UpdateItemCountText(newItem, newItemData);
+                    newItem.AddComponent<ItemUse>();
+
+                    // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
+                    rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                    AlignObject(newItem, rectTransform);
+                    equipmentManager.EquipSuit(newItemData);
+                }
+                else
+                {
+                    // Create the item once and set the initial quantity
+                    GameObject newItem = Instantiate(prefab);
+                    InitiatePrefab(newItem, prefabName, itemType, equipable);
+                    SuitData newItemData = newItem.GetComponent<SuitData>() ?? newItem.AddComponent<SuitData>();
+                    FillSuitItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, false, physicalProtection, fireProtection,
+                        coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, energyCapacity, durability, maxDurability, inventorySlots, strength, perception,
+                        intelligence, agility, charisma, willpower);
+
+                    // Add the new item to the itemArrays dictionary
+                    inventoryManager.AddToItemArray(itemProduct, newItem);
+
+                    // Update the CountInventory text
+                    UpdateItemCountText(newItem, null, newItemData);
+                    newItem.AddComponent<ItemUse>();
+                    newItem.transform.localScale = Vector3.one;
+                }
+
+            }
+        }
+
+        public void CreateHelmet(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection, int shieldPoints, int hitPoints, int durability, int maxDurability,
+            int strength, int perception, int intelligence, int agility, int charisma, int willpower, int visibilityRadius, int explorationRadius, int pickupRadius, RectTransform rectTransform = null)
+        {
+            bool itemFound = false;
+            bool spliRemainingQuantity = true;
+            if (inventoryManager.itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray) && itemArray.Length > 0)
+            {
+                foreach (GameObject item in itemArray)
+                {
+                    HelmetData existingItemData = item.GetComponent<HelmetData>();
+                    if (item.name == prefabName && existingItemData.quantity < existingItemData.stackLimit)
+                    {
+                        // The item already exists, increment the quantity for the rest of the quantity order
+                        existingItemData.quantity += quantity;
+                        spliRemainingQuantity = false;
+                        if (existingItemData.quantity > existingItemData.stackLimit)
+                        {
+                            spliRemainingQuantity = true;
+                            remainingQuantity = existingItemData.quantity - existingItemData.stackLimit;
+                            existingItemData.quantity -= remainingQuantity;
+                        }
+                        UpdateItemCountText(item, existingItemData);
+                        itemFound = true;
+                        break;
+                    }
+                }
+                if (spliRemainingQuantity)
+                {
+                    foreach (GameObject item in itemArray)
+                    {
+                        HelmetData existingItemData = item.GetComponent<HelmetData>();
+                        if (item.name == prefabName && existingItemData.quantity < existingItemData.stackLimit)
+                        {
+                            existingItemData.quantity += remainingQuantity;
+                            if (existingItemData.quantity > existingItemData.stackLimit)
+                            {
+                                float newRemainingQuantity = existingItemData.quantity - existingItemData.stackLimit;
+                                SplitHelmet(newRemainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, physicalProtection, fireProtection,
+                                    coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, durability, maxDurability, strength, perception, intelligence, agility,
+                                    charisma, willpower, visibilityRadius, explorationRadius, pickupRadius);
+                                existingItemData.quantity -= remainingQuantity;
+                            }
+                            UpdateItemCountText(item, null, null, existingItemData);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!itemFound)
+            {
+                if (rectTransform != null)
+                {
+                    // CREATING AND ALSO EQUIPPING THE ITEM RIGHT AWAY (Start game situation)
+                    GameObject newItem = Instantiate(prefab, rectTransform);
+                    InitiatePrefab(newItem, prefabName, itemType, equipable);
+                    HelmetData newItemData = newItem.GetComponent<HelmetData>() ?? newItem.AddComponent<HelmetData>();
+                    FillHelmetItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, true, physicalProtection, fireProtection,
+                        coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, durability, maxDurability, strength, perception, intelligence, agility,
+                        charisma, willpower, visibilityRadius, explorationRadius, pickupRadius, null);
+                    inventoryManager.AddToItemArray(itemProduct, newItem);
+                    UpdateItemCountText(newItem, newItemData);
+                    newItem.AddComponent<ItemUse>();
+
+                    // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
+                    rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                    AlignObject(newItem, rectTransform);
+                    equipmentManager.EquipHelmet(newItemData);
+                }
+                else
+                {
+                    // Create the item once and set the initial quantity
+                    GameObject newItem = Instantiate(prefab);
+                    InitiatePrefab(newItem, prefabName, itemType, equipable);
+                    HelmetData newItemData = newItem.GetComponent<HelmetData>() ?? newItem.AddComponent<HelmetData>();
+                    FillHelmetItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, false, physicalProtection, fireProtection,
+                        coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, durability, maxDurability, strength, perception, intelligence, agility,
+                        charisma, willpower, visibilityRadius, explorationRadius, pickupRadius);
+
+                    // Add the new item to the itemArrays dictionary
+                    inventoryManager.AddToItemArray(itemProduct, newItem);
+
+                    // Update the CountInventory text
+                    UpdateItemCountText(newItem, null, null, newItemData);
+                    newItem.AddComponent<ItemUse>();
+                    newItem.transform.localScale = Vector3.one;
+                }
+            }
+        }
+
+        public void CreateTool(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            int durability, int maxDurability, int strength, int perception, int intelligence, int agility, int charisma, int willpower, float productionSpeed, float materialCost,
+            float outcomeRate, RectTransform rectTransform = null)
+        {
+            bool itemFound = false;
+            bool spliRemainingQuantity = true;
+            if (inventoryManager.itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray) && itemArray.Length > 0)
+            {
+                foreach (GameObject item in itemArray)
+                {
+                    ToolData existingItemData = item.GetComponent<ToolData>();
+                    if (item.name == prefabName && existingItemData.quantity < existingItemData.stackLimit)
+                    {
+                        // The item already exists, increment the quantity for the rest of the quantity order
+                        existingItemData.quantity += quantity;
+                        spliRemainingQuantity = false;
+                        if (existingItemData.quantity > existingItemData.stackLimit)
+                        {
+                            spliRemainingQuantity = true;
+                            remainingQuantity = existingItemData.quantity - existingItemData.stackLimit;
+                            existingItemData.quantity -= remainingQuantity;
+                        }
+                        UpdateItemCountText(item, existingItemData);
+                        itemFound = true;
+                        break;
+                    }
+                }
+                if (spliRemainingQuantity)
+                {
+                    foreach (GameObject item in itemArray)
+                    {
+                        ToolData existingItemData = item.GetComponent<ToolData>();
+                        if (item.name == prefabName && existingItemData.quantity < existingItemData.stackLimit)
+                        {
+                            existingItemData.quantity += remainingQuantity;
+                            if (existingItemData.quantity > existingItemData.stackLimit)
+                            {
+                                float newRemainingQuantity = existingItemData.quantity - existingItemData.stackLimit;
+                                SplitTool(newRemainingQuantity, prefab, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, durability, maxDurability, strength,
+                                    perception, intelligence, agility, charisma, willpower, productionSpeed, materialCost, outcomeRate);
+                                existingItemData.quantity -= remainingQuantity;
+                            }
+                            UpdateItemCountText(item, null, null, null, existingItemData);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!itemFound)
+            {
+                if (rectTransform != null)
+                {
+                    // CREATING AND ALSO EQUIPPING THE ITEM RIGHT AWAY (Start game situation)
+                    GameObject newItem = Instantiate(prefab, rectTransform);
+                    InitiatePrefab(newItem, prefabName, itemType, equipable);
+                    ToolData newItemData = newItem.GetComponent<ToolData>() ?? newItem.AddComponent<ToolData>();
+                    FillToolData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, true, durability, maxDurability, strength, perception,
+                        intelligence, agility, charisma, willpower, productionSpeed, materialCost, outcomeRate);
+                    inventoryManager.AddToItemArray(itemProduct, newItem);
+                    UpdateItemCountText(newItem, newItemData);
+                    newItem.AddComponent<ItemUse>();
+
+                    // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
+                    rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                    AlignObject(newItem, rectTransform);
+                    equipmentManager.EquipTool(newItemData);
+                }
+                else
+                {
+                    // Create the item once and set the initial quantity
+                    GameObject newItem = Instantiate(prefab);
+                    InitiatePrefab(newItem, prefabName, itemType, equipable);
+                    ToolData newItemData = newItem.GetComponent<ToolData>() ?? newItem.AddComponent<ToolData>();
+                    FillToolData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, false, durability, maxDurability, strength, perception,
+                        intelligence, agility, charisma, willpower, productionSpeed, materialCost, outcomeRate);
+
+                    // Add the new item to the itemArrays dictionary
+                    inventoryManager.AddToItemArray(itemProduct, newItem);
+
+                    // Update the CountInventory text
+                    UpdateItemCountText(newItem, null, null, null, newItemData);
+                    newItem.AddComponent<ItemUse>();
+                    newItem.transform.localScale = Vector3.one;
+                }
+
+            }
+        }
+
         public void SplitItem(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable)
         {
             // Split the item, meaning that it will be duplicated
             GameObject newItem = Instantiate(prefab);
-            newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
-            newItem.transform.localScale = new Vector3(1f, 1f, 1f);
-
-            // ItemTemplate attribute injection
-            newItem.name = prefabName;
-            newItem.transform.Find("ChildName").name = prefabName;
-            newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
-
-            // we need to give a proper highlight object placeholder so when the object will be dragged, visible possibilities will be shown to player
-            var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
-
-            if (itemType == "PLANTS" && equipable)
-            {
-                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[9]);
-                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[9]);
-            }
-            else if (itemType == "ENERGY" && equipable)
-            {
-                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
-                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
-            }
-            else if (itemType == "OXYGEN" && equipable)
-            {
-                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
-                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
-            }
-            else if (itemType == "LIQUID" && equipable)
-            {
-                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[10]);
-                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[10]);
-            }
-
-            // Get or add the ItemData component to the new item
+            InitiatePrefab(newItem, prefabName, itemType, equipable);
             ItemData newItemData = newItem.GetComponent<ItemData>() ?? newItem.AddComponent<ItemData>();
-
-            newItemData.itemQuantity = quantity;
-            newItemData.itemProduct = itemProduct;
-            newItemData.itemType = itemType;
-            newItemData.itemClass = itemClass;
-            newItemData.index = index;
-            newItemData.itemName = prefabName;
-            newItemData.equipable = equipable;
-            newItemData.stackLimit = stackLimit;
-            newItemData.isEquipped = false;
-
-            newItemData.ID = ItemCreationID++;
+            FillGeneralItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, false);
 
             // Add the new item to the itemArrays dictionary
             inventoryManager.AddToItemArray(itemProduct, newItem);
@@ -283,21 +500,268 @@ namespace Assets.Scripts.ItemFactory
             newItem.AddComponent<ItemUse>();
         }
 
-        private void UpdateItemCountText(GameObject item, ItemData itemData)
+        public void SplitSuit(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection, int shieldPoints, int hitPoints,
+            int energyCapacity, int durability, int maxDurability, int inventorySlots, int strength, int perception, int intelligence, int agility, int charisma, int willpower)
+        {
+            // Split the item, meaning that it will be duplicated
+            GameObject newItem = Instantiate(prefab);
+            InitiatePrefab(newItem, prefabName, itemType, equipable);
+            SuitData newItemData = newItem.GetComponent<SuitData>() ?? newItem.AddComponent<SuitData>();
+            FillSuitItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, false, physicalProtection, fireProtection,
+                    coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, energyCapacity, durability, maxDurability, inventorySlots, strength, perception,
+                    intelligence, agility, charisma, willpower);
+
+            inventoryManager.AddToItemArray(itemProduct, newItem);
+            UpdateItemCountText(newItem, null, newItemData);
+            newItem.AddComponent<ItemUse>();
+        }
+        public void SplitHelmet(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection, int shieldPoints, int hitPoints, int durability, int maxDurability,
+            int strength, int perception, int intelligence, int agility, int charisma, int willpower, int visibilityRadius, int explorationRadius, int pickupRadius)
+        {
+            // Split the item, meaning that it will be duplicated
+            GameObject newItem = Instantiate(prefab);
+            InitiatePrefab(newItem, prefabName, itemType, equipable);
+            HelmetData newItemData = newItem.GetComponent<HelmetData>() ?? newItem.AddComponent<HelmetData>();
+            FillHelmetItemData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, false, physicalProtection, fireProtection,
+                    coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, durability, maxDurability, strength, perception, intelligence, agility,
+                    charisma, willpower, visibilityRadius, explorationRadius, pickupRadius);
+
+            inventoryManager.AddToItemArray(itemProduct, newItem);
+            UpdateItemCountText(newItem, null, null, newItemData);
+            newItem.AddComponent<ItemUse>();
+        }
+        public void SplitTool(float quantity, GameObject prefab, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            int durability, int maxDurability, int strength, int perception, int intelligence, int agility, int charisma, int willpower, float productionSpeed, float materialCost,
+            float outcomeRate)
+        {
+            // Split the item, meaning that it will be duplicated
+            GameObject newItem = Instantiate(prefab);
+            InitiatePrefab(newItem, prefabName, itemType, equipable);
+            ToolData newItemData = newItem.GetComponent<ToolData>() ?? newItem.AddComponent<ToolData>();
+            FillToolData(newItemData, quantity, itemProduct, itemType, itemClass, prefabName, index, stackLimit, equipable, false, durability, maxDurability, strength, perception,
+                        intelligence, agility, charisma, willpower, productionSpeed, materialCost, outcomeRate);
+
+            inventoryManager.AddToItemArray(itemProduct, newItem);
+            UpdateItemCountText(newItem, null, null, null, newItemData);
+            newItem.AddComponent<ItemUse>();
+        }
+        private void UpdateItemCountText(GameObject item, ItemData itemData = null, SuitData suitData = null, HelmetData helmetData = null, ToolData toolData = null)
         {
             TextMeshProUGUI existingCountText = item.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
             if (existingCountText != null)
             {
-                existingCountText.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
+                string quantityText = "";
+
+                if (itemData != null)
+                {
+                    quantityText = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                }
+                else if (suitData != null)
+                {
+                    quantityText = suitData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                }
+                else if (helmetData != null)
+                {
+                    quantityText = helmetData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                }
+                else if (toolData != null)
+                {
+                    quantityText = toolData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                }
+
+                if (quantityText.EndsWith(".00"))
+                {
+                    quantityText = quantityText[..^3];
+                }
+
+                existingCountText.text = quantityText;
             }
         }
-
+        private void InitiatePrefab(GameObject newItem, string prefabName, string itemType, bool equipable)
+        {
+            newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+            newItem.transform.localScale = new Vector3(1f, 1f, 1f);
+            newItem.name = prefabName;
+            newItem.transform.Find("ChildName").name = prefabName;
+            if (itemType == "SUIT" || itemType == "HELMET" || itemType == "FABRICATOR")
+            {
+                newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignEquipmentSpriteToSlot(prefabName);
+            }
+            else
+            {
+                newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
+            }
+            var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
+            CheckItemTypes(itemType, equipable, dragAndDropComponent);
+        }
         private Sprite AssignSpriteToSlot(string spriteName)
         {
             Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
             return sprite;
         }
 
+        private Sprite AssignEquipmentSpriteToSlot(string spriteName)
+        {
+            Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("equipmenticons", spriteName);
+            return sprite;
+        }
+
+        private void AlignObject(GameObject newItem, RectTransform rectTransform)
+        {
+            newItem.transform.SetParent(rectTransform);
+            newItem.transform.SetAsLastSibling();
+            newItem.transform.localPosition = Vector3.one;
+            newItem.transform.localScale = Vector3.one;
+        }
+
+        private void FillGeneralItemData(ItemData newItemData, float quantity, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable, bool isEquipped, int? ID = null)
+        {
+            newItemData.quantity = quantity;
+            newItemData.itemProduct = itemProduct;
+            newItemData.itemType = itemType;
+            newItemData.itemClass = itemClass;
+            newItemData.index = index;
+            newItemData.itemName = prefabName;
+            newItemData.equipable = equipable;
+            newItemData.stackLimit = stackLimit;
+            newItemData.isEquipped = isEquipped;
+            newItemData.ID = ID ?? ItemCreationID++;
+        }
+        private void FillSuitItemData(SuitData newItemData, float quantity, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            bool isEquipped, int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection, int shieldPoints, int hitPoints, int energyCapacity,
+            int durability, int maxDurability, int inventorySlots, int strength, int perception, int intelligence, int agility, int charisma, int willpower, int? ID = null)
+        {
+            newItemData.quantity = quantity;
+            newItemData.itemProduct = itemProduct;
+            newItemData.itemType = itemType;
+            newItemData.itemClass = itemClass;
+            newItemData.index = index;
+            newItemData.itemName = prefabName;
+            newItemData.equipable = equipable;
+            newItemData.stackLimit = stackLimit;
+            newItemData.isEquipped = isEquipped;
+            newItemData.physicalProtection = physicalProtection;
+            newItemData.fireProtection = fireProtection;
+            newItemData.coldProtection = coldProtection;
+            newItemData.gasProtection = gasProtection;
+            newItemData.explosionProtection = explosionProtection;
+            newItemData.shieldPoints = shieldPoints;
+            newItemData.hitPoints = hitPoints;
+            newItemData.energyCapacity = energyCapacity;
+            newItemData.durability = durability;
+            newItemData.maxDurability = maxDurability;
+            newItemData.inventorySlots = inventorySlots;
+            newItemData.strength = strength;
+            newItemData.perception = perception;
+            newItemData.intelligence = intelligence;
+            newItemData.agility = agility;
+            newItemData.charisma = charisma;
+            newItemData.willpower = willpower;
+            newItemData.ID = ID ?? ItemCreationID++;
+        }
+
+        private void FillHelmetItemData(HelmetData newItemData, float quantity, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            bool isEquipped, int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection, int shieldPoints, int hitPoints, int durability,
+            int maxDurability, int strength, int perception, int intelligence, int agility, int charisma, int willpower, int visibilityRadius, int explorationRadius, int pickupRadius, int? ID = null)
+        {
+            newItemData.quantity = quantity;
+            newItemData.itemProduct = itemProduct;
+            newItemData.itemType = itemType;
+            newItemData.itemClass = itemClass;
+            newItemData.index = index;
+            newItemData.itemName = prefabName;
+            newItemData.equipable = equipable;
+            newItemData.stackLimit = stackLimit;
+            newItemData.isEquipped = isEquipped;
+            newItemData.physicalProtection = physicalProtection;
+            newItemData.fireProtection = fireProtection;
+            newItemData.coldProtection = coldProtection;
+            newItemData.gasProtection = gasProtection;
+            newItemData.explosionProtection = explosionProtection;
+            newItemData.shieldPoints = shieldPoints;
+            newItemData.hitPoints = hitPoints;
+            newItemData.durability = durability;
+            newItemData.maxDurability = maxDurability;
+            newItemData.strength = strength;
+            newItemData.perception = perception;
+            newItemData.intelligence = intelligence;
+            newItemData.agility = agility;
+            newItemData.charisma = charisma;
+            newItemData.willpower = willpower;
+            newItemData.visibilityRadius = visibilityRadius;
+            newItemData.explorationRadius = explorationRadius;
+            newItemData.pickupRadius = pickupRadius;
+            newItemData.ID = ID ?? ItemCreationID++;
+        }
+
+        private void FillToolData(ToolData newItemData, float quantity, string itemProduct, string itemType, string itemClass, string prefabName, int index, float stackLimit, bool equipable,
+            bool isEquipped, int durability, int maxDurability, int strength, int perception, int intelligence, int agility, int charisma, int willpower, float productionSpeed, float materialCost,
+            float outcomeRate, int? ID = null)
+        {
+            newItemData.quantity = quantity;
+            newItemData.itemProduct = itemProduct;
+            newItemData.itemType = itemType;
+            newItemData.itemClass = itemClass;
+            newItemData.index = index;
+            newItemData.itemName = prefabName;
+            newItemData.equipable = equipable;
+            newItemData.stackLimit = stackLimit;
+            newItemData.isEquipped = isEquipped;
+            newItemData.durability = durability;
+            newItemData.maxDurability = maxDurability;
+            newItemData.strength = strength;
+            newItemData.perception = perception;
+            newItemData.intelligence = intelligence;
+            newItemData.agility = agility;
+            newItemData.charisma = charisma;
+            newItemData.willpower = willpower;
+            newItemData.productionSpeed = productionSpeed;
+            newItemData.materialCost = materialCost;
+            newItemData.outcomeRate = outcomeRate;
+            newItemData.ID = ID ?? ItemCreationID++;
+        }
+
+
+        private void CheckItemTypes(string itemType, bool equipable, DragAndDrop dragAndDropComponent)
+        {
+            if (itemType == "PLANTS" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
+            }
+            else if (itemType == "ENERGY" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[5]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[5]);
+            }
+            else if (itemType == "OXYGEN" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[6]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[6]);
+            }
+            else if (itemType == "LIQUID" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
+            }
+            else if (itemType == "SUIT" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[1]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[1]);
+            }
+            else if (itemType == "HELMET" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[0]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[0]);
+            }
+            else if (itemType == "FABRICATOR" && equipable)
+            {
+                dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[2]);
+                dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[2]);
+            }
+        }
         private GameObject[] ExtendArray(GameObject[] oldArray, GameObject newElement)
         {
             int oldLength = oldArray.Length;

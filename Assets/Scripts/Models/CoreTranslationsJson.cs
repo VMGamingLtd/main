@@ -443,45 +443,45 @@
 
       {
         ""identifier"": ""Strength"",
-        ""english"": ""Сила"",
-        ""russian"": ""Навыки"",
-        ""chinese"": ""力量"",
-        ""slovak"": ""Sila""
+        ""english"": ""Strength:"",
+        ""russian"": ""Сила:"",
+        ""chinese"": ""力量:"",
+        ""slovak"": ""Sila:""
       },
       {
         ""identifier"": ""Perception"",
-        ""english"": ""Perception"",
-        ""russian"": ""Восприятие"",
-        ""chinese"": ""知觉"",
-        ""slovak"": ""Vnímanie""
+        ""english"": ""Perception:"",
+        ""russian"": ""Восприятие:"",
+        ""chinese"": ""知觉:"",
+        ""slovak"": ""Vnímanie:""
       },
       {
         ""identifier"": ""Intelligence"",
-        ""english"": ""Intelligence"",
-        ""russian"": ""Интеллект"",
-        ""chinese"": ""智力"",
-        ""slovak"": ""Inteligencia""
+        ""english"": ""Intelligence:"",
+        ""russian"": ""Интеллект:"",
+        ""chinese"": ""智力:"",
+        ""slovak"": ""Inteligencia:""
       },
       {
         ""identifier"": ""Agility"",
-        ""english"": ""Agility"",
-        ""russian"": ""Ловкость"",
-        ""chinese"": ""敏捷"",
-        ""slovak"": ""Obratnosť""
+        ""english"": ""Agility:"",
+        ""russian"": ""Ловкость:"",
+        ""chinese"": ""敏捷:"",
+        ""slovak"": ""Obratnosť:""
       },
       {
         ""identifier"": ""Charisma"",
-        ""english"": ""Charisma"",
-        ""russian"": ""Харизма"",
-        ""chinese"": ""魅力"",
-        ""slovak"": ""Charizma""
+        ""english"": ""Charisma:"",
+        ""russian"": ""Харизма:"",
+        ""chinese"": ""魅力:"",
+        ""slovak"": ""Charizma:""
       },
       {
         ""identifier"": ""Willpower"",
-        ""english"": ""Willpower"",
-        ""russian"": ""Сила воли"",
-        ""chinese"": ""意志"",
-        ""slovak"": ""Sila vôle""
+        ""english"": ""Willpower:"",
+        ""russian"": ""Сила воли:"",
+        ""chinese"": ""意志:"",
+        ""slovak"": ""Sila vôle:""
       },
       {
         ""identifier"": ""Stats"",
@@ -1175,6 +1175,181 @@
         ""russian"": ""Движение"",
         ""chinese"": ""移动"",
         ""slovak"": ""Pohyb""
+      },
+      {
+        ""identifier"": ""Weather"",
+        ""english"": ""Weather"",
+        ""russian"": ""Погода"",
+        ""chinese"": ""天气"",
+        ""slovak"": ""Počasie""
+      },
+      {
+        ""identifier"": ""Route"",
+        ""english"": ""Route"",
+        ""russian"": ""Маршрут"",
+        ""chinese"": ""路线"",
+        ""slovak"": ""Trasa""
+      },
+      {
+        ""identifier"": ""Visibility"",
+        ""english"": ""Visibility"",
+        ""russian"": ""Видимость"",
+        ""chinese"": ""能见度"",
+        ""slovak"": ""Viditeľnosť""
+      },
+      {
+        ""identifier"": ""PerceptionArea"",
+        ""english"": ""Perception area"",
+        ""russian"": ""Область восприятия"",
+        ""chinese"": ""感知区"",
+        ""slovak"": ""Oblasť vnímania""
+      },
+      {
+        ""identifier"": ""PickupRadius"",
+        ""english"": ""Pick-up radius"",
+        ""russian"": ""Круг сбора"",
+        ""chinese"": ""物品拾取距离"",
+        ""slovak"": ""Okruh zberu""
+      },
+      {
+        ""identifier"": ""Movement"",
+        ""english"": ""Movement"",
+        ""russian"": ""Движение"",
+        ""chinese"": ""移动"",
+        ""slovak"": ""Pohyb""
+      },
+      {
+        ""identifier"": ""Durability"",
+        ""english"": ""Durability:"",
+        ""russian"": ""Долговечность:"",
+        ""chinese"": ""耐用性:"",
+        ""slovak"": ""Trvanlivosť:""
+      },
+      {
+        ""identifier"": ""PhysicalProtection"",
+        ""english"": ""Physical protection:"",
+        ""russian"": ""Физическая защита:"",
+        ""chinese"": ""物理保护:"",
+        ""slovak"": ""Fyzická ochrana:""
+      },
+      {
+        ""identifier"": ""FireProtection"",
+        ""english"": ""Fire protection:"",
+        ""russian"": ""Огнестойкость:"",
+        ""chinese"": ""防火性能:"",
+        ""slovak"": ""Požiarna odolnosť:""
+      },
+      {
+        ""identifier"": ""ColdProtection"",
+        ""english"": ""Cold protection:"",
+        ""russian"": ""Холодостойкость:"",
+        ""chinese"": ""耐寒性:"",
+        ""slovak"": ""Odolnosť proti chladu:""
+      },
+      {
+        ""identifier"": ""GasProtection"",
+        ""english"": ""Gas protection:"",
+        ""russian"": ""Газостойкость:"",
+        ""chinese"": ""耐气体性:"",
+        ""slovak"": ""Odolnosť proti plynom:""
+      },
+      {
+        ""identifier"": ""ExplosionProtection"",
+        ""english"": ""Explosion protection:"",
+        ""russian"": ""Взрывостойкость:"",
+        ""chinese"": ""防爆性能:"",
+        ""slovak"": ""Odolnosť proti explózií:""
+      },
+      {
+        ""identifier"": ""ShieldPoints"",
+        ""english"": ""Shield points:"",
+        ""russian"": ""Очки щита:"",
+        ""chinese"": ""护盾点数:"",
+        ""slovak"": ""Body štítu:""
+      },
+      {
+        ""identifier"": ""HitPoints"",
+        ""english"": ""Hit points:"",
+        ""russian"": ""Очки жизни:"",
+        ""chinese"": ""命值点:"",
+        ""slovak"": ""Body zdravia:""
+      },
+      {
+        ""identifier"": ""EnergyCapacity:"",
+        ""english"": ""Hit points:"",
+        ""russian"": ""Энергетическая мощность:"",
+        ""chinese"": ""能量容量:"",
+        ""slovak"": ""Energetická kapacita:""
+      },
+      {
+        ""identifier"": ""InventorySlots"",
+        ""english"": ""Inventory slots:"",
+        ""russian"": ""Слоты инвентаря:"",
+        ""chinese"": ""额外的库存槽位:"",
+        ""slovak"": ""Miesta v inventári:""
+      },
+      {
+        ""identifier"": ""VisibilityRadius"",
+        ""english"": ""Viewable range:"",
+        ""russian"": ""Область видимости:"",
+        ""chinese"": ""可视范围:"",
+        ""slovak"": ""Oblasť viditeľnosti:""
+      },
+      {
+        ""identifier"": ""ExplorationRadius"",
+        ""english"": ""Exploration radius:"",
+        ""russian"": ""Объем разведки:"",
+        ""chinese"": ""探索范围:"",
+        ""slovak"": ""Rozsah prieskumu:""
+      },
+      {
+        ""identifier"": ""PickupRadius"",
+        ""english"": ""Pickup radius:"",
+        ""russian"": ""Объем сбора:"",
+        ""chinese"": ""征集范围:"",
+        ""slovak"": ""Rozsah zbieru:""
+      },
+      {
+        ""identifier"": ""ProductionSpeed"",
+        ""english"": ""Production speed:"",
+        ""russian"": ""Скорость производства:"",
+        ""chinese"": ""生产速度:"",
+        ""slovak"": ""Rýchlosť výroby:""
+      },
+      {
+        ""identifier"": ""MaterialCost"",
+        ""english"": ""Material cost:"",
+        ""russian"": ""Расход материала:"",
+        ""chinese"": ""材料消耗:"",
+        ""slovak"": ""Spotreba materiálu:""
+      },
+      {
+        ""identifier"": ""OutcomeRate"",
+        ""english"": ""Production quantity:"",
+        ""russian"": ""Количество продукции:"",
+        ""chinese"": ""生产数量:"",
+        ""slovak"": ""Výrobné množstvo:""
+      },
+      {
+        ""identifier"": ""ExecutionFailed"",
+        ""english"": ""Execution failed"",
+        ""russian"": ""Выполнение не удалось"",
+        ""chinese"": ""执行失败"",
+        ""slovak"": ""Vykonanie zlyhalo""
+      },
+      {
+        ""identifier"": ""OxygenNotRequired"",
+        ""english"": ""You don't need an oxygen tank in this area."",
+        ""russian"": ""Вам не нужен кислородный баллон в этой области."",
+        ""chinese"": ""在这个区域你不需要氧气瓶。"",
+        ""slovak"": ""V tejto oblasti nepotrebujete kyslíkovú nádrž.""
+      },
+      {
+        ""identifier"": ""SplitFailed"",
+        ""english"": ""You can't split this item at its current quantity."",
+        ""russian"": ""Вы не можете разделить этот товар в его текущем количестве."",
+        ""chinese"": ""您无法按当前数量拆分此商品。"",
+        ""slovak"": ""Túto vec nemôžete rozdeliť v aktuálnom množstve.""
       }
     ]
   }

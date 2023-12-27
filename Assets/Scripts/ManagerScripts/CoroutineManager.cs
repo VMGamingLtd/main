@@ -21,6 +21,7 @@ public class CoroutineManager : MonoBehaviour
     public InventoryManager inventoryManager;
     public BuildingIncrementor buildingIncrementor;
     public ProductionCreator productionCreator;
+    public StatsManager statsManager;
     public SaveManager saveManager;
     public GameObject RecipeList;
     public GameObject loadingBar;
@@ -58,6 +59,11 @@ public class CoroutineManager : MonoBehaviour
 
     // after production is finished add +1 to the counter
     public Dictionary<string, TextMeshProUGUI[]> resourceTextMap;
+    public Dictionary<string, TextMeshProUGUI[]> productionTimeTextMap;
+    public Dictionary<string, TextMeshProUGUI[]> materialCostTextMap;
+    public Dictionary<string, TextMeshProUGUI[]> productionOutcomeTextMap;
+
+    // resource count texts
     public TextMeshProUGUI[] FibrousLeavesTexts;
     public TextMeshProUGUI[] WaterTexts;
     public TextMeshProUGUI[] BiofuelTexts;
@@ -73,6 +79,57 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelGeneratorTexts;
     public TextMeshProUGUI[] IronSheetTexts;
     public TextMeshProUGUI[] IronRodTexts;
+
+    // production time texts
+    public TextMeshProUGUI[] FibrousLeavesProductionTexts;
+    public TextMeshProUGUI[] WaterProductionTexts;
+    public TextMeshProUGUI[] BiofuelProductionTexts;
+    public TextMeshProUGUI[] DistilledWaterProductionTexts;
+    public TextMeshProUGUI[] BatteryProductionTexts;
+    public TextMeshProUGUI[] BatteryCoreProductionTexts;
+    public TextMeshProUGUI[] OxygenTankProductionTexts;
+    public TextMeshProUGUI[] SteamProductionTexts;
+    public TextMeshProUGUI[] WoodProductionTexts;
+    public TextMeshProUGUI[] IronOreProductionTexts;
+    public TextMeshProUGUI[] CoalProductionTexts;
+    public TextMeshProUGUI[] IronBeamProductionTexts;
+    public TextMeshProUGUI[] BiofuelGeneratorProductionTexts;
+    public TextMeshProUGUI[] IronSheetProductionTexts;
+    public TextMeshProUGUI[] IronRodProductionTexts;
+
+    // material cost texts
+    public TextMeshProUGUI[] FibrousLeavesMaterialCostTexts;
+    public TextMeshProUGUI[] WaterMaterialCostTexts;
+    public TextMeshProUGUI[] BiofuelMaterialCostTexts;
+    public TextMeshProUGUI[] DistilledWaterMaterialCostTexts;
+    public TextMeshProUGUI[] BatteryMaterialCostTexts;
+    public TextMeshProUGUI[] BatteryCoreMaterialCostTexts;
+    public TextMeshProUGUI[] OxygenTankMaterialCostTexts;
+    public TextMeshProUGUI[] SteamMaterialCostTexts;
+    public TextMeshProUGUI[] WoodMaterialCostTexts;
+    public TextMeshProUGUI[] IronOreMaterialCostTexts;
+    public TextMeshProUGUI[] CoalMaterialCostTexts;
+    public TextMeshProUGUI[] IronBeamMaterialCostTexts;
+    public TextMeshProUGUI[] BiofuelGeneratorMaterialCostTexts;
+    public TextMeshProUGUI[] IronSheetMaterialCostTexts;
+    public TextMeshProUGUI[] IronRodMaterialCostTexts;
+
+    // production outcome texts
+    public TextMeshProUGUI[] FibrousLeavesOutcomeTexts;
+    public TextMeshProUGUI[] WaterOutcomeTexts;
+    public TextMeshProUGUI[] BiofuelOutcomeTexts;
+    public TextMeshProUGUI[] DistilledWaterOutcomeTexts;
+    public TextMeshProUGUI[] BatteryOutcomeTexts;
+    public TextMeshProUGUI[] BatteryCoreOutcomeTexts;
+    public TextMeshProUGUI[] OxygenTankOutcomeTexts;
+    public TextMeshProUGUI[] SteamOutcomeTexts;
+    public TextMeshProUGUI[] WoodOutcomeTexts;
+    public TextMeshProUGUI[] IronOreOutcomeTexts;
+    public TextMeshProUGUI[] CoalOutcomeTexts;
+    public TextMeshProUGUI[] IronBeamOutcomeTexts;
+    public TextMeshProUGUI[] BiofuelGeneratorOutcomeTexts;
+    public TextMeshProUGUI[] IronSheetOutcomeTexts;
+    public TextMeshProUGUI[] IronRodOutcomeTexts;
 
     private void CheckSlotData()
     {
@@ -129,6 +186,71 @@ public class CoroutineManager : MonoBehaviour
             { "IronRod", IronRodTexts }
         };
     }
+    public void InitializeProductionTimeMap()
+    {
+        productionTimeTextMap = new Dictionary<string, TextMeshProUGUI[]>
+        {
+            { "FibrousLeaves", FibrousLeavesProductionTexts },
+            { "Water", WaterProductionTexts },
+            { "Biofuel", BiofuelProductionTexts },
+            { "DistilledWater", DistilledWaterProductionTexts },
+            { "BatteryCore", BatteryCoreProductionTexts },
+            { "Battery", BatteryProductionTexts },
+            { "OxygenTank", OxygenTankProductionTexts },
+            { "Steam", SteamProductionTexts },
+            { "Wood", WoodProductionTexts },
+            { "IronOre", IronOreProductionTexts },
+            { "Coal", CoalProductionTexts },
+            { "IronBeam", IronBeamProductionTexts },
+            { "BiofuelGenerator", BiofuelGeneratorProductionTexts },
+            { "IronSheet", IronSheetProductionTexts },
+            { "IronRod", IronRodProductionTexts }
+        };
+    }
+
+    public void InitializeMaterialCostMap()
+    {
+        materialCostTextMap = new Dictionary<string, TextMeshProUGUI[]>
+        {
+            { "FibrousLeaves", FibrousLeavesMaterialCostTexts },
+            { "Water", WaterMaterialCostTexts },
+            { "Biofuel", BiofuelMaterialCostTexts },
+            { "DistilledWater", DistilledWaterMaterialCostTexts },
+            { "BatteryCore", BatteryCoreMaterialCostTexts },
+            { "Battery", BatteryMaterialCostTexts },
+            { "OxygenTank", OxygenTankMaterialCostTexts },
+            { "Steam", SteamMaterialCostTexts },
+            { "Wood", WoodMaterialCostTexts },
+            { "IronOre", IronOreMaterialCostTexts },
+            { "Coal", CoalMaterialCostTexts },
+            { "IronBeam", IronBeamMaterialCostTexts },
+            { "BiofuelGenerator", BiofuelGeneratorMaterialCostTexts },
+            { "IronSheet", IronSheetMaterialCostTexts },
+            { "IronRod", IronRodMaterialCostTexts }
+        };
+    }
+
+    public void InitializeProductionOutcomeMap()
+    {
+        productionOutcomeTextMap = new Dictionary<string, TextMeshProUGUI[]>
+        {
+            { "FibrousLeaves", FibrousLeavesOutcomeTexts },
+            { "Water", WaterOutcomeTexts },
+            { "Biofuel", BiofuelOutcomeTexts },
+            { "DistilledWater", DistilledWaterOutcomeTexts },
+            { "BatteryCore", BatteryCoreOutcomeTexts },
+            { "Battery", BatteryOutcomeTexts },
+            { "OxygenTank", OxygenTankOutcomeTexts },
+            { "Steam", SteamOutcomeTexts },
+            { "Wood", WoodOutcomeTexts },
+            { "IronOre", IronOreOutcomeTexts },
+            { "Coal", CoalOutcomeTexts },
+            { "IronBeam", IronBeamOutcomeTexts },
+            { "BiofuelGenerator", BiofuelGeneratorOutcomeTexts },
+            { "IronSheet", IronSheetOutcomeTexts },
+            { "IronRod", IronRodOutcomeTexts }
+        };
+    }
 
     public void StopRunningCoroutine()
     {
@@ -136,27 +258,6 @@ public class CoroutineManager : MonoBehaviour
         StartCoroutine("StopRunningCreateRecipe", recipeData);
     }
 
-    IEnumerator WaitForLoadingBar()
-    {
-        //translationManager.PushTextsIntoFile();
-
-        bool registereduser = registeredUser;
-        GlobalCalculator.GameStarted = false;
-        yield return new WaitForSeconds(2.0f);
-
-        if (registeredUser == false)
-        {
-            loginMenu.SetActive(true);
-            loadingBar.SetActive(false);
-            saveSlots.SetActive(false);
-        }
-        else
-        {
-            saveSlots.SetActive(true);
-            loadingBar.SetActive(false);
-            loginMenu.SetActive(false);
-        }
-    }
     /// <summary>
     /// Uses 'resourceTextMap' dictionary strings to update all respective bound text fields in UI to the current value of the item
     /// </summary>
@@ -189,6 +290,53 @@ public class CoroutineManager : MonoBehaviour
         else
         {
             Debug.LogError($"Text array for '{consumableName}' not found.");
+        }
+    }
+
+    public void UpdateProductionTextsForKey(string key, float value)
+    {
+        if (productionTimeTextMap.ContainsKey(key))
+        {
+            TextMeshProUGUI[] productionTexts = productionTimeTextMap[key];
+
+            for (int i = 0; i < productionTexts.Length; i++)
+            {
+                productionTexts[i].text = value.ToString();
+            }
+        }
+        else
+        {
+            Debug.LogError($"Text array for '{key}' not found.");
+        }
+    }
+
+    public void UpdateMaterialCostTextsForKey(string key, float value)
+    {
+        if (materialCostTextMap.TryGetValue(key, out TextMeshProUGUI[] currentTextArray))
+        {
+            for (int i = 0; i < currentTextArray.Length; i++)
+            {
+                currentTextArray[i].text = value.ToString();
+            }
+        }
+        else
+        {
+            Debug.LogError($"Text array for '{key}' not found.");
+        }
+    }
+
+    public void UpdateProductionOutcomeTextsForKey(string key, float value)
+    {
+        if (productionOutcomeTextMap.TryGetValue(key, out TextMeshProUGUI[] currentTextArray))
+        {
+            for (int i = 0; i < currentTextArray.Length; i++)
+            {
+                currentTextArray[i].text = value.ToString();
+            }
+        }
+        else
+        {
+            Debug.LogError($"Text array for '{key}' not found.");
         }
     }
 
@@ -234,16 +382,17 @@ public class CoroutineManager : MonoBehaviour
         levelUpObject.SetActive(true);
         ExpBar.fillAmount = 0f;
         currentExpText.text = "0";
-        Level.ResetCurrentResource(ref Level.PlayerCurrentExp);
+        Player.ResetCurrentResource(ref Player.PlayerCurrentExp);
         int result = playerMaxExp * 2;
-        Level.AddCurrentResource(ref Level.PlayerMaxExp, result);
+        Player.AddCurrentResource(ref Player.PlayerMaxExp, result);
         maxExpText.text = result.ToString();
-        Level.AddCurrentResource(ref Level.PlayerLevel, 1);
-        levelText.text = Level.GetCurrentResource(ref Level.PlayerLevel).ToString();
-        Level.AddCurrentResource(ref Level.StatPoints, 1);
-        Level.AddCurrentResource(ref Level.SkillPoints, 1);
-        statPointsText.text = Level.GetCurrentResource(ref Level.StatPoints).ToString();
-        skillPointsText.text = Level.GetCurrentResource(ref Level.SkillPoints).ToString();
+        Player.AddCurrentResource(ref Player.PlayerLevel, 1);
+        levelText.text = Player.GetCurrentResource(ref Player.PlayerLevel).ToString();
+        Player.AddCurrentResource(ref Player.StatPoints, 1);
+        Player.AddCurrentResource(ref Player.SkillPoints, 1);
+        statPointsText.text = Player.GetCurrentResource(ref Player.StatPoints).ToString();
+        skillPointsText.text = Player.GetCurrentResource(ref Player.SkillPoints).ToString();
+        statsManager.ShowLevelUpButtons(true);
     }
 
     public void ReturnMaterials(List<ChildData> recipeDataChildList)
@@ -261,7 +410,7 @@ public class CoroutineManager : MonoBehaviour
             List<ChildData> recipeDataChildList = recipeData.childData;
             for (int i = 0; i < recipeDataChildList.Count; i++)
             {
-                bool isQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[i].name, recipeDataChildList[i].product, recipeDataChildList[i].quantity);
+                bool isQuantityMet = inventoryManager.CheckItemQuantity(recipeDataChildList[i].name, recipeDataChildList[i].product, recipeDataChildList[i].quantity / Player.MaterialCost);
                 if (!isQuantityMet)
                 {
                     allItemsMet = false;
@@ -272,7 +421,7 @@ public class CoroutineManager : MonoBehaviour
         if (allItemsMet)
         {
             float timer = 0f;
-            float fillTimePlanet0bb = recipeData.productionTime;
+            float fillTimePlanet0bb = recipeData.productionTime / Player.ProductionSpeed;
             AllCoroutineBooleans[recipeData.index] = true;
             string searchString = recipeData.recipeName + "/FillBckg/FillBar";
             GameObject fillBarObject = RecipeList.transform.Find(searchString).gameObject;
@@ -283,7 +432,7 @@ public class CoroutineManager : MonoBehaviour
                 List<ChildData> recipeDataChildList = recipeData.childData;
                 for (int i = 0; i < recipeDataChildList.Count; i++)
                 {
-                    inventoryManager.ReduceItemQuantity(recipeDataChildList[i].name, recipeDataChildList[i].product, recipeDataChildList[i].quantity);
+                    inventoryManager.ReduceItemQuantity(recipeDataChildList[i].name, recipeDataChildList[i].product, recipeDataChildList[i].quantity / Player.MaterialCost);
                     UpdateQuantityTexts(recipeDataChildList[i].name, recipeDataChildList[i].product);
                 }
             }
@@ -301,10 +450,10 @@ public class CoroutineManager : MonoBehaviour
             imageToFill.fillAmount = 0f;
 
 
-            Level.AddCurrentResource(ref Level.PlayerCurrentExp, recipeData.experience);
-            currentExpText.text = Level.GetCurrentResource(ref Level.PlayerCurrentExp).ToString();
-            int playerCurrentExp = Level.GetCurrentResource(ref Level.PlayerCurrentExp);
-            int playerMaxExp = Level.GetCurrentResource(ref Level.PlayerMaxExp);
+            Player.AddCurrentResource(ref Player.PlayerCurrentExp, recipeData.experience);
+            currentExpText.text = Player.GetCurrentResource(ref Player.PlayerCurrentExp).ToString();
+            int playerCurrentExp = Player.GetCurrentResource(ref Player.PlayerCurrentExp);
+            int playerMaxExp = Player.GetCurrentResource(ref Player.PlayerMaxExp);
             float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
             ExpBar.fillAmount = fillAmount;
 
@@ -334,7 +483,7 @@ public class CoroutineManager : MonoBehaviour
             }
             else
             {
-                itemCreator.CreateItem(recipeData.index);
+                itemCreator.CreateItem(recipeData.index, recipeData.outputValue * Player.OutcomeRate);
                 UpdateQuantityTexts(recipeData.recipeName, recipeData.recipeProduct);
             }
             StartCoroutine("CreateRecipe", recipeData);

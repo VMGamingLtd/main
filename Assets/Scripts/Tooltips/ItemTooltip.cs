@@ -1,3 +1,4 @@
+using ItemManagement;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,6 +9,7 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private TooltipObjectsSmall smallTooltipObjects;
     private TooltipObjectsItems itemTooltipObjects;
     private TooltipFollowMouse tooltipFollowMouse;
+    public bool exitedTooltip;
 
     private void Awake()
     {
@@ -21,7 +23,23 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (GlobalCalculator.GameStarted)
         {
             string objectName = eventData.pointerEnter.transform.name;
-            StartCoroutine(DisplayTooltip(objectName));
+            if (eventData.pointerEnter.transform.parent.TryGetComponent<SuitData>(out var suitData))
+            {
+                StartCoroutine(DisplayTooltip("SuitTooltip", suitData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<HelmetData>(out var helmetData))
+            {
+                StartCoroutine(DisplayTooltip("HelmetTooltip", null, helmetData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<ToolData>(out var toolData))
+            {
+                StartCoroutine(DisplayTooltip("ToolTooltip", null, null, toolData));
+            }
+            else
+            {
+                StartCoroutine(DisplayTooltip(objectName));
+            }
+
         }
 
     }
@@ -29,16 +47,7 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerExit(PointerEventData eventData)
     {
         HideAllTooltips();
-
-        /*if (eventData != null)
-        {
-            string objectName = eventData.pointerEnter.transform.name;
-            HideTooltip(objectName);
-        }
-        else
-        {
-            HideAllTooltips();
-        }*/
+        exitedTooltip = true;
     }
     private GameObject FindTooltipObject(string objectName)
     {
@@ -63,11 +72,10 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 return tooltipObj;
             }
         }
-
         return null;
     }
 
-    public IEnumerator DisplayTooltip(string objectName)
+    public IEnumerator DisplayTooltip(string objectName, SuitData suitData = null, HelmetData helmetData = null, ToolData toolData = null)
     {
         HideAllTooltips();
         GameObject tooltipObject = FindTooltipObject(objectName);
@@ -78,18 +86,39 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {
                 tooltipFollowMouse.enabled = true;
             }
+            exitedTooltip = false;
             FadeCanvasGroup(tooltipObject, 0);
             float timer = 0f;
             float totalTime = 0.1f;
+            float delay = 0.5f;
             tooltipObject.SetActive(true);
-
-            while (timer < totalTime)
+            if (suitData != null)
             {
-                timer += Time.deltaTime;
-                float normalizedTime = Mathf.Clamp01(timer / totalTime);
-                FadeCanvasGroup(tooltipObject, normalizedTime);
-                yield return null;
+                SuitDataInjector suitDataInjector = tooltipObject.GetComponent<SuitDataInjector>();
+                suitDataInjector.InjectData(suitData);
             }
+            else if (helmetData != null)
+            {
+                HelmetDataInjector helmetDataInjector = tooltipObject.GetComponent<HelmetDataInjector>();
+                helmetDataInjector.InjectData(helmetData);
+            }
+            else if (toolData != null)
+            {
+                ToolDataInjector toolDataInjector = tooltipObject.GetComponent<ToolDataInjector>();
+                toolDataInjector.InjectData(toolData);
+            }
+            yield return new WaitForSeconds(delay);
+            if (!exitedTooltip)
+            {
+                while (timer < totalTime)
+                {
+                    timer += Time.deltaTime;
+                    float normalizedTime = Mathf.Clamp01(timer / totalTime);
+                    FadeCanvasGroup(tooltipObject, normalizedTime);
+                    yield return null;
+                }
+            }
+
         }
     }
 

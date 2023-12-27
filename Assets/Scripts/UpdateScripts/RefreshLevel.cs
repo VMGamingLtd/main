@@ -8,6 +8,6 @@ public class RefreshLevel : MonoBehaviour
     void Start()
     {
         textField = GetComponent<TextMeshProUGUI>();
-        textField.text = Level.PlayerLevel.ToString();
+        textField.text = Player.PlayerLevel.ToString();
     }
 }

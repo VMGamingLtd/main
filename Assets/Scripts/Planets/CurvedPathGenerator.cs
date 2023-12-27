@@ -25,11 +25,8 @@ public static class CurvedPathGenerator
         // Calculate the direction from the planet center to the curve point
         Vector3 direction = curvePoint - planetCenter;
 
-        // Calculate the curve height offset
-        float yOffset = Mathf.Sin(t * Mathf.PI);
-
         // Adjust the curve point based on the spherical surface
-        curvePoint = planetCenter + direction.normalized * planetCenter.magnitude / 1.37f;
+        curvePoint = planetCenter + direction.normalized * planetCenter.magnitude / 1.4f;
 
         return curvePoint;
     }

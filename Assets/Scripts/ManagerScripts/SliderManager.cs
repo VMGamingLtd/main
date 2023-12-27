@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using ItemManagement;
 using System.Globalization;
-using ItemManagement;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class SliderManager : MonoBehaviour
 {
@@ -13,6 +13,7 @@ public class SliderManager : MonoBehaviour
     private float currentSplitQuantity;
     private int currentObjID;
     private string currentItemProduct;
+    private string currentItemType;
     private string currentObjName;
     private int objectIndex;
 
@@ -21,10 +22,26 @@ public class SliderManager : MonoBehaviour
         itemName.text = objName;
         mainSlider = gameObject.GetComponent<Slider>();
         mainSlider.value = 0;
-        originalValue.text = itemData.itemQuantity.ToString("F2", CultureInfo.InvariantCulture);
-        mainSlider.maxValue = itemData.itemQuantity;
+        if (itemData.itemType == "SUIT" || itemData.itemType == "HELMET" || itemData.itemType == "FABRICATOR")
+        {
+            mainSlider.wholeNumbers = true;
+        }
+        else
+        {
+            mainSlider.wholeNumbers = false;
+        }
+        originalValue.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+        if (mainSlider.wholeNumbers)
+        {
+            mainSlider.maxValue = itemData.quantity - 1f;
+        }
+        else
+        {
+            mainSlider.maxValue = itemData.quantity - 0.01f;
+        }
         currentObjName = objName;
         currentItemProduct = itemData.itemProduct;
+        currentItemType = itemData.itemType;
         currentObjID = itemData.ID;
         objectIndex = itemData.index;
         Time.timeScale = 0f;
@@ -46,6 +63,10 @@ public class SliderManager : MonoBehaviour
     public string GetCurrentItemProduct()
     {
         return currentItemProduct;
+    }
+    public string GetCurrentItemType()
+    {
+        return currentItemType;
     }
     public int GetCurrentObjID()
     {

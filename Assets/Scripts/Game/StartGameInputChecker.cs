@@ -33,6 +33,9 @@ public class StartGameInputChecker : MonoBehaviour
         inventoryManager.PopulateInventoryArrays();
         buildingManager.PopulateBuildingArrays();
         recipeManager.PopulateInventoryArrays();
+
+        _ = LoadMenus();
+
         recipeCreator.CreateRecipe(0);
         recipeCreator.CreateRecipe(2);
         recipeCreator.CreateRecipe(6);
@@ -42,14 +45,20 @@ public class StartGameInputChecker : MonoBehaviour
         Credits.ResetCredits();
         Credits.AddCredits(42);
 
-        _ = LoadMenus();
-
         // test purposes
         //itemCreator.CreateItem(3);
         //itemCreator.CreateItem(6);
         //itemCreator.CreateItem(2, 20);
 
         equipmentManager.InitStartEquip();
+
+        var suitRectTransform = equipmentManager.SuitSlot.GetComponent<RectTransform>();
+        var helmetRectTransfrom = equipmentManager.HelmetSlot.GetComponent<RectTransform>();
+        var toolRectTransfrom = equipmentManager.LeftHandSlot.GetComponent<RectTransform>();
+
+        itemCreator.CreateSuit(0, null, suitRectTransform);
+        itemCreator.CreateHelmet(0, null, helmetRectTransfrom);
+        itemCreator.CreateTool(0, null, toolRectTransfrom);
 
         // force button click action to open the Exploration menu that the button is set for
         buttonToClick.onClick.Invoke();
@@ -59,7 +68,7 @@ public class StartGameInputChecker : MonoBehaviour
 
         // with fresh game, all production booleans needs to reset to false
         CoroutineManager.ResetAllCoroutineBooleans();
-
+        inventoryManager.CalculateInventorySlots();
         buildingIncrementor.InitializeBuildingCounts();
     }
 
@@ -82,6 +91,7 @@ public class StartGameInputChecker : MonoBehaviour
             accountCanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, t);
             await UniTask.Yield();
         }
+
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
