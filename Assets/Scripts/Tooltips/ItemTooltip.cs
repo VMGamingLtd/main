@@ -23,6 +23,7 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (GlobalCalculator.GameStarted)
         {
             string objectName = eventData.pointerEnter.transform.name;
+            //Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3500: Pointer enter: {objectName}");
             if (eventData.pointerEnter.transform.parent.TryGetComponent<SuitData>(out var suitData))
             {
                 StartCoroutine(DisplayTooltip("SuitTooltip", suitData));

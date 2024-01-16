@@ -8,12 +8,13 @@ public class Planet : MonoBehaviour
     public enum FaceRenderMask { All, Top, Bottom, Left, Right, Front, Back };
     public FaceRenderMask faceRenderMask;
 
-    [SerializeField, HideInInspector]
+    [SerializeField]
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
 
     public ShapeSettings shapeSettings;
     public ColourSettings colourSettings;
+    [HideInInspector]
     public List<GameObject> eventObjects = new();
 
     [HideInInspector]
@@ -26,6 +27,9 @@ public class Planet : MonoBehaviour
 
     void Initialize()
     {
+        //RemoveChildern();
+        //AddPlayerToPlanet();
+        
         shapeGenerator.UpdateSettings(shapeSettings);
         colourGenerator.UpdateSettings(colourSettings);
         if (meshFilters == null || meshFilters.Length == 0)
@@ -55,6 +59,46 @@ public class Planet : MonoBehaviour
         }
     }
 
+    public void RemoveChildern()
+    {
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1100: RemoveChildern()");
+        // Remove all children from plannet which are not the meshFilterss 
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject.name != "mesh")
+            {
+                if (Application.isEditor)
+                {
+                    DestroyImmediate(child.gameObject);
+                }
+                else
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+        }
+        // clear the eventObjects list
+        eventObjects.Clear();
+    }
+    
+    public void AddPlayerToPlanet()
+    {
+        if (Application.isEditor)
+        {
+            Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1120: AddPlayerToPlanet()");
+            // Add the player to the planet
+            GameObject player = GameObject.Find("/PlayerOnPlanet");
+            // clone the player
+            player = Instantiate(player);
+            // set name of the player
+            player.name = "Player";
+            player.transform.parent = transform;
+            player.transform.localPosition = new Vector3(-12.277f, 5.64f, -4.415f);
+            // set the scale of the player
+            player.transform.localScale = new Vector3(0.08888598f, 0.08888598f, 0.08888598f);
+            Debug.Log($"{player.transform.position}"); // @@@@@@@@@@@@@@@@@@@@@@@
+        }
+    }
     public void GeneratePlanet()
     {
         Initialize();
@@ -81,6 +125,7 @@ public class Planet : MonoBehaviour
 
     void GenerateMesh()
     {
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1250: GenerateMesh()");
         for (int i = 0; i < 6; i++)
         {
             if (meshFilters[i].gameObject.activeSelf)
@@ -116,6 +161,14 @@ public class Planet : MonoBehaviour
 
     public void SpawnEventObjectsOnSurface(Mesh mesh, int numberOfObjects)
     {
+        // Quit if in the editor
+        if (Application.isEditor)
+        {
+            return;
+        }
+        
+        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1300: SpawnEventObjectsOnSurface()");
+        
         for (int i = 0; i < numberOfObjects; i++)
         {
             // Get a random point on the mesh surface
