@@ -23,6 +23,7 @@ public class StartGameInputChecker : MonoBehaviour
     // Update is called once per frame
     public void startGameCheckForUsername()
     {
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2500: startGameCheckForUsername");
         globalCalculator = GameObject.Find("GlobalCalculator").GetComponent<GlobalCalculator>();
         planet = GameObject.Find("PlanetParent/StartPlanet").GetComponent<Planet>();
         globalCalculator.UpdatePlayerConsumption();

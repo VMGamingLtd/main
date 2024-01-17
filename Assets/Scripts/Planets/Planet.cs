@@ -1,26 +1,33 @@
 using System.Collections.Generic;
 using UnityEngine;
+
 public class Planet : MonoBehaviour
 {
-    [Range(2, 256)]
-    public int resolution = 10;
+    [Range(2, 256)] public int resolution = 10;
     public bool autoUpdate = true;
-    public enum FaceRenderMask { All, Top, Bottom, Left, Right, Front, Back };
+
+    public enum FaceRenderMask
+    {
+        All,
+        Top,
+        Bottom,
+        Left,
+        Right,
+        Front,
+        Back
+    };
+
     public FaceRenderMask faceRenderMask;
 
-    [SerializeField]
-    MeshFilter[] meshFilters;
+    [SerializeField] MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
 
     public ShapeSettings shapeSettings;
     public ColourSettings colourSettings;
-    [HideInInspector]
-    public List<GameObject> eventObjects = new();
+    [HideInInspector] public List<GameObject> eventObjects = new();
 
-    [HideInInspector]
-    public bool shapeSettingsFoldout;
-    [HideInInspector]
-    public bool colourSettingsFoldout;
+    [HideInInspector] public bool shapeSettingsFoldout;
+    [HideInInspector] public bool colourSettingsFoldout;
 
     ShapeGenerator shapeGenerator = new();
     ColourGenerator colourGenerator = new();
@@ -28,13 +35,14 @@ public class Planet : MonoBehaviour
     void Initialize()
     {
         RemoveChildern();
-        
+
         shapeGenerator.UpdateSettings(shapeSettings);
         colourGenerator.UpdateSettings(colourSettings);
         if (meshFilters == null || meshFilters.Length == 0)
         {
             meshFilters = new MeshFilter[6];
         }
+
         terrainFaces = new TerrainFace[6];
 
         Vector3[] direction = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
@@ -51,13 +59,14 @@ public class Planet : MonoBehaviour
                 meshFilters[i] = meshObj.AddComponent<MeshFilter>();
                 meshFilters[i].sharedMesh = new Mesh();
             }
+
             meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = colourSettings.planetMaterial;
 
             terrainFaces[i] = new(shapeGenerator, meshFilters[i].sharedMesh, resolution, direction[i]);
             bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i;
             meshFilters[i].gameObject.SetActive(renderFace);
         }
-        
+
         AddPlayerToPlanet();
     }
 
@@ -79,28 +88,26 @@ public class Planet : MonoBehaviour
                 }
             }
         }
+
         // clear the eventObjects list
         eventObjects.Clear();
     }
-    
+
     private void AddPlayerToPlanet()
     {
-        if (Application.isEditor)
-        {
-            Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1120: AddPlayerToPlanet()");
-            // Add the player to the planet
-            GameObject player = GameObject.Find("/PlayerOnPlanet");
-            // clone the player
-            player = Instantiate(player);
-            SetPlanetLayer(player);
-            // set name of the player
-            player.name = "Player";
-            player.transform.parent = transform;
-            player.transform.localPosition = new Vector3(-12.277f, 5.64f, -4.415f);
-            // set the scale of the player
-            player.transform.localScale = new Vector3(0.08888598f, 0.08888598f, 0.08888598f);
-            Debug.Log($"{player.transform.position}"); // @@@@@@@@@@@@@@@@@@@@@@@
-        }
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1120: AddPlayerToPlanet()");
+        // Add the player to the planet
+        GameObject player = GameObject.Find("/PlayerOnPlanet");
+        // clone the player
+        player = Instantiate(player);
+        SetPlanetLayer(player);
+        // set name of the player
+        player.name = "Player";
+        player.transform.parent = transform;
+        player.transform.localPosition = new Vector3(-12.277f, 5.64f, -4.415f);
+        // set the scale of the player
+        player.transform.localScale = new Vector3(0.08888598f, 0.08888598f, 0.08888598f);
+        Debug.Log($"{player.transform.position}"); // @@@@@@@@@@@@@@@@@@@@@@@
     }
 
     static void SetPlanetLayer(GameObject gobj)
@@ -108,6 +115,7 @@ public class Planet : MonoBehaviour
         int layer = LayerMask.NameToLayer("Planet");
         gobj.layer = layer;
     }
+
     public void GeneratePlanet()
     {
         Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000: GeneratePlanet()");
@@ -125,6 +133,7 @@ public class Planet : MonoBehaviour
             GenerateMesh();
         }
     }
+
     public void OnColourSettingsUpdated()
     {
         Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3020: OnColourSettingsUpdated()");
@@ -173,14 +182,16 @@ public class Planet : MonoBehaviour
 
     public void SpawnEventObjectsOnSurface(Mesh mesh, int numberOfObjects)
     {
+        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1300: SpawnEventObjectsOnSurface()");
         // Quit if in the editor
-        if (Application.isEditor)
+        if (!Application.isPlaying)
         {
             return;
         }
-        
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1300: SpawnEventObjectsOnSurface()");
-        
+
+        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1350");
+
+
         for (int i = 0; i < numberOfObjects; i++)
         {
             // Get a random point on the mesh surface
@@ -205,7 +216,6 @@ public class Planet : MonoBehaviour
             {
                 Debug.Log("Ocean EventObject at elevation: " + elevation);
                 eventObject.name = "Fish";
-
             }
             else if (elevation < 0.02f)
             {
@@ -217,6 +227,7 @@ public class Planet : MonoBehaviour
                 Debug.Log("Mountain EventObject at elevation: " + elevation);
                 eventObject.name = "IronOre";
             }
+
             eventObject.AddComponent<EventIcon>();
             eventObjects.Add(eventObject);
         }
@@ -246,7 +257,4 @@ public class Planet : MonoBehaviour
 
         return randomPoint;
     }
-
 }
-
-
