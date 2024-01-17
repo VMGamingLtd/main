@@ -27,8 +27,7 @@ public class Planet : MonoBehaviour
 
     void Initialize()
     {
-        //RemoveChildern();
-        //AddPlayerToPlanet();
+        RemoveChildern();
         
         shapeGenerator.UpdateSettings(shapeSettings);
         colourGenerator.UpdateSettings(colourSettings);
@@ -45,6 +44,7 @@ public class Planet : MonoBehaviour
             if (meshFilters[i] == null)
             {
                 GameObject meshObj = new("mesh");
+                SetPlanetLayer(meshObj);
                 meshObj.transform.parent = transform;
 
                 meshObj.AddComponent<MeshRenderer>();
@@ -57,9 +57,11 @@ public class Planet : MonoBehaviour
             bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i;
             meshFilters[i].gameObject.SetActive(renderFace);
         }
+        
+        AddPlayerToPlanet();
     }
 
-    public void RemoveChildern()
+    private void RemoveChildern()
     {
         Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1100: RemoveChildern()");
         // Remove all children from plannet which are not the meshFilterss 
@@ -81,7 +83,7 @@ public class Planet : MonoBehaviour
         eventObjects.Clear();
     }
     
-    public void AddPlayerToPlanet()
+    private void AddPlayerToPlanet()
     {
         if (Application.isEditor)
         {
@@ -90,6 +92,7 @@ public class Planet : MonoBehaviour
             GameObject player = GameObject.Find("/PlayerOnPlanet");
             // clone the player
             player = Instantiate(player);
+            SetPlanetLayer(player);
             // set name of the player
             player.name = "Player";
             player.transform.parent = transform;
@@ -99,8 +102,15 @@ public class Planet : MonoBehaviour
             Debug.Log($"{player.transform.position}"); // @@@@@@@@@@@@@@@@@@@@@@@
         }
     }
+
+    static void SetPlanetLayer(GameObject gobj)
+    {
+        int layer = LayerMask.NameToLayer("Planet");
+        gobj.layer = layer;
+    }
     public void GeneratePlanet()
     {
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000: GeneratePlanet()");
         Initialize();
         GenerateMesh();
         GenerateColours();
@@ -108,6 +118,7 @@ public class Planet : MonoBehaviour
 
     public void OnShapeSettingsUpdated()
     {
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3010: OnShapeSettingsUpdated()");
         if (autoUpdate)
         {
             Initialize();
@@ -116,6 +127,7 @@ public class Planet : MonoBehaviour
     }
     public void OnColourSettingsUpdated()
     {
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3020: OnColourSettingsUpdated()");
         if (autoUpdate)
         {
             Initialize();
