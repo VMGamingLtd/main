@@ -110,7 +110,7 @@ public class Planet : MonoBehaviour
         // iterate over parent's children
         foreach (Transform child in parent.transform)
         {
-            if (child.gameObject.name == "PlayerOnPlanetTemplate")
+            if (child.gameObject.name == "Player")
             {
                 return child.gameObject;
             }
@@ -155,7 +155,7 @@ public class Planet : MonoBehaviour
         {
             FixMeshPosition();
             GameObject player = FindPlayer();
-            if (player != null)
+            if (player == null)
             {
                 AddPlayerToPlanet();
             }
