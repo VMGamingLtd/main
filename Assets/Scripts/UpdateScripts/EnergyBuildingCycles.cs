@@ -13,6 +13,7 @@ public class EnergyBuildingCycles : MonoBehaviour
     private Image pauseImage;
     private Color pauseImgColor;
     private Color electricImg;
+    private TimebarControl timebarControl;
     private InventoryManager inventoryManagerRef;
     private CoroutineManager coroutineManagerRef;
     private ItemCreator itemCreatorRef;
@@ -33,7 +34,10 @@ public class EnergyBuildingCycles : MonoBehaviour
         Transform fillImgObj = transform.Find("FillImg");
         fillImg = fillImgObj.GetComponent<Image>();
         coroutineManagerRef = buildingManager.coroutineManagerRef;
-        productionCreator = GameObject.Find("PRODUCTIONCREATOR").GetComponent<ProductionCreator>();
+
+        if (productionCreator == null)
+            productionCreator = GameObject.Find("PRODUCTIONCREATOR").GetComponent<ProductionCreator>();
+
         pauseImage = transform.Find("PauseImage").GetComponent<Image>();
         pauseImgColor = pauseImage.color;
         // we have to generate cancellation token for async task in order to stop it later
@@ -46,19 +50,24 @@ public class EnergyBuildingCycles : MonoBehaviour
         itemData.actualPowerOutput = itemData.powerOutput;
         currentFillAmount = Mathf.Lerp(0f, 1f, itemData.timer / itemData.totalTime);
         fillImg.fillAmount = currentFillAmount;
+        timebarControl.UpdateTimebar(currentFillAmount);
         itemData.timer += Time.deltaTime;
         itemData.efficiency = itemData.efficiencySetting;
-        await UniTask.DelayFrame(2);
+        await UniTask.DelayFrame(1);
     }
 
     private void PauseMode()
     {
+        if (timebarControl == null)
+        {
+            timebarControl = productionCreator.LinkTimebarToBuildingData(itemData);
+        }
+        timebarControl.ChangeTimeBarColor(UIColors.timebarColorYellow);
+        productionCreator.ChangeProductionItemBackground(itemData, UIColors.timebarColorYellow);
         itemData.efficiency = 0;
         itemData.actualPowerOutput = 0;
-        pauseImgColor = ButtonColors.fadedCol;
+        pauseImgColor = UIColors.fadedCol;
         pauseImage.color = pauseImgColor;
-        enlistedProduction = false;
-        productionCreator.DelistEnergyBuildingProduction(itemData);
         cts.Cancel();
         return;
     }
@@ -66,8 +75,8 @@ public class EnergyBuildingCycles : MonoBehaviour
     {
         itemData.efficiency = 0;
         itemData.actualPowerOutput = 0;
-        pauseImgColor = ButtonColors.invisibleCol;
-        electricImg = ButtonColors.halfFadedCol;
+        pauseImgColor = UIColors.invisibleCol;
+        electricImg = UIColors.halfFadedCol;
         await NotEnoughMaterials();
         return;
     }
@@ -81,7 +90,7 @@ public class EnergyBuildingCycles : MonoBehaviour
         }
         else
         {
-            pauseImgColor = ButtonColors.invisibleCol;
+            pauseImgColor = UIColors.invisibleCol;
             pauseImage.color = pauseImgColor;
             await StartBuildingCycleEnergy(cancellationToken);
         }
@@ -90,6 +99,12 @@ public class EnergyBuildingCycles : MonoBehaviour
 
     public async UniTask NotEnoughMaterials()
     {
+        if (timebarControl == null)
+        {
+            timebarControl = productionCreator.LinkTimebarToBuildingData(itemData);
+        }
+        timebarControl.ChangeTimeBarColor(UIColors.timebarColorRed);
+        productionCreator.ChangeProductionItemBackground(itemData, UIColors.timebarColorRed);
         itemData = GetComponent<EnergyBuildingItemData>();
         itemData.efficiency = 0;
         itemData.actualPowerOutput = 0;
@@ -105,10 +120,17 @@ public class EnergyBuildingCycles : MonoBehaviour
         // the whole UniTask will be killed here when the cts.Cancel() is called
         if (cancellationToken.IsCancellationRequested)
         {
-            enlistedProduction = false;
-            productionCreator.DelistEnergyBuildingProduction(itemData);
             return;
         }
+
+        if (!itemData.enlistedProduction && !enlistedProduction)
+        {
+            GameObject obj = productionCreator.EnlistEnergyBuildingProduction(itemData);
+            timebarControl = obj.GetComponent<TimebarControl>();
+            itemData.enlistedProduction = true;
+        }
+        enlistedProduction = true;
+
         // if the building is paused, then do not continue in production cycle
         if (itemData.isPaused)
         {
@@ -116,7 +138,7 @@ public class EnergyBuildingCycles : MonoBehaviour
         }
         else
         {
-            pauseImgColor = ButtonColors.invisibleCol;
+            pauseImgColor = UIColors.invisibleCol;
             pauseImage.color = pauseImgColor;
         }
 
@@ -128,32 +150,40 @@ public class EnergyBuildingCycles : MonoBehaviour
             getResources[i] = inventoryManagerRef.GetItemQuantity(itemData.consumedItems[i].itemName, itemData.consumedItems[i].itemQuality);
         }
 
-        bool hasEnoughResources = true;
-        for (int i = 0; i < consumedSlots; i++)
+        if (itemData.timer == 0)
         {
-            if (getResources[i] < itemData.consumedItems[i].quantity)
+            bool hasEnoughResources = true;
+            for (int i = 0; i < consumedSlots; i++)
             {
-                hasEnoughResources = false;
-                break;
+                if (getResources[i] < itemData.consumedItems[i].quantity)
+                {
+                    hasEnoughResources = false;
+                    break;
+                }
+            }
+
+            if (hasEnoughResources)
+            {
+                for (int i = 0; i < consumedSlots; i++)
+                {
+                    var item = itemData.consumedItems[i];
+                    inventoryManagerRef.ReduceItemQuantity(itemData.consumedItems[i].itemName, itemData.consumedItems[i].itemQuality, itemData.consumedItems[i].quantity);
+                    UpdateUITextForConsumable(item.itemName, item.itemQuality);
+                }
+            }
+            else
+            {
+                await NotEnoughMaterials();
+                return;
             }
         }
 
-        if (hasEnoughResources)
+        if (timebarControl == null)
         {
-            for (int i = 0; i < consumedSlots; i++)
-            {
-                var item = itemData.consumedItems[i];
-                inventoryManagerRef.ReduceItemQuantity(itemData.consumedItems[i].itemName, itemData.consumedItems[i].itemQuality, itemData.consumedItems[i].quantity);
-                UpdateUITextForConsumable(item.itemName, item.itemQuality);
-                if (!enlistedProduction) productionCreator.EnlistBuildingProduction(itemData);
-                enlistedProduction = true;
-            }
+            timebarControl = productionCreator.LinkTimebarToBuildingData(itemData);
         }
-        else
-        {
-            await NotEnoughMaterials();
-            return;
-        }
+        timebarControl.ChangeTimeBarColor(UIColors.timebarColorGreen);
+        productionCreator.ChangeProductionItemBackground(itemData, UIColors.blackHalfTransparent);
 
         while (itemData.timer < itemData.totalTime && itemData.efficiencySetting > 0)
         {
@@ -162,10 +192,8 @@ public class EnergyBuildingCycles : MonoBehaviour
             {
                 itemData.efficiency = 0;
                 itemData.actualPowerOutput = 0;
-                pauseImgColor = ButtonColors.fadedCol;
+                pauseImgColor = UIColors.fadedCol;
                 pauseImage.color = pauseImgColor;
-                enlistedProduction = false;
-                productionCreator.DelistEnergyBuildingProduction(itemData);
                 cts.Cancel();
                 return;
             }

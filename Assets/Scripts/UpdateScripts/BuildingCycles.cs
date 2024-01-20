@@ -15,6 +15,7 @@ public class BuildingCycles : MonoBehaviour
     private Color electricImgColor;
     private Image electricImage;
     private GameObject obj;
+    private TimebarControl timebarControl;
     private InventoryManager inventoryManagerRef;
     private CoroutineManager coroutineManagerRef;
     private ItemCreator itemCreatorRef;
@@ -23,6 +24,8 @@ public class BuildingCycles : MonoBehaviour
     public float currentFillAmount;
     private CancellationTokenSource cts = null;
     private CancellationToken cancellationToken;
+    private ProductionCreator productionCreator;
+    public bool enlistedProduction;
 
     private void InitializeBuildingData()
     {
@@ -34,6 +37,10 @@ public class BuildingCycles : MonoBehaviour
         Transform fillImgObj = obj.transform.Find("FillImg");
         fillImg = fillImgObj.GetComponent<Image>();
         coroutineManagerRef = buildingManager.coroutineManagerRef;
+
+        if (productionCreator == null)
+            productionCreator = GameObject.Find("PRODUCTIONCREATOR").GetComponent<ProductionCreator>();
+
         pauseImage = obj.transform.Find("PauseImage").GetComponent<Image>();
         pauseImgColor = pauseImage.color;
         if (itemData.powerConsumption > 0)
@@ -44,23 +51,23 @@ public class BuildingCycles : MonoBehaviour
         // we have to generate cancellation token for async task in order to stop it later
         cts = new CancellationTokenSource();
         cancellationToken = cts.Token;
-
     }
+
     private async UniTask FinalizeBuildingData()
     {
         currentFillAmount = Mathf.Lerp(0f, 1f, itemData.timer / itemData.totalTime);
         fillImg.fillAmount = currentFillAmount;
         itemData.timer += Time.deltaTime;
         itemData.efficiency = itemData.efficiencySetting;
-        await UniTask.DelayFrame(2);
+        await UniTask.DelayFrame(1);
     }
 
     private void PauseMode()
     {
         itemData.efficiency = 0;
-        pauseImgColor = ButtonColors.fadedCol;
+        pauseImgColor = UIColors.fadedCol;
         pauseImage.color = pauseImgColor;
-        electricImgColor = ButtonColors.invisibleCol;
+        electricImgColor = UIColors.invisibleCol;
         electricImage.color = electricImgColor;
         cts.Cancel();
         return;
@@ -68,9 +75,9 @@ public class BuildingCycles : MonoBehaviour
     private async UniTask NoElectricityMode()
     {
         itemData.efficiency = 0;
-        pauseImgColor = ButtonColors.invisibleCol;
+        pauseImgColor = UIColors.invisibleCol;
         pauseImage.color = pauseImgColor;
-        electricImgColor = ButtonColors.halfFadedCol;
+        electricImgColor = UIColors.halfFadedCol;
         electricImage.color = electricImgColor;
         await NotEnoughMaterials();
         return;
@@ -114,6 +121,15 @@ public class BuildingCycles : MonoBehaviour
         {
             return;
         }
+
+        if (!itemData.enlistedProduction && !enlistedProduction)
+        {
+            GameObject obj = productionCreator.EnlistBuildingProduction(itemData);
+            timebarControl = obj.GetComponent<TimebarControl>();
+            itemData.enlistedProduction = true;
+        }
+        enlistedProduction = true;
+
         // this step is important during unpause, as it helps the process to continue from where it ended without restart
         if (itemData.isPaused)
         {
@@ -124,6 +140,9 @@ public class BuildingCycles : MonoBehaviour
         {
             await NoElectricityMode();
         }
+
+        pauseImgColor = UIColors.invisibleCol;
+        electricImgColor = UIColors.invisibleCol;
 
         while (itemData.timer < itemData.totalTime && itemData.efficiencySetting > 0)
         {
@@ -147,7 +166,6 @@ public class BuildingCycles : MonoBehaviour
             {
                 var item = itemData.producedItems[i];
                 itemCreatorRef.CreateItem(itemData.producedItems[i].index, itemData.producedItems[i].quantity);
-                //inventoryManagerRef.AddItemQuantity(itemData.producedItems[i].itemName, itemData.producedItems[i].itemQuality, itemData.producedItems[i].quantity, itemData.producedItems[i].index);
                 UpdateUITextForConsumable(item.itemName, item.itemQuality);
             }
 
@@ -155,7 +173,6 @@ public class BuildingCycles : MonoBehaviour
             itemData.timer = 0f;
             currentFillAmount = 0f;
         }
-
 
         if (itemData.efficiency == 0)
         {
@@ -173,6 +190,15 @@ public class BuildingCycles : MonoBehaviour
         {
             return;
         }
+
+        if (!itemData.enlistedProduction && !enlistedProduction)
+        {
+            GameObject obj = productionCreator.EnlistBuildingProduction(itemData);
+            timebarControl = obj.GetComponent<TimebarControl>();
+            itemData.enlistedProduction = true;
+        }
+        enlistedProduction = true;
+
         // this step is important during unpause, as it helps the process to continue from where it ended without restart
         if (itemData.isPaused)
         {
@@ -239,7 +265,6 @@ public class BuildingCycles : MonoBehaviour
             {
                 var item = itemData.producedItems[i];
                 itemCreatorRef.CreateItem(itemData.producedItems[i].index, itemData.producedItems[i].quantity);
-                //inventoryManagerRef.AddItemQuantity(itemData.producedItems[i].itemName, itemData.producedItems[i].itemQuality, itemData.producedItems[i].quantity, itemData.producedItems[i].index);
                 UpdateUITextForConsumable(item.itemName, item.itemQuality);
             }
 
@@ -266,6 +291,7 @@ public class BuildingCycles : MonoBehaviour
             string currentResource = inventoryManagerRef.GetItemQuantity(consumableName, quality).ToString("F2", CultureInfo.InvariantCulture);
             for (int i = 0; i < currentTextArray.Length; i++)
             {
+                if (currentResource.EndsWith(".00")) currentResource = currentResource[..^3];
                 currentTextArray[i].text = currentResource;
             }
         }

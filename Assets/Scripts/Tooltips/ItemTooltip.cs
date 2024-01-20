@@ -1,4 +1,6 @@
+using BuildingManagement;
 using ItemManagement;
+using RecipeManagement;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -34,6 +36,18 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             else if (eventData.pointerEnter.transform.parent.TryGetComponent<ToolData>(out var toolData))
             {
                 StartCoroutine(DisplayTooltip("ToolTooltip", null, null, toolData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<ItemData>(out var itemData))
+            {
+                StartCoroutine(DisplayTooltip("ItemTooltip", null, null, null, itemData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<BuildingItemData>(out var buildingItemData))
+            {
+                StartCoroutine(DisplayTooltip("BuildingTooltip", null, null, null, null, buildingItemData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<RecipeItemData>(out var recipeItemData))
+            {
+                StartCoroutine(DisplayTooltip("ItemRecipeTooltip", null, null, null, null, null, recipeItemData));
             }
             else
             {
@@ -75,7 +89,8 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         return null;
     }
 
-    public IEnumerator DisplayTooltip(string objectName, SuitData suitData = null, HelmetData helmetData = null, ToolData toolData = null)
+    public IEnumerator DisplayTooltip(string objectName, SuitData suitData = null, HelmetData helmetData = null,
+        ToolData toolData = null, ItemData itemData = null, BuildingItemData buildingItemData = null, RecipeItemData recipeItemData = null)
     {
         HideAllTooltips();
         GameObject tooltipObject = FindTooltipObject(objectName);
@@ -107,6 +122,22 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 ToolDataInjector toolDataInjector = tooltipObject.GetComponent<ToolDataInjector>();
                 toolDataInjector.InjectData(toolData);
             }
+            else if (itemData != null)
+            {
+                ItemDataInjector itemDataInjector = tooltipObject.GetComponent<ItemDataInjector>();
+                itemDataInjector.InjectData(itemData);
+            }
+            else if (buildingItemData != null)
+            {
+                BuildingDataInjector buildingDataInjector = tooltipObject.GetComponent<BuildingDataInjector>();
+                buildingDataInjector.InjectData(buildingItemData);
+            }
+            else if (recipeItemData != null)
+            {
+                RecipeDataInjector recipeDataInjector = tooltipObject.GetComponent<RecipeDataInjector>();
+                recipeDataInjector.InjectData(recipeItemData);
+            }
+
             yield return new WaitForSeconds(delay);
             if (!exitedTooltip)
             {
@@ -118,7 +149,6 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                     yield return null;
                 }
             }
-
         }
     }
 

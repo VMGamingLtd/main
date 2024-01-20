@@ -31,6 +31,7 @@ public class NewGameUI : MonoBehaviour
     private GlobalCalculator globalCalculator;
     private ButtonManager buttonManager;
     private BuildingCreator buildingCreator;
+    private ProductionCreator productionCreator;
     private Planet planet;
 
 
@@ -53,6 +54,7 @@ public class NewGameUI : MonoBehaviour
         globalCalculator = GameObject.Find("GlobalCalculator").GetComponent<GlobalCalculator>();
         buttonManager = GameObject.Find("BUTTONMANAGER").GetComponent<ButtonManager>();
         buildingCreator = GameObject.Find("BuildingCreatorList").GetComponent<BuildingCreator>();
+        productionCreator = GameObject.Find("PRODUCTIONCREATOR").GetComponent<ProductionCreator>();
         planet = GameObject.Find("PlanetParent/StartPlanet").GetComponent<Planet>();
 
         if (response != null)
@@ -317,7 +319,7 @@ public class NewGameUI : MonoBehaviour
                 }
             }
 
-            // deserialize buildings
+            // deserialize Powerplant buildings
             for (int i = 0; i < gameData.powerplant.Length; i++)
             {
                 EnergyBuildingItemDataModel buildingData = gameData.powerplant[i];
@@ -325,19 +327,62 @@ public class NewGameUI : MonoBehaviour
                     buildingData.consumedSlotCount, buildingData.consumedItems, buildingData.totalTime, buildingData.basePowerOutput, buildingData.timer,
                     buildingData.actualPowerOutput, buildingData.powerOutput, buildingData.efficiency, buildingData.efficiencySetting, buildingData.buildingCount,
                     buildingData.isPaused, buildingData.buildingPosition, buildingData.secondCycleCount, buildingData.minuteCycleCount, buildingData.hourCycleCount,
-                    buildingData.powerCycleData, buildingData.spriteIconName, buildingData.ID);
+                    buildingData.powerCycleData, buildingData.spriteIconName, buildingData.ID, buildingData.enlistedProduction);
+
+                if (buildingData.enlistedProduction)
+                    productionCreator.RecreateEnergyBuildingProduction(buildingData, buildingData.ID);
             }
+
+            // deserialize PumpingFacility buildings
+            for (int i = 0; i < gameData.pumpingFacility.Length; i++)
+            {
+                BuildingItemDataModel buildingData = gameData.pumpingFacility[i];
+                buildingCreator.RecreateProductionBuilding(buildingData.index, buildingData.buildingName, buildingData.buildingType, buildingData.buildingClass,
+                    buildingData.consumedSlotCount, buildingData.producedSlotCount, buildingData.consumedItems, buildingData.producedItems, buildingData.totalTime, buildingData.powerConsumption,
+                    buildingData.timer, buildingData.actualPowerConsumption, buildingData.efficiency, buildingData.efficiencySetting, buildingData.buildingCount,
+                    buildingData.isPaused, buildingData.buildingPosition, buildingData.secondCycleCount, buildingData.minuteCycleCount, buildingData.hourCycleCount,
+                    buildingData.powerConsumptionCycleData, buildingData.productionCycleData, buildingData.spriteIconName, buildingData.ID, buildingData.enlistedProduction);
+
+                if (buildingData.enlistedProduction)
+                    productionCreator.RecreateBuildingProduction(buildingData, buildingData.ID);
+            }
+
+            // deserialize Agriculture buildings
+            for (int i = 0; i < gameData.agriculture.Length; i++)
+            {
+                BuildingItemDataModel buildingData = gameData.agriculture[i];
+                buildingCreator.RecreateProductionBuilding(buildingData.index, buildingData.buildingName, buildingData.buildingType, buildingData.buildingClass,
+                    buildingData.consumedSlotCount, buildingData.producedSlotCount, buildingData.consumedItems, buildingData.producedItems, buildingData.totalTime, buildingData.powerConsumption,
+                    buildingData.timer, buildingData.actualPowerConsumption, buildingData.efficiency, buildingData.efficiencySetting, buildingData.buildingCount,
+                    buildingData.isPaused, buildingData.buildingPosition, buildingData.secondCycleCount, buildingData.minuteCycleCount, buildingData.hourCycleCount,
+                    buildingData.powerConsumptionCycleData, buildingData.productionCycleData, buildingData.spriteIconName, buildingData.ID, buildingData.enlistedProduction);
+
+                if (buildingData.enlistedProduction)
+                    productionCreator.RecreateBuildingProduction(buildingData, buildingData.ID);
+            }
+
+            if (Player.CanProduce == false)
+            {
+                equipmentManager.DisableProduction();
+            }
+            else { equipmentManager.EnableProduction(); }
 
             // sort items by ID added
             inventoryManager.SortItemRecipeArraysByOrderAdded();
 
             if (GoalManager.secondGoal) buttonManager.UnlockBaseButton();
 
+            MainUI.SetActive(true);
+
             // finish loading after deserialization
             coroutineManager.InitializeResourceMap();
+            coroutineManager.InitializeProductionOutcomeMap();
+            coroutineManager.InitializeProductionTimeMap();
+            coroutineManager.InitializeMaterialCostMap();
+
             coroutineManager.UpdateQuantityTexts("FibrousLeaves", "BASIC");
             coroutineManager.UpdateQuantityTexts("Water", "BASIC");
-            coroutineManager.UpdateQuantityTexts("Biofuel", "PROCESSED");
+            coroutineManager.UpdateQuantityTexts("Biofuel", "ENHANCED");
             coroutineManager.UpdateQuantityTexts("DistilledWater", "PROCESSED");
             coroutineManager.UpdateQuantityTexts("Battery", "ASSEMBLED");
             coroutineManager.UpdateQuantityTexts("BatteryCore", "ENHANCED");
@@ -347,9 +392,19 @@ public class NewGameUI : MonoBehaviour
             coroutineManager.UpdateQuantityTexts("IronBeam", "PROCESSED");
             coroutineManager.UpdateBuildingText("BiofuelGenerator", Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString());
             coroutineManager.UpdateQuantityTexts("IronSheet", "BASIC");
-            coroutineManager.UpdateQuantityTexts("IronRod", "PROCESSED");
+            coroutineManager.UpdateQuantityTexts("BiomassLeaves", "PROCESSED");
+            coroutineManager.UpdateQuantityTexts("BiomassWood", "PROCESSED");
+            coroutineManager.UpdateQuantityTexts("LatexFoam", "BASIC");
+            coroutineManager.UpdateQuantityTexts("ProteinBeans", "BASIC");
+            coroutineManager.UpdateQuantityTexts("ProteinPowder", "PROCESSED");
+            coroutineManager.UpdateQuantityTexts("BioOil", "PROCESSED");
+            coroutineManager.UpdateQuantityTexts("IronTube", "PROCESSED");
+            coroutineManager.UpdateBuildingText("BiofuelGenerator", Planet0Buildings.Planet0WaterPumpBlueprint.ToString());
+            coroutineManager.UpdateBuildingText("FibrousPlantField", Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString());
+
             CoroutineManager.ResetAllCoroutineBooleans();
             globalCalculator.UpdatePlayerConsumption();
+            buildingIncrementor.InitializeAvailableBuildings();
             buildingIncrementor.InitializeBuildingCounts();
             saveSlots.SetActive(false);
             inventoryManager.CalculateInventorySlots();
@@ -361,7 +416,6 @@ public class NewGameUI : MonoBehaviour
     }
     private async UniTask LoadMenus()
     {
-        MainUI.SetActive(true);
         await UniTask.DelayFrame(10);
         buttonToClick.onClick.Invoke();
         await UniTask.DelayFrame(50);
@@ -383,8 +437,8 @@ public class NewGameUI : MonoBehaviour
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
-
     }
+
     public void LoadSlotGame()
     {
         inventoryManager.PopulateInventoryArrays();

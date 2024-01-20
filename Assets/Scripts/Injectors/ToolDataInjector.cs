@@ -18,6 +18,7 @@ public class ToolDataInjector : MonoBehaviour
         equipment.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.itemProduct);
         equipment.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.itemType);
         equipment.transform.Find("Class").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.itemClass);
+        equipment.transform.Find("Desc").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.itemName + "Desc");
         equipment.transform.Find("Stats/Durability/Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Durability");
         equipment.transform.Find("Stats/Durability/DurabilityValue").GetComponent<TextMeshProUGUI>().text = toolData.durability.ToString();
         equipment.transform.Find("Stats/Durability/MaxDurabilityValue").GetComponent<TextMeshProUGUI>().text = toolData.maxDurability.ToString();

@@ -199,19 +199,14 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                     {
                         float remainingStackQuantity = totalStackQuantity - selectedObjStackLimit;
                         itemData1.quantity = remainingStackQuantity;
+
                         TextMeshProUGUI newCountText2 = draggedObj.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                         if (newCountText2 != null)
                         {
-                            newCountText2.text = itemData1.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                            string quantityText = StoreQuantity(itemData1);
+                            newCountText2.text = quantityText;
                         }
                         itemData2.quantity = selectedObjStackLimit;
-
-                        /*if (quantityText.EndsWith(".00"))
-                        {
-                            quantityText = quantityText[..^3];
-                        }
-
-                        existingCountText.text = quantityText;*/
                     }
                     else
                     {
@@ -222,7 +217,9 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                     TextMeshProUGUI newCountText = SelectedObj.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
                     if (newCountText != null)
                     {
-                        newCountText.text = itemData2.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                        string quantityText = StoreQuantity(itemData2);
+                        newCountText.text = quantityText;
+                        //newCountText.text = itemData2.quantity.ToString("F2", CultureInfo.InvariantCulture);
                     }
                 }
             }
@@ -301,10 +298,10 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                     /// Second goal finished and set to true.
                     /// </summary>
                     /// <value>true</value>
-                    if (GoalManager.secondGoal == false)
+                    if (GoalManager.firstGoal == false)
                     {
                         GoalManager goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();
-                        _ = goalManager.SetThirdGoal();
+                        _ = goalManager.SetSecondGoal();
                     }
                 }
             }
@@ -411,6 +408,17 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
         }
 
         return null;
+    }
+
+    private string StoreQuantity(ItemData itemData)
+    {
+        string quantityText = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+
+        if (quantityText.EndsWith(".00"))
+        {
+            quantityText = quantityText[..^3];
+        }
+        return quantityText;
     }
 
     private void DeactivateHighlightObject()

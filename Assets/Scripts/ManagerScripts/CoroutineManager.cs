@@ -38,8 +38,10 @@ public class CoroutineManager : MonoBehaviour
     public GameObject newGamePopup;
     public GameObject levelUpObject;
     public GameObject legal;
-    private TextMeshProUGUI textObject;
 
+    public TimebarControl timebarControl;
+
+    private TextMeshProUGUI textObject;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI currentExpText;
     public TextMeshProUGUI maxExpText;
@@ -50,8 +52,17 @@ public class CoroutineManager : MonoBehaviour
     // data for server
     public static bool registeredUser = false;
     public static bool manualProduction = false;
-    public static bool[] AllCoroutineBooleans = new bool[15];
+    public static bool[] AllCoroutineBooleans = new bool[24];
     public static int IndexNumber;
+
+    public static string[] RecipeKeys =
+    {
+         "FibrousLeaves", "Water", "Biofuel", "DistilledWater", "Battery",
+         "OxygenTank", "BatteryCore", "Steam", "IronOre", "Wood",
+         "Coal", "IronBeam", "BiofuelGenerator", "IronSheet", "IronRod",
+         "LatexFoam", "ProteinBeans", "BiomassLeaves", "BiomassWood", "ProteinPowder",
+         "BioOil", "IronTube", "WaterPump", "FibrousPlantField"
+    };
 
     public Image imageToFill;
     private float targetFillAmountPlanet0bb = 1f;
@@ -69,8 +80,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelTexts;
     public TextMeshProUGUI[] DistilledWaterTexts;
     public TextMeshProUGUI[] BatteryTexts;
+    public TextMeshProUGUI[] OxygenTankTexts;
     public TextMeshProUGUI[] BatteryCoreTexts;
-    public TextMeshProUGUI[] PlanetStatsTexts;
     public TextMeshProUGUI[] SteamTexts;
     public TextMeshProUGUI[] WoodTexts;
     public TextMeshProUGUI[] IronOreTexts;
@@ -79,6 +90,15 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelGeneratorTexts;
     public TextMeshProUGUI[] IronSheetTexts;
     public TextMeshProUGUI[] IronRodTexts;
+    public TextMeshProUGUI[] LatexFoamTexts;
+    public TextMeshProUGUI[] ProteinBeansTexts;
+    public TextMeshProUGUI[] BiomassLeavesTexts;
+    public TextMeshProUGUI[] BiomassWoodTexts;
+    public TextMeshProUGUI[] ProteinPowderTexts;
+    public TextMeshProUGUI[] BioOilTexts;
+    public TextMeshProUGUI[] IronTubeTexts;
+    public TextMeshProUGUI[] WaterPumpTexts;
+    public TextMeshProUGUI[] FibrousPlantFieldTexts;
 
     // production time texts
     public TextMeshProUGUI[] FibrousLeavesProductionTexts;
@@ -86,8 +106,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelProductionTexts;
     public TextMeshProUGUI[] DistilledWaterProductionTexts;
     public TextMeshProUGUI[] BatteryProductionTexts;
-    public TextMeshProUGUI[] BatteryCoreProductionTexts;
     public TextMeshProUGUI[] OxygenTankProductionTexts;
+    public TextMeshProUGUI[] BatteryCoreProductionTexts;
     public TextMeshProUGUI[] SteamProductionTexts;
     public TextMeshProUGUI[] WoodProductionTexts;
     public TextMeshProUGUI[] IronOreProductionTexts;
@@ -96,6 +116,15 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelGeneratorProductionTexts;
     public TextMeshProUGUI[] IronSheetProductionTexts;
     public TextMeshProUGUI[] IronRodProductionTexts;
+    public TextMeshProUGUI[] LatexFoamProductionTexts;
+    public TextMeshProUGUI[] ProteinBeansProductionTexts;
+    public TextMeshProUGUI[] BiomassLeavesProductionTexts;
+    public TextMeshProUGUI[] BiomassWoodProductionTexts;
+    public TextMeshProUGUI[] ProteinPowderProductionTexts;
+    public TextMeshProUGUI[] BioOilProductionTexts;
+    public TextMeshProUGUI[] IronTubeProductionTexts;
+    public TextMeshProUGUI[] WaterPumpProductionTexts;
+    public TextMeshProUGUI[] FibrousPlantFieldProductionTexts;
 
     // material cost texts
     public TextMeshProUGUI[] FibrousLeavesMaterialCostTexts;
@@ -103,8 +132,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelMaterialCostTexts;
     public TextMeshProUGUI[] DistilledWaterMaterialCostTexts;
     public TextMeshProUGUI[] BatteryMaterialCostTexts;
-    public TextMeshProUGUI[] BatteryCoreMaterialCostTexts;
     public TextMeshProUGUI[] OxygenTankMaterialCostTexts;
+    public TextMeshProUGUI[] BatteryCoreMaterialCostTexts;
     public TextMeshProUGUI[] SteamMaterialCostTexts;
     public TextMeshProUGUI[] WoodMaterialCostTexts;
     public TextMeshProUGUI[] IronOreMaterialCostTexts;
@@ -113,6 +142,15 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelGeneratorMaterialCostTexts;
     public TextMeshProUGUI[] IronSheetMaterialCostTexts;
     public TextMeshProUGUI[] IronRodMaterialCostTexts;
+    public TextMeshProUGUI[] LatexFoamMaterialCostTexts;
+    public TextMeshProUGUI[] ProteinBeansMaterialCostTexts;
+    public TextMeshProUGUI[] BiomassLeavesMaterialCostTexts;
+    public TextMeshProUGUI[] BiomassWoodMaterialCostTexts;
+    public TextMeshProUGUI[] ProteinPowderMaterialCostTexts;
+    public TextMeshProUGUI[] BioOilMaterialCostTexts;
+    public TextMeshProUGUI[] IronTubeMaterialCostTexts;
+    public TextMeshProUGUI[] WaterPumpMaterialCostTexts;
+    public TextMeshProUGUI[] FibrousPlantFieldMaterialCostTexts;
 
     // production outcome texts
     public TextMeshProUGUI[] FibrousLeavesOutcomeTexts;
@@ -120,8 +158,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelOutcomeTexts;
     public TextMeshProUGUI[] DistilledWaterOutcomeTexts;
     public TextMeshProUGUI[] BatteryOutcomeTexts;
-    public TextMeshProUGUI[] BatteryCoreOutcomeTexts;
     public TextMeshProUGUI[] OxygenTankOutcomeTexts;
+    public TextMeshProUGUI[] BatteryCoreOutcomeTexts;
     public TextMeshProUGUI[] SteamOutcomeTexts;
     public TextMeshProUGUI[] WoodOutcomeTexts;
     public TextMeshProUGUI[] IronOreOutcomeTexts;
@@ -130,6 +168,15 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] BiofuelGeneratorOutcomeTexts;
     public TextMeshProUGUI[] IronSheetOutcomeTexts;
     public TextMeshProUGUI[] IronRodOutcomeTexts;
+    public TextMeshProUGUI[] LatexFoamOutcomeTexts;
+    public TextMeshProUGUI[] ProteinBeansOutcomeTexts;
+    public TextMeshProUGUI[] BiomassLeavesOutcomeTexts;
+    public TextMeshProUGUI[] BiomassWoodOutcomeTexts;
+    public TextMeshProUGUI[] ProteinPowderOutcomeTexts;
+    public TextMeshProUGUI[] BioOilOutcomeTexts;
+    public TextMeshProUGUI[] IronTubeOutcomeTexts;
+    public TextMeshProUGUI[] WaterPumpOutcomeTexts;
+    public TextMeshProUGUI[] FibrousPlantFieldOutcomeTexts;
 
     private void CheckSlotData()
     {
@@ -173,17 +220,26 @@ public class CoroutineManager : MonoBehaviour
             { "Water", WaterTexts },
             { "Biofuel", BiofuelTexts },
             { "DistilledWater", DistilledWaterTexts },
-            { "BatteryCore", BatteryCoreTexts },
-            { "PlanetStats", PlanetStatsTexts },
             { "Battery", BatteryTexts },
+            { "OxygenTank", OxygenTankTexts },
+            { "BatteryCore", BatteryCoreTexts },
             { "Steam", SteamTexts },
-            { "Wood", WoodTexts },
             { "IronOre", IronOreTexts },
+            { "Wood", WoodTexts },
             { "Coal", CoalTexts },
             { "IronBeam", IronBeamTexts },
             { "BiofuelGenerator", BiofuelGeneratorTexts },
             { "IronSheet", IronSheetTexts },
-            { "IronRod", IronRodTexts }
+            { "IronRod", IronRodTexts },
+            { "LatexFoam", LatexFoamTexts },
+            { "ProteinBeans", ProteinBeansTexts },
+            { "BiomassLeaves", BiomassLeavesTexts },
+            { "BiomassWood", BiomassWoodTexts },
+            { "ProteinPowder", ProteinPowderTexts },
+            { "BioOil", BioOilTexts },
+            { "IronTube", IronTubeTexts },
+            { "WaterPump", WaterPumpTexts },
+            { "FibrousPlantField", FibrousPlantFieldTexts }
         };
     }
     public void InitializeProductionTimeMap()
@@ -194,17 +250,26 @@ public class CoroutineManager : MonoBehaviour
             { "Water", WaterProductionTexts },
             { "Biofuel", BiofuelProductionTexts },
             { "DistilledWater", DistilledWaterProductionTexts },
-            { "BatteryCore", BatteryCoreProductionTexts },
             { "Battery", BatteryProductionTexts },
             { "OxygenTank", OxygenTankProductionTexts },
+            { "BatteryCore", BatteryCoreProductionTexts },
             { "Steam", SteamProductionTexts },
-            { "Wood", WoodProductionTexts },
             { "IronOre", IronOreProductionTexts },
+            { "Wood", WoodProductionTexts },
             { "Coal", CoalProductionTexts },
             { "IronBeam", IronBeamProductionTexts },
             { "BiofuelGenerator", BiofuelGeneratorProductionTexts },
             { "IronSheet", IronSheetProductionTexts },
-            { "IronRod", IronRodProductionTexts }
+            { "IronRod", IronRodProductionTexts },
+            { "LatexFoam", LatexFoamProductionTexts },
+            { "ProteinBeans", ProteinBeansProductionTexts },
+            { "BiomassLeaves", BiomassLeavesProductionTexts },
+            { "BiomassWood", BiomassWoodProductionTexts },
+            { "ProteinPowder", ProteinPowderProductionTexts },
+            { "BioOil", BioOilProductionTexts },
+            { "IronTube", IronTubeProductionTexts },
+            { "WaterPump", WaterPumpProductionTexts },
+            { "FibrousPlantField", FibrousPlantFieldProductionTexts }
         };
     }
 
@@ -216,17 +281,26 @@ public class CoroutineManager : MonoBehaviour
             { "Water", WaterMaterialCostTexts },
             { "Biofuel", BiofuelMaterialCostTexts },
             { "DistilledWater", DistilledWaterMaterialCostTexts },
-            { "BatteryCore", BatteryCoreMaterialCostTexts },
             { "Battery", BatteryMaterialCostTexts },
             { "OxygenTank", OxygenTankMaterialCostTexts },
+            { "BatteryCore", BatteryCoreMaterialCostTexts },
             { "Steam", SteamMaterialCostTexts },
-            { "Wood", WoodMaterialCostTexts },
             { "IronOre", IronOreMaterialCostTexts },
+            { "Wood", WoodMaterialCostTexts },
             { "Coal", CoalMaterialCostTexts },
             { "IronBeam", IronBeamMaterialCostTexts },
             { "BiofuelGenerator", BiofuelGeneratorMaterialCostTexts },
             { "IronSheet", IronSheetMaterialCostTexts },
-            { "IronRod", IronRodMaterialCostTexts }
+            { "IronRod", IronRodMaterialCostTexts },
+            { "LatexFoam", LatexFoamMaterialCostTexts },
+            { "ProteinBeans", ProteinBeansMaterialCostTexts },
+            { "BiomassLeaves", BiomassLeavesMaterialCostTexts },
+            { "BiomassWood", BiomassWoodMaterialCostTexts },
+            { "ProteinPowder", ProteinPowderMaterialCostTexts },
+            { "BioOil", BioOilMaterialCostTexts },
+            { "IronTube", IronTubeMaterialCostTexts },
+            { "WaterPump", WaterPumpMaterialCostTexts },
+            { "FibrousPlantField", FibrousPlantFieldMaterialCostTexts }
         };
     }
 
@@ -238,17 +312,26 @@ public class CoroutineManager : MonoBehaviour
             { "Water", WaterOutcomeTexts },
             { "Biofuel", BiofuelOutcomeTexts },
             { "DistilledWater", DistilledWaterOutcomeTexts },
-            { "BatteryCore", BatteryCoreOutcomeTexts },
             { "Battery", BatteryOutcomeTexts },
             { "OxygenTank", OxygenTankOutcomeTexts },
+            { "BatteryCore", BatteryCoreOutcomeTexts },
             { "Steam", SteamOutcomeTexts },
-            { "Wood", WoodOutcomeTexts },
             { "IronOre", IronOreOutcomeTexts },
+            { "Wood", WoodOutcomeTexts },
             { "Coal", CoalOutcomeTexts },
             { "IronBeam", IronBeamOutcomeTexts },
             { "BiofuelGenerator", BiofuelGeneratorOutcomeTexts },
             { "IronSheet", IronSheetOutcomeTexts },
-            { "IronRod", IronRodOutcomeTexts }
+            { "IronRod", IronRodOutcomeTexts },
+            { "LatexFoam", LatexFoamOutcomeTexts },
+            { "ProteinBeans", ProteinBeansOutcomeTexts },
+            { "BiomassLeaves", BiomassLeavesOutcomeTexts },
+            { "BiomassWood", BiomassWoodOutcomeTexts },
+            { "ProteinPowder", ProteinPowderOutcomeTexts },
+            { "BioOil", BioOilOutcomeTexts },
+            { "IronTube", IronTubeOutcomeTexts },
+            { "WaterPump", WaterPumpOutcomeTexts },
+            { "FibrousPlantField", FibrousPlantFieldOutcomeTexts }
         };
     }
 
@@ -270,6 +353,7 @@ public class CoroutineManager : MonoBehaviour
             string currentResource = inventoryManager.GetItemQuantity(consumableName, quality).ToString("F2", CultureInfo.InvariantCulture);
             for (int i = 0; i < currentTextArray.Length; i++)
             {
+                if (currentResource.EndsWith(".00")) currentResource = currentResource[..^3];
                 currentTextArray[i].text = currentResource;
             }
         }
@@ -295,13 +379,13 @@ public class CoroutineManager : MonoBehaviour
 
     public void UpdateProductionTextsForKey(string key, float value)
     {
-        if (productionTimeTextMap.ContainsKey(key))
+        if (productionTimeTextMap.TryGetValue(key, out TextMeshProUGUI[] currentTextArray))
         {
-            TextMeshProUGUI[] productionTexts = productionTimeTextMap[key];
-
-            for (int i = 0; i < productionTexts.Length; i++)
+            string currentResource = value.ToString();
+            for (int i = 0; i < currentTextArray.Length; i++)
             {
-                productionTexts[i].text = value.ToString();
+                if (currentResource.EndsWith(".00")) currentResource = currentResource[..^3];
+                currentTextArray[i].text = currentResource;
             }
         }
         else
@@ -310,13 +394,22 @@ public class CoroutineManager : MonoBehaviour
         }
     }
 
-    public void UpdateMaterialCostTextsForKey(string key, float value)
+    public void UpdateMaterialCostTextsForKey(string key)
     {
         if (materialCostTextMap.TryGetValue(key, out TextMeshProUGUI[] currentTextArray))
         {
             for (int i = 0; i < currentTextArray.Length; i++)
             {
-                currentTextArray[i].text = value.ToString();
+                string currentResource = currentTextArray[i].text;
+                if (float.TryParse(currentResource, out float updatedQuantity))
+                {
+                    updatedQuantity /= Player.MaterialCost;
+                    if (Player.MaterialCost <= 0) updatedQuantity = 0;
+                }
+                currentResource = updatedQuantity.ToString();
+
+                if (currentResource.EndsWith(".00")) currentResource = currentResource[..^3];
+                currentTextArray[i].text = currentResource;
             }
         }
         else
@@ -329,9 +422,11 @@ public class CoroutineManager : MonoBehaviour
     {
         if (productionOutcomeTextMap.TryGetValue(key, out TextMeshProUGUI[] currentTextArray))
         {
+            string currentResource = value.ToString();
             for (int i = 0; i < currentTextArray.Length; i++)
             {
-                currentTextArray[i].text = value.ToString();
+                if (currentResource.EndsWith(".00")) currentResource = currentResource[..^3];
+                currentTextArray[i].text = currentResource;
             }
         }
         else
@@ -438,12 +533,17 @@ public class CoroutineManager : MonoBehaviour
             }
 
             // we are enlisting a UI row in production overview tab, but only if it doesn't exist already
-            if (!manualProduction) productionCreator.EnlistManualProduction(recipeData);
+            if (!manualProduction)
+            {
+                GameObject obj = productionCreator.EnlistManualProduction(recipeData);
+                timebarControl = obj.GetComponent<TimebarControl>();
+            }
 
             while (timer < fillTimePlanet0bb)
             {
                 currentFillAmountPlanet0bb = Mathf.Lerp(0f, targetFillAmountPlanet0bb, timer / fillTimePlanet0bb);
                 imageToFill.fillAmount = currentFillAmountPlanet0bb;
+                if (timebarControl != null) timebarControl.UpdateTimebar(currentFillAmountPlanet0bb);
                 timer += Time.deltaTime;
                 yield return null;
             }
@@ -458,13 +558,13 @@ public class CoroutineManager : MonoBehaviour
             ExpBar.fillAmount = fillAmount;
 
             /// <summary>
-            /// First goal finished and switched to true.
+            /// Second goal finished and switched to true.
             /// </summary>
             /// <value>true</value>
-            if (GoalManager.firstGoal == false && recipeData.recipeName == "Battery")
+            if (GoalManager.secondGoal == false && recipeData.recipeName == "Battery")
             {
                 GoalManager goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();
-                _ = goalManager.SetSecondGoal();
+                _ = goalManager.SetThirdGoal();
             }
 
             if (playerCurrentExp >= playerMaxExp)
@@ -480,6 +580,19 @@ public class CoroutineManager : MonoBehaviour
                     buildingIncrementor.buildingCounts[0].text = Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString();
                     UpdateBuildingText(recipeData.recipeName, Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString());
                 }
+                else if (recipeData.recipeName == "WaterPump")
+                {
+                    Planet0Buildings.Planet0WaterPumpBlueprint++;
+                    buildingIncrementor.buildingCounts[1].text = Planet0Buildings.Planet0WaterPumpBlueprint.ToString();
+                    UpdateBuildingText(recipeData.recipeName, Planet0Buildings.Planet0WaterPumpBlueprint.ToString());
+                }
+                else if (recipeData.recipeName == "FibrousPlantField")
+                {
+                    Planet0Buildings.Planet0FibrousPlantFieldBlueprint++;
+                    buildingIncrementor.buildingCounts[2].text = Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString();
+                    UpdateBuildingText(recipeData.recipeName, Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString());
+                }
+                buildingIncrementor.InitializeBuildingCounts();
             }
             else
             {

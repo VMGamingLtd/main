@@ -14,7 +14,7 @@ public class PlanetEditor : Editor
             base.OnInspectorGUI();
             if (check.changed)
             {
-                planet.GeneratePlanet();
+                //planet.GeneratePlanet();
             }
         }
 
@@ -42,7 +42,7 @@ public class PlanetEditor : Editor
                     {
                         if (onSettingsUpdated != null)
                         {
-                            onSettingsUpdated();
+                            //onSettingsUpdated();
                         }
                     }
                 }

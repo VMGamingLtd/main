@@ -29,7 +29,7 @@
       },
       {
         ""identifier"": ""FibrousLeavesDesc"",
-        ""english"": ""Basic resource needed to produce higher level items, such as biofuel."",
+        ""english"": ""Basic resource needed to produce higher level items, such as bio fuel."",
         ""russian"": ""Основной съедобный ресурс, необходимый для производства предметов более высокого уровня, таких как биотопливо."",
         ""chinese"": ""这是生产生物燃料等高级物品所需的基本且可食用的资源。"",
         ""slovak"": ""Základný zdroj surovín vužiteľný na výrobu predmetov vyššej úrovne, ako je biopalivo alebo na jedenie.""
@@ -50,7 +50,7 @@
       },
       {
         ""identifier"": ""Biofuel"",
-        ""english"": ""Biofuel"",
+        ""english"": ""Bio fuel"",
         ""russian"": ""Биотопливо"",
         ""chinese"": ""生物燃料"",
         ""slovak"": ""Biopalivo""
@@ -119,6 +119,90 @@
         ""slovak"": ""<color=yellow>Spotreba kyslíka</color>: 0.001/s""
       },
       {
+        ""identifier"": ""LatexFoam"",
+        ""english"": ""Latex foam"",
+        ""russian"": ""Латексная пена"",
+        ""chinese"": ""乳胶泡沫"",
+        ""slovak"": ""Latexová pena""
+      },
+      {
+        ""identifier"": ""LatexFoamDesc"",
+        ""english"": ""A natural latex foam, derived from the sap of trees."",
+        ""russian"": ""Натуральная латексная пена, полученная из сока деревьев."",
+        ""chinese"": ""这是一种天然乳胶泡沫，源自树液。"",
+        ""slovak"": ""Prírodná latexová pena získaná z miazgy stromov.""
+      },
+      {
+        ""identifier"": ""ProteinBeans"",
+        ""english"": ""Protein beans"",
+        ""russian"": ""Протеиновые бобы"",
+        ""chinese"": ""蛋白豆"",
+        ""slovak"": ""Proteínové bobule""
+      },
+      {
+        ""identifier"": ""ProteinBeansDesc"",
+        ""english"": ""Edible resource that can be later processed."",
+        ""russian"": ""Съедобный ресурс, который можно позже переработать."",
+        ""chinese"": ""这是一种可以稍后加工的可食用资源。"",
+        ""slovak"": ""Jedlý zdroj, ktorý možno neskôr spracovať.""
+      },
+      {
+        ""identifier"": ""ProteinPowder"",
+        ""english"": ""Protein powder"",
+        ""russian"": ""Протеиновый порошок"",
+        ""chinese"": ""蛋白粉"",
+        ""slovak"": ""Proteínový prášok""
+      },
+      {
+        ""identifier"": ""ProteinPowderDesc"",
+        ""english"": ""Standard supplement that can be used in medicine or food."",
+        ""russian"": ""Стандартная добавка, которую можно использовать в медицине или пище."",
+        ""chinese"": ""这是一种常见的补充剂，可用于药物或食品。"",
+        ""slovak"": ""Štandardný doplnok, ktorý možno použiť v medicíne alebo potravinách.""
+      },
+      {
+        ""identifier"": ""BiomassLeaves"",
+        ""english"": ""Biomass(leaves)"",
+        ""russian"": ""Биомасса (листья)"",
+        ""chinese"": ""生物量（树叶）"",
+        ""slovak"": ""Biomasa(listy)""
+      },
+      {
+        ""identifier"": ""BiomassLeavesDesc"",
+        ""english"": ""Processed amount of biological material."",
+        ""russian"": ""Переработанное количество биологического материала."",
+        ""chinese"": ""这是经过加工的生物材料。"",
+        ""slovak"": ""Spracovaný množstvo biologického materiálu.""
+      },
+      {
+        ""identifier"": ""BiomassWood"",
+        ""english"": ""Biomass(wood)"",
+        ""russian"": ""Биомасса (древесина)"",
+        ""chinese"": ""生物量（木材）"",
+        ""slovak"": ""Biomasa(drevo)""
+      },
+      {
+        ""identifier"": ""BiomassWoodDesc"",
+        ""english"": ""Processed amount of biological material."",
+        ""russian"": ""Переработанное количество биологического материала."",
+        ""chinese"": ""这是经过加工的生物材料。"",
+        ""slovak"": ""Spracovaný množstvo biologického materiálu.""
+      },
+      {
+        ""identifier"": ""BioOil"",
+        ""english"": ""Bio oil"",
+        ""russian"": ""Биомасло"",
+        ""chinese"": ""生物油"",
+        ""slovak"": ""Bio olej""
+      },
+      {
+        ""identifier"": ""BioOilDesc"",
+        ""english"": ""Transparent, greasy substance made from natural resources."",
+        ""russian"": ""Прозрачное, жирное вещество, изготовленное из природных ресурсов."",
+        ""chinese"": ""这种油是一种由自然资源制成的透明油状物质。"",
+        ""slovak"": ""Transparentná, mastná látka vyrobená z prírodných zdrojov.""
+      },
+      {
         ""identifier"": ""BuildingType"",
         ""english"": ""Building type:"",
         ""russian"": ""Тип здания:"",
@@ -140,15 +224,22 @@
         ""slovak"": ""Výkon:""
       },
       {
+        ""identifier"": ""Materials"",
+        ""english"": ""Materials:"",
+        ""russian"": ""Материалы:"",
+        ""chinese"": ""所需材料："",
+        ""slovak"": ""Materiály:""
+      },
+      {
         ""identifier"": ""BiofuelGenerator"",
-        ""english"": ""Biofuel generator"",
+        ""english"": ""Bio fuel generator"",
         ""russian"": ""Генератор биотоплива"",
         ""chinese"": ""生物燃料发电机"",
         ""slovak"": ""Generátor biopalív""
       },
       {
         ""identifier"": ""BiofuelGeneratorDesc"",
-        ""english"": ""Consumes  <color=yellow>Biofuel </color>to generate electricity."",
+        ""english"": ""Consumes  <color=yellow>Bio fuel </color>to generate electricity."",
         ""russian"": ""Потребляет <color=yellow>биотопливо </color> для выработки электроэнергии."",
         ""chinese"": ""消耗<color=yellow>生物燃料</color>来发电。"",
         ""slovak"": ""Na výrobu elektriny spotrebuje <color=yellow>biopalivo </color>.""
@@ -162,20 +253,20 @@
       },
       {
         ""identifier"": ""WaterPumpDesc"",
-        ""english"": ""Creates <color=yellow>Water</color> from the planet's reserves."",
-        ""russian"": ""Создает <color=yellow>Воду</color> из запасов планеты."",
-        ""chinese"": ""该设施从这个星球的储备中产生<color=yellow>水</color>。"",
-        ""slovak"": ""Ťaží <color=yellow>vodu</color> zo zásob planéty.""
+        ""english"": ""Creates <color=yellow>10 Water</color> from the planet's reserves every 10 seconds."",
+        ""russian"": ""Создает <color=yellow>10 единиц воды</color> из запасов планеты каждые 10 секунд."",
+        ""chinese"": ""每 10 秒从地球储备中产生 <color=yellow>10 水</color>。"",
+        ""slovak"": ""Ťaží <color=yellow>10 vody</color> zo zásob planéty každých 10 sekúnd.""
       },
       {
-        ""identifier"": ""PlantField"",
-        ""english"": ""Plant field"",
-        ""russian"": ""Поле растений"",
-        ""chinese"": ""植物田"",
-        ""slovak"": ""Rastlinné pole""
+        ""identifier"": ""FibrousPlantField"",
+        ""english"": ""Fibrous plant field"",
+        ""russian"": ""Поле волокнистых растений"",
+        ""chinese"": ""纤维植物领域"",
+        ""slovak"": ""Pole vláknitých rastlín""
       },
       {
-        ""identifier"": ""PlantFieldDesc"",
+        ""identifier"": ""FibrousPlantFieldDesc"",
         ""english"": ""Allows you to harvest <color=yellow>fibrous leaves</color>."",
         ""russian"": ""Позволяет собирать <color=yellow>волокнистые листья</color>."",
         ""chinese"": ""这块田地可以让你收获<color=yellow>纤维状叶子</color>。"",
@@ -773,8 +864,8 @@
       {
         ""identifier"": ""FABRICATOR"",
         ""english"": ""Fabricator"",
-        ""russian"": ""Производитель"",
-        ""chinese"": ""制造商"",
+        ""russian"": ""Фабрикатор"",
+        ""chinese"": ""制造装置"",
         ""slovak"": ""Výrobník""
       },
       {
@@ -1031,7 +1122,7 @@
       },
       {
         ""identifier"": ""CraftBatteryDesc"",
-        ""english"": ""Your suit needs energy to function. Craft all necessary materials in order to craft battery (<color=yellow>Fibrous leaves</color> + <color=yellow>Biofuel</color> + <color=yellow>Battery Core</color>)."",
+        ""english"": ""Your suit needs energy to function. Craft all necessary materials in order to craft battery (<color=yellow>Fibrous leaves</color> + <color=yellow>Bio fuel</color> + <color=yellow>Battery Core</color>)."",
         ""russian"": ""Ваш скафандр нуждается в энергии, чтобы функционировать. Создайте все необходимые материалы для изготовления батареи (<color=yellow>Волокнистые листья</color> + <color=yellow>Биотопливо</color> + <color=yellow>Ядро батареи</color>)."",
         ""chinese"": ""你的宇航服需要能量才能正常工作。 制作所有这些物品来制作电池 (<color=yellow>纤维叶</color> + <color=yellow>生物燃料</color> + <color=yellow>电芯</color>)."",
         ""slovak"": ""Váš oblek potrebuje energiu na fungovanie. Najprv vyrobte všetky potrebné veci, aby ste mohli zostrojiť batériu. (<color=yellow>Vláknité listy</color> + <color=yellow>Biopalivo</color> + <color=yellow>Jadro batérie</color>).""
@@ -1045,7 +1136,7 @@
       },
       {
         ""identifier"": ""BuildBaseDesc"",
-        ""english"": ""Build a <color=yellow>Biofuel Generator</color> in the <color=yellow>[Production]</color> tab. Then go to the <color=yellow>[Base]</color> tab and drag its icon inside the construction grid."",
+        ""english"": ""Build a <color=yellow>Bio fuel Generator</color> in the <color=yellow>[Production]</color> tab. Then go to the <color=yellow>[Base]</color> tab and drag its icon inside the construction grid."",
         ""russian"": ""Создайте <color=yellow>Генератор биотоплива</color> на вкладке <color=yellow>[Производство]</color>. Затем перейдите на вкладку <color=yellow>[Base]</color> и перетащите ее значок внутрь сетки построения."",
         ""chinese"": ""在<color=yellow>[生产]</color>选项卡中构建<color=yellow>生物燃料发电机</color>。然后转到<color=yellow>[基地建设]</color>选项卡并将其图标拖动到构造网格内。"",
         ""slovak"": ""Zostavte <color=yellow>Generátor biopalív</color> na karte <color=yellow>[Produkcia]</color>. Potom prejdite na kartu <color=yellow>[Základňa]</color> a presuňte jej ikonu do konštrukčnej mriežky.""
@@ -1168,6 +1259,20 @@
         ""russian"": ""Стандартный компонент металлургической продукции."",
         ""chinese"": ""铁棒是冶金产品的标准件。"",
         ""slovak"": ""Bežný prvok hutníckych výrobkov.""
+      },
+      {
+        ""identifier"": ""IronTube"",
+        ""english"": ""Iron tube"",
+        ""russian"": ""Железная трубка"",
+        ""chinese"": ""铁管"",
+        ""slovak"": ""Železná trubka""
+      },
+      {
+        ""identifier"": ""IronTubeDesc"",
+        ""english"": ""Standard building component for handling fluids or gas."",
+        ""russian"": ""Стандартный строительный компонент для работы с жидкостями или газом."",
+        ""chinese"": ""这是用于处理流体或气体的标准建筑组件。"",
+        ""slovak"": ""Štandardný stavebný prvok na manipuláciu s kvapalinami alebo plynmi.""
       },
       {
         ""identifier"": ""Movement"",
@@ -1350,6 +1455,20 @@
         ""russian"": ""Вы не можете разделить этот товар в его текущем количестве."",
         ""chinese"": ""您无法按当前数量拆分此商品。"",
         ""slovak"": ""Túto vec nemôžete rozdeliť v aktuálnom množstve.""
+      },
+      {
+        ""identifier"": ""FabricatorNotEquipped"",
+        ""english"": ""Fabricator is not equipped!"",
+        ""russian"": ""Производитель не оборудован!"",
+        ""chinese"": ""制造装置未配备！"",
+        ""slovak"": ""Výrobník nemáte vo vybavení!""
+      },
+      {
+        ""identifier"": ""FAB-1Desc"",
+        ""english"": ""The Fabricator: a handheld marvel, seamlessly transforming raw resources into any item imaginable, from advanced weaponry to essential tools, unlocking limitless possibilities."",
+        ""russian"": ""Фабрикатор: портативное чудо, плавно превращающее сырые ресурсы в любые предметы, которые только можно вообразить, от передового оружия до необходимых инструментов, открывая безграничные возможности."",
+        ""chinese"": ""制造者：一种手持式奇迹，可以将原始资源无缝地转化为任何可以想象的物品，从先进武器到基本工具，释放无限的可能性。"",
+        ""slovak"": ""Výrobník: ručný zázrak, ktorý plynule premieňa surové zdroje na akýkoľvek predmet, ktorý si dokážete predstaviť, od pokročilých zbraní až po základné nástroje, odomykajúci neobmedzené možnosti.""
       }
     ]
   }

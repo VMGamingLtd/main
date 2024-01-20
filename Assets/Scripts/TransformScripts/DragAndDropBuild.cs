@@ -124,7 +124,7 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
             case "WaterPump":
                 buildingCreator.CreateBuilding(draggedObject, 1);
                 break;
-            case "PlantField":
+            case "FibrousPlantField":
                 buildingCreator.CreateBuilding(draggedObject, 2);
                 break;
             case "Boiler":

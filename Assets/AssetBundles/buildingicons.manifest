@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3390701244
+CRC: 3520463235
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: fff75c7c41d3dd0e1b761eba991b6e1c
+    Hash: a610b929a1052aca6659f01482c20628
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -16,7 +16,7 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/AssetBundlesRepo/BuildingIcons/Pipe.png
-- Assets/AssetBundlesRepo/BuildingIcons/PlantField.png
+- Assets/AssetBundlesRepo/BuildingIcons/FibrousPlantField.png
 - Assets/AssetBundlesRepo/BuildingIcons/Turbine.png
 - Assets/AssetBundlesRepo/BuildingIcons/Boiler.png
 - Assets/AssetBundlesRepo/BuildingIcons/SteamGenerator.png

@@ -27,6 +27,8 @@ namespace RecipeManagement
         public int index;
         public string name;
         public string product;
+        public string type;
+        public string itemClass;
         public float quantity;
     }
     public class RecipeItemData : MonoBehaviour
@@ -91,9 +93,17 @@ namespace RecipeManagement
             CountHeader.name = recipeName;
             CountHeader.GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
 
+            Transform TimeValue = newItem.transform.Find("Content/Cost/TimeValue");
+            TimeValue.GetComponent<AddToProductionTimeTextArray>().AssignTextToCoroutineManagerArray(recipeName);
+
+            float newProductionTime = productionTime / Player.ProductionSpeed;
+            if (Player.ProductionSpeed <= 0) newProductionTime = 0;
+            float newOutputValue = outputValue * Player.OutcomeRate;
+            if (Player.OutcomeRate <= 0) newOutputValue = 0;
+
             newItem.transform.Find("Content/Cost/EXP").GetComponent<TextMeshProUGUI>().text = experience.ToString() + "XP";
-            newItem.transform.Find("Content/Cost/TimeValue").GetComponent<TextMeshProUGUI>().text = productionTime.ToString() + "s";
-            newItem.transform.Find("Content/Image/CountValue").GetComponent<TextMeshProUGUI>().text = outputValue.ToString();
+            newItem.transform.Find("Content/Cost/TimeValue").GetComponent<TextMeshProUGUI>().text = newProductionTime.ToString() + "s";
+            newItem.transform.Find("Content/Image/CountValue").GetComponent<TextMeshProUGUI>().text = newOutputValue.ToString();
             newItem.transform.Find("Content/Image/CountValue").GetComponent<AddToProductionOutcomeTextArray>().AssignTextToCoroutineManagerArray(recipeName);
             newItem.transform.Find("Content/Image/Image").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeName, recipeProduct);
 
@@ -118,7 +128,9 @@ namespace RecipeManagement
                         if (child != null)
                         {
                             childObject.transform.Find("Image").GetComponent<Image>().sprite = AssignChildSlot(child.name);
-                            childObject.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
+                            float newChildQuantity = child.quantity / Player.MaterialCost;
+                            if (newChildQuantity <= 0) newChildQuantity = 0;
+                            childObject.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = newChildQuantity.ToString();
                             childObject.transform.Find("Quantity").GetComponent<AddToMaterialCostTextArray>().AssignTextToCoroutineManagerArray(child.name);
                             childObject.transform.Find("ChildName").name = child.name;
                             childObject.transform.Find(child.name).GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();
@@ -165,9 +177,14 @@ namespace RecipeManagement
             Transform TimeValue = newItem.transform.Find("Content/Cost/TimeValue");
             TimeValue.GetComponent<AddToProductionTimeTextArray>().AssignTextToCoroutineManagerArray(recipeName);
 
+            float newProductionTime = productionTime / Player.ProductionSpeed;
+            if (Player.ProductionSpeed <= 0) newProductionTime = 0;
+            float newOutputValue = outputValue * Player.OutcomeRate;
+            if (Player.OutcomeRate <= 0) newOutputValue = 0;
+
             newItem.transform.Find("Content/Cost/EXP").GetComponent<TextMeshProUGUI>().text = experience.ToString() + "XP";
-            newItem.transform.Find("Content/Cost/TimeValue").GetComponent<TextMeshProUGUI>().text = productionTime.ToString() + "s";
-            newItem.transform.Find("Content/Image/CountValue").GetComponent<TextMeshProUGUI>().text = outputValue.ToString();
+            newItem.transform.Find("Content/Cost/TimeValue").GetComponent<TextMeshProUGUI>().text = newProductionTime.ToString() + "s";
+            newItem.transform.Find("Content/Image/CountValue").GetComponent<TextMeshProUGUI>().text = newOutputValue.ToString();
             newItem.transform.Find("Content/Image/CountValue").GetComponent<AddToProductionOutcomeTextArray>().AssignTextToCoroutineManagerArray(recipeName);
             newItem.transform.Find("Content/Image/Image").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeName, recipeProduct);
 
@@ -192,7 +209,9 @@ namespace RecipeManagement
                         if (child != null)
                         {
                             childObject.transform.Find("Image").GetComponent<Image>().sprite = AssignChildSlot(child.name);
-                            childObject.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
+                            float newChildQuantity = child.quantity / Player.MaterialCost;
+                            if (newChildQuantity <= 0) newChildQuantity = 0;
+                            childObject.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = newChildQuantity.ToString();
                             childObject.transform.Find("Quantity").GetComponent<AddToMaterialCostTextArray>().AssignTextToCoroutineManagerArray(child.name);
                             childObject.transform.Find("ChildName").name = child.name;
                             childObject.transform.Find(child.name).GetComponent<AddToTextArrayAdaptive>().AssignTextToCoroutineManagerArray();

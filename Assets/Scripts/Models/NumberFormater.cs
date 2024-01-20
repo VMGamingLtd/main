@@ -1,13 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System.Globalization;
+using UnityEngine;
 
 public class NumberFormater
 {
     public string FormatTimeInTens(float timeOutput)
     {
-        return timeOutput.ToString("#.00", CultureInfo.InvariantCulture) + " s";
+        int minutes = Mathf.FloorToInt(timeOutput / 60);
+        int seconds = Mathf.FloorToInt(timeOutput % 60);
+
+        return string.Format("{00:00}:{01:00}", minutes, seconds);
     }
     public string FormatEnergyInThousands(int powerOutput)
     {
@@ -32,15 +33,15 @@ public class NumberFormater
             string formattedValue = MWValue.ToString("#.00", CultureInfo.InvariantCulture);
 
             if (formattedValue[formattedValue.Length - 1] == '0')
-        {
-            formattedValue = formattedValue.Substring(0, formattedValue.Length - 1);
-
-            // Check if the first decimal is also '0' and remove it
-            if (formattedValue[formattedValue.Length - 1] == '0')
             {
-                formattedValue = formattedValue.Substring(0, formattedValue.Length - 2);
+                formattedValue = formattedValue.Substring(0, formattedValue.Length - 1);
+
+                // Check if the first decimal is also '0' and remove it
+                if (formattedValue[formattedValue.Length - 1] == '0')
+                {
+                    formattedValue = formattedValue.Substring(0, formattedValue.Length - 2);
+                }
             }
-        }
 
             return formattedValue + " MW";
         }
@@ -49,7 +50,7 @@ public class NumberFormater
             float kWValue = (float)powerOutput / 1000f;
             string formattedValue = kWValue.ToString("#.00", CultureInfo.InvariantCulture);
 
-             if (formattedValue[formattedValue.Length - 1] == '0')
+            if (formattedValue[formattedValue.Length - 1] == '0')
             {
                 formattedValue = formattedValue.Substring(0, formattedValue.Length - 1);
 

@@ -1,9 +1,9 @@
 public static class PlayerResources
 {
-    public static float PlayerOxygen = 0f;
-    public static float PlayerWater = 0f;
-    public static float PlayerEnergy = 0f;
-    public static float PlayerHunger = 0f;
+    public static float PlayerOxygen;
+    public static float PlayerWater;
+    public static float PlayerEnergy;
+    public static float PlayerHunger;
     public static float PlayerMovementSpeed = 20f;
     public static float PlayerTotalDistance;
     public static float PlayerRemainingDistance;

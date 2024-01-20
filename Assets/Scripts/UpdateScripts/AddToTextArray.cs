@@ -1,5 +1,5 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class AddToTextArray : MonoBehaviour
 {
@@ -12,12 +12,9 @@ public class AddToTextArray : MonoBehaviour
         myText = GetComponent<TextMeshProUGUI>();
         manager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
         System.Reflection.FieldInfo targetVariable = manager.GetType().GetField(targetVariableName);
-        if (GlobalCalculator.GameStarted == true)
-        {
-            TextMeshProUGUI[] array = (TextMeshProUGUI[])targetVariable.GetValue(manager);
-            TextMeshProUGUI[] newArray = AddTextToArray(array, myText);
-            targetVariable.SetValue(manager, newArray);
-        }
+        TextMeshProUGUI[] array = (TextMeshProUGUI[])targetVariable.GetValue(manager);
+        TextMeshProUGUI[] newArray = AddTextToArray(array, myText);
+        targetVariable.SetValue(manager, newArray);
     }
 
     private TextMeshProUGUI[] AddTextToArray(TextMeshProUGUI[] array, TextMeshProUGUI text)

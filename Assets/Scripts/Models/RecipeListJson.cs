@@ -31,19 +31,29 @@
     {
       ""index"": 2,
       ""recipeName"": ""Biofuel"",
-      ""recipeProduct"": ""PROCESSED"",
+      ""recipeProduct"": ""ENHANCED"",
       ""recipeType"": ""LIQUID"",
       ""itemClass"": ""CLASS-F"",
-      ""experience"": 2,
-      ""productionTime"": 3,
+      ""experience"": 4,
+      ""productionTime"": 8,
       ""outputValue"": 1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
-          ""index"": 0,
-          ""name"": ""FibrousLeaves"",
+          ""index"": 15,
+          ""name"": ""LatexFoam"",
           ""product"": ""BASIC"",
+          ""type"": ""FOAM"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 20
+        },
+        {
+          ""index"": 20,
+          ""name"": ""BioOil"",
+          ""product"": ""PROCESSED"",
+          ""type"": ""LIQUID"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 1
         }
       ]
     },
@@ -62,7 +72,9 @@
           ""index"": 1,
           ""name"": ""Water"",
           ""product"": ""BASIC"",
-          ""quantity"": 50
+          ""type"": ""LIQUID"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 60
         }
       ]
     },
@@ -72,21 +84,25 @@
       ""recipeProduct"": ""ASSEMBLED"",
       ""recipeType"": ""ENERGY"",
       ""itemClass"": ""CLASS-F"",
-      ""experience"": 4,
-      ""productionTime"": 8,
+      ""experience"": 8,
+      ""productionTime"": 12,
       ""outputValue"": 1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
           ""index"": 2,
           ""name"": ""Biofuel"",
-          ""product"": ""PROCESSED"",
+          ""product"": ""ENHANCED"",
+          ""type"": ""LIQUID"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 1
         },
         {
           ""index"": 6,
           ""name"": ""BatteryCore"",
           ""product"": ""ENHANCED"",
+          ""type"": ""ENERGY"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 1
         }
       ]
@@ -116,7 +132,9 @@
         {
           ""index"": 2,
           ""name"": ""Biofuel"",
-          ""product"": ""PROCESSED"",
+          ""product"": ""ENHANCED"",
+          ""type"": ""LIQUID"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 4
         }
       ]
@@ -180,12 +198,16 @@
           ""index"": 8,
           ""name"": ""IronOre"",
           ""product"": ""BASIC"",
+          ""type"": ""MINERALS"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 6
         },
         {
           ""index"": 10,
           ""name"": ""Coal"",
           ""product"": ""BASIC"",
+          ""type"": ""MINERALS"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 2
         }
       ]
@@ -205,18 +227,24 @@
           ""index"": 11,
           ""name"": ""IronBeam"",
           ""product"": ""PROCESSED"",
+          ""type"": ""METALS"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 4
         },
         {
           ""index"": 9,
           ""name"": ""Wood"",
           ""product"": ""BASIC"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 4
         },
         {
           ""index"": 14,
           ""name"": ""IronRod"",
           ""product"": ""PROCESSED"",
+          ""type"": ""METALS"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 4
         }
       ]
@@ -236,12 +264,16 @@
           ""index"": 8,
           ""name"": ""IronOre"",
           ""product"": ""BASIC"",
+          ""type"": ""MINERALS"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 4
         },
         {
           ""index"": 10,
           ""name"": ""Coal"",
           ""product"": ""BASIC"",
+          ""type"": ""MINERALS"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 2
         }
       ]
@@ -261,13 +293,234 @@
           ""index"": 13,
           ""name"": ""IronSheet"",
           ""product"": ""BASIC"",
+          ""type"": ""METALS"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 1
         },
         {
           ""index"": 10,
           ""name"": ""Coal"",
           ""product"": ""BASIC"",
+          ""type"": ""MINERALS"",
+          ""itemClass"": ""CLASS-F"",
           ""quantity"": 1
+        }
+      ]
+    },
+    {
+      ""index"": 15,
+      ""recipeName"": ""LatexFoam"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""FOAM"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 1,
+      ""productionTime"": 2,
+      ""outputValue"": 4,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 16,
+      ""recipeName"": ""ProteinBeans"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""PLANTS"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 1,
+      ""productionTime"": 2,
+      ""outputValue"": 8,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 17,
+      ""recipeName"": ""BiomassLeaves"",
+      ""recipeProduct"": ""PROCESSED"",
+      ""recipeType"": ""PLANTS"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 3,
+      ""productionTime"": 5,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 1,
+          ""name"": ""FibrousLeaves"",
+          ""product"": ""BASIC"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 30
+        }
+      ]
+    },
+    {
+      ""index"": 18,
+      ""recipeName"": ""BiomassWood"",
+      ""recipeProduct"": ""PROCESSED"",
+      ""recipeType"": ""PLANTS"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 3,
+      ""productionTime"": 5,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 1,
+          ""name"": ""Wood"",
+          ""product"": ""BASIC"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 2
+        }
+      ]
+    },
+    {
+      ""index"": 19,
+      ""recipeName"": ""ProteinPowder"",
+      ""recipeProduct"": ""PROCESSED"",
+      ""recipeType"": ""POWDER"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 3,
+      ""productionTime"": 5,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 0,
+          ""name"": ""FibrousLeaves"",
+          ""product"": ""BASIC"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 35
+        },
+        {
+          ""index"": 16,
+          ""name"": ""ProteinBeans"",
+          ""product"": ""BASIC"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 60
+        }
+      ]
+    },
+    {
+      ""index"": 20,
+      ""recipeName"": ""BioOil"",
+      ""recipeProduct"": ""PROCESSED"",
+      ""recipeType"": ""LIQUID"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 3,
+      ""productionTime"": 5,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 17,
+          ""name"": ""BiomassLeaves"",
+          ""product"": ""PROCESSED"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 1
+        },
+        {
+          ""index"": 1,
+          ""name"": ""Water"",
+          ""product"": ""BASIC"",
+          ""type"": ""LIQUID"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 60
+        }
+      ]
+    },
+    {
+      ""index"": 21,
+      ""recipeName"": ""IronTube"",
+      ""recipeProduct"": ""PROCESSED"",
+      ""recipeType"": ""METALS"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 4,
+      ""productionTime"": 6,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 13,
+          ""name"": ""IronSheet"",
+          ""product"": ""BASIC"",
+          ""type"": ""METALS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 1
+        },
+        {
+          ""index"": 10,
+          ""name"": ""Coal"",
+          ""product"": ""BASIC"",
+          ""type"": ""MINERALS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 1
+        }
+      ]
+    },
+    {
+      ""index"": 22,
+      ""recipeName"": ""WaterPump"",
+      ""recipeProduct"": ""BUILDINGS"",
+      ""recipeType"": ""PUMPINGFACILITY"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 12,
+      ""productionTime"": 18,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 21,
+          ""name"": ""IronTube"",
+          ""product"": ""PROCESSED"",
+          ""type"": ""METALS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 4
+        },
+        {
+          ""index"": 13,
+          ""name"": ""IronSheet"",
+          ""product"": ""BASIC"",
+          ""type"": ""METALS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 2
+        },
+        {
+          ""index"": 9,
+          ""name"": ""Wood"",
+          ""product"": ""BASIC"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 2
+        }
+      ]
+    },
+    {
+      ""index"": 23,
+      ""recipeName"": ""FibrousPlantField"",
+      ""recipeProduct"": ""BUILDINGS"",
+      ""recipeType"": ""AGRICULTURE"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 8,
+      ""productionTime"": 30,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 0,
+          ""name"": ""FibrousLeaves"",
+          ""product"": ""BASIC"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 100
+        },
+        {
+          ""index"": 9,
+          ""name"": ""Wood"",
+          ""product"": ""BASIC"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 10
         }
       ]
     }

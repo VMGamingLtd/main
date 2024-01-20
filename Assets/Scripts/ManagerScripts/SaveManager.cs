@@ -46,10 +46,11 @@ public class SaveManager : MonoBehaviour
         public bool isPlayerInBiologicalBiome;
         public bool isDraggingBuilding;
         public bool autoConsumption;
-        public bool plantFieldUnlocked;
+        public bool fibrousPlantFieldUnlocked;
         public bool waterPumpUnlocked;
         public float credits;
         public float playerMovementSpeed;
+        public float AchievementPoints;
         public string inventoryTitle;
         public ItemDataModel[] basicInventoryObjects;
         public ItemDataModel[] processedInventoryObjects;
@@ -246,6 +247,7 @@ public class SaveManager : MonoBehaviour
         public int efficiencySetting;
         public int buildingCount;
         public bool isPaused;
+        public bool enlistedProduction;
     }
     [System.Serializable]
     public class BuildingItemDataModel
@@ -267,9 +269,6 @@ public class SaveManager : MonoBehaviour
         public int secondCycleCount;
         public int minuteCycleCount;
         public int hourCycleCount;
-        public int powerOutput;
-        public int basePowerOutput;
-        public int actualPowerOutput;
         public int powerConsumption;
         public int actualPowerConsumption;
         public int producedSlotCount;
@@ -277,6 +276,7 @@ public class SaveManager : MonoBehaviour
         public int efficiencySetting;
         public int buildingCount;
         public bool isPaused;
+        public bool enlistedProduction;
     }
 
     /// <summary>
@@ -323,6 +323,10 @@ public class SaveManager : MonoBehaviour
                 {
                     field.SetValue(null, (int)longValue);
                 }
+                else if (kvp.Value is bool boolValue)
+                {
+                    field.SetValue(null, boolValue);
+                }
             }
         }
         foreach (var kvp in saveDataModel.PlayerResourcesStaticVariables)
@@ -342,6 +346,10 @@ public class SaveManager : MonoBehaviour
                 else if (kvp.Value is int intValue)
                 {
                     field.SetValue(null, intValue);
+                }
+                else if (kvp.Value is bool boolValue)
+                {
+                    field.SetValue(null, boolValue);
                 }
             }
         }
@@ -363,6 +371,10 @@ public class SaveManager : MonoBehaviour
                 else if (kvp.Value is long intValue)
                 {
                     field.SetValue(null, (int)intValue);
+                }
+                else if (kvp.Value is bool boolValue)
+                {
+                    field.SetValue(null, boolValue);
                 }
             }
         }
@@ -392,6 +404,7 @@ public class SaveManager : MonoBehaviour
             ContractResolver = new CustomContractResolver()
         };
 
+        currentSaveData.AchievementPoints = Achievements.AchievementPoints;
         currentSaveData.username = UserName.userName;
         currentSaveData.password = Password.password;
         currentSaveData.email = Email.email;
@@ -838,7 +851,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.agriculture[i] = buildingData;
@@ -876,7 +890,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.pumpingFacility[i] = buildingData;
@@ -914,7 +929,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.factory[i] = buildingData;
@@ -952,7 +968,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.commFacility[i] = buildingData;
@@ -990,7 +1007,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.storageHouse[i] = buildingData;
@@ -1028,7 +1046,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.navalFacility[i] = buildingData;
@@ -1066,7 +1085,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.oxygenFacility[i] = buildingData;
@@ -1104,7 +1124,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.aviationFacility[i] = buildingData;
@@ -1142,7 +1163,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.heatingFacility[i] = buildingData;
@@ -1180,7 +1202,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.coolingFacility[i] = buildingData;
@@ -1216,7 +1239,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.powerplant[i] = buildingData;
@@ -1254,7 +1278,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.oxygenStation[i] = buildingData;
@@ -1292,7 +1317,8 @@ public class SaveManager : MonoBehaviour
                 efficiency = itemDataComponent.efficiency,
                 efficiencySetting = itemDataComponent.efficiencySetting,
                 buildingCount = itemDataComponent.buildingCount,
-                isPaused = itemDataComponent.isPaused
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction
             };
 
             currentSaveData.miningRig[i] = buildingData;

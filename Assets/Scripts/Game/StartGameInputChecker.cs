@@ -36,19 +36,12 @@ public class StartGameInputChecker : MonoBehaviour
 
         _ = LoadMenus();
 
-        recipeCreator.CreateRecipe(0);
-        recipeCreator.CreateRecipe(2);
-        recipeCreator.CreateRecipe(6);
-        recipeCreator.CreateRecipe(4);
+        recipeCreator.CreateRecipe(1);
+        recipeCreator.CreateRecipe(3);
 
         //initialize starting resources
         Credits.ResetCredits();
         Credits.AddCredits(42);
-
-        // test purposes
-        //itemCreator.CreateItem(3);
-        //itemCreator.CreateItem(6);
-        //itemCreator.CreateItem(2, 20);
 
         equipmentManager.InitStartEquip();
 

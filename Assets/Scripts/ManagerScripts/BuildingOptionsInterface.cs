@@ -11,6 +11,7 @@ public class BuildingOptionsInterface : MonoBehaviour
     public TextMeshProUGUI efficiency;
     public TextMeshProUGUI powerOutput;
     public TextMeshProUGUI powerConsumption;
+    public TextMeshProUGUI elapsedTime;
     public TextMeshProUGUI totalTime;
     public TextMeshProUGUI title;
     public TextMeshProUGUI[] consumedSlotQuantity;
@@ -126,6 +127,8 @@ public class BuildingOptionsInterface : MonoBehaviour
             efficiency.text = itemData.efficiencySetting.ToString() + '%';
             string formattedTime = formatter.FormatTimeInTens(itemData.totalTime);
             totalTime.text = formattedTime;
+            string formattedElapsedTime = formatter.FormatTimeInTens(itemData.timer);
+            elapsedTime.text = formattedElapsedTime;
 
             if (consumedSlots > 0)
                 for (int i = 0; i < consumedSlotQuantity.Length; i++)
@@ -235,6 +238,8 @@ public class BuildingOptionsInterface : MonoBehaviour
             efficiency.text = itemData.efficiencySetting.ToString() + '%';
             string formattedTime = formatter.FormatTimeInTens(itemData.totalTime);
             totalTime.text = formattedTime;
+            string formattedElapsedTime = formatter.FormatTimeInTens(itemData.timer);
+            elapsedTime.text = formattedElapsedTime;
 
             if (consumedSlots > 0)
                 for (int i = 0; i < consumedSlotQuantity.Length; i++)

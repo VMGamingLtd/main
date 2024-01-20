@@ -2,61 +2,64 @@ public static class Player
 {
     // BASE STATS
     public static int PlayerLevel = 1;
-    public static int PlayerCurrentExp = 0;
+    public static int PlayerCurrentExp;
     public static int PlayerMaxExp = 40;
-    public static int SkillPoints = 0;
-    public static int StatPoints = 0;
+    public static int SkillPoints;
+    public static int StatPoints;
 
     // SKILLS
-    public static int Biology = 0;
-    public static int Engineering = 0;
-    public static int Chemistry = 0;
-    public static int Physics = 0;
-    public static int Computing = 0;
-    public static int Psychology = 0;
+    public static int Biology;
+    public static int Engineering;
+    public static int Chemistry;
+    public static int Physics;
+    public static int Computing;
+    public static int Psychology;
 
     // ATTACK STATS
-    public static int PhysicalDamage = 0;
-    public static int FireDamage = 0;
-    public static int ColdDamage = 0;
-    public static int GasDamage = 0;
-    public static int ExplosionDamage = 0;
+    public static int PhysicalDamage;
+    public static int FireDamage;
+    public static int ColdDamage;
+    public static int GasDamage;
+    public static int ExplosionDamage;
 
     // PROTECTION STATS
-    public static int ShieldPoints = 0;
-    public static int HitPoints = 0;
-    public static int PhysicalProtection = 0;
-    public static int FireProtection = 0;
-    public static int ColdProtection = 0;
-    public static int GasProtection = 0;
-    public static int ExplosionProtection = 0;
+    public static int ShieldPoints;
+    public static int HitPoints;
+    public static int PhysicalProtection;
+    public static int FireProtection;
+    public static int ColdProtection;
+    public static int GasProtection;
+    public static int ExplosionProtection;
 
     // GENERAL STATS
-    public static int Strength = 0;
-    public static int Perception = 0;
-    public static int Intelligence = 0;
-    public static int Agility = 0;
-    public static int Charisma = 0;
-    public static int Willpower = 0;
+    public static int Strength;
+    public static int Perception;
+    public static int Intelligence;
+    public static int Agility;
+    public static int Charisma;
+    public static int Willpower;
 
-    public static int StatPointsInStrength = 0;
-    public static int StatPointsInPerception = 0;
-    public static int StatPointsInIntelligence = 0;
-    public static int StatPointsInAgility = 0;
-    public static int StatPointsInCharisma = 0;
-    public static int StatPointsInWillpower = 0;
+    public static int StatPointsInStrength;
+    public static int StatPointsInPerception;
+    public static int StatPointsInIntelligence;
+    public static int StatPointsInAgility;
+    public static int StatPointsInCharisma;
+    public static int StatPointsInWillpower;
 
 
     // UTILITY STATS
-    public static int EnergyCapacity = 0;
+    public static int EnergyCapacity;
     public static int InventorySlots = 10;
-    public static int ExplorationRadius = 0;
-    public static int VisibilityRadius = 0;
-    public static int PickupRadius = 0;
-    public static float ProductionSpeed = 0; // players starts with 1 from the first item equipped.
-    public static float MaterialCost = 0; // players starts with 1 from the first item equipped.
-    public static float OutcomeRate = 0; // players starts with 1 from the first item equipped.
+    public static int ExplorationRadius;
+    public static int VisibilityRadius;
+    public static int PickupRadius;
+    public static float ProductionSpeed;// players starts with 1 from the first item equipped.
+    public static float MaterialCost; // players starts with 1 from the first item equipped.
+    public static float OutcomeRate; // players starts with 1 from the first item equipped.
     public static int UsedInventorySlots;
+
+    // MODE VARIABLES
+    public static bool CanProduce; // represents if player has Fabricator tool equipped
 
     public static int AddCurrentResource(ref int currentResourceSet, int amount)
     {

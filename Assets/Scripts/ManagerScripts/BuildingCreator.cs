@@ -48,6 +48,7 @@ namespace BuildingManagement
         public int efficiencySetting;
         public int buildingCount;
         public bool isPaused;
+        public bool enlistedProduction;
 
         public EnergyBuildingItemData()
         {
@@ -83,6 +84,7 @@ namespace BuildingManagement
         public int efficiencySetting;
         public int buildingCount;
         public bool isPaused;
+        public bool enlistedProduction;
 
         public BuildingItemData()
         {
@@ -166,20 +168,96 @@ public class BuildingCreator : MonoBehaviour
         }
     }
 
+    public void RecreateProductionBuilding(int index, string buildingName, string buildingType, string buildingClass, int consumedSlotCount, int producedSlotCount,
+        List<SlotItemData> consumedItems, List<SlotItemData> producedItems, float totalTime, int powerConsumption, float timer, int actualPowerConsumption, int efficiency,
+        int efficiencySetting, int buildingCount, bool isPaused, Vector3 buildingPosition, int secondCycleCount, int minuteCycleCount, int hourCycleCount,
+        PowerConsumptionCycle powerConsumptionCycle, ProductionCycle productionCycle, string spriteIconName, int ID, bool enlistedProduction)
+    {
+        RecreateProductionBuilding(objectTemplate, index, buildingName, buildingType, buildingClass, consumedSlotCount, producedSlotCount, consumedItems, producedItems,
+            totalTime, powerConsumption, timer, actualPowerConsumption, efficiency, efficiencySetting, buildingCount, isPaused, buildingPosition,
+            secondCycleCount, minuteCycleCount, hourCycleCount, powerConsumptionCycle, productionCycle, spriteIconName, ID, enlistedProduction);
+    }
+
+    private void RecreateProductionBuilding(GameObject objectTemplate, int index, string buildingName, string buildingType, string buildingClass, int consumedSlotCount,
+          int producedSlotCount, List<SlotItemData> consumedItems, List<SlotItemData> producedItems, float totalTime, int powerConsumption, float timer, int actualPowerConsumption,
+          int efficiency, int efficiencySetting, int buildingCount, bool isPaused, Vector3 buildingPosition, int secondCycleCount, int minuteCycleCount, int hourCycleCount,
+          PowerConsumptionCycle powerConsumptionCycle, ProductionCycle productionCycle, string spriteIconName, int ID, bool enlistedProduction)
+    {
+        GameObject newBuilding = Instantiate(objectTemplate, BuildingArea);
+        itemData = newBuilding.AddComponent<BuildingItemData>();
+        itemData.buildingType = buildingType;
+        itemData.buildingPosition = buildingPosition;
+        newBuilding.transform.localPosition = buildingPosition;
+        itemData.index = index;
+        newBuilding.name = spriteIconName;
+        itemData.buildingClass = buildingClass;
+        itemData.consumedSlotCount = consumedSlotCount;
+        itemData.producedSlotCount = producedSlotCount;
+        itemData.consumedItems = consumedItems;
+        itemData.producedItems = producedItems;
+        itemData.totalTime = totalTime;
+        itemData.powerConsumption = powerConsumption;
+        itemData.actualPowerConsumption = actualPowerConsumption;
+        itemData.efficiencySetting = 100;
+        itemData.timer = timer;
+        itemData.efficiency = efficiency;
+        itemData.efficiencySetting = efficiencySetting;
+        itemData.buildingCount = buildingCount;
+        itemData.isPaused = isPaused;
+        itemData.secondCycleCount = secondCycleCount;
+        itemData.minuteCycleCount = minuteCycleCount;
+        itemData.hourCycleCount = hourCycleCount;
+        itemData.powerConsumptionCycleData = powerConsumptionCycle;
+        itemData.productionCycleData = productionCycle;
+        itemData.spriteIconName = spriteIconName;
+        itemData.ID = ID;
+        itemData.enlistedProduction = enlistedProduction;
+
+        if (newBuilding.name == "WaterPump")
+        {
+            newBuilding.tag = "NoConsume";
+        }
+        else if (newBuilding.name == "FibrousPlantField")
+        {
+            newBuilding.tag = "Consume";
+        }
+        else if (newBuilding.name == "Boiler")
+        {
+            newBuilding.tag = "Consume";
+        }
+        else if (newBuilding.name == "SteamGenerator")
+        {
+            newBuilding.tag = "Energy";
+        }
+        else if (newBuilding.name == "Furnace")
+        {
+            newBuilding.tag = "Consume";
+        }
+
+        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+        itemData.buildingName = buildingName;
+        newBuilding.AddComponent<BuildingCycles>();
+        newBuilding.AddComponent<DragAndDropBuildings>();
+        buildingManager.AddToItemArray(buildingType, newBuilding);
+        buildingIncrementor.InitializeBuildingCounts();
+        newBuilding.transform.localScale = Vector3.one;
+        newBuilding.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(spriteIconName);
+    }
+
     public void RecreateEnergyBuilding(int index, string buildingName, string buildingType, string buildingClass, int consumedSlotCount,
         List<SlotItemData> consumedItems, float totalTime, int basePowerOutput, float timer, int actualPowerOutput, int powerOutput, int efficiency,
         int efficiencySetting, int buildingCount, bool isPaused, Vector3 buildingPosition, int secondCycleCount, int minuteCycleCount, int hourCycleCount,
-        PowerCycle powerCycleData, string spriteIconName, int ID)
+        PowerCycle powerCycleData, string spriteIconName, int ID, bool enlistedProduction)
     {
         RecreateEnergyBuilding(objectTemplate, index, buildingName, buildingType, buildingClass, consumedSlotCount, consumedItems, totalTime,
             basePowerOutput, timer, actualPowerOutput, powerOutput, efficiency, efficiencySetting, buildingCount, isPaused, buildingPosition,
-            secondCycleCount, minuteCycleCount, hourCycleCount, powerCycleData, spriteIconName, ID);
+            secondCycleCount, minuteCycleCount, hourCycleCount, powerCycleData, spriteIconName, ID, enlistedProduction);
     }
 
     private void RecreateEnergyBuilding(GameObject objectTemplate, int index, string buildingName, string buildingType, string buildingClass, int consumedSlotCount,
           List<SlotItemData> consumedItems, float totalTime, int basePowerOutput, float timer, int actualPowerOutput, int powerOutput, int efficiency, int efficiencySetting,
           int buildingCount, bool isPaused, Vector3 buildingPosition, int secondCycleCount, int minuteCycleCount, int hourCycleCount, PowerCycle powerCycleData, string spriteIconName,
-          int ID)
+          int ID, bool enlistedProduction)
     {
         GameObject newBuilding = Instantiate(objectTemplate, BuildingArea);
         itemDataEnergy = newBuilding.AddComponent<EnergyBuildingItemData>();
@@ -207,6 +285,7 @@ public class BuildingCreator : MonoBehaviour
         itemDataEnergy.powerCycleData = powerCycleData;
         itemDataEnergy.spriteIconName = spriteIconName;
         itemDataEnergy.ID = ID;
+        itemDataEnergy.enlistedProduction = enlistedProduction;
         newBuilding.tag = "Energy";
         translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
         itemDataEnergy.buildingName = buildingName;
@@ -304,12 +383,12 @@ public class BuildingCreator : MonoBehaviour
                 itemData.buildingCount = Planet0Buildings.Planet0WaterPump;
                 draggedObject.tag = "NoConsume";
             }
-            else if (draggedObject.name == "PlantField")
+            else if (draggedObject.name == "FibrousPlantField")
             {
-                Planet0Buildings.Planet0PlantField++;
-                Planet0Buildings.Planet0PlantFieldBlueprint--;
-                itemData.buildingCount = Planet0Buildings.Planet0PlantField;
-                draggedObject.tag = "NoConsume";
+                Planet0Buildings.Planet0FibrousPlantField++;
+                Planet0Buildings.Planet0FibrousPlantFieldBlueprint--;
+                itemData.buildingCount = Planet0Buildings.Planet0FibrousPlantField;
+                draggedObject.tag = "Consume";
             }
             else if (draggedObject.name == "Boiler")
             {

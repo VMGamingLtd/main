@@ -7,6 +7,7 @@ public class GoalManager : MonoBehaviour
     public Animation goalAnimation;
     private RecipeCreator recipeCreator;
     private ButtonManager buttonManager;
+    private CoroutineManager coroutineManager;
     public BuildingIncrementor buildingIncrementor;
     public GameObject[] Goals;
     public static bool firstGoal = false;
@@ -18,6 +19,7 @@ public class GoalManager : MonoBehaviour
     {
         recipeCreator = GameObject.Find("RecipeCreatorList").GetComponent<RecipeCreator>();
         buttonManager = GameObject.Find("BUTTONMANAGER").GetComponent<ButtonManager>();
+        coroutineManager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
     }
 
     public void UpdateCurrentGoal()
@@ -36,11 +38,11 @@ public class GoalManager : MonoBehaviour
         }
         else if (firstGoal)
         {
-            ChangeGoal("CraftAndUseWater");
+            ChangeGoal("CraftBattery");
         }
         else
         {
-            ChangeGoal("CraftBattery");
+            ChangeGoal("CraftAndUseWater");
         }
     }
     public void ChangeGoal(string GoalName)
@@ -54,11 +56,17 @@ public class GoalManager : MonoBehaviour
     {
         goalAnimation.Play("Success");
         await UniTask.Delay(1000);
-        recipeCreator.CreateRecipe(1);
-        recipeCreator.CreateRecipe(3);
-        ChangeGoal("CraftAndUseWater");
+        recipeCreator.CreateRecipe(0);
+        recipeCreator.CreateRecipe(17);
+        recipeCreator.CreateRecipe(15);
+        recipeCreator.CreateRecipe(20);
+        recipeCreator.CreateRecipe(2);
+        recipeCreator.CreateRecipe(6);
+        recipeCreator.CreateRecipe(4);
+        ChangeGoal("CraftBattery");
         goalAnimation.Play("Idle");
         firstGoal = true;
+        coroutineManager.InitializeResourceMap();
     }
 
     public async UniTask SetThirdGoal()
@@ -76,18 +84,23 @@ public class GoalManager : MonoBehaviour
         goalAnimation.Play("Idle");
         secondGoal = true;
         buttonManager.UnlockBaseButton();
+        coroutineManager.InitializeResourceMap();
     }
 
     public async UniTask SetFourthGoal()
     {
         goalAnimation.Play("Success");
         await UniTask.Delay(1000);
-        Planet0Buildings.PlantFieldUnlocked = true;
+        Planet0Buildings.FibrousPlantFieldUnlocked = true;
         Planet0Buildings.WaterPumpUnlocked = true;
         buildingIncrementor.InitializeAvailableBuildings();
+        recipeCreator.CreateRecipe(21);
+        recipeCreator.CreateRecipe(22);
+        recipeCreator.CreateRecipe(23);
         ChangeGoal("AutomateBattery");
         goalAnimation.Play("Idle");
         thirdGoal = true;
+        coroutineManager.InitializeResourceMap();
     }
 
     public async UniTask SetFifthGoal()
@@ -101,5 +114,6 @@ public class GoalManager : MonoBehaviour
         ChangeGoal("AutomateBattery");
         goalAnimation.Play("Idle");
         fourthGoal = true;
+        coroutineManager.InitializeResourceMap();
     }
 }

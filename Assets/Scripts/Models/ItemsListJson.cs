@@ -9,7 +9,7 @@
     {
       ""index"": 0,
       ""quantity"": 5.0,
-      ""stackLimit"": 100.0,
+      ""stackLimit"": 200.0,
       ""itemName"": ""FibrousLeaves"",
       ""itemProduct"": ""BASIC"",
       ""itemType"": ""PLANTS"",
@@ -19,7 +19,7 @@
     {
       ""index"": 1,
       ""quantity"": 10.0,
-      ""stackLimit"": 100.0,
+      ""stackLimit"": 200.0,
       ""itemName"": ""Water"",
       ""itemProduct"": ""BASIC"",
       ""itemType"": ""LIQUID"",
@@ -31,7 +31,7 @@
       ""quantity"": 1.0,
       ""stackLimit"": 100.0,
       ""itemName"": ""Biofuel"",
-      ""itemProduct"": ""PROCESSED"",
+      ""itemProduct"": ""ENHANCED"",
       ""itemType"": ""LIQUID"",
       ""itemClass"": ""CLASS-F"",
       ""equipable"": ""false""
@@ -79,7 +79,7 @@
     {
       ""index"": 7,
       ""quantity"": 2.0,
-      ""stackLimit"": 100.0,
+      ""stackLimit"": 200.0,
       ""itemName"": ""Steam"",
       ""itemProduct"": ""BASIC"",
       ""itemType"": ""GAS"",
@@ -153,6 +153,86 @@
       ""itemName"": ""IronRod"",
       ""itemProduct"": ""PROCESSED"",
       ""itemType"": ""METALS"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 15,
+      ""quantity"": 4.0,
+      ""stackLimit"": 200.0,
+      ""itemName"": ""LatexFoam"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""FOAM"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 16,
+      ""quantity"": 2.0,
+      ""stackLimit"": 200.0,
+      ""itemName"": ""ProteinBeans"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""PLANT"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 17,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""BiomassLeaves"",
+      ""itemProduct"": ""PROCESSED"",
+      ""itemType"": ""PLANTS"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 18,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""BiomassWood"",
+      ""itemProduct"": ""PROCESSED"",
+      ""itemType"": ""PLANTS"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 19,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""ProteinPowder"",
+      ""itemProduct"": ""PROCESSED"",
+      ""itemType"": ""POWDER"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 20,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""BioOil"",
+      ""itemProduct"": ""PROCESSED"",
+      ""itemType"": ""PLANTS"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 21,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""IronTube"",
+      ""itemProduct"": ""PROCESSED"",
+      ""itemType"": ""METALS"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 22,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""WaterPump"",
+      ""itemProduct"": ""BUILDING"",
+      ""itemType"": ""PUMPINGFACILITY"",
       ""itemClass"": ""CLASS-F"",
       ""equipable"": ""false""
     }

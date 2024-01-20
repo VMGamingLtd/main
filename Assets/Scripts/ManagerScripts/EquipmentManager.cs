@@ -14,6 +14,7 @@ public class EquipmentManager : MonoBehaviour
     public GlobalCalculator globalCalculator;
     public InventoryManager inventoryManager;
     public StatsManager statsManager;
+    public CoroutineManager coroutineManager;
 
     public GameObject HelmetSlot;
     public GameObject SuitSlot;
@@ -24,6 +25,7 @@ public class EquipmentManager : MonoBehaviour
     public GameObject OxygenSlot;
     public GameObject WaterSlot;
     public GameObject HungerSlot;
+    public GameObject DisabledProduction;
 
     public void InitStartEquip()
     {
@@ -32,6 +34,16 @@ public class EquipmentManager : MonoBehaviour
             slotEquipped[i] = false;
         }
         RefreshStats();
+    }
+    public void EnableProduction()
+    {
+        Player.CanProduce = true;
+        DisabledProduction.SetActive(false);
+    }
+    public void DisableProduction()
+    {
+        Player.CanProduce = false;
+        DisabledProduction.SetActive(true);
     }
 
     public void RefreshRecipeStats()
@@ -45,27 +57,26 @@ public class EquipmentManager : MonoBehaviour
         coroutineManager.InitializeMaterialCostMap();
         coroutineManager.InitializeProductionOutcomeMap();
 
-        string[] keys = {
-            "FibrousLeaves", "Water", "Biofuel", "DistilledWater", "Battery",
-            "OxygenTank", "BatteryCore", "Steam", "IronOre", "Wood",
-            "Coal", "IronBeam", "BiofuelGenerator", "IronSheet", "IronRod"
-        };
-
-        for (int i = 0; i < keys.Length; i++)
+        for (int i = 0; i < CoroutineManager.RecipeKeys.Length; i++)
         {
-            coroutineManager.UpdateProductionTextsForKey(keys[i], recipeList[i].productionTime / Player.ProductionSpeed);
+            float newProductionTime = recipeList[i].productionTime / Player.ProductionSpeed;
+            if (Player.ProductionSpeed <= 0) newProductionTime = 0;
+            coroutineManager.UpdateProductionTextsForKey(CoroutineManager.RecipeKeys[i], newProductionTime);
         }
         for (int i = 0; i < recipeList.Count; i++)
         {
             foreach (var childData in recipeList[i].childDataList)
             {
                 float updatedQuantity = childData.quantity / Player.MaterialCost;
-                coroutineManager.UpdateMaterialCostTextsForKey(childData.name, updatedQuantity);
+                if (Player.MaterialCost <= 0) updatedQuantity = 0;
+                coroutineManager.UpdateMaterialCostTextsForKey(childData.name);
             }
         }
-        for (int i = 0; i < keys.Length; i++)
+        for (int i = 0; i < CoroutineManager.RecipeKeys.Length; i++)
         {
-            coroutineManager.UpdateProductionOutcomeTextsForKey(keys[i], recipeList[i].outputValue * Player.OutcomeRate);
+            float newOutcomeRate = recipeList[i].outputValue * Player.OutcomeRate;
+            if (Player.OutcomeRate <= 0) newOutcomeRate = 0;
+            coroutineManager.UpdateProductionOutcomeTextsForKey(CoroutineManager.RecipeKeys[i], newOutcomeRate);
         }
     }
 
@@ -133,6 +144,10 @@ public class EquipmentManager : MonoBehaviour
             Player.MaterialCost += itemData.materialCost;
             Player.OutcomeRate += itemData.outcomeRate;
         }
+        if (itemData.itemType == "FABRICATOR")
+        {
+            EnableProduction();
+        }
         RefreshStats();
         RefreshRecipeStats();
     }
@@ -159,7 +174,7 @@ public class EquipmentManager : MonoBehaviour
             Player.VisibilityRadius -= itemData.visibilityRadius;
             Player.PickupRadius -= itemData.pickupRadius;
         }
-        statsManager.RefreshStats();
+        RefreshStats();
     }
 
     public void UnequipSuit(SuitData itemData)
@@ -183,7 +198,7 @@ public class EquipmentManager : MonoBehaviour
             Player.Charisma -= itemData.charisma;
             Player.Willpower -= itemData.willpower;
         }
-        statsManager.RefreshStats();
+        RefreshStats();
     }
 
     public void UnequipTool(ToolData itemData)
@@ -201,7 +216,12 @@ public class EquipmentManager : MonoBehaviour
             Player.MaterialCost -= itemData.materialCost;
             Player.OutcomeRate -= itemData.outcomeRate;
         }
-        statsManager.RefreshStats();
+        if (itemData.itemType == "FABRICATOR")
+        {
+            DisableProduction();
+        }
+        RefreshStats();
+        RefreshRecipeStats();
     }
 
     public void DeductFromEquip()
@@ -223,6 +243,7 @@ public class EquipmentManager : MonoBehaviour
                             if (newCountTextEnergy != null)
                             {
                                 newCountTextEnergy.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                                coroutineManager.UpdateQuantityTexts("Battery", "ASSEMBLED");
                             }
                         }
                         else
@@ -272,6 +293,7 @@ public class EquipmentManager : MonoBehaviour
                             if (newCountTextWater != null)
                             {
                                 newCountTextWater.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                                coroutineManager.UpdateQuantityTexts("DistilledWater", "PROCESSED");
                             }
                         }
                         else

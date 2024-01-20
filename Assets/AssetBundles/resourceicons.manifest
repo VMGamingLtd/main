@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 407387492
+CRC: 3689763640
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e922e33979e9f46e95a0ab5a2a0fa558
+    Hash: 29b3b227d46262acb98748c3727d5f75
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -15,22 +15,29 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/AssetBundlesRepo/ResourceIcons/Coal.png
+- Assets/AssetBundlesRepo/ResourceIcons/Water.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronSheet.png
+- Assets/AssetBundlesRepo/ResourceIcons/ProteinPowder.png
 - Assets/AssetBundlesRepo/ResourceIcons/FibrousLeaves.png
 - Assets/AssetBundlesRepo/ResourceIcons/Fish.png
+- Assets/AssetBundlesRepo/ResourceIcons/BiomassWood.png
 - Assets/AssetBundlesRepo/ResourceIcons/Steam.png
 - Assets/AssetBundlesRepo/ResourceIcons/BatteryCore.png
 - Assets/AssetBundlesRepo/ResourceIcons/Player.png
+- Assets/AssetBundlesRepo/ResourceIcons/BiomassLeaves.png
 - Assets/AssetBundlesRepo/ResourceIcons/DistilledWater.png
 - Assets/AssetBundlesRepo/ResourceIcons/Biofuel.png
-- Assets/AssetBundlesRepo/ResourceIcons/IronOre.png
-- Assets/AssetBundlesRepo/ResourceIcons/IronRod.png
 - Assets/AssetBundlesRepo/ResourceIcons/Wood.png
+- Assets/AssetBundlesRepo/ResourceIcons/IronRod.png
+- Assets/AssetBundlesRepo/ResourceIcons/IronOre.png
+- Assets/AssetBundlesRepo/ResourceIcons/IronTube.png
 - Assets/AssetBundlesRepo/ResourceIcons/Electricity.png
+- Assets/AssetBundlesRepo/ResourceIcons/LatexFoam.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronBeam.png
+- Assets/AssetBundlesRepo/ResourceIcons/ProteinBeans.png
 - Assets/AssetBundlesRepo/ResourceIcons/OxygenTank.png
 - Assets/AssetBundlesRepo/ResourceIcons/Battery.png
+- Assets/AssetBundlesRepo/ResourceIcons/Biooil.png
 - Assets/AssetBundlesRepo/ResourceIcons/SteelPlate.png
-- Assets/AssetBundlesRepo/ResourceIcons/Water.png
+- Assets/AssetBundlesRepo/ResourceIcons/Coal.png
 Dependencies: []

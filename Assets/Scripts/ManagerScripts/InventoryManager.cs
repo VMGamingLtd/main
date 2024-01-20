@@ -181,8 +181,7 @@ public class InventoryManager : MonoBehaviour
             {
                 if (item.name == prefabName)
                 {
-                    ItemData itemData = item.GetComponent<ItemData>();
-                    if (itemData != null)
+                    if (item.TryGetComponent<ItemData>(out var itemData))
                     {
                         totalQuantity += itemData.quantity;
                     }

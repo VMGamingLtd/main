@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2624452660
+CRC: 3188072473
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b936fdbc7c86d633271e4c0f15497880
+    Hash: fb6b1c553abade6936ccda9e1e7230d4
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -18,4 +18,5 @@ Assets:
 - Assets/AssetBundlesRepo/EquipmentIcons/CAS-101.png
 - Assets/AssetBundlesRepo/EquipmentIcons/FAB-1.png
 - Assets/AssetBundlesRepo/EquipmentIcons/CAS-901.png
+- Assets/AssetBundlesRepo/EquipmentIcons/EF-10.png
 Dependencies: []

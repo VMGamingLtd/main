@@ -22,7 +22,7 @@ public static class Planet0Buildings
     public static int Planet0MaxElectricity = 0;
 
     // available buildings unlocks
-    public static bool PlantFieldUnlocked;
+    public static bool FibrousPlantFieldUnlocked;
     public static bool WaterPumpUnlocked;
     public static bool BoilerUnlocked;
     public static bool SteamGeneratorUnlocked;
@@ -30,7 +30,7 @@ public static class Planet0Buildings
 
     // available buildings to place
     public static int Planet0BiofuelGeneratorBlueprint = 0;
-    public static int Planet0PlantFieldBlueprint = 0;
+    public static int Planet0FibrousPlantFieldBlueprint = 0;
     public static int Planet0WaterPumpBlueprint = 0;
     public static int Planet0BoilerBlueprint = 0;
     public static int Planet0SteamGeneratorBlueprint = 0;
@@ -39,7 +39,7 @@ public static class Planet0Buildings
 
     // building counter
     public static int Planet0BiofuelGenerator = 0;
-    public static int Planet0PlantField = 0;
+    public static int Planet0FibrousPlantField = 0;
     public static int Planet0WaterPump = 0;
     public static int Planet0Boiler = 0;
     public static int Planet0SteamGenerator = 0;

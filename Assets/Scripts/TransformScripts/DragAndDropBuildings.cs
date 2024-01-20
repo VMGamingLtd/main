@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using BuildingManagement;
+using UnityEngine.UI;
 
 public class DragAndDropBuildings : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -26,7 +25,7 @@ public class DragAndDropBuildings : MonoBehaviour, IDragHandler, IBeginDragHandl
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        objectImage.color = ButtonColors.highlightCol;
+        objectImage.color = UIColors.highlightCol;
     }
     public void OnPointerExit(PointerEventData eventData)
     {
