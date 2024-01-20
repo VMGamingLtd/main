@@ -228,9 +228,7 @@ public class Planet : MonoBehaviour
         {
             return;
         }
-
         Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1350");
-
 
         for (int i = 0; i < numberOfObjects; i++)
         {
