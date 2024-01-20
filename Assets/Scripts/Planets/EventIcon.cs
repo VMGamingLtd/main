@@ -74,13 +74,10 @@ public class EventIcon : MonoBehaviour
 
     private void OnDestroy()
     {
-        Debug.Log($@"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 4000: EventIcon.OnDestroy() {transform.name}");
         if (planet == null)
         {
             return;
         }
-        Debug.Log($@"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 4010");
-
         List<GameObject> eventObjects = planet.GetComponent<Planet>().eventObjects;
         
         // remove the event object from the list

@@ -88,7 +88,6 @@ public class Planet : MonoBehaviour
         // iterate over parent's children
         foreach (Transform child in parent.transform)
         {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 340: {child.gameObject.name}");
             if (child.gameObject.name == "PlayerOnPlanetTemplate")
             {
                 return child.gameObject;
@@ -109,14 +108,11 @@ public class Planet : MonoBehaviour
             }
         }
         
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 800: no player");
-
         return null;
     }
 
     private void AddPlayerToPlanet()
     {
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1120: AddPlayerToPlanet()");
         // Add the player to the planet
         GameObject player = FindPlayerTemplate();
         // clone the player
@@ -128,7 +124,6 @@ public class Planet : MonoBehaviour
         player.transform.localPosition = new Vector3(-12.277f, 5.64f, -4.415f);
         // set the scale of the player
         player.transform.localScale = new Vector3(0.08888598f, 0.08888598f, 0.08888598f);
-        Debug.Log($"{player.transform.position}"); // @@@@@@@@@@@@@@@@@@@@@@@
     }
 
     static void SetPlanetLayer(GameObject gobj)
@@ -141,7 +136,6 @@ public class Planet : MonoBehaviour
 
     public void GeneratePlanet()
     {
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000: GeneratePlanet()");
         Initialize();
         GenerateMesh();
         GenerateColours();
@@ -159,7 +153,6 @@ public class Planet : MonoBehaviour
 
     public void OnShapeSettingsUpdated()
     {
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3010: OnShapeSettingsUpdated()");
         if (autoUpdate)
         {
             Initialize();
@@ -169,7 +162,6 @@ public class Planet : MonoBehaviour
 
     public void OnColourSettingsUpdated()
     {
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3020: OnColourSettingsUpdated()");
         if (autoUpdate)
         {
             Initialize();
@@ -179,7 +171,6 @@ public class Planet : MonoBehaviour
 
     void GenerateMesh()
     {
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1250: GenerateMesh()");
         for (int i = 0; i < 6; i++)
         {
             if (meshFilters[i].gameObject.activeSelf)
@@ -226,14 +217,12 @@ public class Planet : MonoBehaviour
 
     public void SpawnEventObjectsOnSurface(Mesh mesh, int numberOfObjects)
     {
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1300: SpawnEventObjectsOnSurface()");
         // Quit if in the editor
         if (!Application.isPlaying)
         {
             return;
         }
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1350");
-
+        
         for (int i = 0; i < numberOfObjects; i++)
         {
             // Get a random point on the mesh surface

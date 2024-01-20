@@ -11,7 +11,7 @@ namespace Gaos.Environment
 
             if (envName == "Development")
             {
-                Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp2345  Environment: Development");
+                Debug.Log("Environment: Development");
                 env.Add("GAOS_URL", "https://local.galacticodyssey.space/gaos");
                 env.Add("GAOS_WS", "wss://local.galacticodyssey.space/gaos/ws");
                 env.Add("IS_PROFILE_HTTP_CALLS", "true");
@@ -19,7 +19,7 @@ namespace Gaos.Environment
             }
             else if (envName == "Test")
             {
-                Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp2346  Environment: Test");
+                Debug.Log("Environment: Test");
                 env.Add("GAOS_URL", "https://test.galacticodyssey.space/gaos");
                 env.Add("GAOS_WS", "wss://test.galacticodyssey.space/gaos/ws");
                 env.Add("IS_PROFILE_HTTP_CALLS", "false");
@@ -37,7 +37,7 @@ namespace Gaos.Environment
 
         public static Dictionary<string, string> GetEnvironment()
         {
-            //return Environment.GetEnvironment_("Development");
+            //return Environment.GetEnvironment_("Test");
             return GetEnvironment_("Development");
         }
 
