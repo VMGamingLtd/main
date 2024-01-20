@@ -67,9 +67,18 @@ public class Planet : MonoBehaviour
             meshFilters[i].gameObject.SetActive(renderFace);
         }
 
+        FixMeshPosition();
         AddPlayerToPlanet();
     }
-
+    
+    private void FixMeshPosition()
+    {
+        for (int i=0; i < 6; i++)
+        {
+            meshFilters[i].transform.localPosition = new Vector3(-12.44094f, 6.144372f, -1.966287f);
+        }
+    }
+    
     private void RemoveChildern()
     {
         Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1100: RemoveChildern()");
@@ -92,12 +101,34 @@ public class Planet : MonoBehaviour
         // clear the eventObjects list
         eventObjects.Clear();
     }
+    
+    private GameObject FindPlayerTemplate() 
+    {
+        const string parentPath = "/PlanetParent";
+        GameObject parent = GameObject.Find(parentPath);
+        if (parent == null)
+        {
+            Debug.LogError($"parent not found: {parentPath}");
+            throw new System.Exception($"parent not found: {parentPath}"); 
+        }
+        
+        // iterate over parent's children
+        foreach (Transform child in parent.transform)
+        {
+            if (child.gameObject.name == "PlayerOnPlanetTemplate")
+            {
+                return child.gameObject;
+            }
+        }
+        Debug.LogError("template not found");
+        throw new System.Exception("template not found"); 
+    }
 
     private void AddPlayerToPlanet()
     {
         Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1120: AddPlayerToPlanet()");
         // Add the player to the planet
-        GameObject player = GameObject.Find("/PlayerOnPlanet");
+        GameObject player = FindPlayerTemplate();
         // clone the player
         player = Instantiate(player);
         SetPlanetLayer(player);
@@ -114,6 +145,8 @@ public class Planet : MonoBehaviour
     {
         int layer = LayerMask.NameToLayer("Planet");
         gobj.layer = layer;
+        // ensure player is active
+        gobj.SetActive(true);
     }
 
     public void GeneratePlanet()
@@ -170,6 +203,13 @@ public class Planet : MonoBehaviour
             }
         }
     }
+    
+    private void AddEventObjectToList(GameObject eventObject)
+    {
+        EventIcon eventIcon = eventObject.GetComponent<EventIcon>();
+        eventIcon.setPlanet(gameObject);
+        eventObjects.Add(eventObject);
+    }
 
     public void RecreateEventObject(string Name, Vector3 position)
     {
@@ -177,7 +217,7 @@ public class Planet : MonoBehaviour
         eventObject.transform.parent = transform;
         eventObject.transform.position = position;
         eventObject.AddComponent<EventIcon>();
-        eventObjects.Add(eventObject);
+        AddEventObjectToList(eventObject);
     }
 
     public void SpawnEventObjectsOnSurface(Mesh mesh, int numberOfObjects)
@@ -229,7 +269,7 @@ public class Planet : MonoBehaviour
             }
 
             eventObject.AddComponent<EventIcon>();
-            eventObjects.Add(eventObject);
+            AddEventObjectToList(eventObject);
         }
     }
 

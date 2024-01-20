@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,14 @@ public class EventIcon : MonoBehaviour
     [SerializeField]
     private float sphericalRadius = 3.6f;
 
+    private GameObject planet;
+    
+    public void setPlanet(GameObject planet)
+    {
+        Debug.Log($@"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 5200: EventIcon.setPlanet() {planet}");
+        this.planet = planet;
+    }
+    
     void Start()
     {
         eventObjectContainer = GameObject.Find("PlanetParent").GetComponent<EventObjectContainer>();
@@ -62,6 +71,21 @@ public class EventIcon : MonoBehaviour
                 iconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log($@"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 4000: EventIcon.OnDestroy() {transform.name}");
+        if (planet == null)
+        {
+            return;
+        }
+        Debug.Log($@"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 4010");
+
+        List<GameObject> eventObjects = planet.GetComponent<Planet>().eventObjects;
+        
+        // remove the event object from the list
+        eventObjects.Remove(gameObject);
     }
 
     private Sprite AssignSpriteToSlot(string spriteName)
