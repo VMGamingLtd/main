@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEditor.SceneManagement;
 
 [CustomEditor(typeof(Planet))]
 public class PlanetEditor : Editor
@@ -21,6 +22,7 @@ public class PlanetEditor : Editor
         if (GUILayout.Button("Generate Planet"))
         {
             planet.GeneratePlanet();
+            EditorSceneManager.MarkSceneDirty(planet.gameObject.scene);
         }
 
         DrawSettingsEditor(planet.shapeSettings, planet.OnShapeSettingsUpdated, ref planet.shapeSettingsFoldout, ref shapeEditor);

@@ -88,6 +88,7 @@ public class Planet : MonoBehaviour
         // iterate over parent's children
         foreach (Transform child in parent.transform)
         {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 340: {child.gameObject.name}");
             if (child.gameObject.name == "PlayerOnPlanetTemplate")
             {
                 return child.gameObject;
@@ -99,22 +100,16 @@ public class Planet : MonoBehaviour
     
     private GameObject FindPlayer() 
     {
-        const string parentPath = "/PlanetParent";
-        GameObject parent = GameObject.Find(parentPath);
-        if (parent == null)
-        {
-            Debug.LogError($"parent not found: {parentPath}");
-            throw new System.Exception($"parent not found: {parentPath}"); 
-        }
-        
         // iterate over parent's children
-        foreach (Transform child in parent.transform)
+        foreach (Transform child in gameObject.transform)
         {
             if (child.gameObject.name == "Player")
             {
                 return child.gameObject;
             }
         }
+        
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 800: no player");
 
         return null;
     }
