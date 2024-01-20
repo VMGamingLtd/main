@@ -17,7 +17,6 @@ public class EventIcon : MonoBehaviour
     
     public void setPlanet(GameObject planet)
     {
-        Debug.Log($@"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 5200: EventIcon.setPlanet() {planet}");
         this.planet = planet;
     }
     
@@ -86,6 +85,13 @@ public class EventIcon : MonoBehaviour
         
         // remove the event object from the list
         eventObjects.Remove(gameObject);
+        
+        if (iconInstance != null)
+        {
+            // destroy the icon
+            Destroy(iconInstance);
+        }
+        
     }
 
     private Sprite AssignSpriteToSlot(string spriteName)

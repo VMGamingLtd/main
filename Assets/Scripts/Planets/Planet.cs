@@ -34,8 +34,6 @@ public class Planet : MonoBehaviour
 
     void Initialize()
     {
-        RemoveChildern();
-
         shapeGenerator.UpdateSettings(shapeSettings);
         colourGenerator.UpdateSettings(colourSettings);
         if (meshFilters == null || meshFilters.Length == 0)
@@ -67,8 +65,6 @@ public class Planet : MonoBehaviour
             meshFilters[i].gameObject.SetActive(renderFace);
         }
 
-        FixMeshPosition();
-        AddPlayerToPlanet();
     }
     
     private void FixMeshPosition()
@@ -77,29 +73,6 @@ public class Planet : MonoBehaviour
         {
             meshFilters[i].transform.localPosition = new Vector3(-12.44094f, 6.144372f, -1.966287f);
         }
-    }
-    
-    private void RemoveChildern()
-    {
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1100: RemoveChildern()");
-        // Remove all children from plannet which are not the meshFilterss 
-        foreach (Transform child in transform)
-        {
-            if (child.gameObject.name != "mesh")
-            {
-                if (Application.isEditor)
-                {
-                    DestroyImmediate(child.gameObject);
-                }
-                else
-                {
-                    Destroy(child.gameObject);
-                }
-            }
-        }
-
-        // clear the eventObjects list
-        eventObjects.Clear();
     }
     
     private GameObject FindPlayerTemplate() 
@@ -122,6 +95,28 @@ public class Planet : MonoBehaviour
         }
         Debug.LogError("template not found");
         throw new System.Exception("template not found"); 
+    }
+    
+    private GameObject FindPlayer() 
+    {
+        const string parentPath = "/PlanetParent";
+        GameObject parent = GameObject.Find(parentPath);
+        if (parent == null)
+        {
+            Debug.LogError($"parent not found: {parentPath}");
+            throw new System.Exception($"parent not found: {parentPath}"); 
+        }
+        
+        // iterate over parent's children
+        foreach (Transform child in parent.transform)
+        {
+            if (child.gameObject.name == "PlayerOnPlanetTemplate")
+            {
+                return child.gameObject;
+            }
+        }
+
+        return null;
     }
 
     private void AddPlayerToPlanet()
@@ -155,6 +150,16 @@ public class Planet : MonoBehaviour
         Initialize();
         GenerateMesh();
         GenerateColours();
+        
+        if (!Application.isPlaying)
+        {
+            FixMeshPosition();
+            GameObject player = FindPlayer();
+            if (player != null)
+            {
+                AddPlayerToPlanet();
+            }
+        }
     }
 
     public void OnShapeSettingsUpdated()
@@ -185,7 +190,11 @@ public class Planet : MonoBehaviour
             if (meshFilters[i].gameObject.activeSelf)
             {
                 terrainFaces[i].ConstructMesh();
-                SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 4);
+                // if in playing mode, spawn event objects on the surface
+                if (Application.isPlaying)
+                {
+                    SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 4);
+                }
             }
         }
 
@@ -252,17 +261,14 @@ public class Planet : MonoBehaviour
 
             if (elevation < 0.0f)
             {
-                Debug.Log("Ocean EventObject at elevation: " + elevation);
                 eventObject.name = "Fish";
             }
             else if (elevation < 0.02f)
             {
-                Debug.Log("Land EventObject at elevation: " + elevation);
                 eventObject.name = "FibrousLeaves";
             }
             else
             {
-                Debug.Log("Mountain EventObject at elevation: " + elevation);
                 eventObject.name = "IronOre";
             }
 
