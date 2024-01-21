@@ -202,11 +202,12 @@ public class InventoryManager : MonoBehaviour
                 {
                     ItemData itemData = itemPrefab.GetComponent<ItemData>();
                     itemData.quantity += quantity;
+                    string currentResource = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
 
-                    TextMeshProUGUI countText = itemPrefab.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                    if (countText != null)
+                    if (itemPrefab.transform.Find("CountInventory").TryGetComponent<TextMeshProUGUI>(out var countText))
                     {
-                        countText.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                        if (currentResource.EndsWith(".00")) _ = currentResource[..^3];
+                        countText.text = currentResource;
                     }
 
                     return;
@@ -230,11 +231,12 @@ public class InventoryManager : MonoBehaviour
                     if (itemData.ID == objID)
                     {
                         itemData.quantity -= quantity;
+                        string currentResource = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
 
-                        TextMeshProUGUI countText = itemPrefab.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                        if (countText != null)
+                        if (itemPrefab.transform.Find("CountInventory").TryGetComponent<TextMeshProUGUI>(out var countText))
                         {
-                            countText.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                            if (currentResource.EndsWith(".00")) _ = currentResource[..^3];
+                            countText.text = currentResource;
                         }
                         return;
                     }
@@ -273,11 +275,12 @@ public class InventoryManager : MonoBehaviour
                 {
                     ItemData itemData = itemPrefab.GetComponent<ItemData>();
                     itemData.quantity -= quantity;
+                    string currentResource = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
 
-                    TextMeshProUGUI countText = itemPrefab.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
-                    if (countText != null)
+                    if (itemPrefab.transform.Find("CountInventory").TryGetComponent<TextMeshProUGUI>(out var countText))
                     {
-                        countText.text = itemData.quantity.ToString("F2", CultureInfo.InvariantCulture);
+                        if (currentResource.EndsWith(".00")) _ = currentResource[..^3];
+                        countText.text = currentResource;
                     }
 
                     // Ensure the item quantity doesn't go below zero

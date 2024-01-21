@@ -9,6 +9,7 @@ public class ProductionCreator : MonoBehaviour
 {
     public GameObject manualProductionRowTemplate;
     public GameObject productionRowTemplate;
+    public GameObject energyProductionRowTemplate;
     public RectTransform overviewProductionList;
     public TranslationManager translationManager;
 
@@ -19,13 +20,12 @@ public class ProductionCreator : MonoBehaviour
         CoroutineManager.manualProduction = true;
         if (recipeData.recipeProduct == "BUILDINGS")
         {
-            newItem.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlotBuilding(recipeData.recipeName);
+            newItem.transform.Find("OutputIcon").GetComponent<Image>().sprite = AssignSpriteToSlotBuilding(recipeData.recipeName);
         }
         else
         {
-            newItem.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeData.recipeName);
+            newItem.transform.Find("OutputIcon").GetComponent<Image>().sprite = AssignSpriteToSlot(recipeData.recipeName);
         }
-        newItem.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(recipeData.recipeName);
 
         string quantity = recipeData.outputValue.ToString();
         if (Player.OutcomeRate > 0)
@@ -48,18 +48,40 @@ public class ProductionCreator : MonoBehaviour
         GameObject newItem = Instantiate(productionRowTemplate, overviewProductionList);
         newItem.name = itemData.ID.ToString();
         newItem.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlotBuilding(itemData.spriteIconName);
-        //newItem.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Electricity");
-        //newItem.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = itemData.powerOutput.ToString();
         newItem.transform.Find("Location").GetComponent<TextMeshProUGUI>().text = itemData.buildingName;
+
+        if (itemData.consumedSlotCount == 0)
+        {
+            newItem.transform.Find("RedArrow").gameObject.SetActive(false);
+        }
 
         for (int i = 0; i < 4; i++)
         {
             string childName = "ConsumeResource" + (i + 1);
-            Transform childTransform = newItem.transform.Find(childName);
-            if (childTransform != null)
+            if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
             {
                 GameObject childObject = childTransform.gameObject;
                 SlotItemData child = (i < itemData.consumedItems.Count) ? itemData.consumedItems[i] : null;
+
+                if (child != null)
+                {
+                    childObject.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(child.itemName);
+                    childObject.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
+                }
+                else
+                {
+                    childObject.SetActive(false);
+                }
+            }
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            string childName = "OutputResource" + (i + 1);
+            if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
+            {
+                GameObject childObject = childTransform.gameObject;
+                SlotItemData child = (i < itemData.producedItems.Count) ? itemData.producedItems[i] : null;
 
                 if (child != null)
                 {
@@ -78,18 +100,21 @@ public class ProductionCreator : MonoBehaviour
 
     public GameObject EnlistEnergyBuildingProduction(EnergyBuildingItemData itemData)
     {
-        GameObject newItem = Instantiate(productionRowTemplate, overviewProductionList);
+        NumberFormater formatter = new();
+        GameObject newItem = Instantiate(energyProductionRowTemplate, overviewProductionList);
         newItem.name = itemData.ID.ToString();
         newItem.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlotBuilding(itemData.spriteIconName);
-        newItem.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Electricity");
-        newItem.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = itemData.powerOutput.ToString();
+        newItem.transform.Find("OutputIcon").GetComponent<Image>().sprite = AssignSpriteToSlot("Electricity");
+
+        string formattedPower = formatter.FormatEnergyInThousands(itemData.powerOutput);
+        newItem.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = formattedPower;
+
         newItem.transform.Find("Location").GetComponent<TextMeshProUGUI>().text = itemData.buildingName;
 
         for (int i = 0; i < 4; i++)
         {
             string childName = "ConsumeResource" + (i + 1);
-            Transform childTransform = newItem.transform.Find(childName);
-            if (childTransform != null)
+            if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
             {
                 GameObject childObject = childTransform.gameObject;
                 SlotItemData child = (i < itemData.consumedItems.Count) ? itemData.consumedItems[i] : null;
@@ -114,18 +139,41 @@ public class ProductionCreator : MonoBehaviour
         GameObject newItem = Instantiate(productionRowTemplate, overviewProductionList);
         newItem.name = ID.ToString();
         newItem.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlotBuilding(itemData.spriteIconName);
-        //newItem.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Electricity");
-        //newItem.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = itemData.powerOutput.ToString();
         newItem.transform.Find("Location").GetComponent<TextMeshProUGUI>().text = itemData.buildingName;
+
+        if (itemData.consumedSlotCount == 0)
+        {
+            newItem.transform.Find("RedArrow").gameObject.SetActive(false);
+        }
 
         for (int i = 0; i < 4; i++)
         {
             string childName = "ConsumeResource" + (i + 1);
-            Transform childTransform = newItem.transform.Find(childName);
-            if (childTransform != null)
+
+            if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
             {
                 GameObject childObject = childTransform.gameObject;
                 SlotItemData child = (i < itemData.consumedItems.Count) ? itemData.consumedItems[i] : null;
+
+                if (child != null)
+                {
+                    childObject.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(child.itemName);
+                    childObject.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
+                }
+                else
+                {
+                    childObject.SetActive(false);
+                }
+            }
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            string childName = "OutputResource" + (i + 1);
+            if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
+            {
+                GameObject childObject = childTransform.gameObject;
+                SlotItemData child = (i < itemData.producedItems.Count) ? itemData.producedItems[i] : null;
 
                 if (child != null)
                 {
@@ -144,18 +192,21 @@ public class ProductionCreator : MonoBehaviour
 
     public GameObject RecreateEnergyBuildingProduction(EnergyBuildingItemDataModel itemData, int ID)
     {
-        GameObject newItem = Instantiate(productionRowTemplate, overviewProductionList);
+        NumberFormater formatter = new();
+        GameObject newItem = Instantiate(energyProductionRowTemplate, overviewProductionList);
         newItem.name = ID.ToString();
         newItem.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlotBuilding(itemData.spriteIconName);
-        newItem.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Electricity");
-        newItem.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = itemData.powerOutput.ToString();
+        newItem.transform.Find("OutputIcon").GetComponent<Image>().sprite = AssignSpriteToSlot("Electricity");
+
+        string formattedPower = formatter.FormatEnergyInThousands(itemData.powerOutput);
+        newItem.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = formattedPower;
+
         newItem.transform.Find("Location").GetComponent<TextMeshProUGUI>().text = itemData.buildingName;
 
         for (int i = 0; i < 4; i++)
         {
             string childName = "ConsumeResource" + (i + 1);
-            Transform childTransform = newItem.transform.Find(childName);
-            if (childTransform != null)
+            if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
             {
                 GameObject childObject = childTransform.gameObject;
                 SlotItemData child = (i < itemData.consumedItems.Count) ? itemData.consumedItems[i] : null;
@@ -175,9 +226,19 @@ public class ProductionCreator : MonoBehaviour
         return newItem;
     }
 
-    public void ChangeProductionItemBackground(EnergyBuildingItemData itemData, Color color)
+    public void ChangeProductionItemBackground(Color color, EnergyBuildingItemData energyItemData = null, BuildingItemData itemData = null)
     {
-        string childID = itemData.ID.ToString();
+        string childID;
+
+        if (energyItemData != null)
+        {
+            childID = energyItemData.ID.ToString();
+        }
+        else
+        {
+            childID = itemData.ID.ToString();
+        }
+
         GameObject foundChild = FindChild(overviewProductionList, childID);
         if (foundChild != null)
         {
@@ -197,9 +258,18 @@ public class ProductionCreator : MonoBehaviour
         }
     }
 
-    public TimebarControl LinkTimebarToBuildingData(EnergyBuildingItemData itemData)
+    public TimebarControl LinkTimebarToBuildingData(EnergyBuildingItemData energyItemData = null, BuildingItemData itemData = null)
     {
-        string childID = itemData.ID.ToString();
+        string childID;
+
+        if (energyItemData != null)
+        {
+            childID = energyItemData.ID.ToString();
+        }
+        else
+        {
+            childID = itemData.ID.ToString();
+        }
         GameObject foundChild = FindChild(overviewProductionList, childID);
         if (foundChild != null)
         {

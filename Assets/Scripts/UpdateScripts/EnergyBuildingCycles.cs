@@ -63,7 +63,7 @@ public class EnergyBuildingCycles : MonoBehaviour
             timebarControl = productionCreator.LinkTimebarToBuildingData(itemData);
         }
         timebarControl.ChangeTimeBarColor(UIColors.timebarColorYellow);
-        productionCreator.ChangeProductionItemBackground(itemData, UIColors.timebarColorYellow);
+        productionCreator.ChangeProductionItemBackground(UIColors.timebarColorYellow, itemData);
         itemData.efficiency = 0;
         itemData.actualPowerOutput = 0;
         pauseImgColor = UIColors.fadedCol;
@@ -99,13 +99,13 @@ public class EnergyBuildingCycles : MonoBehaviour
 
     public async UniTask NotEnoughMaterials()
     {
+        itemData = GetComponent<EnergyBuildingItemData>();
         if (timebarControl == null)
         {
             timebarControl = productionCreator.LinkTimebarToBuildingData(itemData);
         }
         timebarControl.ChangeTimeBarColor(UIColors.timebarColorRed);
-        productionCreator.ChangeProductionItemBackground(itemData, UIColors.timebarColorRed);
-        itemData = GetComponent<EnergyBuildingItemData>();
+        productionCreator.ChangeProductionItemBackground(UIColors.timebarColorRed, itemData);
         itemData.efficiency = 0;
         itemData.actualPowerOutput = 0;
         animation = GetComponent<Animation>();
@@ -183,7 +183,7 @@ public class EnergyBuildingCycles : MonoBehaviour
             timebarControl = productionCreator.LinkTimebarToBuildingData(itemData);
         }
         timebarControl.ChangeTimeBarColor(UIColors.timebarColorGreen);
-        productionCreator.ChangeProductionItemBackground(itemData, UIColors.blackHalfTransparent);
+        productionCreator.ChangeProductionItemBackground(UIColors.blackHalfTransparent, itemData);
 
         while (itemData.timer < itemData.totalTime && itemData.efficiencySetting > 0)
         {

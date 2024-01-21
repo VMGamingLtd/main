@@ -58,12 +58,19 @@ public class BuildingCycles : MonoBehaviour
         currentFillAmount = Mathf.Lerp(0f, 1f, itemData.timer / itemData.totalTime);
         fillImg.fillAmount = currentFillAmount;
         itemData.timer += Time.deltaTime;
+        timebarControl.UpdateTimebar(currentFillAmount);
         itemData.efficiency = itemData.efficiencySetting;
         await UniTask.DelayFrame(1);
     }
 
     private void PauseMode()
     {
+        if (timebarControl == null)
+        {
+            timebarControl = productionCreator.LinkTimebarToBuildingData(null, itemData);
+        }
+        timebarControl.ChangeTimeBarColor(UIColors.timebarColorYellow);
+        productionCreator.ChangeProductionItemBackground(UIColors.timebarColorYellow, null, itemData);
         itemData.efficiency = 0;
         pauseImgColor = UIColors.fadedCol;
         pauseImage.color = pauseImgColor;
@@ -74,6 +81,12 @@ public class BuildingCycles : MonoBehaviour
     }
     private async UniTask NoElectricityMode()
     {
+        if (timebarControl == null)
+        {
+            timebarControl = productionCreator.LinkTimebarToBuildingData(null, itemData);
+        }
+        timebarControl.ChangeTimeBarColor(UIColors.timebarColorYellow);
+        productionCreator.ChangeProductionItemBackground(UIColors.timebarColorYellow, null, itemData);
         itemData.efficiency = 0;
         pauseImgColor = UIColors.invisibleCol;
         pauseImage.color = pauseImgColor;
@@ -99,6 +112,12 @@ public class BuildingCycles : MonoBehaviour
     public async UniTask NotEnoughMaterials()
     {
         itemData = obj.GetComponent<BuildingItemData>();
+        if (timebarControl == null)
+        {
+            timebarControl = productionCreator.LinkTimebarToBuildingData(null, itemData);
+        }
+        timebarControl.ChangeTimeBarColor(UIColors.timebarColorRed);
+        productionCreator.ChangeProductionItemBackground(UIColors.timebarColorRed, null, itemData);
         itemData.efficiency = 0;
         animation = GetComponent<Animation>();
         animation.Play("NotEnoughMaterialsBuilding");
@@ -143,6 +162,13 @@ public class BuildingCycles : MonoBehaviour
 
         pauseImgColor = UIColors.invisibleCol;
         electricImgColor = UIColors.invisibleCol;
+
+        if (timebarControl == null)
+        {
+            timebarControl = productionCreator.LinkTimebarToBuildingData(null, itemData);
+        }
+        timebarControl.ChangeTimeBarColor(UIColors.timebarColorGreen);
+        productionCreator.ChangeProductionItemBackground(UIColors.blackHalfTransparent, null, itemData);
 
         while (itemData.timer < itemData.totalTime && itemData.efficiencySetting > 0)
         {
@@ -242,6 +268,14 @@ public class BuildingCycles : MonoBehaviour
             await NotEnoughMaterials();
             return;
         }
+
+        if (timebarControl == null)
+        {
+            timebarControl = productionCreator.LinkTimebarToBuildingData(null, itemData);
+        }
+        timebarControl.ChangeTimeBarColor(UIColors.timebarColorGreen);
+        productionCreator.ChangeProductionItemBackground(UIColors.blackHalfTransparent, null, itemData);
+
         // if all above it approved, then starts the building cycle
         while (itemData.timer < itemData.totalTime && itemData.efficiencySetting > 0)
         {
