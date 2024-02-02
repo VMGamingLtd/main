@@ -18,7 +18,8 @@ public class FindObjectsByScript : EditorWindow
 
         if (GUILayout.Button("Find"))
         {
-            FindObjectsWithScript(scriptName);
+            //FindObjectsWithScript(scriptName);
+            FindObjectsWithScriptIncludingInactive(scriptName);
         }
     }
 
@@ -42,4 +43,34 @@ public class FindObjectsByScript : EditorWindow
             Debug.Log(go.name, go);
         }
     }
+
+    private void FindObjectsWithScriptIncludingInactive(string scriptName)
+    {
+        var allGameObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+        List<GameObject> results = new List<GameObject>();
+
+        foreach (var go in allGameObjects)
+        {
+            // Check if the GameObject is part of a scene (to exclude prefabs not currently in the scene)
+            if (go.hideFlags == HideFlags.None)
+            {
+                var scripts = go.GetComponents<MonoBehaviour>();
+                foreach (var script in scripts)
+                {
+                    if (script != null && script.GetType().Name == scriptName)
+                    {
+                        results.Add(go);
+                        break;
+                    }
+                }
+            }
+        }
+
+        Debug.Log($"Found {results.Count} GameObject(s) with script '{scriptName}' including inactive ones");
+        foreach (var result in results)
+        {
+            Debug.Log(result.name, result);
+        }
+    }
+
 }

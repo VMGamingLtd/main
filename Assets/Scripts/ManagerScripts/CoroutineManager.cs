@@ -55,6 +55,8 @@ public class CoroutineManager : MonoBehaviour
     public static bool[] AllCoroutineBooleans = new bool[24];
     public static int IndexNumber;
 
+    public static int CurrentGameSlotId;
+
     public static string[] RecipeKeys =
     {
          "FibrousLeaves", "Water", "Biofuel", "DistilledWater", "Battery",
@@ -180,7 +182,56 @@ public class CoroutineManager : MonoBehaviour
 
     private void CheckSlotData()
     {
-        StartCoroutine(UserGameDataGet.Get(1, CallSaveSlot1Data));
+        // StartCoroutine(UserGameDataGet.Get(1, CallSaveSlot1Data));
+        SetSlotButtons();
+    }
+
+    public void SetSlotButon(Gaos.Routes.Model.DeviceJson.DeviceRegisterResponseUserSlot slotData)
+    {
+        string description = slotData.Hours.ToString() + "h " + slotData.Minutes.ToString() + "m " + slotData.Seconds.ToString() + "s ";
+        TextMeshProUGUI saveSlotTitle = null;
+        TextMeshProUGUI saveSlotDesc = null;
+
+        switch (slotData.SlotId)
+        {
+            case 1:
+                saveSlotTitle = saveSlot1Title;
+                saveSlotDesc = saveSlot1Desc;
+                break;
+            case 2:
+                saveSlotTitle = saveSlot2Title;
+                saveSlotDesc = saveSlot2Desc;
+                break;
+            case 3:
+                saveSlotTitle = saveSlot3Title;
+                saveSlotDesc = saveSlot3Desc;
+                break;
+            case 4:
+                saveSlotTitle = saveSlot4Title;
+                saveSlotDesc = saveSlot4Desc;
+                break;
+            default:
+                Debug.LogWarning($"Invalid slot id: ${slotData.SlotId}, user: ${slotData.UserName}");
+                break;
+        }
+
+        saveSlotTitle.text = slotData.UserName;
+        saveSlotDesc.text = description;
+
+        saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+        legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+    }
+
+    private void SetSlotButtons()
+    {
+        // Get all active slots from context
+        Gaos.Routes.Model.DeviceJson.DeviceRegisterResponseUserSlot[] userSlots = Gaos.Context.Authentication.GetUserSlots();
+        for ( int i = 0; i < userSlots.Length; i++)
+        {
+            SetSlotButon(userSlots[i]);
+        }
+        saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
+        legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
     }
 
     private void CallSaveSlot1Data(UserGameDataGetResponse response)
@@ -444,6 +495,7 @@ public class CoroutineManager : MonoBehaviour
         newGamePopup.GetComponent<Michsky.UI.Shift.ModalWindowManager>().ModalWindowIn();
         loadingBar.SetActive(false);
     }
+
     public IEnumerator LoadSaveSlots()
     {
         CheckSlotData();

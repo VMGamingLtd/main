@@ -53,7 +53,7 @@ public class CustomSceneLoader : MonoBehaviour
                 var userName = Gaos.Context.Authentication.GetUserName();
                 var isGuest = Gaos.Context.Authentication.GetIsGuest();
                 UserName.userName = userName;
-                Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
+                Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventArgs { UserName = UserName.userName, IsGuest = isGuest });
                 ModelsRx.ContextRx.UserRx.UserName = userName;
                 ModelsRx.ContextRx.UserRx.IsGuest = isGuest;
 
@@ -80,7 +80,7 @@ public class CustomSceneLoader : MonoBehaviour
             var userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
             UserName.userName = userName;
             bool isGuest = (bool)Gaos.User.User.GuestLogin.GuestLoginResponse.IsGuest;
-            Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventPayload { UserName = UserName.userName, IsGuest = isGuest });
+            Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventArgs { UserName = UserName.userName, IsGuest = isGuest });
             ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
             ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.GuestLogin.GuestLoginResponse.IsGuest;
             LoadGuestAsync();

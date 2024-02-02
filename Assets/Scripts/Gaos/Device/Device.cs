@@ -109,6 +109,7 @@ namespace Gaos.Device.Device
                         Context.Authentication.SetIsGuest(false);
                     }
                     Context.Authentication.SetJWT(DeviceRegisterResponse.JWT.Token);
+                    Context.Authentication.SetUserSlots(DeviceRegisterResponse.UserSlots);
                 }
                 else
                 {

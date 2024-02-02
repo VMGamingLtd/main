@@ -90,5 +90,47 @@ namespace Gaos.GameData
         }
     }
 
+    public class EnsureNewSlot
+    {
+        private readonly static string CLASS_NAME = typeof(EnsureNewSlot).Name;
+
+
+
+        public delegate void OnEnsureNewSlotComplete(EnsureNewSlotResponse response);
+
+        public static IEnumerator EnsureNewSlotExists(int slotId, OnEnsureNewSlotComplete onEnsureNewSlotComplete)
+        {
+            const string METHOD_NAME = "Save()";
+
+            EnsureNewSlotRequest request = new EnsureNewSlotRequest();
+            request.UserId = Context.Authentication.GetUserId();
+            request.SlotId = slotId;
+
+            string requestJsonStr = JsonConvert.SerializeObject(request);
+
+            Api.ApiCall apiCall = new("api/gameData/ensureNewSlot", requestJsonStr);
+            yield return apiCall.Call();
+
+            if (apiCall.IsResponseError)
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error saving game data");
+                onEnsureNewSlotComplete(null);
+
+            }
+            else
+            {
+                EnsureNewSlotResponse response = JsonConvert.DeserializeObject<EnsureNewSlotResponse>(apiCall.ResponseJsonStr);
+                if (response.IsError == true)
+                {
+                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error ensuring new slot exists: {response.ErrorMessage}");
+                    onEnsureNewSlotComplete(null);
+                    yield break;
+                }
+                onEnsureNewSlotComplete(response);
+            }
+
+        }
+    }
+
 
 }

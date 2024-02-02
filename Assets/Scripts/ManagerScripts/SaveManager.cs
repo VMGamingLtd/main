@@ -12,6 +12,8 @@ using UnityEngine;
 public class SaveManager : MonoBehaviour
 {
 
+    public static int CurrentGameSlotId;
+
     private const string FileName = "Savegame.json";
     private string filePath;
     public InventoryManager inventoryManager;
@@ -1358,7 +1360,7 @@ public class SaveManager : MonoBehaviour
 
     public void TestSaveGameDataOnServer()
     {
-        int slotId = 1;
+        int slotId = CurrentGameSlotId;
 
         // fill in game data
 

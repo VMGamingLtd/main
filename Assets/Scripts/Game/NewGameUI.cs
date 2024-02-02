@@ -12,6 +12,7 @@ using static SaveManager;
 
 public class NewGameUI : MonoBehaviour
 {
+    public int slotNumber;
     public GameObject newGameUI;
     public GameObject saveSlots;
     public BuildingManager buildingManager;
@@ -39,12 +40,14 @@ public class NewGameUI : MonoBehaviour
     {
         translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
     }
+
     public void StartNewGameUI()
     {
         newGameUI.SetActive(true);
         saveSlots.SetActive(false);
     }
-    private void CallSaveSlot1Data(UserGameDataGetResponse response)
+
+    private void CalGetSlotData(UserGameDataGetResponse response)
     {
         recipeCreator = GameObject.Find("RecipeCreatorList").GetComponent<RecipeCreator>();
         itemCreator = GameObject.Find("ItemCreatorList").GetComponent<ItemCreator>();
@@ -444,20 +447,78 @@ public class NewGameUI : MonoBehaviour
         inventoryManager.PopulateInventoryArrays();
         buildingManager.PopulateBuildingArrays();
         recipeManager.PopulateInventoryArrays();
-        StartCoroutine(UserGameDataGet.Get(1, CallSaveSlot1Data));
+        StartCoroutine(UserGameDataGet.Get(slotNumber, CalGetSlotData));
     }
 
-    public void CheckSlotStatus()
-    {
-        string slotName = transform.Find("Info/Name").GetComponent<TextMeshProUGUI>().text;
-        CoreTranslations matchedEntry = translationManager.FindEntryBySubstring(slotName);
-        if (matchedEntry != null)
+    private bool IsNewSlot(Gaos.Routes.Model.DeviceJson.DeviceRegisterResponseUserSlot slot) {
+        if (slot.Hours == 0 && slot.Minutes == 0 && slot.Seconds == 0)
         {
-            StartNewGameUI();
+            return true;
         }
         else
         {
-            LoadSlotGame();
+            return false;
+        }
+    }
+
+    public void BootGameInSlot()
+    {
+        if (true)
+        {
+            CoroutineManager.CurrentGameSlotId = slotNumber;
+            SaveManager.CurrentGameSlotId = slotNumber;
+
+            // Search in gaos context if there's an active user slot with same slotNumber
+            var userSlots = Gaos.Context.Authentication.GetUserSlots();
+            foreach (var slot in userSlots)
+            {
+                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1800: SlotId: {slot.SlotId}");
+                if (slot.SlotId == slotNumber)
+                {
+                    if (IsNewSlot(slot) == true)
+                    {
+                        // If there's a user slot with same slotNumber and game has never been saved on the slot then create a new game on the slot, whatever players date before first game data save will be lost
+                        StartNewGameUI();
+                        return;
+                    }
+                    else
+                    {
+                        // If there's a user slot with same slotNumber and there was at least one game data save from the game on the slot then boot existing game, new players game data after last save will be lost
+                        LoadSlotGame();
+                        return;
+                    }
+                }
+            }
+
+            // Ensure new slot exists in backend
+            StartCoroutine(Gaos.GameData.EnsureNewSlot.EnsureNewSlotExists(slotNumber, OnEnsureNewSlotComplete));
+
+            // If there's no acive user slot with same slotNumber, then start new game on the slot
+            StartNewGameUI();
+        }
+        /*
+        else
+        {
+            string slotName = transform.Find("Info/Name").GetComponent<TextMeshProUGUI>().text;
+            CoreTranslations matchedEntry = translationManager.FindEntryBySubstring(slotName);
+            if (matchedEntry != null)
+            {
+                StartNewGameUI();
+            }
+            else
+            {
+                LoadSlotGame();
+            }
+        }
+        */
+    }
+
+    public void OnEnsureNewSlotComplete(EnsureNewSlotResponse response)
+    {
+        if (response != null)
+        {
+            CoroutineManager.CurrentGameSlotId = slotNumber;
+            StartNewGameUI();
         }
     }
 }
