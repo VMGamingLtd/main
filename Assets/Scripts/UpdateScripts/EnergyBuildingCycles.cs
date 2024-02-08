@@ -220,6 +220,7 @@ public class EnergyBuildingCycles : MonoBehaviour
             string currentResource = inventoryManagerRef.GetItemQuantity(consumableName, quality).ToString("F2", CultureInfo.InvariantCulture);
             for (int i = 0; i < currentTextArray.Length; i++)
             {
+                if (currentResource.EndsWith(".00")) currentResource = currentResource[..^3];
                 currentTextArray[i].text = currentResource;
             }
         }

@@ -523,6 +523,51 @@
           ""quantity"": 10
         }
       ]
+    },
+    {
+      ""index"": 24,
+      ""recipeName"": ""ResearchDevice"",
+      ""recipeProduct"": ""BUILDINGS"",
+      ""recipeType"": ""LABORATORY"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 16,
+      ""productionTime"": 60,
+      ""outputValue"": 1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 11,
+          ""name"": ""IronBeam"",
+          ""product"": ""PROCESSED"",
+          ""type"": ""METALS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 4
+        },      
+        {
+          ""index"": 13,
+          ""name"": ""IronSheet"",
+          ""product"": ""BASIC"",
+          ""type"": ""METALS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 8
+        },
+        {
+          ""index"": 21,
+          ""name"": ""IronTube"",
+          ""product"": ""PROCESSED"",
+          ""type"": ""METALS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 8
+        },
+        {
+          ""index"": 9,
+          ""name"": ""Wood"",
+          ""product"": ""BASIC"",
+          ""type"": ""PLANTS"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 12
+        }
+      ]
     }
   ]
 }

@@ -100,7 +100,7 @@ public class NewGameUI : MonoBehaviour
             for (int i = 0; i < gameData.EventObjects.Count; i++)
             {
                 EventIconModel iconModel = gameData.EventObjects[i];
-                planet.RecreateEventObject(iconModel.Name, iconModel.position); 
+                planet.RecreateEventObject(iconModel.Name, iconModel.position);
             }
 
             // assign current goal
@@ -371,6 +371,7 @@ public class NewGameUI : MonoBehaviour
             inventoryManager.SortItemRecipeArraysByOrderAdded();
 
             if (GoalManager.secondGoal) buttonManager.UnlockBaseButton();
+            if (GoalManager.thirdGoal) buttonManager.UnlockResearchButton();
 
             MainUI.SetActive(true);
 
@@ -426,6 +427,8 @@ public class NewGameUI : MonoBehaviour
         float currentAlpha = 0f;
         float targetAlpha = 1f;
 
+
+
         while (currentTime < totalTime)
         {
             currentTime += Time.deltaTime;
@@ -437,6 +440,8 @@ public class NewGameUI : MonoBehaviour
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
+
+
     }
 
     public void LoadSlotGame()

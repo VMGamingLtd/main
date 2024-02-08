@@ -24,7 +24,8 @@
       ""producedItems"": [],
       ""totalTime"": 300.0,
       ""basePowerOutput"": 10000,
-      ""powerConsumption"": 0
+      ""powerConsumption"": 0,
+      ""researchPoints"": 0
     },
     {
       ""index"": 1,
@@ -44,7 +45,8 @@
       ],
       ""totalTime"": 10.0,
       ""basePowerOutput"": 0,
-      ""powerConsumption"": 2000
+      ""powerConsumption"": 2000,
+      ""researchPoints"": 0
     },
     {
       ""index"": 2,
@@ -71,7 +73,8 @@
       ],
       ""totalTime"": 20.0,
       ""basePowerOutput"": 0,
-      ""powerConsumption"": 2000
+      ""powerConsumption"": 2000,
+      ""researchPoints"": 0
     },
     {
       ""index"": 3,
@@ -98,7 +101,8 @@
       ],
       ""totalTime"": 20.0,
       ""basePowerOutput"": 0,
-      ""powerConsumption"": 2000
+      ""powerConsumption"": 2000,
+      ""researchPoints"": 0
     },
     {
       ""index"": 4,
@@ -145,7 +149,22 @@
       ],
       ""totalTime"": 10.0,
       ""basePowerOutput"": 30000,
-      ""powerConsumption"": 0
+      ""powerConsumption"": 0,
+      ""researchPoints"": 0
+    },
+    {
+      ""index"": 6,
+      ""buildingName"": ""ResearchDevice"",
+      ""buildingType"": ""LABORATORY"",
+      ""buildingClass"": ""CLASS-F"",
+      ""consumedSlotCount"": 0,
+      ""consumedItems"": [],
+      ""producedSlotCount"": 0,
+      ""producedItems"": [],
+      ""totalTime"": 60.0,
+      ""basePowerOutput"": 0,
+      ""powerConsumption"": 10000,
+      ""researchPoints"": 1.0
     }
   ]
 }

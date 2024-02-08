@@ -235,6 +235,16 @@
       ""itemType"": ""PUMPINGFACILITY"",
       ""itemClass"": ""CLASS-F"",
       ""equipable"": ""false""
+    },
+    {
+      ""index"": 23,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""ResearchDevice"",
+      ""itemProduct"": ""BUILDING"",
+      ""itemType"": ""LABORATORY"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
     }
   ]
 }

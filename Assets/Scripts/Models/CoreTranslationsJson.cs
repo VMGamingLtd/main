@@ -315,6 +315,20 @@
         ""slovak"": ""Vytvára <color=yellow>paru</color> ohrevom vody.""
       },
       {
+        ""identifier"": ""ResearchDevice"",
+        ""english"": ""Research device"",
+        ""russian"": ""Исследовательское устройство"",
+        ""chinese"": ""研究装置"",
+        ""slovak"": ""Výskumné zariadenie""
+      },
+      {
+        ""identifier"": ""ResearchDeviceDesc"",
+        ""english"": ""Generates <color=yellow>research points</color> at the cost of electricity."",
+        ""russian"": ""Устройство, генерирующее <color=yellow>точки исследования</color> с помощью электричества."",
+        ""chinese"": ""这会利用电力产生<color=yellow>研究点</color>。"",
+        ""slovak"": ""Generuje <color=yellow>výskumné body</color> za cenu elektriny.""
+      },
+      {
         ""identifier"": ""Wood"",
         ""english"": ""Wood"",
         ""russian"": ""Древесина"",
@@ -925,6 +939,13 @@
         ""slovak"": ""Komunikačné zariadenie""
       },
       {
+        ""identifier"": ""LABORATORY"",
+        ""english"": ""Laboratory"",
+        ""russian"": ""Лаборатория"",
+        ""chinese"": ""实验室"",
+        ""slovak"": ""Laboratórium""
+      },
+      {
         ""identifier"": ""STORAGEHOUSE"",
         ""english"": ""Storage house"",
         ""russian"": ""Складское помещение"",
@@ -1469,6 +1490,55 @@
         ""russian"": ""Фабрикатор: портативное чудо, плавно превращающее сырые ресурсы в любые предметы, которые только можно вообразить, от передового оружия до необходимых инструментов, открывая безграничные возможности."",
         ""chinese"": ""制造者：一种手持式奇迹，可以将原始资源无缝地转化为任何可以想象的物品，从先进武器到基本工具，释放无限的可能性。"",
         ""slovak"": ""Výrobník: ručný zázrak, ktorý plynule premieňa surové zdroje na akýkoľvek predmet, ktorý si dokážete predstaviť, od pokročilých zbraní až po základné nástroje, odomykajúci neobmedzené možnosti.""
+      },
+      {
+        ""identifier"": ""Research"",
+        ""english"": ""Research"",
+        ""russian"": ""Исследовать"",
+        ""chinese"": ""研究"",
+        ""slovak"": ""Výskum""
+      },
+      {
+        ""identifier"": ""ResearchPoint"",
+        ""english"": ""Research point"",
+        ""russian"": ""Точка исследования"",
+        ""chinese"": ""研究点"",
+        ""slovak"": ""Výskumný bod""
+      },
+      {
+        ""identifier"": ""ResearchScienceProjects"",
+        ""english"": ""Complete a research 'Science projects'"",
+        ""russian"": ""Завершить исследование «Научные проекты»"",
+        ""chinese"": ""完成一项研究“科学项目”"",
+        ""slovak"": ""Dokončite výskum „Vedecké projekty“""
+      },
+      {
+        ""identifier"": ""ScienceProjects"",
+        ""english"": ""Science projects"",
+        ""russian"": ""Научные проекты"",
+        ""chinese"": ""科学项目"",
+        ""slovak"": ""Vedecké projekty""
+      },
+      {
+        ""identifier"": ""ScienceProjectsDesc"",
+        ""english"": ""Enables the research of multiple categories."",
+        ""russian"": ""Позволяет исследовать несколько категорий."",
+        ""chinese"": ""该项目允许进行多个类别的研究。"",
+        ""slovak"": ""Umožňuje výskum viacerých kategórií.""
+      },
+      {
+        ""identifier"": ""Rewards"",
+        ""english"": ""Rewards:"",
+        ""russian"": ""Награды:"",
+        ""chinese"": ""奖励："",
+        ""slovak"": ""Odmeny:""
+      },
+      {
+        ""identifier"": ""Requirements"",
+        ""english"": ""Requirements:"",
+        ""russian"": ""Требования:"",
+        ""chinese"": ""要求："",
+        ""slovak"": ""Požiadavky:""
       }
     ]
   }

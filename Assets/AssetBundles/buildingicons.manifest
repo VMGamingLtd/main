@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3520463235
+CRC: 496152719
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a610b929a1052aca6659f01482c20628
+    Hash: d8a057d869f8c8a121de3c3eddbd8d77
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -17,7 +17,9 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/AssetBundlesRepo/BuildingIcons/Pipe.png
 - Assets/AssetBundlesRepo/BuildingIcons/FibrousPlantField.png
+- Assets/AssetBundlesRepo/BuildingIcons/ResearchDevice.png
 - Assets/AssetBundlesRepo/BuildingIcons/Turbine.png
+- Assets/AssetBundlesRepo/BuildingIcons/ResearchLab.png
 - Assets/AssetBundlesRepo/BuildingIcons/Boiler.png
 - Assets/AssetBundlesRepo/BuildingIcons/SteamGenerator.png
 - Assets/AssetBundlesRepo/BuildingIcons/BiofuelGenerator.png

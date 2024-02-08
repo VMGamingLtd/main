@@ -61,7 +61,7 @@ public class CoroutineManager : MonoBehaviour
          "OxygenTank", "BatteryCore", "Steam", "IronOre", "Wood",
          "Coal", "IronBeam", "BiofuelGenerator", "IronSheet", "IronRod",
          "LatexFoam", "ProteinBeans", "BiomassLeaves", "BiomassWood", "ProteinPowder",
-         "BioOil", "IronTube", "WaterPump", "FibrousPlantField"
+         "BioOil", "IronTube", "WaterPump", "FibrousPlantField", "ResearchDevice"
     };
 
     public Image imageToFill;
@@ -99,6 +99,7 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] IronTubeTexts;
     public TextMeshProUGUI[] WaterPumpTexts;
     public TextMeshProUGUI[] FibrousPlantFieldTexts;
+    public TextMeshProUGUI[] ResearchDeviceTexts;
 
     // production time texts
     public TextMeshProUGUI[] FibrousLeavesProductionTexts;
@@ -125,6 +126,7 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] IronTubeProductionTexts;
     public TextMeshProUGUI[] WaterPumpProductionTexts;
     public TextMeshProUGUI[] FibrousPlantFieldProductionTexts;
+    public TextMeshProUGUI[] ResearchDeviceProductionTexts;
 
     // material cost texts
     public TextMeshProUGUI[] FibrousLeavesMaterialCostTexts;
@@ -151,6 +153,7 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] IronTubeMaterialCostTexts;
     public TextMeshProUGUI[] WaterPumpMaterialCostTexts;
     public TextMeshProUGUI[] FibrousPlantFieldMaterialCostTexts;
+    public TextMeshProUGUI[] ResearchDeviceMaterialCostTexts;
 
     // production outcome texts
     public TextMeshProUGUI[] FibrousLeavesOutcomeTexts;
@@ -177,6 +180,7 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] IronTubeOutcomeTexts;
     public TextMeshProUGUI[] WaterPumpOutcomeTexts;
     public TextMeshProUGUI[] FibrousPlantFieldOutcomeTexts;
+    public TextMeshProUGUI[] ResearchDeviceOutcomeTexts;
 
     private void CheckSlotData()
     {
@@ -196,7 +200,6 @@ public class CoroutineManager : MonoBehaviour
                 int hours = gameData.hours;
                 string description = hours.ToString() + "h " + minutes.ToString() + "m " + seconds.ToString() + "s ";
 
-
                 saveSlot1Title.text = saveName;
                 saveSlot1Desc.text = description;
 
@@ -212,6 +215,7 @@ public class CoroutineManager : MonoBehaviour
             legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
         }
     }
+
     public void InitializeResourceMap()
     {
         resourceTextMap = new Dictionary<string, TextMeshProUGUI[]>
@@ -239,7 +243,8 @@ public class CoroutineManager : MonoBehaviour
             { "BioOil", BioOilTexts },
             { "IronTube", IronTubeTexts },
             { "WaterPump", WaterPumpTexts },
-            { "FibrousPlantField", FibrousPlantFieldTexts }
+            { "FibrousPlantField", FibrousPlantFieldTexts },
+            { "ResearchDevice", ResearchDeviceTexts }
         };
     }
     public void InitializeProductionTimeMap()
@@ -269,7 +274,8 @@ public class CoroutineManager : MonoBehaviour
             { "BioOil", BioOilProductionTexts },
             { "IronTube", IronTubeProductionTexts },
             { "WaterPump", WaterPumpProductionTexts },
-            { "FibrousPlantField", FibrousPlantFieldProductionTexts }
+            { "FibrousPlantField", FibrousPlantFieldProductionTexts },
+            { "ResearchDevice", ResearchDeviceProductionTexts }
         };
     }
 
@@ -300,7 +306,8 @@ public class CoroutineManager : MonoBehaviour
             { "BioOil", BioOilMaterialCostTexts },
             { "IronTube", IronTubeMaterialCostTexts },
             { "WaterPump", WaterPumpMaterialCostTexts },
-            { "FibrousPlantField", FibrousPlantFieldMaterialCostTexts }
+            { "FibrousPlantField", FibrousPlantFieldMaterialCostTexts },
+            { "ResearchDevice", ResearchDeviceMaterialCostTexts }
         };
     }
 
@@ -331,7 +338,8 @@ public class CoroutineManager : MonoBehaviour
             { "BioOil", BioOilOutcomeTexts },
             { "IronTube", IronTubeOutcomeTexts },
             { "WaterPump", WaterPumpOutcomeTexts },
-            { "FibrousPlantField", FibrousPlantFieldOutcomeTexts }
+            { "FibrousPlantField", FibrousPlantFieldOutcomeTexts },
+            { "ResearchDevice", ResearchDeviceOutcomeTexts }
         };
     }
 
@@ -591,6 +599,12 @@ public class CoroutineManager : MonoBehaviour
                     Planet0Buildings.Planet0FibrousPlantFieldBlueprint++;
                     buildingIncrementor.buildingCounts[2].text = Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString();
                     UpdateBuildingText(recipeData.recipeName, Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString());
+                }
+                else if (recipeData.recipeName == "ResearchDevice")
+                {
+                    Planet0Buildings.Planet0FibrousPlantFieldBlueprint++;
+                    buildingIncrementor.buildingCounts[6].text = Planet0Buildings.Planet0ResearchDeviceBlueprint.ToString();
+                    UpdateBuildingText(recipeData.recipeName, Planet0Buildings.Planet0ResearchDeviceBlueprint.ToString());
                 }
                 buildingIncrementor.InitializeBuildingCounts();
             }

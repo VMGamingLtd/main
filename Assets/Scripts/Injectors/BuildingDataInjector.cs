@@ -55,4 +55,16 @@ public class BuildingDataInjector : MonoBehaviour
         Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("buildingicons", spriteName);
         return sprite;
     }
+
+    void OnDisable()
+    {
+        foreach (Transform child in consumeStatList)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child2 in outputStatList)
+        {
+            Destroy(child2.gameObject);
+        }
+    }
 }
