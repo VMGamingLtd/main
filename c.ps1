@@ -69,7 +69,7 @@
 #invoke release-bundles-to-local --platform="webgl" --version="0.0.1" --bundles-version="2" --is-forced
 #invoke publish-to-local --platform="webgl" --version="0.0.1", --bundles-version="1" --is-include-build
 
-#invoke update-nginx-on-test-server
+invoke update-nginx-on-test-server
 #invoke deploy-gaos-to-test-server
 
 #invoke release-to-local --platform="webgl" --version="0.0.1" --is-forced  
