@@ -72,7 +72,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
                 Debug.Log(objectID);
                 if (researchData != null)
                 {
-                    tooltipObject.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = researchData.projectName;
+                    tooltipObject.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectName);
                     tooltipObject.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSkillSpriteToSlot(researchData.projectName);
                     tooltipObject.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectType);
                     tooltipObject.transform.Find("Class").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectClass);

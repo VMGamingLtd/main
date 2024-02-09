@@ -6,6 +6,7 @@ public static class Player
     public static int PlayerMaxExp = 40;
     public static int SkillPoints;
     public static int StatPoints;
+    public static int ResearchPoints;
 
     // SKILLS
     public static int Biology;

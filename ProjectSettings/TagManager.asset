@@ -8,6 +8,7 @@ TagManager:
   - NoConsume
   - Consume
   - StudentRow
+  - Research
   layers:
   - Default
   - TransparentFX

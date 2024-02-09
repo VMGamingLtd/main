@@ -136,6 +136,9 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
             case "Furnace":
                 buildingCreator.CreateBuilding(draggedObject, 5);
                 break;
+            case "ResearchDevice":
+                buildingCreator.CreateBuilding(draggedObject, 6);
+                break;
             default:
                 Debug.LogWarning("Unknown building type: " + objName);
                 break;

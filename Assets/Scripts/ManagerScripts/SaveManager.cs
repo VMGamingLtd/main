@@ -88,6 +88,7 @@ public class SaveManager : MonoBehaviour
         public EnergyBuildingItemDataModel[] powerplant;
         public BuildingItemDataModel[] oxygenStation;
         public BuildingItemDataModel[] miningRig;
+        public ResearchBuildingItemDataModel[] research;
         public Dictionary<string, object> Planet0StaticVariables = new();
         public Dictionary<string, object> PlayerStaticVariables = new();
         public Dictionary<string, object> PlayerResourcesStaticVariables = new();
@@ -221,8 +222,8 @@ public class SaveManager : MonoBehaviour
         public bool hasRequirements;
         public List<ChildData> childData;
     }
-    [System.Serializable]
-    public class EnergyBuildingItemDataModel
+
+    public class BasicBuildingModel
     {
         public int index;
         public int ID;
@@ -230,53 +231,54 @@ public class SaveManager : MonoBehaviour
         public string buildingType;
         public string buildingName;
         public string buildingClass;
+        public float timer;
+        public float totalTime;
+        public int efficiency;
+        public int efficiencySetting;
+        public int buildingCount;
+        public bool isPaused;
+        public bool enlistedProduction;
+        public int consumedSlotCount;
+        public int producedSlotCount;
+    }
+
+    [Serializable]
+    public class EnergyBuildingItemDataModel : BasicBuildingModel
+    {
         public Vector3 buildingPosition;
         public List<SlotItemData> consumedItems;
         public PowerCycle powerCycleData = new();
-        public int consumedSlotCount;
-        public float timer;
-        public float totalTime;
         public int secondCycleCount;
         public int minuteCycleCount;
         public int hourCycleCount;
         public int powerOutput;
         public int basePowerOutput;
         public int actualPowerOutput;
-        public int producedSlotCount;
-        public int efficiency;
-        public int efficiencySetting;
-        public int buildingCount;
-        public bool isPaused;
-        public bool enlistedProduction;
     }
-    [System.Serializable]
-    public class BuildingItemDataModel
+    [Serializable]
+    public class BuildingItemDataModel : BasicBuildingModel
     {
-        public int index;
-        public int ID;
-        public string spriteIconName;
-        public string buildingType;
-        public string buildingName;
-        public string buildingClass;
         public Vector3 buildingPosition;
         public List<SlotItemData> consumedItems;
         public List<SlotItemData> producedItems;
         public PowerConsumptionCycle powerConsumptionCycleData = new();
         public ProductionCycle productionCycleData = new();
-        public int consumedSlotCount;
-        public float timer;
-        public float totalTime;
         public int secondCycleCount;
         public int minuteCycleCount;
         public int hourCycleCount;
         public int powerConsumption;
         public int actualPowerConsumption;
-        public int producedSlotCount;
-        public int efficiency;
-        public int efficiencySetting;
-        public int buildingCount;
-        public bool isPaused;
-        public bool enlistedProduction;
+    }
+
+    [Serializable]
+    public class ResearchBuildingItemDataModel : BasicBuildingModel
+    {
+        public Vector3 buildingPosition;
+        public List<SlotItemData> consumedItems;
+        public PowerConsumptionCycle powerConsumptionCycleData = new();
+        public int powerConsumption;
+        public int actualPowerConsumption;
+        public float researchPoints;
     }
 
     /// <summary>
@@ -1322,6 +1324,40 @@ public class SaveManager : MonoBehaviour
             };
 
             currentSaveData.miningRig[i] = buildingData;
+        }
+
+        currentSaveData.research = new ResearchBuildingItemDataModel[buildingArrays["RESEARCH"].Length];
+
+        for (int i = 0; i < buildingArrays["RESEARCH"].Length; i++)
+        {
+            GameObject itemGameObject = buildingArrays["RESEARCH"][i];
+            ResearchBuildingItemData itemDataComponent = itemGameObject.GetComponent<ResearchBuildingItemData>();
+            itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
+            ResearchBuildingItemDataModel buildingData = new()
+            {
+                index = itemDataComponent.index,
+                ID = itemDataComponent.ID,
+                spriteIconName = itemDataComponent.spriteIconName,
+                buildingType = itemDataComponent.buildingType,
+                buildingName = itemDataComponent.buildingName,
+                buildingClass = itemDataComponent.buildingClass,
+                buildingPosition = itemDataComponent.buildingPosition,
+                consumedItems = itemDataComponent.consumedItems,
+                powerConsumptionCycleData = itemDataComponent.powerConsumptionCycleData,
+                consumedSlotCount = itemDataComponent.consumedSlotCount,
+                timer = itemDataComponent.timer,
+                totalTime = itemDataComponent.totalTime,
+                powerConsumption = itemDataComponent.powerConsumption,
+                actualPowerConsumption = itemDataComponent.actualPowerConsumption,
+                efficiency = itemDataComponent.efficiency,
+                efficiencySetting = itemDataComponent.efficiencySetting,
+                buildingCount = itemDataComponent.buildingCount,
+                isPaused = itemDataComponent.isPaused,
+                enlistedProduction = itemDataComponent.enlistedProduction,
+                researchPoints = itemDataComponent.researchPoints,
+            };
+
+            currentSaveData.research[i] = buildingData;
         }
 
         string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented, settings);

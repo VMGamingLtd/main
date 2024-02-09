@@ -361,6 +361,20 @@ public class NewGameUI : MonoBehaviour
                     productionCreator.RecreateBuildingProduction(buildingData, buildingData.ID);
             }
 
+            // deserialize Research buildings
+            for (int i = 0; i < gameData.research.Length; i++)
+            {
+                ResearchBuildingItemDataModel buildingData = gameData.research[i];
+                buildingCreator.RecreateResearchBuilding(buildingData.index, buildingData.buildingName, buildingData.buildingType, buildingData.buildingClass,
+                    buildingData.consumedSlotCount, buildingData.consumedItems, buildingData.totalTime, buildingData.powerConsumption, buildingData.timer,
+                    buildingData.actualPowerConsumption, buildingData.efficiency, buildingData.efficiencySetting, buildingData.buildingCount,
+                    buildingData.isPaused, buildingData.buildingPosition, buildingData.powerConsumptionCycleData, buildingData.spriteIconName, buildingData.ID,
+                    buildingData.enlistedProduction, buildingData.researchPoints);
+
+                if (buildingData.enlistedProduction)
+                    productionCreator.RecreateResearchBuildingProduction(buildingData, buildingData.ID);
+            }
+
             if (Player.CanProduce == false)
             {
                 equipmentManager.DisableProduction();

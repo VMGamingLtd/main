@@ -47,12 +47,13 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI maxExpText;
     public TextMeshProUGUI skillPointsText;
     public TextMeshProUGUI statPointsText;
+    public TextMeshProUGUI researchPointsText;
     public Image ExpBar;
 
     // data for server
     public static bool registeredUser = false;
     public static bool manualProduction = false;
-    public static bool[] AllCoroutineBooleans = new bool[24];
+    public static bool[] AllCoroutineBooleans = new bool[25];
     public static int IndexNumber;
 
     public static string[] RecipeKeys =
@@ -602,7 +603,7 @@ public class CoroutineManager : MonoBehaviour
                 }
                 else if (recipeData.recipeName == "ResearchDevice")
                 {
-                    Planet0Buildings.Planet0FibrousPlantFieldBlueprint++;
+                    Planet0Buildings.Planet0ResearchDeviceBlueprint++;
                     buildingIncrementor.buildingCounts[6].text = Planet0Buildings.Planet0ResearchDeviceBlueprint.ToString();
                     UpdateBuildingText(recipeData.recipeName, Planet0Buildings.Planet0ResearchDeviceBlueprint.ToString());
                 }

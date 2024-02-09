@@ -190,6 +190,61 @@ public class ProductionCreator : MonoBehaviour
         return newItem;
     }
 
+    public GameObject RecreateResearchBuildingProduction(ResearchBuildingItemDataModel itemData, int ID)
+    {
+        GameObject newItem = Instantiate(productionRowTemplate, overviewProductionList);
+        newItem.name = ID.ToString();
+        newItem.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlotBuilding(itemData.spriteIconName);
+        newItem.transform.Find("Location").GetComponent<TextMeshProUGUI>().text = itemData.buildingName;
+
+        if (itemData.consumedSlotCount == 0)
+        {
+            newItem.transform.Find("RedArrow").gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            string childName = "ConsumeResource" + (i + 1);
+
+            if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
+            {
+                GameObject childObject = childTransform.gameObject;
+                SlotItemData child = (i < itemData.consumedItems.Count) ? itemData.consumedItems[i] : null;
+
+                if (child != null)
+                {
+                    childObject.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(child.itemName);
+                    childObject.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = child.quantity.ToString();
+                }
+                else
+                {
+                    childObject.SetActive(false);
+                }
+            }
+        }
+
+        string childName2 = "OutputResource1";
+        if (newItem.transform.Find(childName2).TryGetComponent<Transform>(out var childTransform2))
+        {
+            GameObject childObject = childTransform2.gameObject;
+            childObject.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot("ResearchPoint");
+            childObject.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = itemData.researchPoints.ToString();
+        }
+
+        // leave only first 'OutputResource1' to display and disable the rest
+        for (int i = 1; i < 4; i++)
+        {
+            string childName = "OutputResource" + (i + 1);
+            if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
+            {
+                GameObject childObject = childTransform.gameObject;
+                childObject.SetActive(false);
+            }
+        }
+
+        return newItem;
+    }
+
     public GameObject RecreateEnergyBuildingProduction(EnergyBuildingItemDataModel itemData, int ID)
     {
         NumberFormater formatter = new();

@@ -23,7 +23,7 @@ namespace BuildingManagement
         public int powerConsumption;
         public float researchPoints;
     }
-    [System.Serializable]
+    [Serializable]
     public class EnergyBuildingItemData : MonoBehaviour
     {
         public int index;
@@ -58,7 +58,7 @@ namespace BuildingManagement
         }
     }
 
-    [System.Serializable]
+    [Serializable]
     public class BuildingItemData : MonoBehaviour
     {
         public int index;
@@ -93,7 +93,38 @@ namespace BuildingManagement
             producedItems = new List<SlotItemData>();
         }
     }
-    [System.Serializable]
+
+    [Serializable]
+    public class ResearchBuildingItemData : MonoBehaviour
+    {
+        public int index;
+        public int ID;
+        public string spriteIconName;
+        public string buildingType;
+        public string buildingName;
+        public string buildingClass;
+        public Vector3 buildingPosition;
+        public List<SlotItemData> consumedItems;
+        public PowerConsumptionCycle powerConsumptionCycleData = new();
+        public int consumedSlotCount;
+        public float timer;
+        public float totalTime;
+        public int powerConsumption;
+        public int actualPowerConsumption;
+        public int efficiency;
+        public int efficiencySetting;
+        public int buildingCount;
+        public bool isPaused;
+        public bool enlistedProduction;
+        public float researchPoints;
+
+        public ResearchBuildingItemData()
+        {
+            consumedItems = new List<SlotItemData>();
+        }
+    }
+
+    [Serializable]
     public class PowerCycle
     {
         public float[] secondCycle = new float[120];
@@ -129,7 +160,7 @@ namespace BuildingManagement
     }
 
 
-    [System.Serializable]
+    [Serializable]
     public class SlotItemData
     {
         public int index;
@@ -148,6 +179,7 @@ public class BuildingCreator : MonoBehaviour
     public TranslationManager translationManager;
     private BuildingItemData itemData;
     private EnergyBuildingItemData itemDataEnergy;
+    private ResearchBuildingItemData itemDataResearch;
     public List<BuildingDataJson> buildingDataList;
     private GameObject objectTemplate;
     public RectTransform BuildingArea;
@@ -167,6 +199,57 @@ public class BuildingCreator : MonoBehaviour
         {
             buildingDataList = jsonArray.buildings;
         }
+    }
+
+    public void RecreateResearchBuilding(int index, string buildingName, string buildingType, string buildingClass, int consumedSlotCount,
+        List<SlotItemData> consumedItems, float totalTime, int powerConsumption, float timer, int actualPowerConsumption, int efficiency,
+        int efficiencySetting, int buildingCount, bool isPaused, Vector3 buildingPosition, PowerConsumptionCycle powerConsumptionCycle,
+        string spriteIconName, int ID, bool enlistedProduction, float researchPoints)
+    {
+        RecreateResearchBuilding(objectTemplate, index, buildingName, buildingType, buildingClass, consumedSlotCount, consumedItems,
+            totalTime, powerConsumption, timer, actualPowerConsumption, efficiency, efficiencySetting, buildingCount, isPaused, buildingPosition,
+            powerConsumptionCycle, spriteIconName, ID, enlistedProduction, researchPoints);
+    }
+
+    private void RecreateResearchBuilding(GameObject objectTemplate, int index, string buildingName, string buildingType, string buildingClass, int consumedSlotCount,
+          List<SlotItemData> consumedItems, float totalTime, int powerConsumption, float timer, int actualPowerConsumption, int efficiency, int efficiencySetting,
+          int buildingCount, bool isPaused, Vector3 buildingPosition, PowerConsumptionCycle powerConsumptionCycle, string spriteIconName, int ID,
+          bool enlistedProduction, float researchPoints)
+    {
+        GameObject newBuilding = Instantiate(objectTemplate, BuildingArea);
+        itemDataResearch = newBuilding.AddComponent<ResearchBuildingItemData>();
+        itemDataResearch.buildingType = buildingType;
+        itemDataResearch.buildingPosition = buildingPosition;
+        newBuilding.transform.localPosition = buildingPosition;
+        itemDataResearch.index = index;
+        newBuilding.name = spriteIconName;
+        itemDataResearch.buildingClass = buildingClass;
+        itemDataResearch.consumedSlotCount = consumedSlotCount;
+        itemDataResearch.consumedItems = consumedItems;
+        itemDataResearch.totalTime = totalTime;
+        itemDataResearch.powerConsumption = powerConsumption;
+        itemDataResearch.actualPowerConsumption = actualPowerConsumption;
+        itemDataResearch.efficiencySetting = 100;
+        itemDataResearch.timer = timer;
+        itemDataResearch.efficiency = efficiency;
+        itemDataResearch.efficiencySetting = efficiencySetting;
+        itemDataResearch.buildingCount = buildingCount;
+        itemDataResearch.isPaused = isPaused;
+        itemDataResearch.powerConsumptionCycleData = powerConsumptionCycle;
+        itemDataResearch.spriteIconName = spriteIconName;
+        itemDataResearch.ID = ID;
+        itemDataResearch.enlistedProduction = enlistedProduction;
+        itemDataResearch.researchPoints = researchPoints;
+        newBuilding.tag = "Research";
+
+        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+        itemDataResearch.buildingName = buildingName;
+        newBuilding.AddComponent<BuildingCycles>();
+        newBuilding.AddComponent<DragAndDropBuildings>();
+        buildingManager.AddToItemArray(buildingType, newBuilding);
+        buildingIncrementor.InitializeBuildingCounts();
+        newBuilding.transform.localScale = Vector3.one;
+        newBuilding.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(spriteIconName);
     }
 
     public void RecreateProductionBuilding(int index, string buildingName, string buildingType, string buildingClass, int consumedSlotCount, int producedSlotCount,
@@ -313,7 +396,8 @@ public class BuildingCreator : MonoBehaviour
                     itemData.producedItems,
                     itemData.totalTime,
                     itemData.basePowerOutput,
-                    itemData.powerConsumption);
+                    itemData.powerConsumption,
+                    itemData.researchPoints);
     }
     private void CreateBuilding(GameObject draggedObject,
                                 int index,
@@ -326,7 +410,8 @@ public class BuildingCreator : MonoBehaviour
                                 List<SlotItemData> producedItemData,
                                 float totalTime,
                                 int powerOutput,
-                                int powerConsumption)
+                                int powerConsumption,
+                                float researchPoints)
     {
         if (buildingType == "POWERPLANT")
         {
@@ -351,12 +436,45 @@ public class BuildingCreator : MonoBehaviour
                 Planet0Buildings.Planet0BiofuelGenerator++;
                 Planet0Buildings.Planet0BiofuelGeneratorBlueprint--;
                 itemDataEnergy.buildingCount = Planet0Buildings.Planet0BiofuelGenerator;
-                draggedObject.tag = "Energy";
+
             }
+            draggedObject.tag = "Energy";
             translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
             string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
             itemDataEnergy.buildingName = $"{titleText} #{itemDataEnergy.buildingCount}";
             draggedObject.AddComponent<EnergyBuildingCycles>();
+        }
+        else if (buildingType == "RESEARCH")
+        {
+            itemDataResearch = draggedObject.AddComponent<ResearchBuildingItemData>();
+            itemDataResearch.buildingType = buildingType;
+            itemDataResearch.buildingPosition = draggedObject.GetComponent<RectTransform>().anchoredPosition3D;
+            itemDataResearch.index = index;
+            draggedObject.name = buildingName;
+            itemDataResearch.buildingClass = buildingClass;
+            itemDataResearch.consumedSlotCount = consumedSlotCount;
+            itemDataResearch.consumedItems = slotItemData;
+            itemDataResearch.totalTime = totalTime;
+            itemDataResearch.powerConsumption = powerConsumption;
+            itemDataResearch.efficiencySetting = 100;
+            itemDataResearch.isPaused = false;
+            itemDataResearch.researchPoints = researchPoints;
+            BuildingUniqueID++;
+            itemDataResearch.ID = BuildingUniqueID;
+            itemDataResearch.spriteIconName = draggedObject.transform.Find("Icon").GetComponent<Image>().sprite.name;
+
+            if (draggedObject.name == "ResearchDevice")
+            {
+                Planet0Buildings.Planet0ResearchDevice++;
+                Planet0Buildings.Planet0ResearchDeviceBlueprint--;
+                itemData.buildingCount = Planet0Buildings.Planet0ResearchDevice;
+
+            }
+            draggedObject.tag = "Research";
+            translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+            string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
+            itemData.buildingName = $"{titleText} #{itemData.buildingCount}";
+            draggedObject.AddComponent<BuildingCycles>();
         }
         else
         {
@@ -411,6 +529,13 @@ public class BuildingCreator : MonoBehaviour
                 Planet0Buildings.Planet0FurnaceBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0Furnace;
                 draggedObject.tag = "Consume";
+            }
+            else if (draggedObject.name == "ResearchDevice")
+            {
+                Planet0Buildings.Planet0ResearchDevice++;
+                Planet0Buildings.Planet0ResearchDeviceBlueprint--;
+                itemData.buildingCount = Planet0Buildings.Planet0ResearchDevice;
+                draggedObject.tag = "Research";
             }
             translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
             string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
