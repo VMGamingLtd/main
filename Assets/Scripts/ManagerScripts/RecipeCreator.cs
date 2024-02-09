@@ -22,6 +22,21 @@ namespace RecipeManagement
     }
 
     [Serializable]
+    public class ResearchDataJson
+    {
+        public int index;
+        public string projectName;
+        public string projectProduct;
+        public string projectType;
+        public string projectClass;
+        public int experience;
+        public float researchTime;
+        public bool hasRequirements;
+        public List<ChildData> requirementsList;
+        public List<ChildData> rewardsList;
+    }
+
+    [Serializable]
     public class ChildData
     {
         public int index;
@@ -50,6 +65,7 @@ namespace RecipeManagement
         public GameObject recipeTemplate;
         public RecipeManager recipeManager;
         public List<RecipeDataJson> recipeDataList;
+        public List<ResearchDataJson> researchDataList;
         private TranslationManager translationManager;
         public static int recipeOrderAdded;
 
@@ -58,6 +74,10 @@ namespace RecipeManagement
         {
             public List<RecipeDataJson> recipes;
         }
+        private class JsonArray2
+        {
+            public List<ResearchDataJson> projects;
+        }
         private void Awake()
         {
             string jsonText = Assets.Scripts.Models.RecipeListJson.json;
@@ -65,6 +85,13 @@ namespace RecipeManagement
             if (jsonArray != null)
             {
                 recipeDataList = jsonArray.recipes;
+            }
+
+            string jsonText2 = Assets.Scripts.Models.ResearchListJson.json;
+            JsonArray2 jsonArray2 = JsonUtility.FromJson<JsonArray2>(jsonText2);
+            if (jsonArray2 != null)
+            {
+                researchDataList = jsonArray2.projects;
             }
         }
         public void RecreateRecipe(string recipeProduct, string recipeType, string itemClass, string recipeName, int index,

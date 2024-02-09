@@ -13,6 +13,7 @@ public class BuildingIncrementor : MonoBehaviour
         if (Planet0Buildings.BoilerUnlocked) buildings[3].SetActive(true);
         if (Planet0Buildings.SteamGeneratorUnlocked) buildings[4].SetActive(true);
         if (Planet0Buildings.FurnaceUnlocked) buildings[5].SetActive(true);
+        if (Planet0Buildings.ResearchDeviceUnlocked) buildings[6].SetActive(true);
     }
     public void InitializeBuildingCounts()
     {
@@ -22,5 +23,6 @@ public class BuildingIncrementor : MonoBehaviour
         buildingCounts[3].text = Planet0Buildings.Planet0BoilerBlueprint.ToString();
         buildingCounts[4].text = Planet0Buildings.Planet0SteamGeneratorBlueprint.ToString();
         buildingCounts[5].text = Planet0Buildings.Planet0FurnaceBlueprint.ToString();
+        buildingCounts[6].text = Planet0Buildings.Planet0ResearchDeviceBlueprint.ToString();
     }
 }

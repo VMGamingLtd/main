@@ -63,7 +63,7 @@ public class NewGameUI : MonoBehaviour
         if (response != null)
         {
             SaveDataModel gameData = JsonConvert.DeserializeObject<SaveDataModel>(response.GameDataJson);
-            Debug.Log(response.GameDataJson);
+            //Debug.Log(response.GameDataJson);
             UserName.userName = gameData.username;
             Password.password = gameData.password;
             Email.email = gameData.email;
@@ -103,7 +103,7 @@ public class NewGameUI : MonoBehaviour
             for (int i = 0; i < gameData.EventObjects.Count; i++)
             {
                 EventIconModel iconModel = gameData.EventObjects[i];
-                planet.RecreateEventObject(iconModel.Name, iconModel.position); 
+                planet.RecreateEventObject(iconModel.Name, iconModel.position);
             }
 
             // assign current goal
@@ -374,6 +374,7 @@ public class NewGameUI : MonoBehaviour
             inventoryManager.SortItemRecipeArraysByOrderAdded();
 
             if (GoalManager.secondGoal) buttonManager.UnlockBaseButton();
+            if (GoalManager.thirdGoal) buttonManager.UnlockResearchButton();
 
             MainUI.SetActive(true);
 
@@ -429,6 +430,8 @@ public class NewGameUI : MonoBehaviour
         float currentAlpha = 0f;
         float targetAlpha = 1f;
 
+
+
         while (currentTime < totalTime)
         {
             currentTime += Time.deltaTime;
@@ -440,6 +443,8 @@ public class NewGameUI : MonoBehaviour
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
+
+
     }
 
     public void LoadSlotGame()
@@ -472,7 +477,6 @@ public class NewGameUI : MonoBehaviour
             var userSlots = Gaos.Context.Authentication.GetUserSlots();
             foreach (var slot in userSlots)
             {
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1800: SlotId: {slot.SlotId}");
                 if (slot.SlotId == slotNumber)
                 {
                     if (IsNewSlot(slot) == true)

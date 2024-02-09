@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3689763640
+CRC: 3212018256
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 29b3b227d46262acb98748c3727d5f75
+    Hash: fb0ef3cf4b015a6584318e435a1c5924
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -21,6 +21,7 @@ Assets:
 - Assets/AssetBundlesRepo/ResourceIcons/FibrousLeaves.png
 - Assets/AssetBundlesRepo/ResourceIcons/Fish.png
 - Assets/AssetBundlesRepo/ResourceIcons/BiomassWood.png
+- Assets/AssetBundlesRepo/ResourceIcons/ResearchPoint.png
 - Assets/AssetBundlesRepo/ResourceIcons/Steam.png
 - Assets/AssetBundlesRepo/ResourceIcons/BatteryCore.png
 - Assets/AssetBundlesRepo/ResourceIcons/Player.png

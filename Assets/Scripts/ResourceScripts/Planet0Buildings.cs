@@ -27,6 +27,7 @@ public static class Planet0Buildings
     public static bool BoilerUnlocked;
     public static bool SteamGeneratorUnlocked;
     public static bool FurnaceUnlocked;
+    public static bool ResearchDeviceUnlocked;
 
     // available buildings to place
     public static int Planet0BiofuelGeneratorBlueprint = 0;
@@ -35,6 +36,7 @@ public static class Planet0Buildings
     public static int Planet0BoilerBlueprint = 0;
     public static int Planet0SteamGeneratorBlueprint = 0;
     public static int Planet0FurnaceBlueprint = 0;
+    public static int Planet0ResearchDeviceBlueprint = 0;
 
 
     // building counter
@@ -44,6 +46,7 @@ public static class Planet0Buildings
     public static int Planet0Boiler = 0;
     public static int Planet0SteamGenerator = 0;
     public static int Planet0Furnace = 0;
+    public static int Planet0ResearchDevice = 0;
 
 
     public static string AddBuildingCount(ref int buildingName, int amount)

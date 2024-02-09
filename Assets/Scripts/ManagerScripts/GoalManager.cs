@@ -30,7 +30,7 @@ public class GoalManager : MonoBehaviour
         }
         else if (thirdGoal)
         {
-            ChangeGoal("AutomateBattery");
+            ChangeGoal("ResearchScienceProjects");
         }
         else if (secondGoal)
         {
@@ -93,11 +93,14 @@ public class GoalManager : MonoBehaviour
         await UniTask.Delay(1000);
         Planet0Buildings.FibrousPlantFieldUnlocked = true;
         Planet0Buildings.WaterPumpUnlocked = true;
+        Planet0Buildings.ResearchDeviceUnlocked = true;
+        buttonManager.UnlockResearchButton();
         buildingIncrementor.InitializeAvailableBuildings();
         recipeCreator.CreateRecipe(21);
         recipeCreator.CreateRecipe(22);
         recipeCreator.CreateRecipe(23);
-        ChangeGoal("AutomateBattery");
+        recipeCreator.CreateRecipe(24);
+        ChangeGoal("ResearchScienceProjects");
         goalAnimation.Play("Idle");
         thirdGoal = true;
         coroutineManager.InitializeResourceMap();

@@ -79,6 +79,7 @@ public class BuildingCycles : MonoBehaviour
         cts.Cancel();
         return;
     }
+
     private async UniTask NoElectricityMode()
     {
         if (timebarControl == null)
@@ -95,6 +96,7 @@ public class BuildingCycles : MonoBehaviour
         await NotEnoughMaterials();
         return;
     }
+
     public async UniTaskVoid Start()
     {
         InitializeBuildingData();

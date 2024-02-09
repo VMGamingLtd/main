@@ -21,6 +21,7 @@ namespace BuildingManagement
         public float totalTime;
         public int basePowerOutput;
         public int powerConsumption;
+        public float researchPoints;
     }
     [System.Serializable]
     public class EnergyBuildingItemData : MonoBehaviour
@@ -147,7 +148,7 @@ public class BuildingCreator : MonoBehaviour
     public TranslationManager translationManager;
     private BuildingItemData itemData;
     private EnergyBuildingItemData itemDataEnergy;
-    private List<BuildingDataJson> buildingDataList;
+    public List<BuildingDataJson> buildingDataList;
     private GameObject objectTemplate;
     public RectTransform BuildingArea;
     public static int BuildingUniqueID;
