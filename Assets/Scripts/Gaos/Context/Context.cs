@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gaos.Routes.Model.DeviceJson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,9 @@ namespace Gaos.Context
         private static int UserId = -1;
         private static string UserName;
         private static bool IsGuest = false;
+        private static DeviceRegisterResponseUserSlot[] UserSlots = new DeviceRegisterResponseUserSlot[0];
+
+
         public static void SetJWT(string jwt)
         { 
             JWT = jwt;
@@ -51,6 +55,16 @@ namespace Gaos.Context
         {
             return IsGuest;
         }   
+
+        public static void SetUserSlots(DeviceRegisterResponseUserSlot[] userSlots)
+        {
+            UserSlots = userSlots;
+        }
+
+        public static DeviceRegisterResponseUserSlot[] GetUserSlots()
+        {
+            return UserSlots;
+        }
     }
 
     public class Device

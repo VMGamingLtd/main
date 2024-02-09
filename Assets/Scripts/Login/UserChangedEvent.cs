@@ -1,6 +1,8 @@
-﻿namespace Assets.Scripts.Login
+﻿using System;
+
+namespace Assets.Scripts.Login
 {
-    public class UserChangedEventPayload
+    public class UserChangedEventArgs: EventArgs
     {
         public string UserName { get; set; }
         public bool IsGuest { get; set; }
@@ -8,15 +10,13 @@
 
     public class UserChangedEvent
     {
-        public delegate void EventHandler(UserChangedEventPayload payload);
-        public static event EventHandler OnEvent;
+        public static event EventHandler<UserChangedEventArgs> UserChanged;
 
-        public static void Emit(UserChangedEventPayload payload)
+        public static void Emit(UserChangedEventArgs args)
         {
-            if (OnEvent != null)
-            {
-                OnEvent(payload);
-            }
+            // Thread-safe event invocation
+            EventHandler<UserChangedEventArgs> handler = UserChanged;
+            handler?.Invoke(null, args); // Using null as the sender since it's a static class
         }
     }
 }

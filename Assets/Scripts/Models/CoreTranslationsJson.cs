@@ -470,10 +470,10 @@
       },
       {
         ""identifier"": ""RecoverPasswordUsername"",
-        ""english"": ""Recover password / username"",
-        ""russian"": ""Восстановить пароль/имя пользователя"",
-        ""chinese"": ""恢复密码/用户名"",
-        ""slovak"": ""Obnovte heslo / používateľské meno""
+        ""english"": ""Recover password / username"",  
+        ""russian"": ""Восстановить пароль / имя пользователя"",
+        ""chinese"": ""恢复密码 / 用户名"",
+        ""slovak"": ""Obnoviť heslo / užívateľské meno""
       },
       {
         ""identifier"": ""NameEmail"",
@@ -518,6 +518,14 @@
         ""slovak"": ""heslo""
       },
       {
+        ""identifier"": ""VerificationCode"",
+        ""english"": ""verification code"",
+        ""russian"": ""код подтверждения"",
+        ""chinese"": ""验证码"",
+        ""slovak"": ""overovací kód""
+      },
+
+      {
         ""identifier"": ""Start"",
         ""english"": ""Start"",
         ""russian"": ""Начать"",
@@ -534,9 +542,9 @@
       {
         ""identifier"": ""Next"",
         ""english"": ""Next"",
-        ""russian"": ""Продолжать"",
-        ""chinese"": ""继续"",
-        ""slovak"": ""meno""
+        ""russian"": ""Далее"",
+        ""chinese"": ""下一个"",
+        ""slovak"": ""Ďalší""
       },
       {
         ""identifier"": ""Recover"",
@@ -544,6 +552,13 @@
         ""russian"": ""Восстановить"",
         ""chinese"": ""恢复"",
         ""slovak"": ""Obnoviť""
+        },
+        {
+        ""identifier"": ""Send"",
+        ""english"": ""Send"",
+        ""russian"": ""Отправить"",
+        ""chinese"": ""发送"",
+        ""slovak"": ""Odoslať""
         },
 
       {

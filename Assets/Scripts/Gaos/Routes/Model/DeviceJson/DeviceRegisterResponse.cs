@@ -3,6 +3,18 @@ namespace Gaos.Routes.Model.DeviceJson
 {
 
     [System.Serializable]
+    public class DeviceRegisterResponseUserSlot
+    {
+        public string MongoDocumentId;
+        public int SlotId;
+
+        public string UserName;
+        public int Seconds;
+        public int Minutes;
+        public int Hours;
+    }
+
+    [System.Serializable]
     public class DeviceRegisterResponse
     {
         public bool? IsError;
@@ -15,6 +27,8 @@ namespace Gaos.Routes.Model.DeviceJson
 
         public Dbo.Model.User? User;
         public Dbo.Model.JWT? JWT;
+
+        public DeviceRegisterResponseUserSlot[]? UserSlots;
 
     }
 }
