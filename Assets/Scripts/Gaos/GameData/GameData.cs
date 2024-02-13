@@ -6,12 +6,19 @@ using UnityEngine;
 
 namespace Gaos.GameData
 {
+    public class LastGameDataVersion
+    {
+        public static string Version = "0";
+    }
+
     public class UserGameDataGet
     {
         private readonly static string CLASS_NAME = typeof(UserGameDataGet).Name;
 
 
         public delegate void OnUserGameDataGetComplete(UserGameDataGetResponse response);
+
+        public static string Version = "0";
 
         public static IEnumerator Get(int slotId, OnUserGameDataGetComplete onUserGameDataGetComplete)
         {
@@ -43,6 +50,8 @@ namespace Gaos.GameData
                     onUserGameDataGetComplete(null);
                     yield break;
                 }
+                LastGameDataVersion.Version = response.Version;
+                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1000: read, version ${response.Version}");
                 onUserGameDataGetComplete(response);
             }
 
@@ -63,6 +72,9 @@ namespace Gaos.GameData
 
             request.UserId = Context.Authentication.GetUserId();
             request.SlotId = slotId;
+            request.Version = UserGameDataGet.Version;
+
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1100: saving, version ${request.Version}");
 
             string requestJsonStr = JsonConvert.SerializeObject(request);
 
@@ -84,6 +96,8 @@ namespace Gaos.GameData
                     onUserGameDataSaveComplete(null);
                     yield break;
                 }
+                LastGameDataVersion.Version = response.Version;
+                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1200: save response, version ${response.Version}");
                 onUserGameDataSaveComplete(response);
             }
 
