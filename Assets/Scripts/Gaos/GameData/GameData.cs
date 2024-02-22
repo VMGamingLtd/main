@@ -181,8 +181,9 @@ namespace Gaos.GameData
                     if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                     {
                         Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  4100");
-                        if (previousVersion.GameDataJson != null)
+                        if (previousVersion != null && previousVersion.GameDataJson != null)
                         {
+                            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  4200");
                             JObject objA = JObject.Parse(previousVersion.GameDataJson);
                             JObject objB = JObject.Parse(item.request.GameDataJson);
                             var diff = jsondiff.Difference.CompareValues(objA, objB);
@@ -223,8 +224,9 @@ namespace Gaos.GameData
                 {
                     Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  4000");
                     var previousVersion = LastGameDataVersion.getVersion(item.slotId);
-                    if (previousVersion.GameDataJson != null)
+                    if (previousVersion != null && previousVersion.GameDataJson != null)
                     {
+                        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  4050");
                         JObject objA = JObject.Parse(previousVersion.GameDataJson);
                         JObject objB = JObject.Parse(item.request.GameDataJson);
                         var diff = jsondiff.Difference.CompareValues(objA, objB);
@@ -239,6 +241,7 @@ namespace Gaos.GameData
                 {
                     item.request.IsGameDataDiff = false;
                 }
+                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  2110: makeOnRequestQueueItemSaveComplete(): {item.request.GameDataJson}");
                 gameObject.StartCoroutine(Save1(item.slotId, item.request, onUserGameDataSaveComplete));
             }
             else
