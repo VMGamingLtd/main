@@ -10,5 +10,6 @@ namespace Gaos.Routes.Model.GameDataJson
         public int  SlotId;
         public string? Version;
         public string? GameDataJson;
+        public bool? IsGameDataDiff;
     }
 }

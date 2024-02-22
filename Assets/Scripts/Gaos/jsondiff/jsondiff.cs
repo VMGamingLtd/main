@@ -641,5 +641,16 @@ namespace jsondiff
                 throw new Exception("AddDiff: invalid diff type");
             }
         }
+
+        public static JsonSerializerSettings GetJsonSerializerSettings()
+        {
+            return new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new DiffValueConverter(), new DiffValueAtPropertyConverter(), new DiffValueAtIndexConverter() }
+            };
+        }
+
+
     }
+
 }

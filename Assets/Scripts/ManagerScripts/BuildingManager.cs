@@ -35,7 +35,8 @@ public class BuildingManager : MonoBehaviour
             { "COOLINGFACILITY", new GameObject[0] },
             { "POWERPLANT", new GameObject[0] },
             { "OXYGENSTATION", new GameObject[0] },
-            { "MININGRIG", new GameObject[0] }
+            { "MININGRIG", new GameObject[0] },
+            { "RESEARCH", new GameObject[0] }  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TODO: this was milan fix of crash, fix needs to be consulted with brano
         };
         cycleCount = new BuildingCycleCount();
     }
