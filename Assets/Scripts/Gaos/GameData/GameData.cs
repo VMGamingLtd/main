@@ -207,26 +207,24 @@ namespace Gaos.GameData
             };
         }
 
+        private static bool isProcessingSendQueueRunning = false;
+
         public static IEnumerator ProcessSendQueue(MonoBehaviour gameObject)
         {
             if (requestsQueue.Count > 0)
             {
                 RequestQueteItem item = requestsQueue.Dequeue();
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  2000: makeOnRequestQueueItemSaveComplete(): {item.request.GameDataJson}");
                 while(requestsQueue.Count > 0)
                 {
                     item = requestsQueue.Dequeue();
                 }
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  2100: makeOnRequestQueueItemSaveComplete(): {item.request.GameDataJson}");
                 var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, item);
 
                 if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                 {
-                    Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  4000");
                     var previousVersion = LastGameDataVersion.getVersion(item.slotId);
                     if (previousVersion != null && previousVersion.GameDataJson != null)
                     {
-                        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  4050");
                         JObject objA = JObject.Parse(previousVersion.GameDataJson);
                         JObject objB = JObject.Parse(item.request.GameDataJson);
                         var diff = jsondiff.Difference.CompareValues(objA, objB);
@@ -241,15 +239,12 @@ namespace Gaos.GameData
                 {
                     item.request.IsGameDataDiff = false;
                 }
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  2110: makeOnRequestQueueItemSaveComplete(): {item.request.GameDataJson}");
                 gameObject.StartCoroutine(Save1(item.slotId, item.request, onUserGameDataSaveComplete));
             }
             else
             {
                 // sleep for 1 second before checking again
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  200: sleep 1s");
                 yield return new WaitForSeconds(1);
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  210");
                 gameObject.StartCoroutine(ProcessSendQueue(gameObject));
             }
         }

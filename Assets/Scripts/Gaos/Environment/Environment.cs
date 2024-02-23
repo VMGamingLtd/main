@@ -30,7 +30,7 @@ namespace Gaos.Environment
                 env.Add("IS_PROFILE_HTTP_CALLS", "false");
                 env.Add("RELEASE_URL", "https://test.galacticodyssey.space/release");
 
-                env.Add("IS_SEND_GAME_DATA_DIFF", "false");
+                env.Add("IS_SEND_GAME_DATA_DIFF", "true");
 
                 env.Add("IS_DEBUG", "false");
                 env.Add("IS_DEBUG_GAME_DATA", "false");
