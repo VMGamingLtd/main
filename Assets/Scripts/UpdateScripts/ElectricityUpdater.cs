@@ -85,12 +85,23 @@ public class ElectricityUpdater : MonoBehaviour
                     // Iterate through each building of the current type and get the BuildingItemData component
                     foreach (GameObject building in buildings)
                     {
-                        BuildingItemData itemData = building.GetComponent<BuildingItemData>();
-
-                        if (!itemData.isPaused)
+                        if (buildingType == "LABORATORY")
                         {
-                            // Add the powerConsumption of each building to the totalConsumption
-                            totalConsumption += itemData.powerConsumption;
+                            ResearchBuildingItemData itemData = building.GetComponent<ResearchBuildingItemData>();
+                            if (!itemData.isPaused)
+                            {
+                                // Add the powerConsumption of each building to the totalConsumption
+                                totalConsumption += itemData.powerConsumption;
+                            }
+                        }
+                        else
+                        {
+                            BuildingItemData itemData = building.GetComponent<BuildingItemData>();
+                            if (!itemData.isPaused)
+                            {
+                                // Add the powerConsumption of each building to the totalConsumption
+                                totalConsumption += itemData.powerConsumption;
+                            }
                         }
                     }
                 }

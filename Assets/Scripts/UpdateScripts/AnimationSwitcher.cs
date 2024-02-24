@@ -15,5 +15,4 @@ public class AnimationSwitcher : MonoBehaviour
         animator.Play("Panel In");
         audioManager.PlayPanelInSound();
     }
-
 }

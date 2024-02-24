@@ -27,7 +27,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         if (GlobalCalculator.GameStarted)
         {
-            StartCoroutine(DisplayTooltip(eventData.pointerEnter.transform.name));
+            StartCoroutine(DisplayTooltip(eventData.pointerEnter.transform.parent.name));
         }
     }
 
@@ -58,7 +58,6 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
             {
                 tooltipFollowMouse.enabled = true;
             }
-            Debug.Log("Displaying tooltip");
             exitedTooltip = false;
             FadeCanvasGroup(tooltipObject, 0);
             float timer = 0f;
@@ -87,7 +86,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
                     {
                         foreach (ChildData requirementItem in researchData.requirementsList)
                         {
-                            CreateRequirementStat(requirementItem.name, requirementItem.quantity.ToString(), requirementItem.name);
+                            CreateRequirementStat(requirementItem);
                         }
                     }
                     else
@@ -97,7 +96,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
                     foreach (ChildData rewardItem in researchData.rewardsList)
                     {
-                        CreateRewardStat(rewardItem.name, rewardItem.quantity.ToString(), rewardItem.name);
+                        CreateRewardStat(rewardItem);
                     }
                 }
             }
@@ -116,22 +115,40 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
     }
 
-    private void CreateRequirementStat(string Name, string Value, string SpriteName)
+    private void CreateRequirementStat(ChildData childData)
     {
         GameObject newStat = Instantiate(stat, requirementsStatList);
-        newStat.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(Name);
-        newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Value;
-        newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignBuildingSpriteToSlot(SpriteName);
+        newStat.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(childData.name);
+        newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = childData.quantity.ToString();
+
+        if (childData.type == "SKILLPOINT")
+        {
+            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignSkillSpriteToSlot(childData.name);
+        }
+        else
+        {
+            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignBuildingSpriteToSlot(childData.name);
+        }
+
         newStat.transform.localPosition = Vector3.one;
         newStat.transform.localScale = Vector3.one;
     }
 
-    private void CreateRewardStat(string Name, string Value, string SpriteName)
+    private void CreateRewardStat(ChildData childData)
     {
         GameObject newStat = Instantiate(stat, rewardsStatList);
-        newStat.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(Name);
-        newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Value;
-        newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignResourceSpriteToSlot(SpriteName);
+        newStat.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(childData.name);
+        newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = childData.quantity.ToString();
+
+        if (childData.type == "SKILLPOINT")
+        {
+            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignSkillSpriteToSlot(childData.name);
+        }
+        else
+        {
+            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignBuildingSpriteToSlot(childData.name);
+        }
+
         newStat.transform.localPosition = Vector3.one;
         newStat.transform.localScale = Vector3.one;
     }
@@ -144,7 +161,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private Sprite AssignSkillSpriteToSlot(string spriteName)
     {
-        Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("skillsicons", spriteName);
+        Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("skillicons", spriteName);
         return sprite;
     }
 
@@ -167,22 +184,20 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         foreach (GameObject tooltipObject in itemTooltipObjects.tooltipObjectItems)
         {
-            tooltipObject.SetActive(false);
+            if (tooltipObject.activeSelf)
+            {
+                tooltipObject.SetActive(false);
+
+                foreach (Transform child in requirementsStatList)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                foreach (Transform child2 in rewardsStatList)
+                {
+                    Destroy(child2.gameObject);
+                }
+            }
         }
-    }
-
-    void OnDisable()
-    {
-        if (requirementsStatList != null)
-            foreach (Transform child in requirementsStatList)
-            {
-                Destroy(child.gameObject);
-            }
-
-        if (rewardsStatList != null)
-            foreach (Transform child2 in rewardsStatList)
-            {
-                Destroy(child2.gameObject);
-            }
     }
 }

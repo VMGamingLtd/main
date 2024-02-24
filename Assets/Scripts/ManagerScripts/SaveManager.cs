@@ -90,7 +90,7 @@ public class SaveManager : MonoBehaviour
         public EnergyBuildingItemDataModel[] powerplant;
         public BuildingItemDataModel[] oxygenStation;
         public BuildingItemDataModel[] miningRig;
-        public ResearchBuildingItemDataModel[] research;
+        public ResearchBuildingItemDataModel[] laboratory;
         public Dictionary<string, object> Planet0StaticVariables = new();
         public Dictionary<string, object> PlayerStaticVariables = new();
         public Dictionary<string, object> PlayerResourcesStaticVariables = new();
@@ -1328,11 +1328,11 @@ public class SaveManager : MonoBehaviour
             currentSaveData.miningRig[i] = buildingData;
         }
 
-        currentSaveData.research = new ResearchBuildingItemDataModel[buildingArrays["RESEARCH"].Length];
+        currentSaveData.laboratory = new ResearchBuildingItemDataModel[buildingArrays["LABORATORY"].Length];
 
-        for (int i = 0; i < buildingArrays["RESEARCH"].Length; i++)
+        for (int i = 0; i < buildingArrays["LABORATORY"].Length; i++)
         {
-            GameObject itemGameObject = buildingArrays["RESEARCH"][i];
+            GameObject itemGameObject = buildingArrays["LABORATORY"][i];
             ResearchBuildingItemData itemDataComponent = itemGameObject.GetComponent<ResearchBuildingItemData>();
             itemDataComponent.buildingName = itemDataComponent.buildingName.Replace("(Clone)", "");
             ResearchBuildingItemDataModel buildingData = new()
@@ -1359,7 +1359,7 @@ public class SaveManager : MonoBehaviour
                 researchPoints = itemDataComponent.researchPoints,
             };
 
-            currentSaveData.research[i] = buildingData;
+            currentSaveData.laboratory[i] = buildingData;
         }
 
         string jsonString = JsonConvert.SerializeObject(currentSaveData, Formatting.Indented, settings);

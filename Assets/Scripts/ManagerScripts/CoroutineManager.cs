@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using Gaos.GameData;
 using Gaos.Routes.Model.GameDataJson;
 using ItemManagement;
 using Newtonsoft.Json;
@@ -231,7 +230,7 @@ public class CoroutineManager : MonoBehaviour
     {
         // Get all active slots from context
         Gaos.Routes.Model.DeviceJson.DeviceRegisterResponseUserSlot[] userSlots = Gaos.Context.Authentication.GetUserSlots();
-        for ( int i = 0; i < userSlots.Length; i++)
+        for (int i = 0; i < userSlots.Length; i++)
         {
             SetSlotButon(userSlots[i]);
         }
