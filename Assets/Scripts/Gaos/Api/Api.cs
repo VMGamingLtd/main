@@ -271,19 +271,40 @@ namespace Gaos.Api
 
         public Configuration Config = Configuration.Config.clone();
 
+        private DateTime StartTime;
+        private DateTime EndTime;
+
+        private int DurationMilliseconds
+        {
+            get
+            {
+                return (int)(EndTime - StartTime).TotalMilliseconds;
+            }
+        }
+
+
         public ApiCall(string urlPath, string requestJsonStr)
         {
             this.UrlPath = urlPath;
             this.RequestJsonStr = requestJsonStr;
+
         }
         public void SetConfig(Configuration config)
         {
             this.Config = config;
         }
 
+        public int GetDurationMilliseconds()
+        {
+            return this.DurationMilliseconds;
+        }
+
         public IEnumerator Call()
         {
             string METHOD = "Call()";
+            
+            StartTime = DateTime.Now;
+
 
             string url = $"{Configuration.Config.API_URL}/{this.UrlPath}";
 
@@ -291,6 +312,8 @@ namespace Gaos.Api
             http.SetConfig(this.Config);
 
             yield return http.Call();
+
+            EndTime = DateTime.Now;
 
             if (http.IsResponseError)
             {
@@ -307,12 +330,16 @@ namespace Gaos.Api
         {
             string METHOD = "CallAsync()";
 
+            StartTime = DateTime.Now;
+
             string url = $"{Configuration.Config.API_URL}/{this.UrlPath}";
 
             HttpPostJsonCall http = new HttpPostJsonCall($"{url}", RequestJsonStr);
             http.SetConfig(this.Config);
 
             await http.CallAsync();
+
+            EndTime = DateTime.Now;
 
             if (http.IsResponseError)
             {

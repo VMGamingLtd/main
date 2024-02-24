@@ -6,5 +6,7 @@ namespace Gaos.Routes.Model.GameDataJson
     {
         public int UserId;
         public int SlotId;
+
+        public string? Version;
     }
 }

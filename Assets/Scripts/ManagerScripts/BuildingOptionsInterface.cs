@@ -33,8 +33,10 @@ public class BuildingOptionsInterface : MonoBehaviour
     private bool isUpdatingUI = false;
     private BuildingItemData itemData;
     private EnergyBuildingItemData itemDataEnergy;
+    private ResearchBuildingItemData itemDataResearch;
     private BuildingCycles buildingCycles;
     private EnergyBuildingCycles buildingCyclesEnergy;
+    private ResearchBuildingCycles buildingCyclesResearch;
     private AudioSource audioSource;
 
     public void StartUpdatingUI(BuildingItemData itemData, GameObject refObj)
@@ -45,6 +47,16 @@ public class BuildingOptionsInterface : MonoBehaviour
             gameObject.SetActive(true);
             mainObj = refObj;
             StartCoroutine(UpdateUI(itemData));
+        }
+    }
+    public void StartUpdatingResearchUI(ResearchBuildingItemData itemData, GameObject refObj)
+    {
+        if (!isUpdatingUI)
+        {
+            isUpdatingUI = true;
+            gameObject.SetActive(true);
+            mainObj = refObj;
+            StartCoroutine(UpdateResearchUI(itemData));
         }
     }
     public void StartUpdatingEnergyUI(EnergyBuildingItemData itemData, GameObject refObj)
@@ -191,6 +203,110 @@ public class BuildingOptionsInterface : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
     }
+
+    private IEnumerator UpdateResearchUI(ResearchBuildingItemData itemData)
+    {
+        buildingCyclesResearch = mainObj.GetComponent<ResearchBuildingCycles>();
+        audioSource = transform.gameObject.GetComponent<AudioSource>();
+        NumberFormater formatter = new();
+        audioSource.clip = reactorAudioClip;
+        title.text = itemData.buildingName;
+        bool audioPlaying = false;
+
+        if (itemData.powerConsumption > 0)
+        {
+            PowerConumeModel.SetActive(true);
+        }
+        else
+        {
+            PowerConumeModel.SetActive(false);
+        }
+
+        int consumedSlots = itemData.consumedSlotCount;
+        if (consumedSlots > 0)
+        {
+            ConsumeModel.SetActive(true);
+            for (int i = 0; i < consumedSlotObjects.Length; i++)
+            {
+                if (i < consumedSlots)
+                {
+                    consumedSlotObjects[i].SetActive(true);
+                    var item = itemData.consumedItems[i];
+                    consumedSlotImage[i].sprite = AssignSpriteToSlot(item.itemName);
+                    consumedSlotQuantity[i].text = itemData.consumedItems[i].quantity.ToString();
+                }
+                else
+                {
+                    consumedSlotObjects[i].SetActive(false); // Deactivate the rest of the consumedSlotObjects
+                }
+            }
+        }
+        else
+        {
+            ConsumeModel.SetActive(false);
+        }
+
+        ProductionModel.SetActive(false);
+
+        while (isUpdatingUI)
+        {
+            efficiency.text = itemData.efficiencySetting.ToString() + '%';
+            string formattedTime = formatter.FormatTimeInTens(itemData.totalTime);
+            totalTime.text = formattedTime;
+            string formattedElapsedTime = formatter.FormatTimeInTens(itemData.timer);
+            elapsedTime.text = formattedElapsedTime;
+
+            if (consumedSlots > 0)
+                for (int i = 0; i < consumedSlotQuantity.Length; i++)
+                {
+                    if (i < consumedSlots)
+                    {
+                        consumedSlotQuantity[i].text = itemData.consumedItems[i].quantity.ToString("F2", CultureInfo.InvariantCulture);
+                    }
+                }
+
+            if (itemData.powerConsumption > 0)
+            {
+                string formattedPower = formatter.FormatEnergyInThousands(itemData.powerConsumption);
+                powerConsumption.text = formattedPower;
+            }
+            if (itemData.isPaused == true)
+            {
+                pauseButton.SetActive(false);
+                playButton.SetActive(true);
+                audioPlaying = false;
+                audioSource.Stop();
+                reactorStatus.Play("ReactorOff");
+            }
+            else if (itemData.efficiency > 0)
+            {
+                if (!audioPlaying)
+                {
+                    audioSource.Play();
+                    audioPlaying = true;
+                }
+                pauseButton.SetActive(true);
+                playButton.SetActive(false);
+                fillImg.fillAmount = buildingCyclesResearch.currentFillAmount;
+                reactorStatus.Play("ReactorOn");
+                float targetSpeed = itemData.efficiencySetting / 100f;
+                reactorStatus["ReactorOn"].speed = targetSpeed;
+                float adjustedPitch = 1f + targetSpeed;
+                audioSource.pitch = adjustedPitch;
+            }
+            else
+            {
+                pauseButton.SetActive(true);
+                playButton.SetActive(false);
+                audioPlaying = false;
+                audioSource.Stop();
+                reactorStatus.Play("ReactorOff");
+                fillImg.fillAmount = 0f;
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
     private IEnumerator UpdateEnergyUI(EnergyBuildingItemData itemData)
     {
         buildingCyclesEnergy = mainObj.GetComponent<EnergyBuildingCycles>();
@@ -291,10 +407,13 @@ public class BuildingOptionsInterface : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
     }
+
+
     public void ToggleProduction()
     {
         itemData = mainObj.GetComponent<BuildingItemData>();
         itemDataEnergy = mainObj.GetComponent<EnergyBuildingItemData>();
+        itemDataResearch = mainObj.GetComponent<ResearchBuildingItemData>();
         audioSource = transform.gameObject.GetComponent<AudioSource>();
 
         // check if the building is running, then stop it
@@ -309,6 +428,12 @@ public class BuildingOptionsInterface : MonoBehaviour
             itemDataEnergy = mainObj.GetComponent<EnergyBuildingItemData>();
             itemDataEnergy.efficiency = 0;
             itemDataEnergy.isPaused = true;
+        }
+        else if (itemDataResearch != null && itemDataResearch.isPaused == false)
+        {
+            itemDataResearch = mainObj.GetComponent<ResearchBuildingItemData>();
+            itemDataResearch.efficiency = 0;
+            itemDataResearch.isPaused = true;
         }
         else
         {

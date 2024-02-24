@@ -5,7 +5,6 @@ using Gaos.Routes.Model.GameDataJson;
 using ItemManagement;
 using Newtonsoft.Json;
 using RecipeManagement;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static SaveManager;
@@ -33,6 +32,7 @@ public class NewGameUI : MonoBehaviour
     private ButtonManager buttonManager;
     private BuildingCreator buildingCreator;
     private ProductionCreator productionCreator;
+    private ResearchManager researchManager;
     private Planet planet;
 
 
@@ -365,9 +365,9 @@ public class NewGameUI : MonoBehaviour
             }
 
             // deserialize Research buildings
-            for (int i = 0; i < gameData.research.Length; i++)
+            for (int i = 0; i < gameData.laboratory.Length; i++)
             {
-                ResearchBuildingItemDataModel buildingData = gameData.research[i];
+                ResearchBuildingItemDataModel buildingData = gameData.laboratory[i];
                 buildingCreator.RecreateResearchBuilding(buildingData.index, buildingData.buildingName, buildingData.buildingType, buildingData.buildingClass,
                     buildingData.consumedSlotCount, buildingData.consumedItems, buildingData.totalTime, buildingData.powerConsumption, buildingData.timer,
                     buildingData.actualPowerConsumption, buildingData.efficiency, buildingData.efficiencySetting, buildingData.buildingCount,
@@ -420,6 +420,8 @@ public class NewGameUI : MonoBehaviour
             coroutineManager.UpdateBuildingText("BiofuelGenerator", Planet0Buildings.Planet0WaterPumpBlueprint.ToString());
             coroutineManager.UpdateBuildingText("FibrousPlantField", Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString());
 
+            coroutineManager.researchPointsText.text = Player.ResearchPoints.ToString();
+
             CoroutineManager.ResetAllCoroutineBooleans();
             globalCalculator.UpdatePlayerConsumption();
             buildingIncrementor.InitializeAvailableBuildings();
@@ -469,7 +471,8 @@ public class NewGameUI : MonoBehaviour
         StartCoroutine(UserGameDataGet.Get(slotNumber, CalGetSlotData));
     }
 
-    private bool IsNewSlot(Gaos.Routes.Model.DeviceJson.DeviceRegisterResponseUserSlot slot) {
+    private bool IsNewSlot(Gaos.Routes.Model.DeviceJson.DeviceRegisterResponseUserSlot slot)
+    {
         if (slot.Hours == 0 && slot.Minutes == 0 && slot.Seconds == 0)
         {
             return true;
@@ -512,7 +515,7 @@ public class NewGameUI : MonoBehaviour
             StartCoroutine(Gaos.GameData.EnsureNewSlot.EnsureNewSlotExists(slotNumber, OnEnsureNewSlotComplete));
 
             // If there's no acive user slot with same slotNumber, then start new game on the slot
-            StartNewGameUI();
+            //StartNewGameUI();
         }
         /*
         else
