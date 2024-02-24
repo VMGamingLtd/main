@@ -150,7 +150,6 @@ namespace Gaos.GameData
 
         public static IEnumerator Save(int slotId, UserGameDataSaveRequest request, OnUserGameDataSaveComplete onUserGameDataSaveComplete)
         {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  3000: enQueue(): {request.GameDataJson}");
             requestsQueue.Enqueue(new RequestQueteItem
             {
                 slotId = slotId,
@@ -163,10 +162,8 @@ namespace Gaos.GameData
 
         private static OnUserGameDataSaveComplete makeOnRequestQueueItemSaveComplete(MonoBehaviour gameObject, RequestQueteItem item)
         {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  2250: makeOnRequestQueueItemSaveComplete(): {item.request.GameDataJson}");
             return (UserGameDataSaveResponse response) =>
             {
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  2300: makeOnRequestQueueItemSaveComplete(): {item.request.GameDataJson}");
                 var previousVersion = LastGameDataVersion.getVersion(item.slotId);
                 LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
                 item.onUserGameDataSaveComplete(response);
@@ -180,10 +177,8 @@ namespace Gaos.GameData
                     var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, item);
                     if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                     {
-                        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  4100");
                         if (previousVersion != null && previousVersion.GameDataJson != null)
                         {
-                            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  4200");
                             JObject objA = JObject.Parse(previousVersion.GameDataJson);
                             JObject objB = JObject.Parse(item.request.GameDataJson);
                             var diff = jsondiff.Difference.CompareValues(objA, objB);

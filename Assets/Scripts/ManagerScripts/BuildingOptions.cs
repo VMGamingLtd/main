@@ -5,6 +5,7 @@ public class BuildingOptions : MonoBehaviour
 {
     private BuildingItemData itemData;
     private EnergyBuildingItemData itemDataEnergy;
+    private ResearchBuildingItemData itemDataResearch;
     private BuildingOptionsInterface optionsInterfaceScript;
     private BuildingOptionsWindow buildingOptionsWindow;
     private GameObject refObj;
@@ -23,11 +24,16 @@ public class BuildingOptions : MonoBehaviour
         {
             itemData = GetComponent<BuildingItemData>();
             itemDataEnergy = GetComponent<EnergyBuildingItemData>();
+            itemDataResearch = GetComponent<ResearchBuildingItemData>();
             refObj = transform.gameObject;
             buildingOptionsWindow.buildingOptions.SetActive(false);
             if (itemData != null)
             {
                 optionsInterfaceScript.StartUpdatingUI(itemData, refObj);
+            }
+            else if (itemDataResearch != null)
+            {
+                optionsInterfaceScript.StartUpdatingResearchUI(itemDataResearch, refObj);
             }
             else
             {

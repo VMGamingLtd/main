@@ -36,7 +36,7 @@ public class BuildingManager : MonoBehaviour
             { "POWERPLANT", new GameObject[0] },
             { "OXYGENSTATION", new GameObject[0] },
             { "MININGRIG", new GameObject[0] },
-            { "RESEARCH", new GameObject[0] }  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TODO: this was milan fix of crash, fix needs to be consulted with brano
+            { "LABORATORY", new GameObject[0] }
         };
         cycleCount = new BuildingCycleCount();
     }
@@ -58,6 +58,11 @@ public class BuildingManager : MonoBehaviour
                     {
                         EnergyBuildingItemData itemDataEnergy = item.GetComponent<EnergyBuildingItemData>();
                         UpdateEnergyBuildingCycles(itemDataEnergy);
+                    }
+                    else if (kvp.Key == "LABORATORY")
+                    {
+                        ResearchBuildingItemData itemDataResearch = item.GetComponent<ResearchBuildingItemData>();
+                        UpdateResearchBuildingCycles(itemDataResearch);
                     }
                     else
                     {
@@ -132,11 +137,19 @@ public class BuildingManager : MonoBehaviour
             itemData.hourCycleCount = 0;
         }
     }
+
     public void UpdateBuildingCycles(BuildingItemData itemData)
     {
         ShiftAndFillCycle(itemData.powerConsumptionCycleData.secondCycle, itemData.actualPowerConsumption);
         itemData.secondCycleCount++;
     }
+
+    public void UpdateResearchBuildingCycles(ResearchBuildingItemData itemData)
+    {
+        ShiftAndFillCycle(itemData.powerConsumptionCycleData.secondCycle, itemData.actualPowerConsumption);
+        //itemData.secondCycleCount++;
+    }
+
     private void ShiftAndFillCycle(float[] cycleArray, float value)
     {
         Array.Copy(cycleArray, 0, cycleArray, 1, cycleArray.Length - 1);

@@ -244,7 +244,7 @@ public class BuildingCreator : MonoBehaviour
 
         translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
         itemDataResearch.buildingName = buildingName;
-        newBuilding.AddComponent<BuildingCycles>();
+        newBuilding.AddComponent<ResearchBuildingCycles>();
         newBuilding.AddComponent<DragAndDropBuildings>();
         buildingManager.AddToItemArray(buildingType, newBuilding);
         buildingIncrementor.InitializeBuildingCounts();
@@ -444,7 +444,7 @@ public class BuildingCreator : MonoBehaviour
             itemDataEnergy.buildingName = $"{titleText} #{itemDataEnergy.buildingCount}";
             draggedObject.AddComponent<EnergyBuildingCycles>();
         }
-        else if (buildingType == "RESEARCH")
+        else if (buildingType == "LABORATORY")
         {
             itemDataResearch = draggedObject.AddComponent<ResearchBuildingItemData>();
             itemDataResearch.buildingType = buildingType;
@@ -473,8 +473,8 @@ public class BuildingCreator : MonoBehaviour
             draggedObject.tag = "Research";
             translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
             string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
-            itemData.buildingName = $"{titleText} #{itemData.buildingCount}";
-            draggedObject.AddComponent<BuildingCycles>();
+            itemDataResearch.buildingName = $"{titleText} #{itemData.buildingCount}";
+            draggedObject.AddComponent<ResearchBuildingCycles>();
         }
         else
         {
@@ -529,13 +529,6 @@ public class BuildingCreator : MonoBehaviour
                 Planet0Buildings.Planet0FurnaceBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0Furnace;
                 draggedObject.tag = "Consume";
-            }
-            else if (draggedObject.name == "ResearchDevice")
-            {
-                Planet0Buildings.Planet0ResearchDevice++;
-                Planet0Buildings.Planet0ResearchDeviceBlueprint--;
-                itemData.buildingCount = Planet0Buildings.Planet0ResearchDevice;
-                draggedObject.tag = "Research";
             }
             translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
             string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);

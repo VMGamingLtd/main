@@ -6,7 +6,7 @@ public static class Player
     public static int PlayerMaxExp = 40;
     public static int SkillPoints;
     public static int StatPoints;
-    public static int ResearchPoints;
+    public static float ResearchPoints;
 
     // SKILLS
     public static int Biology;
@@ -54,13 +54,22 @@ public static class Player
     public static int ExplorationRadius;
     public static int VisibilityRadius;
     public static int PickupRadius;
-    public static float ProductionSpeed;// players starts with 1 from the first item equipped.
-    public static float MaterialCost; // players starts with 1 from the first item equipped.
-    public static float OutcomeRate; // players starts with 1 from the first item equipped.
     public static int UsedInventorySlots;
+    public static float ProductionSpeed; // players start with 1 from the first item equipped.
+    public static float MaterialCost; // players start with 1 from the first item equipped.
+    public static float OutcomeRate; // players start with 1 from the first item equipped.
 
     // MODE VARIABLES
     public static bool CanProduce; // represents if player has Fabricator tool equipped
+
+    // PLAYER RESEARCH PROGRESS
+    public static bool ScienceProjectResearch;
+    public static bool SteamPowerResearch;
+    public static bool BasicAlchemyResearch;
+    public static bool ElectricityFundamentalsResearch;
+    public static bool BotanyResearch;
+    public static bool DataAnalysisResearch;
+    public static bool CognitiveEnhancementResearch;
 
     public static int AddCurrentResource(ref int currentResourceSet, int amount)
     {

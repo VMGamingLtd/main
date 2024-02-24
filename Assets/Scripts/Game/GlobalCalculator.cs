@@ -46,7 +46,6 @@ public class GlobalCalculator : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp  100: ProcessSendQueue()");
         StartCoroutine(Gaos.GameData.UserGameDataSave.ProcessSendQueue(this));
     }
 
