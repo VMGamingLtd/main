@@ -1,11 +1,8 @@
 using Gaos.Routes.Model.GameDataJson;
 using Newtonsoft.Json;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Gaos.Environment;
-using UnityEditor.Compilation;
 using Newtonsoft.Json.Linq;
 
 
@@ -159,12 +156,30 @@ namespace Gaos.GameData
             yield return null;
         }
 
+        private static RequestQueteItem cloneQueueItem(RequestQueteItem item)
+        {
+            return new RequestQueteItem
+            {
+                slotId = item.slotId,
+                request = new UserGameDataSaveRequest
+                {
+                    UserId = item.request.UserId,
+                    SlotId = item.request.SlotId,
+                    Version = item.request.Version,
+                    GameDataJson = item.request.GameDataJson,
+                    IsGameDataDiff = item.request.IsGameDataDiff
+                },
+                onUserGameDataSaveComplete = item.onUserGameDataSaveComplete
+            };
+        }
 
         private static OnUserGameDataSaveComplete makeOnRequestQueueItemSaveComplete(MonoBehaviour gameObject, RequestQueteItem item)
         {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 500: {item.request.GameDataJson}");
             return (UserGameDataSaveResponse response) =>
             {
                 var previousVersion = LastGameDataVersion.getVersion(item.slotId);
+                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 600: {item.request.GameDataJson}");
                 LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
                 item.onUserGameDataSaveComplete(response);
                 if (requestsQueue.Count > 0)
@@ -174,7 +189,7 @@ namespace Gaos.GameData
                     {
                         item = requestsQueue.Dequeue();
                     }
-                    var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, item);
+                    var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item));
                     if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                     {
                         if (previousVersion != null && previousVersion.GameDataJson != null)
@@ -182,6 +197,18 @@ namespace Gaos.GameData
                             JObject objA = JObject.Parse(previousVersion.GameDataJson);
                             JObject objB = JObject.Parse(item.request.GameDataJson);
                             var diff = jsondiff.Difference.CompareValues(objA, objB);
+                            if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_GAME_DATA"] == "true")
+                            {
+                                var strA = JsonConvert.SerializeObject(objA, jsonSerializerSettings);
+                                var strB = JsonConvert.SerializeObject(objB, jsonSerializerSettings);
+                                var strDiff = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: objaA: {strA.Length}");
+                                Debug.Log(strA);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: objaB: {strB.Length}");
+                                Debug.Log(strB);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: diff: {strDiff.Length}");
+                                Debug.Log(strDiff);
+                            }
                             var diffJson = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
                             item.request.GameDataJson = diffJson;
                             item.request.IsGameDataDiff = true;
@@ -213,7 +240,7 @@ namespace Gaos.GameData
                 {
                     item = requestsQueue.Dequeue();
                 }
-                var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, item);
+                var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item));
 
                 if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                 {
@@ -223,6 +250,21 @@ namespace Gaos.GameData
                         JObject objA = JObject.Parse(previousVersion.GameDataJson);
                         JObject objB = JObject.Parse(item.request.GameDataJson);
                         var diff = jsondiff.Difference.CompareValues(objA, objB);
+                        if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_GAME_DATA"] == "true")
+                        {
+                            if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_GAME_DATA"] == "true")
+                            {
+                                var strA = JsonConvert.SerializeObject(objA, jsonSerializerSettings);
+                                var strB = JsonConvert.SerializeObject(objB, jsonSerializerSettings);
+                                var strDiff = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: objaA: {strA.Length}");
+                                Debug.Log(strA);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: objaB: {strB.Length}");
+                                Debug.Log(strB);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: diff: {strDiff.Length}");
+                                Debug.Log(strDiff);
+                            }
+                        }
                         var diffJson = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
                         item.request.GameDataJson = diffJson;
                         item.request.IsGameDataDiff = true;
