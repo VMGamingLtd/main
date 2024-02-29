@@ -110,6 +110,18 @@ namespace Gaos.Device.Device
                     }
                     Context.Authentication.SetJWT(DeviceRegisterResponse.JWT.Token);
                     Context.Authentication.SetUserSlots(DeviceRegisterResponse.UserSlots);
+
+                    if (DeviceRegisterResponse.UserSlots != null)
+                    {
+                        foreach (var userSlot in DeviceRegisterResponse.UserSlots)
+                        {
+                            if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true")
+                            {
+                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: userSlot id: {userSlot.SlotId}, user name: {userSlot.UserName}, game data (id, version): ({userSlot.MongoDocumentId}, {userSlot.MongoDocumentVersion})");
+                            }   
+                            Gaos.GameData.LastGameDataVersion.setVersion(userSlot.SlotId, userSlot.MongoDocumentVersion, userSlot.MongoDocumentId, null);
+                        }
+                    }
                 }
                 else
                 {

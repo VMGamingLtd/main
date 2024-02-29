@@ -44,6 +44,11 @@ public class GlobalCalculator : MonoBehaviour
     private const float delayTime = 1f;
     public TextMeshProUGUI timeText;
 
+    void OnEnable()
+    {
+        StartCoroutine(Gaos.GameData.UserGameDataSave.ProcessSendQueue(this));
+    }
+
     void Start()
     {
         timer = 0f;

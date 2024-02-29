@@ -515,7 +515,7 @@ public class NewGameUI : MonoBehaviour
             StartCoroutine(Gaos.GameData.EnsureNewSlot.EnsureNewSlotExists(slotNumber, OnEnsureNewSlotComplete));
 
             // If there's no acive user slot with same slotNumber, then start new game on the slot
-            StartNewGameUI();
+            //StartNewGameUI();
         }
         /*
         else
