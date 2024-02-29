@@ -25,8 +25,8 @@ namespace Gaos.Environment
 
                 env.Add("IS_SEND_GAME_DATA_DIFF", "true");
 
-                env.Add("IS_DEBUG", "true");
-                env.Add("IS_DEBUG_GAME_DATA", "true");
+                env.Add("IS_DEBUG", "false");
+                env.Add("IS_DEBUG_GAME_DATA", "false");
             }
             else if (envName == "Test")
             {
@@ -57,8 +57,8 @@ namespace Gaos.Environment
 
         public static Dictionary<string, string> GetEnvironment()
         {
-            //return Environment.GetEnvironment_("Test");
-            return GetEnvironment_("Development");
+            return Environment.GetEnvironment_("Test");
+            //return GetEnvironment_("Development");
         }
 
     }

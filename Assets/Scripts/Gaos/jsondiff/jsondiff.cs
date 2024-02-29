@@ -466,9 +466,6 @@ namespace jsondiff
                 var diff = CompareObjectValueAtProperty(valA, valB, property.Name);
                 if (diff != null)
                 {
-                    Console.WriteLine(property.Name);
-                    Console.WriteLine(diff.Diff.Type);
-
                     diffs.Add(diff);
                 }
 
