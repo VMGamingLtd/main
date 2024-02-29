@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 113607267
+CRC: 2385637200
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1a519b948d4c3c7b95e5526c46b0298d
+    Hash: 1da0631ed1be29f32c7ac8cbb9644c51
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -16,9 +16,16 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/AssetBundlesRepo/SkillIcons/engineering.png
+- Assets/AssetBundlesRepo/SkillIcons/BasicAlchemy.png
 - Assets/AssetBundlesRepo/SkillIcons/atom.png
+- Assets/AssetBundlesRepo/SkillIcons/Botany.png
+- Assets/AssetBundlesRepo/SkillIcons/SteamPower.png
 - Assets/AssetBundlesRepo/SkillIcons/dna.png
 - Assets/AssetBundlesRepo/SkillIcons/cpu.png
 - Assets/AssetBundlesRepo/SkillIcons/chemistry.png
+- Assets/AssetBundlesRepo/SkillIcons/ScienceProjects.png
+- Assets/AssetBundlesRepo/SkillIcons/CognitiveEnhancement.png
+- Assets/AssetBundlesRepo/SkillIcons/ElectricityFundamentals.png
 - Assets/AssetBundlesRepo/SkillIcons/brain.png
+- Assets/AssetBundlesRepo/SkillIcons/DataAnalysis.png
 Dependencies: []

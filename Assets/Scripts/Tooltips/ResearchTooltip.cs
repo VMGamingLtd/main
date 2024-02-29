@@ -68,14 +68,17 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
             if (int.TryParse(objectName, out int objectID))
             {
                 var researchData = recipeCreator.researchDataList[objectID];
-                Debug.Log(objectID);
+
                 if (researchData != null)
                 {
                     tooltipObject.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectName);
                     tooltipObject.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSkillSpriteToSlot(researchData.projectName);
+                    tooltipObject.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectProduct);
                     tooltipObject.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectType);
                     tooltipObject.transform.Find("Class").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectClass);
                     tooltipObject.transform.Find("Desc").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectName + "Desc");
+                    tooltipObject.transform.Find("RequirementsTitle").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Requirements");
+                    tooltipObject.transform.Find("RewardsTitle").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Rewards");
 
                     stat = GameObject.Find("ItemCreatorList/BuildingTooltipStatTemplate");
 
@@ -123,7 +126,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
         if (childData.type == "SKILLPOINT")
         {
-            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignSkillSpriteToSlot(childData.name);
+            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignResourceSpriteToSlot(childData.name);
         }
         else
         {
@@ -138,15 +141,16 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         GameObject newStat = Instantiate(stat, rewardsStatList);
         newStat.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(childData.name);
-        newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = childData.quantity.ToString();
 
         if (childData.type == "SKILLPOINT")
         {
-            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignSkillSpriteToSlot(childData.name);
+            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignResourceSpriteToSlot(childData.name);
+            newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = childData.quantity.ToString();
         }
         else
         {
             newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignBuildingSpriteToSlot(childData.name);
+            newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Blueprint");
         }
 
         newStat.transform.localPosition = Vector3.one;
@@ -173,8 +177,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private void FadeCanvasGroup(GameObject targetObject, float alpha)
     {
-        CanvasGroup canvasGroup = targetObject.transform.parent.GetComponent<CanvasGroup>();
-        if (canvasGroup != null)
+        if (targetObject.transform.parent.TryGetComponent<CanvasGroup>(out var canvasGroup))
         {
             canvasGroup.alpha = alpha;
         }

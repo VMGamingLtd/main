@@ -45,7 +45,7 @@ public class DaylightSemicircle : MonoBehaviour
 
             // Get the positions of the two nearest points
             RectTransform pointA = points[pointIndex];
-            RectTransform pointB = points[pointIndex + 1];
+            RectTransform pointB = pointIndex < points.Length - 1 ? points[pointIndex + 1] : points[pointIndex];
 
             // Calculate the interpolated position based on the percentage
             float percentage = (normalizedTime - (float)pointIndex / (points.Length - 1)) * (points.Length - 1);

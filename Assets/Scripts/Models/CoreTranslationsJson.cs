@@ -751,6 +751,13 @@
         ""slovak"": ""Zásady ochrany osobných údajov""
       },
       {
+        ""identifier"": ""Blueprint"",
+        ""english"": "" - (Blueprint)"",
+        ""russian"": "" - (План)"",
+        ""chinese"": "" - (蓝图)"",
+        ""slovak"": "" - (Plán)""
+      },
+      {
         ""identifier"": ""ALLBLUEPRINTS"",
         ""english"": ""All blueprints"",
         ""russian"": ""Все чертежи"",
@@ -1528,6 +1535,13 @@
         ""slovak"": ""Dokončite výskum „Vedecké projekty“""
       },
       {
+        ""identifier"": ""ResearchScienceProjectsDesc"",
+        ""english"": ""Place a <color=yellow>Research device</color> in your base to generate research points. Then complete <color=yellow>Science Project</color> research."",
+        ""russian"": ""Разместите <color=yellow>Исследовательское устройство</color> на своей базе, чтобы получать очки исследования. Затем завершите исследование <color=yellow>Научного проекта</color>."",
+        ""chinese"": ""在你的基地放置一个<color=yellow>研究装置</color>来生成研究点。然后完成<color=yellow>科学项目</color>研究。"",
+        ""slovak"": ""Umiestnite <color=yellow>Výskumné zariadenie</color> do svojej základne a generujte výskumné body. Potom dokončite výskum <color=yellow>Vedeckého projektu</color>.""
+      },
+      {
         ""identifier"": ""ScienceProjects"",
         ""english"": ""Science projects"",
         ""russian"": ""Научные проекты"",
@@ -1554,6 +1568,20 @@
         ""russian"": ""Требования:"",
         ""chinese"": ""要求："",
         ""slovak"": ""Požiadavky:""
+      },
+      {
+        ""identifier"": ""SteamPower"",
+        ""english"": ""Steam power"",
+        ""russian"": ""Сила пара"",
+        ""chinese"": ""蒸汽动力"",
+        ""slovak"": ""Parný pohon""
+      },
+      {
+        ""identifier"": ""SteamPowerDesc"",
+        ""english"": ""Unlocks the usage of steam as a resource together with steam powered buildings."",
+        ""russian"": ""Открывает возможность использования пара в качестве ресурса вместе со зданиями, работающими на паре."",
+        ""chinese"": ""解锁蒸汽作为资源以及蒸汽动力建筑的使用。"",
+        ""slovak"": ""Odomkne využitie pary ako zdroja spolu s budovami poháňanými parou.""
       }
     ]
   }
