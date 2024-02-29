@@ -175,11 +175,11 @@ namespace Gaos.GameData
 
         private static OnUserGameDataSaveComplete makeOnRequestQueueItemSaveComplete(MonoBehaviour gameObject, RequestQueteItem item)
         {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 500: {item.request.GameDataJson}");
+            //Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 500: {item.request.GameDataJson}");
             return (UserGameDataSaveResponse response) =>
             {
                 var previousVersion = LastGameDataVersion.getVersion(item.slotId);
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 600: {item.request.GameDataJson}");
+                //Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 600: {item.request.GameDataJson}");
                 LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
                 item.onUserGameDataSaveComplete(response);
                 if (requestsQueue.Count > 0)
@@ -228,8 +228,6 @@ namespace Gaos.GameData
                 }
             };
         }
-
-        private static bool isProcessingSendQueueRunning = false;
 
         public static IEnumerator ProcessSendQueue(MonoBehaviour gameObject)
         {
