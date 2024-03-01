@@ -51,6 +51,14 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             else
             {
                 StartCoroutine(DisplayTooltip(eventData.pointerEnter.transform.name));
+
+                var parent = eventData.pointerEnter.transform.parent;
+                var grandParent = parent.transform.parent;
+
+                if (grandParent.TryGetComponent(out Animation animation))
+                {
+                    animation.Stop();
+                }
             }
 
         }
@@ -59,6 +67,14 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        var parent = eventData.pointerEnter.transform.parent;
+        var grandParent = parent.transform.parent;
+
+        if (grandParent.TryGetComponent(out Animation animation))
+        {
+            animation.Play();
+        }
+
         HideAllTooltips();
         exitedTooltip = true;
     }
@@ -93,6 +109,7 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         HideAllTooltips();
         GameObject tooltipObject = FindTooltipObject(objectName);
+
         if (tooltipObject != null)
         {
             tooltipFollowMouse = tooltipObject.transform.parent.GetComponent<TooltipFollowMouse>();
