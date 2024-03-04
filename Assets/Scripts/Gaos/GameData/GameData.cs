@@ -34,6 +34,11 @@ namespace Gaos.GameData
         {
             slotToVersion[slotId] = new DocumentVersion { DocId = docId, DocVersion = docVersion, GameDataJson = gameDataJson };
         }
+
+        public static void setNoneVersion(int slotId)
+        {
+            slotToVersion.Remove(slotId);
+        }
     }
 
     public class UserGameDataGet
@@ -180,7 +185,16 @@ namespace Gaos.GameData
             {
                 var previousVersion = LastGameDataVersion.getVersion(item.slotId);
                 //Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 600: {item.request.GameDataJson}");
-                LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
+                if (response != null)
+                {
+                    LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
+                    Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 800: received version: {response.Version}");
+                }
+                else
+                {
+                    // error saving game data
+                    LastGameDataVersion.setNoneVersion(item.slotId);
+                }
                 item.onUserGameDataSaveComplete(response);
                 if (requestsQueue.Count > 0)
                 {
@@ -208,6 +222,20 @@ namespace Gaos.GameData
                                 Debug.Log(strB);
                                 Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: diff: {strDiff.Length}");
                                 Debug.Log(strDiff);
+                            }
+                            if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_SEND_GAMEDATA_ON_SAVE"] == "true")
+                            {
+                                // verifiy that previos version is the same as the one sent in response
+                                JObject objA_received = JObject.Parse(response.GameDataJson);
+                                var resultIsEqual = jsondiff.Difference.IsEqualValues(objA, objA_received);
+                                if (resultIsEqual.IsEqual == false)
+                                {
+                                    Debug.LogError($"@@@@@@@@@@@@@@@@@@@@ gamedata: objA_received: {response.GameDataJson.Length}");
+                                    Debug.LogError(response.GameDataJson);
+                                    Debug.LogError($"@@@@@@@@@@@@@@@@@@@@ gamedata: objA: {previousVersion.GameDataJson.Length}");
+                                    Debug.LogError(previousVersion.GameDataJson);
+                                    throw new System.Exception($"previos game data  sync with backend, differs at property: {resultIsEqual.PropertyPath}");
+                                }
                             }
                             var diffJson = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
                             item.request.GameDataJson = diffJson;
@@ -292,6 +320,7 @@ namespace Gaos.GameData
             request.UserId = Context.Authentication.GetUserId();
             request.SlotId = slotId;
             request.Version = LastGameDataVersion.getVersion(slotId).DocVersion;
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 800: saving version: {request.Version}");
 
 
             if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_GAME_DATA"] == "true")
@@ -316,6 +345,7 @@ namespace Gaos.GameData
                 if (response.IsError == true)
                 {
                     Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error saving game data: {response.ErrorMessage}");
+                    throw new System.Exception($"error saving game data: {response.ErrorMessage}"); //@@@@@@@@@@@@@@@@@@@@@@@@@@@
                     onUserGameDataSaveComplete(null);
                     yield break;
                 }

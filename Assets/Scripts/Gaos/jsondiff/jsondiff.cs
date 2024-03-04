@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable 8600, 8601, 8618, 8602, 8604, 8603, 8765
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -567,6 +569,152 @@ namespace jsondiff
                     }
                 }
             }
+        }
+
+        public class IsEqualResult
+        {
+            public bool IsEqual { get; set; }
+            public string PropertyPath { get; set; }
+        }
+
+        private static IsEqualResult IsEqualArrayValues(JToken valA, JToken valB, string propertyPath)
+        {
+            var arrA = (JArray)valA;
+            var arrB = (JArray)valB;
+
+            var count = Math.Max(arrA.Count, arrB.Count);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (i >= arrA.Count)
+                {
+                    return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath + $"[{i}]" };
+                }
+                if (i >= arrB.Count)
+                {
+                    return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath + $"[{i}]" };
+                }
+                if (arrA[i].Type != arrB[i].Type)
+                {
+                    return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath + $"[{i}]" };
+                }
+                if (arrA[i].Type == JTokenType.Object)
+                {
+                    var result = IsEqualObjectValues(arrA[i], arrB[i], propertyPath + $"[{i}]");
+                    if (!result.IsEqual)
+                    {
+                        return result;
+                    }
+                }
+                else if (arrA[i].Type == JTokenType.Array)
+                {
+                    var result = IsEqualArrayValues(arrA[i], arrB[i], propertyPath + $"[{i}]");
+                    if (!result.IsEqual)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    if (arrA[i].ToString() != arrB[i].ToString())
+                    {
+                        return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath + $"[{i}]" };
+                    }
+                }
+            }
+            return new IsEqualResult { IsEqual = true, PropertyPath = propertyPath };
+        }
+
+        private static IsEqualResult IsEqualObjectValues(JToken valA, JToken valB, string propertyPath)
+        {
+
+            var objA = (JObject)valA;
+            var objB = (JObject)valB;
+
+            var objAProperties = objA.Properties();
+            foreach (var property in objAProperties)
+            {
+                if (objB[property.Name] == null)
+                {
+                    return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath + "." + property.Name };
+                }
+                if (objA[property.Name].Type != objB[property.Name].Type)
+                {
+                    return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath + "." + property.Name };
+                }
+                if (objA[property.Name].Type == JTokenType.Object)
+                {
+                    var result = IsEqualObjectValues(objA[property.Name], objB[property.Name], propertyPath + "." + property.Name);
+                    if (!result.IsEqual)
+                    {
+                        return result;
+                    }
+                }
+                else if (objA[property.Name].Type == JTokenType.Array)
+                {
+                    var result = IsEqualArrayValues(objA[property.Name], objB[property.Name], propertyPath + "." + property.Name);
+                    if (!result.IsEqual)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    if (objA[property.Name].ToString() != objB[property.Name].ToString())
+                    {
+                        return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath + "." + property.Name };
+                    }
+                }
+            }
+
+            var objBProperties = objB.Properties();
+            foreach (var property in objBProperties)
+            {
+                if (objA[property.Name] == null)
+                {
+                    return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath + "." + property.Name };
+                }
+            }
+
+            return new IsEqualResult { IsEqual = true, PropertyPath = propertyPath };
+        }
+
+        private static IsEqualResult IsEqualValues_(JToken valA, JToken valB, string propertyPath)
+        {
+            if (valA.Type != valB.Type)
+            {
+                return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath };
+            }
+            else
+            {
+                if (valA.Type == JTokenType.Object)
+                {
+                    var result = IsEqualObjectValues(valA, valB, propertyPath);
+                    return result;
+                }
+                else if (valA.Type == JTokenType.Array)
+                {
+                    var result = IsEqualArrayValues(valA, valB, propertyPath);
+                    return result;
+                }
+                else
+                {
+                    if (valA.ToString() != valB.ToString())
+                    {
+                        return new IsEqualResult { IsEqual = false, PropertyPath = propertyPath };
+                    }
+                    else
+                    {
+                        return new IsEqualResult { IsEqual = true, PropertyPath = propertyPath };
+                    }
+                }
+            }
+        }
+
+        public static IsEqualResult IsEqualValues(JToken valA, JToken valB)
+        {
+            var result = IsEqualValues_(valA, valB, "");
+            return result;
         }
 
         private static JToken MergeArrays(JToken val, List<DiffValueAtIndex> diffs)
