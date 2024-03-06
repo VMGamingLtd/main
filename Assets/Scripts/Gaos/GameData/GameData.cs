@@ -194,6 +194,7 @@ namespace Gaos.GameData
                 {
                     // error saving game data
                     LastGameDataVersion.setNoneVersion(item.slotId);
+                    Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 900: error saving game data");
                 }
                 item.onUserGameDataSaveComplete(response);
                 if (requestsQueue.Count > 0)
@@ -223,19 +224,9 @@ namespace Gaos.GameData
                                 Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: diff: {strDiff.Length}");
                                 Debug.Log(strDiff);
                             }
-                            if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_SEND_GAMEDATA_ON_SAVE"] == "true")
+                            if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_SEND_GAMEDATA_BASE"] == "true")
                             {
-                                // verifiy that previos version is the same as the one sent in response
-                                JObject objA_received = JObject.Parse(response.GameDataJson);
-                                var resultIsEqual = jsondiff.Difference.IsEqualValues(objA, objA_received);
-                                if (resultIsEqual.IsEqual == false)
-                                {
-                                    Debug.LogError($"@@@@@@@@@@@@@@@@@@@@ gamedata: objA_received: {response.GameDataJson.Length}");
-                                    Debug.LogError(response.GameDataJson);
-                                    Debug.LogError($"@@@@@@@@@@@@@@@@@@@@ gamedata: objA: {previousVersion.GameDataJson.Length}");
-                                    Debug.LogError(previousVersion.GameDataJson);
-                                    throw new System.Exception($"previos game data  sync with backend, differs at property: {resultIsEqual.PropertyPath}");
-                                }
+                                item.request.GameDataDiffBase = previousVersion.GameDataJson;
                             }
                             var diffJson = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
                             item.request.GameDataJson = diffJson;
@@ -290,6 +281,10 @@ namespace Gaos.GameData
                                 Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: diff: {strDiff.Length}");
                                 Debug.Log(strDiff);
                             }
+                        }
+                        if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_SEND_GAMEDATA_BASE"] == "true")
+                        {
+                            item.request.GameDataDiffBase = previousVersion.GameDataJson;
                         }
                         var diffJson = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
                         item.request.GameDataJson = diffJson;

@@ -27,7 +27,7 @@ namespace Gaos.Environment
 
                 env.Add("IS_DEBUG", "false");
                 env.Add("IS_DEBUG_GAME_DATA", "false");
-                env.Add("IS_DEBUG_SEND_GAMEDATA_ON_SAVE", "false");
+                env.Add("IS_DEBUG_SEND_GAMEDATA_BASE", "false");
             }
             else if (envName == "Test")
             {
@@ -45,7 +45,7 @@ namespace Gaos.Environment
 
                 env.Add("IS_DEBUG", "true");
                 env.Add("IS_DEBUG_GAME_DATA", "false");
-                env.Add("IS_DEBUG_SEND_GAMEDATA_ON_SAVE", "true");
+                env.Add("IS_DEBUG_SEND_GAMEDATA_BASE", "true");
 
             }
             else
