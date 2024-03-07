@@ -35,10 +35,6 @@ namespace Gaos.GameData
             slotToVersion[slotId] = new DocumentVersion { DocId = docId, DocVersion = docVersion, GameDataJson = gameDataJson };
         }
 
-        public static void setNoneVersion(int slotId)
-        {
-            slotToVersion.Remove(slotId);
-        }
     }
 
     public class UserGameDataGet
@@ -180,21 +176,18 @@ namespace Gaos.GameData
 
         private static OnUserGameDataSaveComplete makeOnRequestQueueItemSaveComplete(MonoBehaviour gameObject, RequestQueteItem item)
         {
-            //Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 500: {item.request.GameDataJson}");
             return (UserGameDataSaveResponse response) =>
             {
                 var previousVersion = LastGameDataVersion.getVersion(item.slotId);
-                //Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 600: {item.request.GameDataJson}");
                 if (response != null)
                 {
                     LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
-                    Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 800: received version: {response.Version}");
                 }
                 else
                 {
                     // error saving game data
-                    LastGameDataVersion.setNoneVersion(item.slotId);
-                    Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 900: error saving game data");
+                    LastGameDataVersion.setVersion(item.slotId, previousVersion.DocId, previousVersion.DocVersion, null);
+
                 }
                 item.onUserGameDataSaveComplete(response);
                 if (requestsQueue.Count > 0)
@@ -315,7 +308,6 @@ namespace Gaos.GameData
             request.UserId = Context.Authentication.GetUserId();
             request.SlotId = slotId;
             request.Version = LastGameDataVersion.getVersion(slotId).DocVersion;
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@ cp 800: saving version: {request.Version}");
 
 
             if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_GAME_DATA"] == "true")
@@ -340,7 +332,6 @@ namespace Gaos.GameData
                 if (response.IsError == true)
                 {
                     Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error saving game data: {response.ErrorMessage}");
-                    throw new System.Exception($"error saving game data: {response.ErrorMessage}"); //@@@@@@@@@@@@@@@@@@@@@@@@@@@
                     onUserGameDataSaveComplete(null);
                     yield break;
                 }
