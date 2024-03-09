@@ -36,6 +36,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         HideAllTooltips();
         exitedTooltip = true;
     }
+
     private GameObject FindTooltipObject(string objectName)
     {
         foreach (GameObject tooltipObj in itemTooltipObjects.tooltipObjectItems)
@@ -48,6 +49,11 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         return null;
     }
 
+    /// <summary>
+    /// Displays the actual tooltip after mouse over where object name is also the actual ID of the entry in the json file ResearchListJson.
+    /// </summary>
+    /// <param name="objectName"></param>
+    /// <returns></returns>
     public IEnumerator DisplayTooltip(string objectName)
     {
         HideAllTooltips();
@@ -118,6 +124,10 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
     }
 
+    /// <summary>
+    /// Instantiates a game object inside Research tooltip - RequirementStatList game object with values from json file.
+    /// </summary>
+    /// <param name="childData"></param>
     private void CreateRequirementStat(ChildData childData)
     {
         GameObject newStat = Instantiate(stat, requirementsStatList);
@@ -137,6 +147,10 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         newStat.transform.localScale = Vector3.one;
     }
 
+    /// <summary>
+    /// Instantiates a game object inside Research tooltip - RewardStatList game object with values from json file.
+    /// </summary>
+    /// <param name="childData"></param>
     private void CreateRewardStat(ChildData childData)
     {
         GameObject newStat = Instantiate(stat, rewardsStatList);
@@ -146,6 +160,16 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         {
             newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignResourceSpriteToSlot(childData.name);
             newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = childData.quantity.ToString();
+        }
+        else if (childData.type == "GENERALSTAT")
+        {
+            GameObject childIcon = newStat.transform.Find("Icon").gameObject;
+            childIcon.SetActive(false);
+
+            if (childData.name == "AllProduction")
+            {
+                newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = childData.quantity.ToString() + " + %";
+            }
         }
         else
         {
@@ -175,6 +199,11 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         return sprite;
     }
 
+    /// <summary>
+    /// Fades the alpha value of the Canvas object over a desired time to create 'FadeIn' or 'FadeOut' transition effect.
+    /// </summary>
+    /// <param name="targetObject"></param>
+    /// <param name="alpha"></param>
     private void FadeCanvasGroup(GameObject targetObject, float alpha)
     {
         if (targetObject.transform.parent.TryGetComponent<CanvasGroup>(out var canvasGroup))

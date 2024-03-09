@@ -78,6 +78,7 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         HideAllTooltips();
         exitedTooltip = true;
     }
+
     private GameObject FindTooltipObject(string objectName)
     {
         foreach (GameObject tooltipObj in tooltipObjects.tooltipObjects)
@@ -113,16 +114,20 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (tooltipObject != null)
         {
             tooltipFollowMouse = tooltipObject.transform.parent.GetComponent<TooltipFollowMouse>();
+
             if (tooltipFollowMouse != null)
             {
                 tooltipFollowMouse.enabled = true;
             }
+
             exitedTooltip = false;
             FadeCanvasGroup(tooltipObject, 0);
             float timer = 0f;
             float totalTime = 0.1f;
             float delay = 0.5f;
+
             tooltipObject.SetActive(true);
+
             if (suitData != null)
             {
                 SuitDataInjector suitDataInjector = tooltipObject.GetComponent<SuitDataInjector>();

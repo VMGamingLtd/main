@@ -35,17 +35,6 @@ public class StartGameInputChecker : MonoBehaviour
         buildingManager.PopulateBuildingArrays();
         recipeManager.PopulateInventoryArrays();
 
-        _ = LoadMenus();
-
-        recipeCreator.CreateRecipe(1);
-        recipeCreator.CreateRecipe(3);
-
-        //initialize starting resources
-        Credits.ResetCredits();
-        Credits.AddCredits(42);
-
-        equipmentManager.InitStartEquip();
-
         var suitRectTransform = equipmentManager.SuitSlot.GetComponent<RectTransform>();
         var helmetRectTransfrom = equipmentManager.HelmetSlot.GetComponent<RectTransform>();
         var toolRectTransfrom = equipmentManager.LeftHandSlot.GetComponent<RectTransform>();
@@ -53,6 +42,16 @@ public class StartGameInputChecker : MonoBehaviour
         itemCreator.CreateSuit(0, null, suitRectTransform);
         itemCreator.CreateHelmet(0, null, helmetRectTransfrom);
         itemCreator.CreateTool(0, null, toolRectTransfrom);
+
+        _ = LoadMenus();
+
+        equipmentManager.InitStartEquip();
+        recipeCreator.CreateRecipe(1);
+        recipeCreator.CreateRecipe(3);
+
+        //initialize starting resources
+        Credits.ResetCredits();
+        Credits.AddCredits(42);
 
         // force button click action to open the Exploration menu that the button is set for
         buttonToClick.onClick.Invoke();

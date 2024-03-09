@@ -241,6 +241,12 @@ public class ResearchManager : MonoBehaviour
                     }
                 }
             }
+
+            if (!Player.PoweredEngineeringResearch)
+            {
+                if (Connections.TryGetValue(7, out var connectionObject)) connectionObject.SetActive(false);
+                if (Projects.TryGetValue(7, out var projectObject)) projectObject.SetActive(false);
+            }
         }
     }
 }

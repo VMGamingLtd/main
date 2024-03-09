@@ -1582,6 +1582,20 @@
         ""russian"": ""Открывает возможность использования пара в качестве ресурса вместе со зданиями, работающими на паре."",
         ""chinese"": ""解锁蒸汽作为资源以及蒸汽动力建筑的使用。"",
         ""slovak"": ""Odomkne využitie pary ako zdroja spolu s budovami poháňanými parou.""
+      },
+      {
+        ""identifier"": ""AllProduction"",
+        ""english"": ""All production"",
+        ""russian"": ""Вся продукция"",
+        ""chinese"": ""全部生产"",
+        ""slovak"": ""Celá výroba""
+      },
+      {
+        ""identifier"": ""ByType"",
+        ""english"": ""Type"",
+        ""russian"": ""Тип"",
+        ""chinese"": ""类型"",
+        ""slovak"": ""Typ""
       }
     ]
   }

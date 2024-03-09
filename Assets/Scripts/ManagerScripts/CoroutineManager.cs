@@ -444,7 +444,7 @@ public class CoroutineManager : MonoBehaviour
             for (int i = 0; i < currentTextArray.Length; i++)
             {
                 if (currentResource.EndsWith(".00")) currentResource = currentResource[..^3];
-                currentTextArray[i].text = currentResource;
+                currentTextArray[i].text = currentResource + " s";
             }
         }
         else

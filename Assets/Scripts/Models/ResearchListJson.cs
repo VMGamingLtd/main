@@ -246,7 +246,7 @@ namespace Assets.Scripts.Models
       ""rewardsList"": [
         {
           ""index"": 0,
-          ""name"": ""Production"",
+          ""name"": ""AllProduction"",
           ""product"": ""BASIC"",
           ""type"": ""GENERALSTAT"",
           ""itemClass"": ""CLASS-F"",

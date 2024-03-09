@@ -72,11 +72,13 @@ public class BuildingObjectUITooltip : MonoBehaviour, IPointerEnterHandler, IPoi
 
                 if (buildingData != null)
                 {
-                    tooltipObject.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = buildingData.buildingName;
+                    tooltipObject.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingData.buildingName);
                     tooltipObject.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(buildingData.buildingName);
                     tooltipObject.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingData.buildingType);
                     tooltipObject.transform.Find("Class").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingData.buildingClass);
                     tooltipObject.transform.Find("Desc").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingData.buildingName + "Desc");
+                    tooltipObject.transform.Find("ConsumptionTitle").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Consumption");
+                    tooltipObject.transform.Find("OutputTitle").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Output");
 
                     stat = GameObject.Find("ItemCreatorList/BuildingTooltipStatTemplate");
 

@@ -237,6 +237,10 @@ public class BuildingCycles : MonoBehaviour
         {
             await NoElectricityMode();
         }
+
+        pauseImgColor = UIColors.invisibleCol;
+        electricImgColor = UIColors.invisibleCol;
+
         // checking if player has enough of all consumed resources based on BuildingItemData
         int consumedSlots = itemData.consumedSlotCount;
         float[] getResources = new float[consumedSlots];
