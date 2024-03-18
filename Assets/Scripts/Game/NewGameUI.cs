@@ -103,7 +103,7 @@ public class NewGameUI : MonoBehaviour
             for (int i = 0; i < gameData.EventObjects.Count; i++)
             {
                 EventIconModel iconModel = gameData.EventObjects[i];
-                planet.RecreateEventObject(iconModel.Name, iconModel.position);
+                planet.RecreateEventObject(iconModel.Name, iconModel.position, iconModel.iconType, iconModel.currentQuantity, iconModel.maxQuantity);
             }
 
             // assign current goal

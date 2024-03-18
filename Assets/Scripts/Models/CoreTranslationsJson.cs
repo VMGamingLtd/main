@@ -1596,6 +1596,146 @@
         ""russian"": ""Тип"",
         ""chinese"": ""类型"",
         ""slovak"": ""Typ""
+      },
+      {
+        ""identifier"": ""Quantity"",
+        ""english"": ""Quantity :"",
+        ""russian"": ""Количество :"",
+        ""chinese"": ""数量 ："",
+        ""slovak"": ""Množstvo :""
+      },
+      {
+        ""identifier"": ""FishMeat"",
+        ""english"": ""Fish meat"",
+        ""russian"": ""Рыбное мясо"",
+        ""chinese"": ""鱼肉"",
+        ""slovak"": ""Rybie mäso""
+      },
+      {
+        ""identifier"": ""Whale"",
+        ""english"": ""Whale"",
+        ""russian"": ""Кит"",
+        ""chinese"": ""鲸"",
+        ""slovak"": ""Veľryba""
+      },
+      {
+        ""identifier"": ""Kuleoma"",
+        ""english"": ""Kuleoma"",
+        ""russian"": ""Кулеома"",
+        ""chinese"": ""Kuleoma"",
+        ""slovak"": ""Kuleoma""
+      },
+      {
+        ""identifier"": ""SeaTurtle"",
+        ""english"": ""Sea turtle"",
+        ""russian"": ""Морская черепаха"",
+        ""chinese"": ""海龟"",
+        ""slovak"": ""Morská korytnačka""
+      },
+      {
+        ""identifier"": ""Shark"",
+        ""english"": ""Shark"",
+        ""russian"": ""Акула"",
+        ""chinese"": ""鲨鱼"",
+        ""slovak"": ""Žralok""
+      },
+      {
+        ""identifier"": ""Octopus"",
+        ""english"": ""Octopus"",
+        ""russian"": ""Осьминог"",
+        ""chinese"": ""章鱼"",
+        ""slovak"": ""Chobotnica""
+      },
+      {
+        ""identifier"": ""SilicaSand"",
+        ""english"": ""Silica sand"",
+        ""russian"": ""Кварцевый песок"",
+        ""chinese"": ""硅砂"",
+        ""slovak"": ""Kremičitý piesok""
+      },
+      {
+        ""identifier"": ""Clay"",
+        ""english"": ""Clay"",
+        ""russian"": ""Глина"",
+        ""chinese"": ""黏土"",
+        ""slovak"": ""Hlina""
+      },
+      {
+        ""identifier"": ""Limestone"",
+        ""english"": ""Limestone"",
+        ""russian"": ""Известняк"",
+        ""chinese"": ""石灰石"",
+        ""slovak"": ""Vápenec""
+      },
+      {
+        ""identifier"": ""CopperOre"",
+        ""english"": ""Copper ore"",
+        ""russian"": ""Медная руда"",
+        ""chinese"": ""铜矿"",
+        ""slovak"": ""Medená ruda""
+      },
+      {
+        ""identifier"": ""Stone"",
+        ""english"": ""Stone"",
+        ""russian"": ""Камень"",
+        ""chinese"": ""石头"",
+        ""slovak"": ""Kameň""
+      },
+      {
+        ""identifier"": ""GoldOre"",
+        ""english"": ""Gold ore"",
+        ""russian"": ""Золотая руда"",
+        ""chinese"": ""金矿"",
+        ""slovak"": ""Zlatá ruda""
+      },
+      {
+        ""identifier"": ""SilverOre"",
+        ""english"": ""Silver ore"",
+        ""russian"": ""Серебряная руда"",
+        ""chinese"": ""银矿石"",
+        ""slovak"": ""Strieborná ruda""
+      },
+      {
+        ""identifier"": ""RedHorn"",
+        ""english"": ""Red horn"",
+        ""russian"": ""Красный рог"",
+        ""chinese"": ""红角"",
+        ""slovak"": ""Červený roháč""
+      },
+      {
+        ""identifier"": ""Bantir"",
+        ""english"": ""Bantir"",
+        ""russian"": ""Бантир"",
+        ""chinese"": ""Bantir"",
+        ""slovak"": ""Bantir""
+      },
+      {
+        ""identifier"": ""AnimalSkin"",
+        ""english"": ""Animal skin"",
+        ""russian"": ""Кожа животного"",
+        ""chinese"": ""动物皮"",
+        ""slovak"": ""Zvieracia koža""
+      },
+      {
+        ""identifier"": ""Milk"",
+        ""english"": ""Milk"",
+        ""russian"": ""Молоко"",
+        ""chinese"": ""牛奶"",
+        ""slovak"": ""Mlieko""
+      },
+      {
+        ""identifier"": ""DeleteData"",
+        ""english"": ""Delete data?"",
+        ""russian"": ""Удалить данные?"",
+        ""chinese"": ""删除数据？"",
+        ""slovak"": ""Odstrániť údaje?""
+      },
+      {
+        ""identifier"": ""DeleteDataDesc"",
+        ""english"": ""All saved progress will be deleted permantnely."",
+        ""russian"": ""Эти игровые данные будут удалены навсегда."",
+        ""chinese"": ""该游戏数据将被永久删除。"",
+        ""slovak"": ""Tieto herné údaje budú natrvalo vymazané.""
       }
     ]
   }

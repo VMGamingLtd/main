@@ -1,7 +1,5 @@
 using Cysharp.Threading.Tasks;
-using Gaos.Routes.Model.GameDataJson;
 using ItemManagement;
-using Newtonsoft.Json;
 using RecipeManagement;
 using System;
 using System.Collections;
@@ -10,7 +8,6 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static SaveManager;
 
 public class CoroutineManager : MonoBehaviour
 {
@@ -37,6 +34,10 @@ public class CoroutineManager : MonoBehaviour
     public GameObject newGamePopup;
     public GameObject levelUpObject;
     public GameObject legal;
+    public GameObject Slot1DeleteButton;
+    public GameObject Slot2DeleteButton;
+    public GameObject Slot3DeleteButton;
+    public GameObject Slot4DeleteButton;
 
     public TimebarControl timebarControl;
 
@@ -186,8 +187,15 @@ public class CoroutineManager : MonoBehaviour
 
     private void CheckSlotData()
     {
-        // StartCoroutine(UserGameDataGet.Get(1, CallSaveSlot1Data));
         SetSlotButtons();
+    }
+
+    public void DeleteSlotButton(int slotNumber)
+    {
+        if (GameObject.Find("MessageCanvas/MESSAGEOBJECTS").TryGetComponent<MessageObjects>(out var messageObjects))
+        {
+            messageObjects.DisplayMessage("DeleteSlotWindow", slotNumber);
+        }
     }
 
     public void SetSlotButon(Gaos.Routes.Model.DeviceJson.DeviceRegisterResponseUserSlot slotData)
@@ -201,18 +209,22 @@ public class CoroutineManager : MonoBehaviour
             case 1:
                 saveSlotTitle = saveSlot1Title;
                 saveSlotDesc = saveSlot1Desc;
+                Slot1DeleteButton.SetActive(true);
                 break;
             case 2:
                 saveSlotTitle = saveSlot2Title;
                 saveSlotDesc = saveSlot2Desc;
+                Slot2DeleteButton.SetActive(true);
                 break;
             case 3:
                 saveSlotTitle = saveSlot3Title;
                 saveSlotDesc = saveSlot3Desc;
+                Slot3DeleteButton.SetActive(true);
                 break;
             case 4:
                 saveSlotTitle = saveSlot4Title;
                 saveSlotDesc = saveSlot4Desc;
+                Slot4DeleteButton.SetActive(true);
                 break;
             default:
                 Debug.LogWarning($"Invalid slot id: ${slotData.SlotId}, user: ${slotData.UserName}");
@@ -236,35 +248,6 @@ public class CoroutineManager : MonoBehaviour
         }
         saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
         legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
-    }
-
-    private void CallSaveSlot1Data(UserGameDataGetResponse response)
-    {
-        if (response != null)
-        {
-            if (response.GameDataJson != null)
-            {
-                SaveDataModel gameData = JsonConvert.DeserializeObject<SaveDataModel>(response.GameDataJson);
-                string saveName = gameData.username;
-                int seconds = gameData.seconds;
-                int minutes = gameData.minutes;
-                int hours = gameData.hours;
-                string description = hours.ToString() + "h " + minutes.ToString() + "m " + seconds.ToString() + "s ";
-
-                saveSlot1Title.text = saveName;
-                saveSlot1Desc.text = description;
-
-                saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
-                legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
-            }
-            saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
-            legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
-        }
-        else
-        {
-            saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
-            legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
-        }
     }
 
     public void InitializeResourceMap()

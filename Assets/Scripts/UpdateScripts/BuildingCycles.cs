@@ -20,7 +20,7 @@ public class BuildingCycles : MonoBehaviour
     private CoroutineManager coroutineManagerRef;
     private ItemCreator itemCreatorRef;
     private BuildingItemData itemData;
-    private new Animation animation;
+    private Animation Animation;
     public float currentFillAmount;
     private CancellationTokenSource cts = null;
     private CancellationToken cancellationToken;
@@ -121,10 +121,10 @@ public class BuildingCycles : MonoBehaviour
         timebarControl.ChangeTimeBarColor(UIColors.timebarColorRed);
         productionCreator.ChangeProductionItemBackground(UIColors.timebarColorRed, null, itemData);
         itemData.efficiency = 0;
-        animation = GetComponent<Animation>();
-        animation.Play("NotEnoughMaterialsBuilding");
+        Animation = GetComponent<Animation>();
+        Animation.Play("NotEnoughMaterialsBuilding");
         await UniTask.DelayFrame(60);
-        animation.Stop();
+        Animation.Stop();
         if (obj.CompareTag("NoConsume"))
         {
             await StartNoConsumeCycle(cancellationToken);

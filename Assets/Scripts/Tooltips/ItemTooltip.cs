@@ -48,6 +48,10 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {
                 StartCoroutine(DisplayTooltip("ItemRecipeTooltip", null, null, null, null, null, recipeItemData));
             }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<EventIconData>(out var eventIconData))
+            {
+                StartCoroutine(DisplayTooltip("EventIconTooltip", null, null, null, null, null, null, eventIconData));
+            }
             else
             {
                 StartCoroutine(DisplayTooltip(eventData.pointerEnter.transform.name));
@@ -76,6 +80,13 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
 
         HideAllTooltips();
+
+        if (tooltipFollowMouse != null)
+        {
+            tooltipFollowMouse.ResetTooltipPosition();
+            tooltipFollowMouse.enabled = false;
+        }
+
         exitedTooltip = true;
     }
 
@@ -106,7 +117,8 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
 
     public IEnumerator DisplayTooltip(string objectName, SuitData suitData = null, HelmetData helmetData = null,
-        ToolData toolData = null, ItemData itemData = null, BuildingItemData buildingItemData = null, RecipeItemData recipeItemData = null)
+        ToolData toolData = null, ItemData itemData = null, BuildingItemData buildingItemData = null, RecipeItemData recipeItemData = null,
+        EventIconData eventIconData = null)
     {
         HideAllTooltips();
         GameObject tooltipObject = FindTooltipObject(objectName);
@@ -158,6 +170,11 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 RecipeDataInjector recipeDataInjector = tooltipObject.GetComponent<RecipeDataInjector>();
                 recipeDataInjector.InjectData(recipeItemData);
             }
+            else if (eventIconData != null)
+            {
+                EventIconDataInjector eventIconDataInjector = tooltipObject.GetComponent<EventIconDataInjector>();
+                eventIconDataInjector.InjectData(eventIconData);
+            }
 
             yield return new WaitForSeconds(delay);
             if (!exitedTooltip)
@@ -189,11 +206,12 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             if (tooltipFollowMouse != null)
             {
-                tooltipFollowMouse.enabled = true;
+                tooltipFollowMouse.enabled = false;
             }
             tooltipObject.SetActive(false);
         }
     }
+
     public void HideAllTooltips()
     {
         foreach (GameObject tooltipObject in tooltipObjects.tooltipObjects)
