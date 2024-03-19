@@ -11,7 +11,7 @@ public class ItemDataInjector : MonoBehaviour
     public void InjectData(ItemData itemData)
     {
         item = transform.gameObject;
-        item.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = itemData.name;
+        item.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(itemData.itemName);
         item.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(itemData.name);
         item.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(itemData.itemProduct);
         item.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(itemData.itemType);

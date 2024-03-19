@@ -32,14 +32,14 @@ public class NumberFormater
             float MWValue = (float)powerOutput / 100000f;
             string formattedValue = MWValue.ToString("#.00", CultureInfo.InvariantCulture);
 
-            if (formattedValue[formattedValue.Length - 1] == '0')
+            if (formattedValue[^1] == '0')
             {
-                formattedValue = formattedValue.Substring(0, formattedValue.Length - 1);
+                formattedValue = formattedValue[..^1];
 
                 // Check if the first decimal is also '0' and remove it
-                if (formattedValue[formattedValue.Length - 1] == '0')
+                if (formattedValue[^1] == '0')
                 {
-                    formattedValue = formattedValue.Substring(0, formattedValue.Length - 2);
+                    formattedValue = formattedValue[..^2];
                 }
             }
 
@@ -50,14 +50,14 @@ public class NumberFormater
             float kWValue = (float)powerOutput / 1000f;
             string formattedValue = kWValue.ToString("#.00", CultureInfo.InvariantCulture);
 
-            if (formattedValue[formattedValue.Length - 1] == '0')
+            if (formattedValue[^1] == '0')
             {
-                formattedValue = formattedValue.Substring(0, formattedValue.Length - 1);
+                formattedValue = formattedValue[..^1];
 
                 // Check if the first decimal is also '0' and remove it
-                if (formattedValue[formattedValue.Length - 1] == '0')
+                if (formattedValue[^1] == '0')
                 {
-                    formattedValue = formattedValue.Substring(0, formattedValue.Length - 2);
+                    formattedValue = formattedValue[..^2];
                 }
             }
 
@@ -66,6 +66,50 @@ public class NumberFormater
         else
         {
             return powerOutput.ToString("0", CultureInfo.InvariantCulture) + " W";
+        }
+    }
+
+    public string FormatNumberInThousands(float quantity)
+    {
+        if (quantity >= 1000000)
+        {
+            float milionValue = quantity / 100000f;
+            string formattedValue = milionValue.ToString("#.00", CultureInfo.InvariantCulture);
+
+            if (formattedValue[^1] == '0')
+            {
+                formattedValue = formattedValue[..^1];
+
+                // Check if the first decimal is also '0' and remove it
+                if (formattedValue[^1] == '0')
+                {
+                    formattedValue = formattedValue[..^2];
+                }
+            }
+
+            return formattedValue + " M";
+        }
+        else if (quantity >= 1000)
+        {
+            float thousandValue = quantity / 1000f;
+            string formattedValue = thousandValue.ToString("#.00", CultureInfo.InvariantCulture);
+
+            if (formattedValue[^1] == '0')
+            {
+                formattedValue = formattedValue[..^1];
+
+                // Check if the first decimal is also '0' and remove it
+                if (formattedValue[^1] == '0')
+                {
+                    formattedValue = formattedValue[..^2];
+                }
+            }
+
+            return formattedValue + " K";
+        }
+        else
+        {
+            return quantity.ToString("0", CultureInfo.InvariantCulture);
         }
     }
 

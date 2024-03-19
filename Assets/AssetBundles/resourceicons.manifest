@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3212018256
+CRC: 1732428710
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: fb0ef3cf4b015a6584318e435a1c5924
+    Hash: d6ec9eff1b3b35dab47d695c467e1132
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -15,30 +15,47 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/AssetBundlesRepo/ResourceIcons/Water.png
-- Assets/AssetBundlesRepo/ResourceIcons/IronSheet.png
+- Assets/AssetBundlesRepo/ResourceIcons/Clay.png
 - Assets/AssetBundlesRepo/ResourceIcons/ProteinPowder.png
 - Assets/AssetBundlesRepo/ResourceIcons/FibrousLeaves.png
 - Assets/AssetBundlesRepo/ResourceIcons/Fish.png
 - Assets/AssetBundlesRepo/ResourceIcons/BiomassWood.png
+- Assets/AssetBundlesRepo/ResourceIcons/Bantir.png
+- Assets/AssetBundlesRepo/ResourceIcons/SilicaSand.png
 - Assets/AssetBundlesRepo/ResourceIcons/ResearchPoint.png
-- Assets/AssetBundlesRepo/ResourceIcons/Steam.png
-- Assets/AssetBundlesRepo/ResourceIcons/BatteryCore.png
-- Assets/AssetBundlesRepo/ResourceIcons/Player.png
-- Assets/AssetBundlesRepo/ResourceIcons/BiomassLeaves.png
-- Assets/AssetBundlesRepo/ResourceIcons/DistilledWater.png
+- Assets/AssetBundlesRepo/ResourceIcons/CopperOre.png
 - Assets/AssetBundlesRepo/ResourceIcons/Biofuel.png
 - Assets/AssetBundlesRepo/ResourceIcons/Wood.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronRod.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronOre.png
-- Assets/AssetBundlesRepo/ResourceIcons/IronTube.png
-- Assets/AssetBundlesRepo/ResourceIcons/Electricity.png
+- Assets/AssetBundlesRepo/ResourceIcons/AnimalSkin.png
 - Assets/AssetBundlesRepo/ResourceIcons/LatexFoam.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronBeam.png
+- Assets/AssetBundlesRepo/ResourceIcons/IronTube.png
+- Assets/AssetBundlesRepo/ResourceIcons/Limestone.png
+- Assets/AssetBundlesRepo/ResourceIcons/Shark.png
+- Assets/AssetBundlesRepo/ResourceIcons/Biooil.png
+- Assets/AssetBundlesRepo/ResourceIcons/Water.png
+- Assets/AssetBundlesRepo/ResourceIcons/IronSheet.png
+- Assets/AssetBundlesRepo/ResourceIcons/Whale.png
+- Assets/AssetBundlesRepo/ResourceIcons/GoldOre.png
+- Assets/AssetBundlesRepo/ResourceIcons/RedHorn.png
+- Assets/AssetBundlesRepo/ResourceIcons/SilverOre.png
+- Assets/AssetBundlesRepo/ResourceIcons/Steam.png
+- Assets/AssetBundlesRepo/ResourceIcons/BatteryCore.png
+- Assets/AssetBundlesRepo/ResourceIcons/Kuleoma.png
+- Assets/AssetBundlesRepo/ResourceIcons/Player.png
+- Assets/AssetBundlesRepo/ResourceIcons/BiomassLeaves.png
+- Assets/AssetBundlesRepo/ResourceIcons/DistilledWater.png
+- Assets/AssetBundlesRepo/ResourceIcons/Electricity.png
+- Assets/AssetBundlesRepo/ResourceIcons/Stone.png
+- Assets/AssetBundlesRepo/ResourceIcons/SeaTurtle.png
+- Assets/AssetBundlesRepo/ResourceIcons/Octopus.png
 - Assets/AssetBundlesRepo/ResourceIcons/ProteinBeans.png
+- Assets/AssetBundlesRepo/ResourceIcons/Milk.png
 - Assets/AssetBundlesRepo/ResourceIcons/OxygenTank.png
 - Assets/AssetBundlesRepo/ResourceIcons/Battery.png
-- Assets/AssetBundlesRepo/ResourceIcons/Biooil.png
+- Assets/AssetBundlesRepo/ResourceIcons/FishMeat.png
 - Assets/AssetBundlesRepo/ResourceIcons/SteelPlate.png
 - Assets/AssetBundlesRepo/ResourceIcons/Coal.png
 Dependencies: []

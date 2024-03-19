@@ -1,5 +1,6 @@
 using BuildingManagement;
 using RecipeManagement;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ public class ProductionCreator : MonoBehaviour
         GameObject newItem = Instantiate(manualProductionRowTemplate, overviewProductionList);
         newItem.name = "manual";
         CoroutineManager.manualProduction = true;
+
         if (recipeData.recipeProduct == "BUILDINGS")
         {
             newItem.transform.Find("OutputIcon").GetComponent<Image>().sprite = AssignSpriteToSlotBuilding(recipeData.recipeName);
@@ -28,21 +30,29 @@ public class ProductionCreator : MonoBehaviour
         }
 
         string quantity = recipeData.outputValue.ToString();
+
         if (Player.OutcomeRate > 0)
         {
             float finalQuantity = Player.OutcomeRate * recipeData.outputValue;
             quantity = finalQuantity.ToString();
         }
+
         if (quantity.EndsWith(".00"))
         {
             quantity = quantity[..^3];
         }
+
         newItem.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = quantity;
 
         newItem.transform.Find("Location").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("ManualProduction");
 
+        ProductionRow productionRow = newItem.AddComponent<ProductionRow>();
+        productionRow.Name = newItem.name;
+        productionRow.Type = ProductionRowType.Manual;
+
         return newItem;
     }
+
     public GameObject EnlistBuildingProduction(BuildingItemData itemData)
     {
         GameObject newItem = Instantiate(productionRowTemplate, overviewProductionList);
@@ -78,6 +88,7 @@ public class ProductionCreator : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             string childName = "OutputResource" + (i + 1);
+
             if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
             {
                 GameObject childObject = childTransform.gameObject;
@@ -95,6 +106,10 @@ public class ProductionCreator : MonoBehaviour
             }
         }
 
+        ProductionRow productionRow = newItem.AddComponent<ProductionRow>();
+        productionRow.Name = newItem.name;
+        productionRow.Type = ProductionRowType.Consume;
+
         return newItem;
     }
 
@@ -108,12 +123,12 @@ public class ProductionCreator : MonoBehaviour
 
         string formattedPower = formatter.FormatEnergyInThousands(itemData.powerOutput);
         newItem.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = formattedPower;
-
         newItem.transform.Find("Location").GetComponent<TextMeshProUGUI>().text = itemData.buildingName;
 
         for (int i = 0; i < 4; i++)
         {
             string childName = "ConsumeResource" + (i + 1);
+
             if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
             {
                 GameObject childObject = childTransform.gameObject;
@@ -130,6 +145,10 @@ public class ProductionCreator : MonoBehaviour
                 }
             }
         }
+
+        ProductionRow productionRow = newItem.AddComponent<ProductionRow>();
+        productionRow.Name = newItem.name;
+        productionRow.Type = ProductionRowType.Energy;
 
         return newItem;
     }
@@ -168,6 +187,7 @@ public class ProductionCreator : MonoBehaviour
         }
 
         string childName2 = "OutputResource1";
+
         if (newItem.transform.Find(childName2).TryGetComponent<Transform>(out var childTransform2))
         {
             GameObject childObject = childTransform2.gameObject;
@@ -185,6 +205,10 @@ public class ProductionCreator : MonoBehaviour
                 childObject.SetActive(false);
             }
         }
+
+        ProductionRow productionRow = newItem.AddComponent<ProductionRow>();
+        productionRow.Name = newItem.name;
+        productionRow.Type = ProductionRowType.Research;
 
         return newItem;
     }
@@ -225,6 +249,7 @@ public class ProductionCreator : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             string childName = "OutputResource" + (i + 1);
+
             if (newItem.transform.Find(childName).TryGetComponent<Transform>(out var childTransform))
             {
                 GameObject childObject = childTransform.gameObject;
@@ -241,6 +266,10 @@ public class ProductionCreator : MonoBehaviour
                 }
             }
         }
+
+        ProductionRow productionRow = newItem.AddComponent<ProductionRow>();
+        productionRow.Name = newItem.name;
+        productionRow.Type = ProductionRowType.Consume;
 
         return newItem;
     }
@@ -297,6 +326,10 @@ public class ProductionCreator : MonoBehaviour
             }
         }
 
+        ProductionRow productionRow = newItem.AddComponent<ProductionRow>();
+        productionRow.Name = newItem.name;
+        productionRow.Type = ProductionRowType.Research;
+
         return newItem;
     }
 
@@ -310,7 +343,6 @@ public class ProductionCreator : MonoBehaviour
 
         string formattedPower = formatter.FormatEnergyInThousands(itemData.powerOutput);
         newItem.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = formattedPower;
-
         newItem.transform.Find("Location").GetComponent<TextMeshProUGUI>().text = itemData.buildingName;
 
         for (int i = 0; i < 4; i++)
@@ -333,7 +365,75 @@ public class ProductionCreator : MonoBehaviour
             }
         }
 
+        ProductionRow productionRow = newItem.AddComponent<ProductionRow>();
+        productionRow.Name = newItem.name;
+        productionRow.Type = ProductionRowType.Energy;
+
         return newItem;
+    }
+
+    /// <summary>
+    /// Production Menu -> Overview - gets component Production row from all children objects, compare their names and reorders them 
+    /// inside the Transform list.
+    /// </summary>
+    public void SortByName()
+    {
+        List<GameObject> childrenList = new();
+
+        foreach (Transform child in overviewProductionList)
+        {
+            childrenList.Add(child.gameObject);
+        }
+
+        childrenList.Sort((x, y) =>
+        {
+            ProductionRow productionRowX = x.GetComponent<ProductionRow>();
+            ProductionRow productionRowY = y.GetComponent<ProductionRow>();
+
+            if (productionRowX != null && productionRowY != null)
+            {
+                return productionRowX.Name.CompareTo(productionRowY.Name);
+            }
+
+            return 0;
+        });
+
+        for (int i = 0; i < childrenList.Count; i++)
+        {
+            childrenList[i].transform.SetSiblingIndex(i);
+        }
+    }
+
+    /// <summary>
+    /// Production Menu -> Overview - gets component Production row from all children objects, compare their names and reorders them 
+    /// inside the Transform list.
+    /// </summary>
+    public void SortByType()
+    {
+        List<GameObject> childrenList = new();
+
+        foreach (Transform child in overviewProductionList)
+        {
+            childrenList.Add(child.gameObject);
+        }
+
+        childrenList.Sort((x, y) =>
+        {
+            ProductionRow productionRowX = x.GetComponent<ProductionRow>();
+            ProductionRow productionRowY = y.GetComponent<ProductionRow>();
+
+            if (productionRowX != null && productionRowY != null)
+            {
+                return productionRowX.Type.CompareTo(productionRowY.Type);
+            }
+
+            return 0;
+        });
+
+        for (int i = 0; i < childrenList.Count; i++)
+        {
+            childrenList[i].transform.SetSiblingIndex(i);
+        }
     }
 
     public void ChangeProductionItemBackground(Color color, EnergyBuildingItemData energyItemData = null, BuildingItemData itemData = null,
@@ -436,6 +536,7 @@ public class ProductionCreator : MonoBehaviour
         Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
         return sprite;
     }
+
     private Sprite AssignSpriteToSlotBuilding(string spriteName)
     {
         Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("buildingicons", spriteName);

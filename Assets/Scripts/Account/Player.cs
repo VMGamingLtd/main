@@ -47,7 +47,6 @@ public static class Player
     public static int StatPointsInCharisma;
     public static int StatPointsInWillpower;
 
-
     // UTILITY STATS
     public static int EnergyCapacity;
     public static int InventorySlots = 10;
@@ -70,6 +69,7 @@ public static class Player
     public static bool BotanyResearch;
     public static bool DataAnalysisResearch;
     public static bool CognitiveEnhancementResearch;
+    public static bool PoweredEngineeringResearch;
 
     public static int AddCurrentResource(ref int currentResourceSet, int amount)
     {

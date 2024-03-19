@@ -1,5 +1,6 @@
 using ItemManagement;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class MessageObjects : MonoBehaviour
@@ -18,7 +19,8 @@ public class MessageObjects : MonoBehaviour
             {"ServerConnectionLost", ServerConnectionLost},
             {"IncorrectCredentials", IncorrectCredentials},
             {"SplitWindow", SplitWindow},
-            {"SplitItemFail", SplitItemFail}
+            {"SplitItemFail", SplitItemFail},
+            {"DeleteSlotWindow", DeleteSlotWindow }
         };
     }
     public GameObject OxygenTankEquipFail;
@@ -26,6 +28,7 @@ public class MessageObjects : MonoBehaviour
     public GameObject IncorrectCredentials;
     public GameObject SplitWindow;
     public GameObject SplitItemFail;
+    public GameObject DeleteSlotWindow;
 
     public void DisplaySplitWindow(ItemData itemData, string objName)
     {
@@ -68,11 +71,16 @@ public class MessageObjects : MonoBehaviour
         }
         HideAllMessages();
     }
-    public void DisplayMessage(string objectName)
+    public void DisplayMessage(string objectName, int? slotNumber = null)
     {
         if (messageMap.TryGetValue(objectName, out GameObject messageObject))
         {
             messageObject.SetActive(true);
+
+            if (slotNumber != null)
+            {
+                messageObject.transform.Find("TitleContext/SlotNumber").GetComponent<TextMeshProUGUI>().text = slotNumber.ToString();
+            }
         }
     }
     public void HideAllMessages()

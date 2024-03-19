@@ -282,7 +282,7 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                 if (originalParentName == "INVENTORYMANAGER" && draggedObjectName == "Battery")
                 {
                     ItemData itemData = draggedObj.GetComponent<ItemData>();
-                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 5, "PlayerEnergy", 0.0166f, draggedObjectName, itemData);
+                    EquipSlot(highlightObj, objectRectTransform, highlightRectTransform, 5, "PlayerEnergy", 0.001f, draggedObjectName, itemData);
                     audioManager.PlayEnergySlotSound();
                 }
             }

@@ -66,25 +66,25 @@ public class Planet : MonoBehaviour
         }
 
     }
-    
+
     private void FixMeshPosition()
     {
-        for (int i=0; i < 6; i++)
+        for (int i = 0; i < 6; i++)
         {
             meshFilters[i].transform.localPosition = new Vector3(-12.44094f, 6.144372f, -1.966287f);
         }
     }
-    
-    private GameObject FindPlayerTemplate() 
+
+    private GameObject FindPlayerTemplate()
     {
         const string parentPath = "/PlanetParent";
         GameObject parent = GameObject.Find(parentPath);
         if (parent == null)
         {
             Debug.LogError($"parent not found: {parentPath}");
-            throw new System.Exception($"parent not found: {parentPath}"); 
+            throw new System.Exception($"parent not found: {parentPath}");
         }
-        
+
         // iterate over parent's children
         foreach (Transform child in parent.transform)
         {
@@ -94,10 +94,10 @@ public class Planet : MonoBehaviour
             }
         }
         Debug.LogError("template not found");
-        throw new System.Exception("template not found"); 
+        throw new System.Exception("template not found");
     }
-    
-    private GameObject FindPlayer() 
+
+    private GameObject FindPlayer()
     {
         // iterate over parent's children
         foreach (Transform child in gameObject.transform)
@@ -107,7 +107,7 @@ public class Planet : MonoBehaviour
                 return child.gameObject;
             }
         }
-        
+
         return null;
     }
 
@@ -139,7 +139,7 @@ public class Planet : MonoBehaviour
         Initialize();
         GenerateMesh();
         GenerateColours();
-        
+
         if (!Application.isPlaying)
         {
             FixMeshPosition();
@@ -179,7 +179,7 @@ public class Planet : MonoBehaviour
                 // if in playing mode, spawn event objects on the surface
                 if (Application.isPlaying)
                 {
-                    SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 4);
+                    SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 56);
                 }
             }
         }
@@ -198,20 +198,24 @@ public class Planet : MonoBehaviour
             }
         }
     }
-    
+
     private void AddEventObjectToList(GameObject eventObject)
     {
         EventIcon eventIcon = eventObject.GetComponent<EventIcon>();
-        eventIcon.setPlanet(gameObject);
+        eventIcon.SetPlanet(gameObject);
         eventObjects.Add(eventObject);
     }
 
-    public void RecreateEventObject(string Name, Vector3 position)
+    public void RecreateEventObject(string Name, Vector3 position, EventIconType iconType, float currentQuantity, float maxQuantity)
     {
         GameObject eventObject = new(Name);
         eventObject.transform.parent = transform;
         eventObject.transform.position = position;
-        eventObject.AddComponent<EventIcon>();
+        var component = eventObject.AddComponent<EventIcon>();
+        component.name = Name;
+        component.iconType = iconType;
+        component.CurrentQuantity = currentQuantity;
+        component.MaxQuantity = maxQuantity;
         AddEventObjectToList(eventObject);
     }
 
@@ -222,7 +226,7 @@ public class Planet : MonoBehaviour
         {
             return;
         }
-        
+
         for (int i = 0; i < numberOfObjects; i++)
         {
             // Get a random point on the mesh surface
@@ -243,20 +247,179 @@ public class Planet : MonoBehaviour
             // Move the object on the z-axis by adding 3.6 to its current z position
             eventObject.transform.position += new Vector3(0f, 0f, 3.6f);
 
-            if (elevation < 0.0f)
+            if (elevation < -0.06f)
             {
-                eventObject.name = "Fish";
+                eventObject.name = "Whale";
+                var component = eventObject.AddComponent<EventIcon>();
+                component.iconType = EventIconType.Fish;
+                component.MaxQuantity = Random.Range(500f, 2500f);
+                component.Elevation = elevation;
             }
-            else if (elevation < 0.02f)
+            else if (elevation < -0.03f)
             {
-                eventObject.name = "FibrousLeaves";
+                var option = Random.Range(0, 3);
+                if (option == 0)
+                {
+                    eventObject.name = "Kuleoma";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Fish;
+                    component.MaxQuantity = Random.Range(1000f, 5000f);
+                    component.Elevation = elevation;
+                }
+                else if (option == 1)
+                {
+                    eventObject.name = "Octopus";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Fish;
+                    component.MaxQuantity = Random.Range(1000f, 4000f);
+                    component.Elevation = elevation;
+                }
+                else
+                {
+                    eventObject.name = "Shark";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Fish;
+                    component.MaxQuantity = Random.Range(600f, 2000f);
+                    component.Elevation = elevation;
+                }
+            }
+            else if (elevation < 0.0f)
+            {
+                var option = Random.Range(0, 2);
+                if (option == 0)
+                {
+                    eventObject.name = "Fish";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Fish;
+                    component.MaxQuantity = Random.Range(2000f, 10000f);
+                    component.Elevation = elevation;
+                }
+                else
+                {
+                    eventObject.name = "SeaTurtle";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Fish;
+                    component.MaxQuantity = Random.Range(1000f, 4000f);
+                    component.Elevation = elevation;
+                }
+            }
+            else if (elevation < 0.01f)
+            {
+                var option = Random.Range(0, 3);
+                if (option == 0)
+                {
+                    eventObject.name = "SilicaSand";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Mineral;
+                    component.MaxQuantity = Random.Range(500000f, 1000000f);
+                    component.Elevation = elevation;
+                }
+                else if (option == 1)
+                {
+                    eventObject.name = "Limestone";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Mineral;
+                    component.MaxQuantity = Random.Range(4000f, 10000f);
+                    component.Elevation = elevation;
+                }
+                else
+                {
+                    eventObject.name = "Clay";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Mineral;
+                    component.MaxQuantity = Random.Range(100000f, 200000f);
+                    component.Elevation = elevation;
+                }
+            }
+            else if (elevation < 0.03f)
+            {
+                var option = Random.Range(0, 4);
+                if (option == 0)
+                {
+                    eventObject.name = "FibrousLeaves";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Plant;
+                    component.MaxQuantity = Random.Range(500000f, 1000000f);
+                    component.Elevation = elevation;
+                }
+                else if (option == 1)
+                {
+                    eventObject.name = "RedHorn";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.FurAnimal;
+                    component.MaxQuantity = Random.Range(1000f, 2000f);
+                    component.Elevation = elevation;
+                }
+                else if (option == 2)
+                {
+                    eventObject.name = "Bantir";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.MilkAnimal;
+                    component.MaxQuantity = Random.Range(2000f, 3000f);
+                    component.Elevation = elevation;
+                }
+                else
+                {
+                    eventObject.name = "ProteinBeans";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Plant;
+                    component.MaxQuantity = Random.Range(1000f, 2000f);
+                    component.Elevation = elevation;
+                }
             }
             else
             {
-                eventObject.name = "IronOre";
+                var option = Random.Range(0, 5);
+                if (option == 0)
+                {
+                    eventObject.name = "IronOre";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Mineral;
+                    component.MaxQuantity = Random.Range(1000f, 100000f);
+                    component.Elevation = elevation;
+                }
+                else if (option == 1)
+                {
+                    eventObject.name = "CopperOre";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Mineral;
+                    component.MaxQuantity = Random.Range(1000f, 100000f);
+                    component.Elevation = elevation;
+                }
+                else if (option == 2)
+                {
+                    eventObject.name = "SilverOre";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Mineral;
+                    component.MaxQuantity = Random.Range(1000f, 100000f);
+                    component.Elevation = elevation;
+                }
+                else if (option == 3)
+                {
+                    eventObject.name = "GoldOre";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Mineral;
+                    component.MaxQuantity = Random.Range(1000f, 100000f);
+                    component.Elevation = elevation;
+                }
+                else if (option == 4)
+                {
+                    eventObject.name = "Coal";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Mineral;
+                    component.MaxQuantity = Random.Range(1000f, 100000f);
+                    component.Elevation = elevation;
+                }
+                else
+                {
+                    eventObject.name = "Stone";
+                    var component = eventObject.AddComponent<EventIcon>();
+                    component.iconType = EventIconType.Mineral;
+                    component.MaxQuantity = Random.Range(1000f, 100000f);
+                    component.Elevation = elevation;
+                }
             }
 
-            eventObject.AddComponent<EventIcon>();
             AddEventObjectToList(eventObject);
         }
     }

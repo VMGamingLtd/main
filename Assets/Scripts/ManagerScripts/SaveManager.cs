@@ -102,6 +102,9 @@ public class SaveManager : MonoBehaviour
     {
         public string Name;
         public Vector3 position;
+        public EventIconType iconType;
+        public float currentQuantity;
+        public float maxQuantity;
     }
 
     [Serializable]
@@ -479,13 +482,22 @@ public class SaveManager : MonoBehaviour
         Planet planet = GameObject.Find("PlanetParent/StartPlanet").GetComponent<Planet>();
         foreach (GameObject eventObject in planet.eventObjects)
         {
-            EventIconModel itemData = new()
-            {
-                Name = eventObject.name,
-                position = eventObject.transform.position,
-            };
+            eventObject.TryGetComponent(out EventIcon component);
 
-            currentSaveData.EventObjects.Add(itemData);
+            if (component != null)
+            {
+                EventIconModel itemData = new()
+                {
+                    Name = eventObject.name,
+                    position = eventObject.transform.position,
+                    iconType = component.iconType,
+                    currentQuantity = component.CurrentQuantity,
+                    maxQuantity = component.MaxQuantity,
+                };
+
+                currentSaveData.EventObjects.Add(itemData);
+            }
+
         }
 
         // Access the itemArrays dictionary through the inventoryManager reference

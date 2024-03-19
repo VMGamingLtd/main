@@ -2,6 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum EventIconType
+{
+    Player,
+    FriendlyPlayer,
+    EnemyPlayer,
+    Fish,
+    Plant,
+    Mineral,
+    FurAnimal,
+    MilkAnimal,
+    Animal
+}
+
 public class EventIcon : MonoBehaviour
 {
     private EventObjectContainer eventObjectContainer;
@@ -10,16 +23,21 @@ public class EventIcon : MonoBehaviour
     private GameObject iconPrefab;
     private Camera renderCamera;
     private GameObject iconInstance;
+    private GameObject planet;
+
     [SerializeField]
     private float sphericalRadius = 3.6f;
 
-    private GameObject planet;
-    
-    public void setPlanet(GameObject planet)
+    public EventIconType iconType;
+    public float CurrentQuantity;
+    public float MaxQuantity;
+    public float Elevation;
+
+    public void SetPlanet(GameObject planet)
     {
         this.planet = planet;
     }
-    
+
     void Start()
     {
         eventObjectContainer = GameObject.Find("PlanetParent").GetComponent<EventObjectContainer>();
@@ -31,6 +49,12 @@ public class EventIcon : MonoBehaviour
         Sprite sprite = AssignSpriteToSlot(transform.name);
         iconInstance.transform.Find("Image/Icon").GetComponent<Image>().sprite = sprite;
         iconInstance.name = transform.name;
+
+        var component = iconInstance.AddComponent<EventIconData>();
+        component.Name = transform.name;
+        component.Type = iconType;
+        component.CurrentQuantity = MaxQuantity;
+        component.MaxQuantity = MaxQuantity;
     }
 
     void Update()
@@ -79,16 +103,16 @@ public class EventIcon : MonoBehaviour
             return;
         }
         List<GameObject> eventObjects = planet.GetComponent<Planet>().eventObjects;
-        
+
         // remove the event object from the list
         eventObjects.Remove(gameObject);
-        
+
         if (iconInstance != null)
         {
             // destroy the icon
             Destroy(iconInstance);
         }
-        
+
     }
 
     private Sprite AssignSpriteToSlot(string spriteName)
