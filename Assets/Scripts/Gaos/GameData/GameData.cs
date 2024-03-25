@@ -388,5 +388,46 @@ namespace Gaos.GameData
         }
     }
 
+    public class DeleteSlot
+    {
+        private readonly static string CLASS_NAME = typeof(DeleteSlot).Name;
+
+        public delegate void OnDeleteSlotComplete(DeleteSlotResponse response);
+
+        public static IEnumerator DeleteSlotCall(int slotId, OnDeleteSlotComplete onDeleteSlotComplete)
+        {
+            const string METHOD_NAME = "DeleteSlotCall()";
+            Debug.Log("@@@@@@@@@@@@@@@@@@@@@ cp 3000: DeleteSlotCall()");
+
+            DeleteSlotRequest request = new DeleteSlotRequest();
+            request.UserId = Context.Authentication.GetUserId();
+            request.SlotId = slotId;
+
+            string requestJsonStr = JsonConvert.SerializeObject(request);
+
+            Api.ApiCall apiCall = new("api/gameData/deleteGameSlot", requestJsonStr);
+            yield return apiCall.Call();
+
+            if (apiCall.IsResponseError)
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error deleting slot");
+                onDeleteSlotComplete(null);
+
+            }
+            else
+            {
+                DeleteSlotResponse response = JsonConvert.DeserializeObject<DeleteSlotResponse>(apiCall.ResponseJsonStr);
+                if (response.IsError == true)
+                {
+                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error deleting slot: {response.ErrorMessage}");
+                    onDeleteSlotComplete(null);
+                    yield break;
+                }
+                onDeleteSlotComplete(response);
+            }
+
+        }
+    }
+
 
 }
