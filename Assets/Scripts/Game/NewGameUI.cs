@@ -498,13 +498,13 @@ public class NewGameUI : MonoBehaviour
                 {
                     if (IsNewSlot(slot) == true)
                     {
-                        // If there's a user slot with same slotNumber and game has never been saved on the slot then create a new game on the slot, whatever players date before first game data save will be lost
+                        // If there's a user slot with same slotNumber and game has never been saved on the slot then create a new game on the slot
                         StartNewGameUI();
                         return;
                     }
                     else
                     {
-                        // If there's a user slot with same slotNumber and there was at least one game data save from the game on the slot then boot existing game, new players game data after last save will be lost
+                        // If there's a user slot with same slotNumber and there was at least one game data save from the game on the slot then boot existing game
                         LoadSlotGame();
                         return;
                     }

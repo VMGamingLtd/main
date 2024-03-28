@@ -65,6 +65,11 @@ namespace Gaos.Context
         {
             return UserSlots;
         }
+
+        public static void RemoveUserSlot(int slotId)
+        {
+            UserSlots = UserSlots.Where(slot => slot.SlotId != slotId).ToArray();
+        }
     }
 
     public class Device
