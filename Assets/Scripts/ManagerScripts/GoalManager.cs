@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using RecipeManagement;
+using System;
 using UnityEngine;
 
 public class GoalManager : MonoBehaviour
@@ -56,14 +57,13 @@ public class GoalManager : MonoBehaviour
     {
         goalAnimation.Play("Success");
         await UniTask.Delay(1000);
-        recipeCreator.CreateRecipe(0);
-        recipeCreator.CreateRecipe(17);
-        recipeCreator.CreateRecipe(15);
-        recipeCreator.CreateRecipe(20);
-        recipeCreator.CreateRecipe(2);
-        recipeCreator.CreateRecipe(6);
-        recipeCreator.CreateRecipe(4);
         ChangeGoal("CraftBattery");
+        recipeCreator.CreateRecipe(2, Guid.NewGuid());
+        recipeCreator.CreateRecipe(15, Guid.NewGuid());
+        recipeCreator.CreateRecipe(17, Guid.NewGuid());
+        recipeCreator.CreateRecipe(20, Guid.NewGuid());
+        recipeCreator.CreateRecipe(6, Guid.NewGuid());
+        recipeCreator.CreateRecipe(4, Guid.NewGuid());
         goalAnimation.Play("Idle");
         firstGoal = true;
         coroutineManager.InitializeResourceMap();
@@ -73,13 +73,6 @@ public class GoalManager : MonoBehaviour
     {
         goalAnimation.Play("Success");
         await UniTask.Delay(1000);
-        recipeCreator.CreateRecipe(8);
-        recipeCreator.CreateRecipe(9);
-        recipeCreator.CreateRecipe(10);
-        recipeCreator.CreateRecipe(11);
-        recipeCreator.CreateRecipe(12);
-        recipeCreator.CreateRecipe(13);
-        recipeCreator.CreateRecipe(14);
         ChangeGoal("BuildBase");
         goalAnimation.Play("Idle");
         secondGoal = true;
@@ -96,10 +89,6 @@ public class GoalManager : MonoBehaviour
         Planet0Buildings.ResearchDeviceUnlocked = true;
         buttonManager.UnlockResearchButton();
         buildingIncrementor.InitializeAvailableBuildings();
-        recipeCreator.CreateRecipe(21);
-        recipeCreator.CreateRecipe(22);
-        recipeCreator.CreateRecipe(23);
-        recipeCreator.CreateRecipe(24);
         ChangeGoal("ResearchScienceProjects");
         goalAnimation.Play("Idle");
         thirdGoal = true;

@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -53,7 +54,7 @@ public class CoroutineManager : MonoBehaviour
     // data for server
     public static bool registeredUser = false;
     public static bool manualProduction = false;
-    public static bool[] AllCoroutineBooleans = new bool[25];
+    public static bool[] AllCoroutineBooleans = new bool[36];
     public static int IndexNumber;
 
     public static int CurrentGameSlotId;
@@ -64,7 +65,9 @@ public class CoroutineManager : MonoBehaviour
          "OxygenTank", "BatteryCore", "Steam", "IronOre", "Wood",
          "Coal", "IronBeam", "BiofuelGenerator", "IronSheet", "IronRod",
          "LatexFoam", "ProteinBeans", "BiomassLeaves", "BiomassWood", "ProteinPowder",
-         "BioOil", "IronTube", "WaterPump", "FibrousPlantField", "ResearchDevice"
+         "BioOil", "IronTube", "WaterPump", "FibrousPlantField", "ResearchDevice",
+         "FishMeat", "AnimalMeat", "AnimalSkin", "Milk", "SilicaSand", "Limestone",
+         "Clay", "Stone", "CopperOre", "SilverOre", "GoldOre"
     };
 
     public Image imageToFill;
@@ -78,112 +81,164 @@ public class CoroutineManager : MonoBehaviour
     public Dictionary<string, TextMeshProUGUI[]> productionOutcomeTextMap;
 
     // resource count texts
-    public TextMeshProUGUI[] FibrousLeavesTexts;
-    public TextMeshProUGUI[] WaterTexts;
-    public TextMeshProUGUI[] BiofuelTexts;
-    public TextMeshProUGUI[] DistilledWaterTexts;
-    public TextMeshProUGUI[] BatteryTexts;
-    public TextMeshProUGUI[] OxygenTankTexts;
-    public TextMeshProUGUI[] BatteryCoreTexts;
-    public TextMeshProUGUI[] SteamTexts;
-    public TextMeshProUGUI[] WoodTexts;
-    public TextMeshProUGUI[] IronOreTexts;
-    public TextMeshProUGUI[] CoalTexts;
-    public TextMeshProUGUI[] IronBeamTexts;
-    public TextMeshProUGUI[] BiofuelGeneratorTexts;
-    public TextMeshProUGUI[] IronSheetTexts;
-    public TextMeshProUGUI[] IronRodTexts;
-    public TextMeshProUGUI[] LatexFoamTexts;
-    public TextMeshProUGUI[] ProteinBeansTexts;
-    public TextMeshProUGUI[] BiomassLeavesTexts;
-    public TextMeshProUGUI[] BiomassWoodTexts;
-    public TextMeshProUGUI[] ProteinPowderTexts;
-    public TextMeshProUGUI[] BioOilTexts;
-    public TextMeshProUGUI[] IronTubeTexts;
-    public TextMeshProUGUI[] WaterPumpTexts;
-    public TextMeshProUGUI[] FibrousPlantFieldTexts;
-    public TextMeshProUGUI[] ResearchDeviceTexts;
+    public TextMeshProUGUI[] FibrousLeavesTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WaterTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiofuelTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] DistilledWaterTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BatteryTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] OxygenTankTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BatteryCoreTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SteamTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WoodTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronOreTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] CoalTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronBeamTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiofuelGeneratorTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronSheetTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronRodTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] LatexFoamTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ProteinBeansTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiomassLeavesTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiomassWoodTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ProteinPowderTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BioOilTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronTubeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WaterPumpTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] FibrousPlantFieldTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ResearchDeviceTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] FishMeatTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] AnimalMeatTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] AnimalSkinTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] MilkTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SilicaSandTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ClayTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] LimestoneTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] StoneTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] CopperOreTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SilverOreTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] GoldOreTexts = new TextMeshProUGUI[0];
 
     // production time texts
-    public TextMeshProUGUI[] FibrousLeavesProductionTexts;
-    public TextMeshProUGUI[] WaterProductionTexts;
-    public TextMeshProUGUI[] BiofuelProductionTexts;
-    public TextMeshProUGUI[] DistilledWaterProductionTexts;
-    public TextMeshProUGUI[] BatteryProductionTexts;
-    public TextMeshProUGUI[] OxygenTankProductionTexts;
-    public TextMeshProUGUI[] BatteryCoreProductionTexts;
-    public TextMeshProUGUI[] SteamProductionTexts;
-    public TextMeshProUGUI[] WoodProductionTexts;
-    public TextMeshProUGUI[] IronOreProductionTexts;
-    public TextMeshProUGUI[] CoalProductionTexts;
-    public TextMeshProUGUI[] IronBeamProductionTexts;
-    public TextMeshProUGUI[] BiofuelGeneratorProductionTexts;
-    public TextMeshProUGUI[] IronSheetProductionTexts;
-    public TextMeshProUGUI[] IronRodProductionTexts;
-    public TextMeshProUGUI[] LatexFoamProductionTexts;
-    public TextMeshProUGUI[] ProteinBeansProductionTexts;
-    public TextMeshProUGUI[] BiomassLeavesProductionTexts;
-    public TextMeshProUGUI[] BiomassWoodProductionTexts;
-    public TextMeshProUGUI[] ProteinPowderProductionTexts;
-    public TextMeshProUGUI[] BioOilProductionTexts;
-    public TextMeshProUGUI[] IronTubeProductionTexts;
-    public TextMeshProUGUI[] WaterPumpProductionTexts;
-    public TextMeshProUGUI[] FibrousPlantFieldProductionTexts;
-    public TextMeshProUGUI[] ResearchDeviceProductionTexts;
+    public TextMeshProUGUI[] FibrousLeavesProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WaterProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiofuelProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] DistilledWaterProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BatteryProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] OxygenTankProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BatteryCoreProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SteamProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WoodProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronOreProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] CoalProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronBeamProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiofuelGeneratorProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronSheetProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronRodProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] LatexFoamProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ProteinBeansProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiomassLeavesProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiomassWoodProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ProteinPowderProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BioOilProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronTubeProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WaterPumpProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] FibrousPlantFieldProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ResearchDeviceProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] FishMeatProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] AnimalMeatProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] AnimalSkinProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] MilkProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SilicaSandProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] LimestoneProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ClayProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] StoneProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] CopperOreProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SilverOreProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] GoldOreProductionTexts = new TextMeshProUGUI[0];
 
     // material cost texts
-    public TextMeshProUGUI[] FibrousLeavesMaterialCostTexts;
-    public TextMeshProUGUI[] WaterMaterialCostTexts;
-    public TextMeshProUGUI[] BiofuelMaterialCostTexts;
-    public TextMeshProUGUI[] DistilledWaterMaterialCostTexts;
-    public TextMeshProUGUI[] BatteryMaterialCostTexts;
-    public TextMeshProUGUI[] OxygenTankMaterialCostTexts;
-    public TextMeshProUGUI[] BatteryCoreMaterialCostTexts;
-    public TextMeshProUGUI[] SteamMaterialCostTexts;
-    public TextMeshProUGUI[] WoodMaterialCostTexts;
-    public TextMeshProUGUI[] IronOreMaterialCostTexts;
-    public TextMeshProUGUI[] CoalMaterialCostTexts;
-    public TextMeshProUGUI[] IronBeamMaterialCostTexts;
-    public TextMeshProUGUI[] BiofuelGeneratorMaterialCostTexts;
-    public TextMeshProUGUI[] IronSheetMaterialCostTexts;
-    public TextMeshProUGUI[] IronRodMaterialCostTexts;
-    public TextMeshProUGUI[] LatexFoamMaterialCostTexts;
-    public TextMeshProUGUI[] ProteinBeansMaterialCostTexts;
-    public TextMeshProUGUI[] BiomassLeavesMaterialCostTexts;
-    public TextMeshProUGUI[] BiomassWoodMaterialCostTexts;
-    public TextMeshProUGUI[] ProteinPowderMaterialCostTexts;
-    public TextMeshProUGUI[] BioOilMaterialCostTexts;
-    public TextMeshProUGUI[] IronTubeMaterialCostTexts;
-    public TextMeshProUGUI[] WaterPumpMaterialCostTexts;
-    public TextMeshProUGUI[] FibrousPlantFieldMaterialCostTexts;
-    public TextMeshProUGUI[] ResearchDeviceMaterialCostTexts;
+    public TextMeshProUGUI[] FibrousLeavesMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WaterMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiofuelMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] DistilledWaterMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BatteryMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] OxygenTankMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BatteryCoreMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SteamMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WoodMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronOreMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] CoalMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronBeamMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiofuelGeneratorMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronSheetMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronRodMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] LatexFoamMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ProteinBeansMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiomassLeavesMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiomassWoodMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ProteinPowderMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BioOilMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronTubeMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WaterPumpMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] FibrousPlantFieldMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ResearchDeviceMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] FishMeatMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] AnimalMeatMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] AnimalSkinMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] MilkMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SilicaSandMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] LimestoneMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ClayMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] StoneMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] CopperOreMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SilverOreMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] GoldOreMaterialCostTexts = new TextMeshProUGUI[0];
 
     // production outcome texts
-    public TextMeshProUGUI[] FibrousLeavesOutcomeTexts;
-    public TextMeshProUGUI[] WaterOutcomeTexts;
-    public TextMeshProUGUI[] BiofuelOutcomeTexts;
-    public TextMeshProUGUI[] DistilledWaterOutcomeTexts;
-    public TextMeshProUGUI[] BatteryOutcomeTexts;
-    public TextMeshProUGUI[] OxygenTankOutcomeTexts;
-    public TextMeshProUGUI[] BatteryCoreOutcomeTexts;
-    public TextMeshProUGUI[] SteamOutcomeTexts;
-    public TextMeshProUGUI[] WoodOutcomeTexts;
-    public TextMeshProUGUI[] IronOreOutcomeTexts;
-    public TextMeshProUGUI[] CoalOutcomeTexts;
-    public TextMeshProUGUI[] IronBeamOutcomeTexts;
-    public TextMeshProUGUI[] BiofuelGeneratorOutcomeTexts;
-    public TextMeshProUGUI[] IronSheetOutcomeTexts;
-    public TextMeshProUGUI[] IronRodOutcomeTexts;
-    public TextMeshProUGUI[] LatexFoamOutcomeTexts;
-    public TextMeshProUGUI[] ProteinBeansOutcomeTexts;
-    public TextMeshProUGUI[] BiomassLeavesOutcomeTexts;
-    public TextMeshProUGUI[] BiomassWoodOutcomeTexts;
-    public TextMeshProUGUI[] ProteinPowderOutcomeTexts;
-    public TextMeshProUGUI[] BioOilOutcomeTexts;
-    public TextMeshProUGUI[] IronTubeOutcomeTexts;
-    public TextMeshProUGUI[] WaterPumpOutcomeTexts;
-    public TextMeshProUGUI[] FibrousPlantFieldOutcomeTexts;
-    public TextMeshProUGUI[] ResearchDeviceOutcomeTexts;
+    public TextMeshProUGUI[] FibrousLeavesOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WaterOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiofuelOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] DistilledWaterOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BatteryOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] OxygenTankOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BatteryCoreOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SteamOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WoodOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronOreOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] CoalOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronBeamOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiofuelGeneratorOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronSheetOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronRodOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] LatexFoamOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ProteinBeansOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiomassLeavesOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BiomassWoodOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ProteinPowderOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] BioOilOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] IronTubeOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] WaterPumpOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] FibrousPlantFieldOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ResearchDeviceOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] FishMeatOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] AnimalMeatOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] AnimalSkinOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] MilkOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SilicaSandOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] LimestoneOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] ClayOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] StoneOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] CopperOreOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SilverOreOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] GoldOreOutcomeTexts = new TextMeshProUGUI[0];
+
+    void Start()
+    {
+        InitializeResourceMap();
+        InitializeProductionOutcomeMap();
+        InitializeProductionTimeMap();
+        InitializeMaterialCostMap();
+    }
 
     private void CheckSlotData()
     {
@@ -233,6 +288,7 @@ public class CoroutineManager : MonoBehaviour
 
         saveSlotTitle.text = slotData.UserName;
         saveSlotDesc.text = description;
+        UserName.userName = slotData.UserName;
 
         saveSlots.GetComponent<CanvasGroupFaderIn>().FadeInObject();
         legal.GetComponent<CanvasGroupFaderIn>().FadeInObject();
@@ -252,129 +308,80 @@ public class CoroutineManager : MonoBehaviour
 
     public void InitializeResourceMap()
     {
-        resourceTextMap = new Dictionary<string, TextMeshProUGUI[]>
+        resourceTextMap = new Dictionary<string, TextMeshProUGUI[]>();
+
+        foreach (string key in RecipeKeys)
         {
-            { "FibrousLeaves", FibrousLeavesTexts },
-            { "Water", WaterTexts },
-            { "Biofuel", BiofuelTexts },
-            { "DistilledWater", DistilledWaterTexts },
-            { "Battery", BatteryTexts },
-            { "OxygenTank", OxygenTankTexts },
-            { "BatteryCore", BatteryCoreTexts },
-            { "Steam", SteamTexts },
-            { "IronOre", IronOreTexts },
-            { "Wood", WoodTexts },
-            { "Coal", CoalTexts },
-            { "IronBeam", IronBeamTexts },
-            { "BiofuelGenerator", BiofuelGeneratorTexts },
-            { "IronSheet", IronSheetTexts },
-            { "IronRod", IronRodTexts },
-            { "LatexFoam", LatexFoamTexts },
-            { "ProteinBeans", ProteinBeansTexts },
-            { "BiomassLeaves", BiomassLeavesTexts },
-            { "BiomassWood", BiomassWoodTexts },
-            { "ProteinPowder", ProteinPowderTexts },
-            { "BioOil", BioOilTexts },
-            { "IronTube", IronTubeTexts },
-            { "WaterPump", WaterPumpTexts },
-            { "FibrousPlantField", FibrousPlantFieldTexts },
-            { "ResearchDevice", ResearchDeviceTexts }
-        };
+            FieldInfo field = GetType().GetField(key + "Texts");
+            if (field != null)
+            {
+                TextMeshProUGUI[] texts = (TextMeshProUGUI[])field.GetValue(this);
+                resourceTextMap.Add(key, texts);
+            }
+            else
+            {
+                Debug.LogError("Field not found: " + key + "Texts");
+            }
+        }
     }
     public void InitializeProductionTimeMap()
     {
-        productionTimeTextMap = new Dictionary<string, TextMeshProUGUI[]>
+        productionTimeTextMap = new Dictionary<string, TextMeshProUGUI[]>();
+
+        foreach (string key in RecipeKeys)
         {
-            { "FibrousLeaves", FibrousLeavesProductionTexts },
-            { "Water", WaterProductionTexts },
-            { "Biofuel", BiofuelProductionTexts },
-            { "DistilledWater", DistilledWaterProductionTexts },
-            { "Battery", BatteryProductionTexts },
-            { "OxygenTank", OxygenTankProductionTexts },
-            { "BatteryCore", BatteryCoreProductionTexts },
-            { "Steam", SteamProductionTexts },
-            { "IronOre", IronOreProductionTexts },
-            { "Wood", WoodProductionTexts },
-            { "Coal", CoalProductionTexts },
-            { "IronBeam", IronBeamProductionTexts },
-            { "BiofuelGenerator", BiofuelGeneratorProductionTexts },
-            { "IronSheet", IronSheetProductionTexts },
-            { "IronRod", IronRodProductionTexts },
-            { "LatexFoam", LatexFoamProductionTexts },
-            { "ProteinBeans", ProteinBeansProductionTexts },
-            { "BiomassLeaves", BiomassLeavesProductionTexts },
-            { "BiomassWood", BiomassWoodProductionTexts },
-            { "ProteinPowder", ProteinPowderProductionTexts },
-            { "BioOil", BioOilProductionTexts },
-            { "IronTube", IronTubeProductionTexts },
-            { "WaterPump", WaterPumpProductionTexts },
-            { "FibrousPlantField", FibrousPlantFieldProductionTexts },
-            { "ResearchDevice", ResearchDeviceProductionTexts }
-        };
+            FieldInfo field = GetType().GetField(key + "ProductionTexts");
+
+            if (field != null)
+            {
+                TextMeshProUGUI[] texts = (TextMeshProUGUI[])field.GetValue(this);
+                productionTimeTextMap.Add(key, texts);
+            }
+            else
+            {
+                Debug.LogError("Field not found: " + key + "ProductionTexts");
+            }
+        }
     }
 
     public void InitializeMaterialCostMap()
     {
-        materialCostTextMap = new Dictionary<string, TextMeshProUGUI[]>
+        materialCostTextMap = new Dictionary<string, TextMeshProUGUI[]>();
+
+        foreach (string key in RecipeKeys)
         {
-            { "FibrousLeaves", FibrousLeavesMaterialCostTexts },
-            { "Water", WaterMaterialCostTexts },
-            { "Biofuel", BiofuelMaterialCostTexts },
-            { "DistilledWater", DistilledWaterMaterialCostTexts },
-            { "Battery", BatteryMaterialCostTexts },
-            { "OxygenTank", OxygenTankMaterialCostTexts },
-            { "BatteryCore", BatteryCoreMaterialCostTexts },
-            { "Steam", SteamMaterialCostTexts },
-            { "IronOre", IronOreMaterialCostTexts },
-            { "Wood", WoodMaterialCostTexts },
-            { "Coal", CoalMaterialCostTexts },
-            { "IronBeam", IronBeamMaterialCostTexts },
-            { "BiofuelGenerator", BiofuelGeneratorMaterialCostTexts },
-            { "IronSheet", IronSheetMaterialCostTexts },
-            { "IronRod", IronRodMaterialCostTexts },
-            { "LatexFoam", LatexFoamMaterialCostTexts },
-            { "ProteinBeans", ProteinBeansMaterialCostTexts },
-            { "BiomassLeaves", BiomassLeavesMaterialCostTexts },
-            { "BiomassWood", BiomassWoodMaterialCostTexts },
-            { "ProteinPowder", ProteinPowderMaterialCostTexts },
-            { "BioOil", BioOilMaterialCostTexts },
-            { "IronTube", IronTubeMaterialCostTexts },
-            { "WaterPump", WaterPumpMaterialCostTexts },
-            { "FibrousPlantField", FibrousPlantFieldMaterialCostTexts },
-            { "ResearchDevice", ResearchDeviceMaterialCostTexts }
-        };
+            FieldInfo field = GetType().GetField(key + "MaterialCostTexts");
+
+            if (field != null)
+            {
+                TextMeshProUGUI[] texts = (TextMeshProUGUI[])field.GetValue(this);
+                materialCostTextMap.Add(key, texts);
+            }
+            else
+            {
+                Debug.LogError("Field not found: " + key + "MaterialCostTexts");
+            }
+        }
     }
 
     public void InitializeProductionOutcomeMap()
     {
-        productionOutcomeTextMap = new Dictionary<string, TextMeshProUGUI[]>
+        productionOutcomeTextMap = new Dictionary<string, TextMeshProUGUI[]>();
+
+        foreach (string key in RecipeKeys)
         {
-            { "FibrousLeaves", FibrousLeavesOutcomeTexts },
-            { "Water", WaterOutcomeTexts },
-            { "Biofuel", BiofuelOutcomeTexts },
-            { "DistilledWater", DistilledWaterOutcomeTexts },
-            { "Battery", BatteryOutcomeTexts },
-            { "OxygenTank", OxygenTankOutcomeTexts },
-            { "BatteryCore", BatteryCoreOutcomeTexts },
-            { "Steam", SteamOutcomeTexts },
-            { "IronOre", IronOreOutcomeTexts },
-            { "Wood", WoodOutcomeTexts },
-            { "Coal", CoalOutcomeTexts },
-            { "IronBeam", IronBeamOutcomeTexts },
-            { "BiofuelGenerator", BiofuelGeneratorOutcomeTexts },
-            { "IronSheet", IronSheetOutcomeTexts },
-            { "IronRod", IronRodOutcomeTexts },
-            { "LatexFoam", LatexFoamOutcomeTexts },
-            { "ProteinBeans", ProteinBeansOutcomeTexts },
-            { "BiomassLeaves", BiomassLeavesOutcomeTexts },
-            { "BiomassWood", BiomassWoodOutcomeTexts },
-            { "ProteinPowder", ProteinPowderOutcomeTexts },
-            { "BioOil", BioOilOutcomeTexts },
-            { "IronTube", IronTubeOutcomeTexts },
-            { "WaterPump", WaterPumpOutcomeTexts },
-            { "FibrousPlantField", FibrousPlantFieldOutcomeTexts },
-            { "ResearchDevice", ResearchDeviceOutcomeTexts }
-        };
+            FieldInfo field = GetType().GetField(key + "OutcomeTexts");
+
+            if (field != null)
+            {
+                TextMeshProUGUI[] texts = (TextMeshProUGUI[])field.GetValue(this);
+                productionOutcomeTextMap.Add(key, texts);
+            }
+            else
+            {
+                Debug.LogError("Field not found: " + key + "OutcomeTexts");
+            }
+        }
     }
 
     public void StopRunningCoroutine()
@@ -401,7 +408,7 @@ public class CoroutineManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Text array for '{consumableName}' not found.");
+            //Debug.LogError($"Text array for '{consumableName}' not found.");
         }
     }
     public void UpdateBuildingText(string consumableName, string resourceQuantity)
@@ -415,7 +422,7 @@ public class CoroutineManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Text array for '{consumableName}' not found.");
+            //Debug.LogError($"Text array for '{consumableName}' not found.");
         }
     }
 

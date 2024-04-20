@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1732428710
+CRC: 3672419699
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d6ec9eff1b3b35dab47d695c467e1132
+    Hash: dfaa2f8347ac64b3224be8674b0354dc
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -18,7 +18,7 @@ Assets:
 - Assets/AssetBundlesRepo/ResourceIcons/Clay.png
 - Assets/AssetBundlesRepo/ResourceIcons/ProteinPowder.png
 - Assets/AssetBundlesRepo/ResourceIcons/FibrousLeaves.png
-- Assets/AssetBundlesRepo/ResourceIcons/Fish.png
+- Assets/AssetBundlesRepo/ResourceIcons/SmallFish.png
 - Assets/AssetBundlesRepo/ResourceIcons/BiomassWood.png
 - Assets/AssetBundlesRepo/ResourceIcons/Bantir.png
 - Assets/AssetBundlesRepo/ResourceIcons/SilicaSand.png
@@ -36,6 +36,7 @@ Assets:
 - Assets/AssetBundlesRepo/ResourceIcons/Shark.png
 - Assets/AssetBundlesRepo/ResourceIcons/Biooil.png
 - Assets/AssetBundlesRepo/ResourceIcons/Water.png
+- Assets/AssetBundlesRepo/ResourceIcons/AnimalMeat.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronSheet.png
 - Assets/AssetBundlesRepo/ResourceIcons/Whale.png
 - Assets/AssetBundlesRepo/ResourceIcons/GoldOre.png

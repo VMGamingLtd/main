@@ -43,7 +43,7 @@ namespace Assets.Scripts.ItemFactory
                 newItem.AddComponent<ItemUse>();
 
                 // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
-                rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                rectTransform.Find(Constants.EmptyButton).GetComponent<Image>().gameObject.SetActive(false);
                 AlignObject(newItem, rectTransform);
             }
         }
@@ -139,7 +139,7 @@ namespace Assets.Scripts.ItemFactory
                 newItem.AddComponent<ItemUse>();
 
                 // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
-                rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                rectTransform.Find(Constants.EmptyButton)?.GetComponent<Image>()?.gameObject.SetActive(false);
                 AlignObject(newItem, rectTransform);
             }
         }
@@ -176,7 +176,7 @@ namespace Assets.Scripts.ItemFactory
                 newItem.AddComponent<ItemUse>();
 
                 // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
-                rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                rectTransform.Find(Constants.EmptyButton).GetComponent<Image>().gameObject.SetActive(false);
                 AlignObject(newItem, rectTransform);
             }
         }
@@ -210,7 +210,7 @@ namespace Assets.Scripts.ItemFactory
                 newItem.AddComponent<ItemUse>();
 
                 // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
-                rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                rectTransform.Find(Constants.EmptyButton).GetComponent<Image>().gameObject.SetActive(false);
                 AlignObject(newItem, rectTransform);
             }
         }
@@ -280,7 +280,7 @@ namespace Assets.Scripts.ItemFactory
                     newItem.AddComponent<ItemUse>();
 
                     // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
-                    rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                    rectTransform.Find(Constants.EmptyButton).GetComponent<Image>().gameObject.SetActive(false);
                     AlignObject(newItem, rectTransform);
                     equipmentManager.EquipSuit(newItemData);
                 }
@@ -371,7 +371,7 @@ namespace Assets.Scripts.ItemFactory
                     newItem.AddComponent<ItemUse>();
 
                     // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
-                    rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                    rectTransform.Find(Constants.EmptyButton).GetComponent<Image>().gameObject.SetActive(false);
                     AlignObject(newItem, rectTransform);
                     equipmentManager.EquipHelmet(newItemData);
                 }
@@ -459,7 +459,7 @@ namespace Assets.Scripts.ItemFactory
                     newItem.AddComponent<ItemUse>();
 
                     // assign the game object into the Inventory UI under the buttons as a child and align the position to be in the middle of the button
-                    rectTransform.Find("EmptyButton")?.GetComponent<Image>()?.gameObject.SetActive(false);
+                    rectTransform.Find(Constants.EmptyButton).GetComponent<Image>().gameObject.SetActive(false);
                     AlignObject(newItem, rectTransform);
                     equipmentManager.EquipTool(newItemData);
                 }
@@ -549,7 +549,7 @@ namespace Assets.Scripts.ItemFactory
         }
         private void UpdateItemCountText(GameObject item, ItemData itemData = null, SuitData suitData = null, HelmetData helmetData = null, ToolData toolData = null)
         {
-            TextMeshProUGUI existingCountText = item.transform.Find("CountInventory")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI existingCountText = item.transform.Find(Constants.CountInventory)?.GetComponent<TextMeshProUGUI>();
             if (existingCountText != null)
             {
                 string quantityText = "";
@@ -585,7 +585,7 @@ namespace Assets.Scripts.ItemFactory
             newItem.transform.localScale = new Vector3(1f, 1f, 1f);
             newItem.name = prefabName;
             newItem.transform.Find("ChildName").name = prefabName;
-            if (itemType == "SUIT" || itemType == "HELMET" || itemType == "FABRICATOR")
+            if (itemType == Constants.Suit || itemType == Constants.Helmet || itemType == Constants.Fabricator)
             {
                 newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignEquipmentSpriteToSlot(prefabName);
             }
@@ -598,13 +598,13 @@ namespace Assets.Scripts.ItemFactory
         }
         private Sprite AssignSpriteToSlot(string spriteName)
         {
-            Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
+            Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>(Constants.ResourceIcons, spriteName);
             return sprite;
         }
 
         private Sprite AssignEquipmentSpriteToSlot(string spriteName)
         {
-            Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("equipmenticons", spriteName);
+            Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>(Constants.EquipmentIcons, spriteName);
             return sprite;
         }
 
@@ -726,37 +726,37 @@ namespace Assets.Scripts.ItemFactory
 
         private void CheckItemTypes(string itemType, bool equipable, DragAndDrop dragAndDropComponent)
         {
-            if (itemType == "PLANTS" && equipable)
+            if (itemType == Constants.Plants && equipable || itemType == Constants.Meat && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
             }
-            else if (itemType == "ENERGY" && equipable)
+            else if (itemType == Constants.Energy && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[5]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[5]);
             }
-            else if (itemType == "OXYGEN" && equipable)
+            else if (itemType == Constants.Oxygen && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[6]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[6]);
             }
-            else if (itemType == "LIQUID" && equipable)
+            else if (itemType == Constants.Liquid && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
             }
-            else if (itemType == "SUIT" && equipable)
+            else if (itemType == Constants.Suit && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[1]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[1]);
             }
-            else if (itemType == "HELMET" && equipable)
+            else if (itemType == Constants.Helmet && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[0]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[0]);
             }
-            else if (itemType == "FABRICATOR" && equipable)
+            else if (itemType == Constants.Fabricator && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[2]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[2]);

@@ -13,8 +13,11 @@
       ""recipeType"": ""PLANTS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 1,
+      ""minQuantityRange"": 10000,
+      ""maxQuantityRange"": 10000000,
       ""productionTime"": 2,
       ""outputValue"": 5,
+      ""currentQuantity"": -1,
       ""hasRequirements"": false
     },
     {
@@ -24,8 +27,11 @@
       ""recipeType"": ""LIQUID"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 1,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 2,
       ""outputValue"": 10,
+      ""currentQuantity"": -1,
       ""hasRequirements"": false
     },
     {
@@ -35,8 +41,11 @@
       ""recipeType"": ""LIQUID"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 4,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 8,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -64,8 +73,11 @@
       ""recipeType"": ""LIQUID"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 2,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 3,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -85,8 +97,11 @@
       ""recipeType"": ""ENERGY"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 8,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 12,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -114,8 +129,11 @@
       ""recipeType"": ""OXYGEN"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 4,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 8,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true
     },
     {
@@ -125,8 +143,11 @@
       ""recipeType"": ""ENERGY"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 3,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 6,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -146,8 +167,11 @@
       ""recipeType"": ""GAS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 1,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 2,
       ""outputValue"": 2,
+      ""currentQuantity"": -1,
       ""hasRequirements"": false
     },
     {
@@ -155,10 +179,13 @@
       ""recipeName"": ""IronOre"",
       ""recipeProduct"": ""BASIC"",
       ""recipeType"": ""MINERALS"",
-      ""itemClass"": ""CLASS-F"",
+      ""itemClass"": ""CLASS-D"",
       ""experience"": 2,
-      ""productionTime"": 4,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 10000,
+      ""productionTime"": 6,
       ""outputValue"": 4,
+      ""currentQuantity"": -1,
       ""hasRequirements"": false
     },
     {
@@ -168,8 +195,11 @@
       ""recipeType"": ""PLANTS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 2,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 100000,
       ""productionTime"": 4,
       ""outputValue"": 2,
+      ""currentQuantity"": -1,
       ""hasRequirements"": false
     },
     {
@@ -177,10 +207,13 @@
       ""recipeName"": ""Coal"",
       ""recipeProduct"": ""BASIC"",
       ""recipeType"": ""MINERALS"",
-      ""itemClass"": ""CLASS-F"",
+      ""itemClass"": ""CLASS-D"",
       ""experience"": 2,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 10000,
       ""productionTime"": 4,
       ""outputValue"": 2,
+      ""currentQuantity"": -1,
       ""hasRequirements"": false
     },
     {
@@ -190,8 +223,11 @@
       ""recipeType"": ""METALS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 4,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 6,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -219,8 +255,11 @@
       ""recipeType"": ""POWERPLANT"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 16,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 24,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -256,8 +295,11 @@
       ""recipeType"": ""METALS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 2,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 4,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -285,8 +327,11 @@
       ""recipeType"": ""METALS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 4,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 6,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -314,8 +359,11 @@
       ""recipeType"": ""FOAM"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 1,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 2,
       ""outputValue"": 4,
+      ""currentQuantity"": -1,
       ""hasRequirements"": false
     },
     {
@@ -325,8 +373,11 @@
       ""recipeType"": ""PLANTS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 1,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 100000,
       ""productionTime"": 2,
       ""outputValue"": 8,
+      ""currentQuantity"": -1,
       ""hasRequirements"": false
     },
     {
@@ -336,8 +387,11 @@
       ""recipeType"": ""PLANTS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 3,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 5,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -357,8 +411,11 @@
       ""recipeType"": ""PLANTS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 3,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 5,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -378,8 +435,11 @@
       ""recipeType"": ""POWDER"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 3,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 5,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -407,8 +467,11 @@
       ""recipeType"": ""LIQUID"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 3,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 5,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -436,8 +499,11 @@
       ""recipeType"": ""METALS"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 4,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 6,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -465,8 +531,11 @@
       ""recipeType"": ""PUMPINGFACILITY"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 12,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 18,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -502,8 +571,11 @@
       ""recipeType"": ""AGRICULTURE"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 8,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 30,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -531,8 +603,11 @@
       ""recipeType"": ""LABORATORY"",
       ""itemClass"": ""CLASS-F"",
       ""experience"": 16,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
       ""productionTime"": 60,
       ""outputValue"": 1,
+      ""currentQuantity"": -1,
       ""hasRequirements"": true,
       ""childDataList"": [
         {
@@ -568,6 +643,160 @@
           ""quantity"": 12
         }
       ]
+    },
+    {
+      ""index"": 25,
+      ""recipeName"": ""FishMeat"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MEAT"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 1,
+      ""minQuantityRange"": 100,
+      ""maxQuantityRange"": 1000,
+      ""productionTime"": 22,
+      ""outputValue"": 2,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 26,
+      ""recipeName"": ""AnimalMeat"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MEAT"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 1,
+      ""minQuantityRange"": 100,
+      ""maxQuantityRange"": 1000,
+      ""productionTime"": 24,
+      ""outputValue"": 4,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 27,
+      ""recipeName"": ""AnimalSkin"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""FABRIC"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 2,
+      ""minQuantityRange"": 100,
+      ""maxQuantityRange"": 1000,
+      ""productionTime"": 18,
+      ""outputValue"": 1,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 28,
+      ""recipeName"": ""Milk"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""LIQUID"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 1,
+      ""minQuantityRange"": 100,
+      ""maxQuantityRange"": 1000,
+      ""productionTime"": 22,
+      ""outputValue"": 1,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 29,
+      ""recipeName"": ""SilicaSand"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 1,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 10000,
+      ""productionTime"": 4,
+      ""outputValue"": 4,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 30,
+      ""recipeName"": ""Limestone"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 2,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 10000,
+      ""productionTime"": 6,
+      ""outputValue"": 4,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 31,
+      ""recipeName"": ""Clay"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 2,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 10000,
+      ""productionTime"": 4,
+      ""outputValue"": 2,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 32,
+      ""recipeName"": ""Stone"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 2,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 10000,
+      ""productionTime"": 6,
+      ""outputValue"": 4,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 33,
+      ""recipeName"": ""CopperOre"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-D"",
+      ""experience"": 2,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 10000,
+      ""productionTime"": 6,
+      ""outputValue"": 4,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 34,
+      ""recipeName"": ""SilverOre"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-C"",
+      ""experience"": 4,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 5000,
+      ""productionTime"": 8,
+      ""outputValue"": 2,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 35,
+      ""recipeName"": ""GoldOre"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-C"",
+      ""experience"": 4,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 5000,
+      ""productionTime"": 8,
+      ""outputValue"": 2,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
     }
   ]
 }
