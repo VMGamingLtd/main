@@ -47,8 +47,6 @@ public class CustomSceneLoader : MonoBehaviour
         const string METOD_NAME = "OnRergisterDeviceComplete()";
         if (Gaos.Device.Device.Registration.IsDeviceRegistered == true)
         {
-
-
             if (Gaos.Context.Authentication.GetUserId() > -1)
             {
                 var userName = Gaos.Context.Authentication.GetUserName();

@@ -436,8 +436,6 @@ public class NewGameUI : MonoBehaviour
 
             coroutineManager.researchPointsText.text = Player.ResearchPoints.ToString();
 
-            coroutineManager.researchPointsText.text = Player.ResearchPoints.ToString();
-
             CoroutineManager.ResetAllCoroutineBooleans();
             globalCalculator.UpdatePlayerConsumption();
             buildingIncrementor.InitializeAvailableBuildings();
