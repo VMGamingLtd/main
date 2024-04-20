@@ -1,6 +1,6 @@
-using UnityEngine;
-using System.Collections;
 using Newtonsoft.Json;
+using System.Collections;
+using UnityEngine;
 
 namespace Gaos.Device.Device
 {
@@ -34,6 +34,7 @@ namespace Gaos.Device.Device
             string requestJsonStr = JsonConvert.SerializeObject(request);
 
             Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("device/register", requestJsonStr);
+
             yield return apiCall.Call();
 
             if (apiCall.IsResponseTimeout == true)
@@ -50,7 +51,7 @@ namespace Gaos.Device.Device
                 }
                 else
                 {
-                    DeviceRegisterResponse =  JsonConvert.DeserializeObject<Gaos.Routes.Model.DeviceJson.DeviceRegisterResponse>(apiCall.ResponseJsonStr);
+                    DeviceRegisterResponse = JsonConvert.DeserializeObject<Gaos.Routes.Model.DeviceJson.DeviceRegisterResponse>(apiCall.ResponseJsonStr);
                     if (DeviceRegisterResponse.IsError == true)
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: registering device: {DeviceRegisterResponse.ErrorMessage}");
@@ -118,7 +119,7 @@ namespace Gaos.Device.Device
                             if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true")
                             {
                                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: userSlot id: {userSlot.SlotId}, user name: {userSlot.UserName}, game data (id, version): ({userSlot.MongoDocumentId}, {userSlot.MongoDocumentVersion})");
-                            }   
+                            }
                             Gaos.GameData.LastGameDataVersion.setVersion(userSlot.SlotId, userSlot.MongoDocumentVersion, userSlot.MongoDocumentId, null);
                         }
                     }

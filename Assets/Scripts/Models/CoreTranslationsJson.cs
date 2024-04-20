@@ -863,11 +863,18 @@
         ""slovak"": ""Prášky""
       },
       {
-        ""identifier"": ""FLESH"",
-        ""english"": ""Flesh"",
-        ""russian"": ""Плоть"",
-        ""chinese"": ""肉体"",
+        ""identifier"": ""MEAT"",
+        ""english"": ""Meat"",
+        ""russian"": ""Мясо"",
+        ""chinese"": ""肉"",
         ""slovak"": ""Mäso""
+      },
+      {
+        ""identifier"": ""FABRIC"",
+        ""english"": ""Fabric"",
+        ""russian"": ""Ткань"",
+        ""chinese"": ""织物"",
+        ""slovak"": ""Látka""
       },
       {
         ""identifier"": ""WEAPONS"",
@@ -1610,6 +1617,34 @@
         ""russian"": ""Рыбное мясо"",
         ""chinese"": ""鱼肉"",
         ""slovak"": ""Rybie mäso""
+      },
+      {
+        ""identifier"": ""FishMeatDesc"",
+        ""english"": ""Healthy protein resource and also can be a recipe ingredient."",
+        ""russian"": ""Полезный белковый ресурс, а также может быть ингредиентом рецепта."",
+        ""chinese"": ""鱼肉是一种有用的蛋白质资源，也可以作为食谱成分。"",
+        ""slovak"": ""Zdravý zdroj bielkovín a tiež môže byť zložkou receptu.""
+      },
+      {
+        ""identifier"": ""AnimalMeat"",
+        ""english"": ""Animal meat"",
+        ""russian"": ""Мясо животных"",
+        ""chinese"": ""动物肉"",
+        ""slovak"": ""Zvieracie mäso""
+      },
+      {
+        ""identifier"": ""AnimalMeatDesc"",
+        ""english"": ""Food resource acquired from animals that requires further processing."",
+        ""russian"": ""Пищевой ресурс, полученный от животных и требующий дальнейшей переработки."",
+        ""chinese"": ""这是从动物身上获得的食物资源，需要进一步加工。"",
+        ""slovak"": ""Potravinový zdroj získaný zo zvierat, ktorý si vyžaduje ďalšie spracovanie.""
+      },
+      {
+        ""identifier"": ""SmallFish"",
+        ""english"": ""Small fish"",
+        ""russian"": ""Маленькая рыба"",
+        ""chinese"": ""小鱼"",
+        ""slovak"": ""Malá ryba""
       },
       {
         ""identifier"": ""Whale"",

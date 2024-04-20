@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 5643388007353808802}
   m_Layer: 5
   m_Name: EventIcon
-  m_TagString: Untagged
+  m_TagString: EventIcon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bb72f5ca984e00d44aff91ecb54c2487, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b047f7fbe28c89042968b6b488a956fb, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

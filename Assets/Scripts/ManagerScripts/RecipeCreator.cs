@@ -15,8 +15,11 @@ namespace RecipeManagement
         public string recipeType;
         public string itemClass;
         public int experience;
+        public float minQuantityRange;
+        public float maxQuantityRange;
         public float productionTime;
         public float outputValue;
+        public float currentQuantity;
         public bool hasRequirements;
         public List<ChildData> childDataList;
     }
@@ -48,6 +51,7 @@ namespace RecipeManagement
     }
     public class RecipeItemData : MonoBehaviour
     {
+        public Guid guid;
         public int index;
         public int orderAdded;
         public string recipeName;
@@ -57,6 +61,7 @@ namespace RecipeManagement
         public int experience;
         public float productionTime;
         public float outputValue;
+        public float currentQuantity;
         public bool hasRequirements;
         public List<ChildData> childData;
     }
@@ -64,6 +69,7 @@ namespace RecipeManagement
     {
         public GameObject recipeTemplate;
         public RecipeManager recipeManager;
+        public Transform recipeList;
         public List<RecipeDataJson> recipeDataList;
         public List<ResearchDataJson> researchDataList;
         private TranslationManager translationManager;
@@ -94,21 +100,30 @@ namespace RecipeManagement
                 researchDataList = jsonArray2.projects;
             }
         }
-        public void RecreateRecipe(string recipeProduct, string recipeType, string itemClass, string recipeName, int index,
-            int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, int orderAdded)
+        public void RecreateRecipe(string recipeProduct, Guid guid, string recipeType, string itemClass, string recipeName, int index, int experience,
+            float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, int orderAdded, float currentQuantity)
         {
-            RecreateRecipe(recipeTemplate, recipeProduct, recipeType, itemClass, recipeName, index,
-                experience, productionTime, outputValue, hasRequirements, childDataList, orderAdded);
+            RecreateRecipe(recipeTemplate, guid, recipeProduct, recipeType, itemClass, recipeName, index,
+                experience, productionTime, outputValue, hasRequirements, childDataList, orderAdded, currentQuantity);
         }
-        public void CreateRecipe(int recipeIndex)
+        public void CreateRecipe(int recipeIndex, Guid guid, float? quantity = null)
         {
             var itemData = recipeDataList[recipeIndex];
 
-            CreateRecipe(recipeTemplate, itemData.recipeProduct, itemData.recipeType, itemData.itemClass, itemData.recipeName, itemData.index,
-                itemData.experience, itemData.productionTime, itemData.outputValue, itemData.hasRequirements, itemData.childDataList);
+            if (quantity != null)
+            {
+                itemData.currentQuantity = (float)quantity;
+            }
+            else
+            {
+                itemData.currentQuantity = -1;
+            }
+
+            CreateRecipe(recipeTemplate, guid, itemData.recipeProduct, itemData.recipeType, itemData.itemClass, itemData.recipeName, itemData.index,
+                itemData.experience, itemData.productionTime, itemData.outputValue, itemData.hasRequirements, itemData.childDataList, itemData.currentQuantity);
         }
-        private void RecreateRecipe(GameObject template, string recipeProduct, string recipeType, string itemClass, string recipeName, int index,
-            int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, int orderAdded)
+        private void RecreateRecipe(GameObject template, Guid guid, string recipeProduct, string recipeType, string itemClass, string recipeName, int index,
+            int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, int orderAdded, float currentQuantity)
         {
             // RecipeTemplate attribute injection
             GameObject newItem = Instantiate(template);
@@ -171,6 +186,7 @@ namespace RecipeManagement
             }
             // Initialize RecipeItemData component that will hold all recipe data througout the game
             RecipeItemData newRecipeData = newItem.GetComponent<RecipeItemData>() ?? newItem.AddComponent<RecipeItemData>();
+            newRecipeData.guid = guid;
             newRecipeData.recipeName = recipeName;
             newRecipeData.recipeProduct = recipeProduct;
             newRecipeData.recipeType = recipeType;
@@ -179,6 +195,7 @@ namespace RecipeManagement
             newRecipeData.experience = experience;
             newRecipeData.productionTime = productionTime;
             newRecipeData.outputValue = outputValue;
+            newRecipeData.currentQuantity = currentQuantity;
             newRecipeData.hasRequirements = hasRequirements;
             newRecipeData.childData = childDataList;
             newRecipeData.orderAdded = orderAdded;
@@ -188,8 +205,8 @@ namespace RecipeManagement
             newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
             newItem.transform.localScale = Vector3.one;
         }
-        private void CreateRecipe(GameObject template, string recipeProduct, string recipeType, string itemClass, string recipeName,
-            int index, int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList)
+        private void CreateRecipe(GameObject template, Guid guid, string recipeProduct, string recipeType, string itemClass, string recipeName,
+            int index, int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, float currentQuantity)
         {
             // RecipeTemplate attribute injection
             GameObject newItem = Instantiate(template);
@@ -253,6 +270,7 @@ namespace RecipeManagement
             }
             // Initialize RecipeItemData component that will hold all recipe data througout the game
             RecipeItemData newRecipeData = newItem.GetComponent<RecipeItemData>() ?? newItem.AddComponent<RecipeItemData>();
+            newRecipeData.guid = guid;
             newRecipeData.recipeName = recipeName;
             newRecipeData.recipeProduct = recipeProduct;
             newRecipeData.recipeType = recipeType;
@@ -261,10 +279,11 @@ namespace RecipeManagement
             newRecipeData.experience = experience;
             newRecipeData.productionTime = productionTime;
             newRecipeData.outputValue = outputValue;
+            newRecipeData.currentQuantity = currentQuantity;
             newRecipeData.hasRequirements = hasRequirements;
             newRecipeData.childData = childDataList;
             newRecipeData.orderAdded = recipeOrderAdded++;
-            //recipeManager.itemRecipeArrays[recipeProduct].Add(newItem);
+
             recipeManager.AddToItemArray(recipeProduct, newItem);
 
             newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);

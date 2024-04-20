@@ -237,13 +237,133 @@
       ""equipable"": ""false""
     },
     {
-      ""index"": 23,
+      ""index"": 24,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""FibrousPlantField"",
+      ""itemProduct"": ""BUILDING"",
+      ""itemType"": ""AGRICULTURE"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 24,
       ""quantity"": 1.0,
       ""stackLimit"": 100.0,
       ""itemName"": ""ResearchDevice"",
       ""itemProduct"": ""BUILDING"",
       ""itemType"": ""LABORATORY"",
       ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 25,
+      ""quantity"": 2.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""FishMeat"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MEAT"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""true""
+    },
+    {
+      ""index"": 26,
+      ""quantity"": 4.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""AnimalMeat"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MEAT"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 27,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""AnimalSkin"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""FABRIC"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 28,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""Milk"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""LIQUID"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""true""
+    },
+    {
+      ""index"": 29,
+      ""quantity"": 4.0,
+      ""stackLimit"": 200.0,
+      ""itemName"": ""SilicaSand"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 30,
+      ""quantity"": 4.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""Limestone"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 31,
+      ""quantity"": 2.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""Clay"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 32,
+      ""quantity"": 4.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""Stone"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 33,
+      ""quantity"": 4.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""CopperOre"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-D"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 34,
+      ""quantity"": 2.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""SilverOre"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-C"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 35,
+      ""quantity"": 2.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""GoldOre"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-C"",
       ""equipable"": ""false""
     }
   ]

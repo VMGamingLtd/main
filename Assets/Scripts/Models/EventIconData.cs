@@ -5,5 +5,6 @@ public class EventIconData : MonoBehaviour
     public EventIconType Type;
     public string Name;
     public float CurrentQuantity;
-    public float MaxQuantity;
+    public float MinQuantityRange;
+    public float MaxQuantityRange;
 }

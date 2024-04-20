@@ -124,7 +124,7 @@ public class GlobalCalculator : MonoBehaviour
         else
         {
             NoOxygen.SetActive(false);
-            PlayerNeeds[1].text = PlayerResources.PlayerOxygen.ToString() + "/m";
+            PlayerNeeds[1].text = PlayerResources.PlayerOxygen.ToString() + "/s";
         }
 
         // water need check
@@ -136,7 +136,7 @@ public class GlobalCalculator : MonoBehaviour
         else
         {
             NoWater.SetActive(false);
-            PlayerNeeds[2].text = PlayerResources.PlayerWater.ToString() + "/m";
+            PlayerNeeds[2].text = PlayerResources.PlayerWater.ToString() + "/s";
         }
 
         // power need check
@@ -148,7 +148,7 @@ public class GlobalCalculator : MonoBehaviour
         else
         {
             NoEnergy.SetActive(false);
-            PlayerNeeds[3].text = PlayerResources.PlayerEnergy.ToString("F3", CultureInfo.InvariantCulture) + "/m";
+            PlayerNeeds[3].text = PlayerResources.PlayerEnergy.ToString("F3", CultureInfo.InvariantCulture) + "/s";
         }
 
         // hunger need check
@@ -160,7 +160,7 @@ public class GlobalCalculator : MonoBehaviour
         else
         {
             NoFood.SetActive(false);
-            PlayerNeeds[4].text = PlayerResources.PlayerHunger.ToString() + "/m";
+            PlayerNeeds[4].text = PlayerResources.PlayerHunger.ToString() + "/s";
         }
     }
     public void UpdateEverySecond()

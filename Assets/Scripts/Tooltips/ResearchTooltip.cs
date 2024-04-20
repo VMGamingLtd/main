@@ -64,6 +64,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
             {
                 tooltipFollowMouse.enabled = true;
             }
+
             exitedTooltip = false;
             FadeCanvasGroup(tooltipObject, 0);
             float timer = 0f;

@@ -13,12 +13,23 @@ public class EventIconDataInjector : MonoBehaviour
     public void InjectData(EventIconData eventIconData)
     {
         equipment = transform.gameObject;
+
+        if (eventIconData.Type == EventIconType.Player)
+        {
+            equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = UserName.userName;
+            equipment.transform.Find("Stats/Quantity").gameObject.SetActive(false);
+            equipment.transform.Find("Header/Image").gameObject.SetActive(false);
+            return;
+        }
+
         NumberFormater numberFormater = new();
+        equipment.transform.Find("Stats/Quantity").gameObject.SetActive(true);
         equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(eventIconData.Name);
         equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(eventIconData.name);
         equipment.transform.Find("Stats/Quantity/Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Quantity");
         equipment.transform.Find("Stats/Quantity/CurrentQuantity").GetComponent<TextMeshProUGUI>().text = numberFormater.FormatNumberInThousands(eventIconData.CurrentQuantity).ToString();
-        equipment.transform.Find("Stats/Quantity/MaxQuantity").GetComponent<TextMeshProUGUI>().text = numberFormater.FormatNumberInThousands(eventIconData.MaxQuantity).ToString();
+        equipment.transform.Find("Stats/Quantity/MaxQuantity").GetComponent<TextMeshProUGUI>().text = numberFormater.FormatNumberInThousands(eventIconData.MaxQuantityRange).ToString();
+
 
         if (eventIconData.Type == EventIconType.Fish)
         {
@@ -26,10 +37,12 @@ public class EventIconDataInjector : MonoBehaviour
         }
         else if (eventIconData.Type == EventIconType.FurAnimal)
         {
+            CreateStat("AnimalMeat");
             CreateStat("AnimalSkin");
         }
         else if (eventIconData.Type == EventIconType.MilkAnimal)
         {
+            CreateStat("AnimalMeat");
             CreateStat("Milk");
         }
     }

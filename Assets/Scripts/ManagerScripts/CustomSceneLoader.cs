@@ -12,7 +12,6 @@ public class CustomSceneLoader : MonoBehaviour
 
     private void OnEnable()
     {
-
         StartCoroutine(Gaos.Device.Device.Registration.RegisterDevice(OnRergisterDeviceComplete));
     }
 
@@ -34,7 +33,7 @@ public class CustomSceneLoader : MonoBehaviour
             await UniTask.Yield();
         }
 
-        coroutineManager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
+        coroutineManager = GameObject.Find(Constants.CoroutineManager).GetComponent<CoroutineManager>();
 
         await UniTask.Delay(TimeSpan.FromSeconds(1));
 
@@ -48,8 +47,6 @@ public class CustomSceneLoader : MonoBehaviour
         const string METOD_NAME = "OnRergisterDeviceComplete()";
         if (Gaos.Device.Device.Registration.IsDeviceRegistered == true)
         {
-
-
             if (Gaos.Context.Authentication.GetUserId() > -1)
             {
                 var userName = Gaos.Context.Authentication.GetUserName();

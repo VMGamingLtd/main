@@ -103,7 +103,9 @@ public class NewGameUI : MonoBehaviour
             for (int i = 0; i < gameData.EventObjects.Count; i++)
             {
                 EventIconModel iconModel = gameData.EventObjects[i];
-                planet.RecreateEventObject(iconModel.Name, iconModel.position, iconModel.iconType, iconModel.currentQuantity, iconModel.maxQuantity);
+                planet.RecreateEventObject(iconModel.Name, iconModel.position, iconModel.iconType, iconModel.currentQuantity, iconModel.minQuantityRange, iconModel.maxQuantityRange, iconModel.recipeIndex,
+                    iconModel.recipeIndex2, iconModel.recipeIndex3, iconModel.recipeIndex4, iconModel.recipeProduct, iconModel.recipeProduct2, iconModel.recipeProduct3, iconModel.recipeProduct4,
+                    iconModel.recipeGuid, iconModel.recipeGuid2, iconModel.recipeGuid3, iconModel.recipeGuid4);
             }
 
             // assign current goal
@@ -117,32 +119,32 @@ public class NewGameUI : MonoBehaviour
             for (int i = 0; i < gameData.basicRecipeObjects.Length; i++)
             {
                 RecipeItemDataModel recipeData = gameData.basicRecipeObjects[i];
-                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
-                    recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded);
+                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.guid, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
+                recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded, recipeData.currentQuantity);
             }
             for (int i = 0; i < gameData.processedRecipeObjects.Length; i++)
             {
                 RecipeItemDataModel recipeData = gameData.processedRecipeObjects[i];
-                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
-                    recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded);
+                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.guid, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
+                recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded, recipeData.currentQuantity);
             }
             for (int i = 0; i < gameData.enhancedRecipeObjects.Length; i++)
             {
                 RecipeItemDataModel recipeData = gameData.enhancedRecipeObjects[i];
-                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
-                    recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded);
+                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.guid, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
+                recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded, recipeData.currentQuantity);
             }
             for (int i = 0; i < gameData.assembledRecipeObjects.Length; i++)
             {
                 RecipeItemDataModel recipeData = gameData.assembledRecipeObjects[i];
-                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
-                    recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded);
+                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.guid, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
+                recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded, recipeData.currentQuantity);
             }
             for (int i = 0; i < gameData.buildingRecipeObjects.Length; i++)
             {
                 RecipeItemDataModel recipeData = gameData.buildingRecipeObjects[i];
-                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
-                    recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded);
+                recipeCreator.RecreateRecipe(recipeData.recipeProduct, recipeData.guid, recipeData.recipeType, recipeData.itemClass, recipeData.recipeName, recipeData.index,
+                recipeData.experience, recipeData.productionTime, recipeData.outputValue, recipeData.hasRequirements, recipeData.childData, recipeData.orderAdded, recipeData.currentQuantity);
             }
             // sort recipes by orderAdded
             recipeManager.SortItemRecipeArraysByOrderAdded();
@@ -154,17 +156,17 @@ public class NewGameUI : MonoBehaviour
                 ItemDataModel itemData = gameData.basicInventoryObjects[i];
                 if (itemData.isEquipped)
                 {
-                    if (itemData.itemType == "ENERGY")
+                    if (itemData.itemType == Constants.Energy)
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
                     }
-                    if (itemData.itemType == "LIQUID")
+                    if (itemData.itemType == Constants.Liquid)
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
                     }
-                    if (itemData.itemType == "PLANTS" || itemData.itemType == "FLESH")
+                    if (itemData.itemType == Constants.Plants || itemData.itemType == Constants.Meat)
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
@@ -181,17 +183,17 @@ public class NewGameUI : MonoBehaviour
                 ItemDataModel itemData = gameData.processedInventoryObjects[i];
                 if (itemData.isEquipped)
                 {
-                    if (itemData.itemType == "ENERGY")
+                    if (itemData.itemType == Constants.Energy)
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
                     }
-                    if (itemData.itemType == "LIQUID")
+                    if (itemData.itemType == Constants.Liquid)
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
                     }
-                    if (itemData.itemType == "PLANTS" || itemData.itemType == "FLESH")
+                    if (itemData.itemType == Constants.Plants || itemData.itemType == Constants.Meat)
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
@@ -208,17 +210,17 @@ public class NewGameUI : MonoBehaviour
                 ItemDataModel itemData = gameData.enhancedInventoryObjects[i];
                 if (itemData.isEquipped)
                 {
-                    if (itemData.itemType == "ENERGY")
+                    if (itemData.itemType == Constants.Energy)
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
                     }
-                    if (itemData.itemType == "LIQUID")
+                    if (itemData.itemType == Constants.Liquid)
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
                     }
-                    if (itemData.itemType == "PLANTS" || itemData.itemType == "FLESH")
+                    if (itemData.itemType == Constants.Plants || itemData.itemType == Constants.Meat)
                     {
                         itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
@@ -237,17 +239,17 @@ public class NewGameUI : MonoBehaviour
                 {
                     if (itemData.isEquipped)
                     {
-                        if (itemData.itemType == "ENERGY")
+                        if (itemData.itemType == Constants.Energy)
                         {
                             itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                             itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
                         }
-                        if (itemData.itemType == "LIQUID")
+                        if (itemData.itemType == Constants.Liquid)
                         {
                             itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                             itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
                         }
-                        if (itemData.itemType == "PLANTS" || itemData.itemType == "FLESH")
+                        if (itemData.itemType == Constants.Plants || itemData.itemType == Constants.Meat)
                         {
                             itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                             itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
@@ -398,27 +400,39 @@ public class NewGameUI : MonoBehaviour
             coroutineManager.InitializeProductionTimeMap();
             coroutineManager.InitializeMaterialCostMap();
 
-            coroutineManager.UpdateQuantityTexts("FibrousLeaves", "BASIC");
-            coroutineManager.UpdateQuantityTexts("Water", "BASIC");
-            coroutineManager.UpdateQuantityTexts("Biofuel", "ENHANCED");
-            coroutineManager.UpdateQuantityTexts("DistilledWater", "PROCESSED");
-            coroutineManager.UpdateQuantityTexts("Battery", "ASSEMBLED");
-            coroutineManager.UpdateQuantityTexts("BatteryCore", "ENHANCED");
-            coroutineManager.UpdateQuantityTexts("Wood", "BASIC");
-            coroutineManager.UpdateQuantityTexts("IronOre", "BASIC");
-            coroutineManager.UpdateQuantityTexts("Coal", "BASIC");
-            coroutineManager.UpdateQuantityTexts("IronBeam", "PROCESSED");
-            coroutineManager.UpdateBuildingText("BiofuelGenerator", Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString());
-            coroutineManager.UpdateQuantityTexts("IronSheet", "BASIC");
-            coroutineManager.UpdateQuantityTexts("BiomassLeaves", "PROCESSED");
-            coroutineManager.UpdateQuantityTexts("BiomassWood", "PROCESSED");
-            coroutineManager.UpdateQuantityTexts("LatexFoam", "BASIC");
-            coroutineManager.UpdateQuantityTexts("ProteinBeans", "BASIC");
-            coroutineManager.UpdateQuantityTexts("ProteinPowder", "PROCESSED");
-            coroutineManager.UpdateQuantityTexts("BioOil", "PROCESSED");
-            coroutineManager.UpdateQuantityTexts("IronTube", "PROCESSED");
-            coroutineManager.UpdateBuildingText("BiofuelGenerator", Planet0Buildings.Planet0WaterPumpBlueprint.ToString());
-            coroutineManager.UpdateBuildingText("FibrousPlantField", Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString());
+            coroutineManager.UpdateQuantityTexts(Constants.FibrousLeaves, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.Water, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.Biofuel, Constants.Enhanced);
+            coroutineManager.UpdateQuantityTexts(Constants.DistilledWater, Constants.Processed);
+            coroutineManager.UpdateQuantityTexts(Constants.Battery, Constants.Assembled);
+            coroutineManager.UpdateQuantityTexts(Constants.BatteryCore, Constants.Enhanced);
+            coroutineManager.UpdateQuantityTexts(Constants.Wood, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.IronOre, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.Coal, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.IronBeam, Constants.Processed);
+            coroutineManager.UpdateBuildingText(Constants.BiofuelGenerator, Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString());
+            coroutineManager.UpdateQuantityTexts(Constants.IronSheet, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.BiomassLeaves, Constants.Processed);
+            coroutineManager.UpdateQuantityTexts(Constants.BiomassWood, Constants.Processed);
+            coroutineManager.UpdateQuantityTexts(Constants.LatexFoam, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.ProteinBeans, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.ProteinPowder, Constants.Processed);
+            coroutineManager.UpdateQuantityTexts(Constants.BioOil, Constants.Processed);
+            coroutineManager.UpdateQuantityTexts(Constants.IronTube, Constants.Processed);
+            coroutineManager.UpdateBuildingText(Constants.WaterPump, Planet0Buildings.Planet0WaterPumpBlueprint.ToString());
+            coroutineManager.UpdateBuildingText(Constants.FibrousPlantField, Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString());
+            coroutineManager.UpdateBuildingText(Constants.ResearchDevice, Planet0Buildings.Planet0ResearchDeviceBlueprint.ToString());
+            coroutineManager.UpdateQuantityTexts(Constants.FishMeat, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.AnimalMeat, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.AnimalSkin, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.Milk, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.SilicaSand, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.Limestone, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.Clay, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.Stone, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.CopperOre, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.SilverOre, Constants.Basic);
+            coroutineManager.UpdateQuantityTexts(Constants.GoldOre, Constants.Basic);
 
             coroutineManager.researchPointsText.text = Player.ResearchPoints.ToString();
 
@@ -459,8 +473,6 @@ public class NewGameUI : MonoBehaviour
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
-
-
     }
 
     public void LoadSlotGame()

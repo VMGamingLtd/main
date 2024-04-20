@@ -99,11 +99,7 @@ public class RecipeManager : MonoBehaviour
         }
 
         // Get or add the ItemData component to the item
-        RecipeItemData itemData = item.GetComponent<RecipeItemData>();
-        if (itemData == null)
-        {
-            itemData = item.AddComponent<RecipeItemData>();
-        }
+        _ = item.GetComponent<RecipeItemData>() ?? item.AddComponent<RecipeItemData>();
     }
 
     public void RemoveFromItemArray(string recipeProduct, GameObject item)
