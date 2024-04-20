@@ -751,6 +751,13 @@
         ""slovak"": ""Zásady ochrany osobných údajov""
       },
       {
+        ""identifier"": ""Blueprint"",
+        ""english"": "" - (Blueprint)"",
+        ""russian"": "" - (План)"",
+        ""chinese"": "" - (蓝图)"",
+        ""slovak"": "" - (Plán)""
+      },
+      {
         ""identifier"": ""ALLBLUEPRINTS"",
         ""english"": ""All blueprints"",
         ""russian"": ""Все чертежи"",
@@ -856,11 +863,18 @@
         ""slovak"": ""Prášky""
       },
       {
-        ""identifier"": ""FLESH"",
-        ""english"": ""Flesh"",
-        ""russian"": ""Плоть"",
-        ""chinese"": ""肉体"",
+        ""identifier"": ""MEAT"",
+        ""english"": ""Meat"",
+        ""russian"": ""Мясо"",
+        ""chinese"": ""肉"",
         ""slovak"": ""Mäso""
+      },
+      {
+        ""identifier"": ""FABRIC"",
+        ""english"": ""Fabric"",
+        ""russian"": ""Ткань"",
+        ""chinese"": ""织物"",
+        ""slovak"": ""Látka""
       },
       {
         ""identifier"": ""WEAPONS"",
@@ -1528,6 +1542,13 @@
         ""slovak"": ""Dokončite výskum „Vedecké projekty“""
       },
       {
+        ""identifier"": ""ResearchScienceProjectsDesc"",
+        ""english"": ""Place a <color=yellow>Research device</color> in your base to generate research points. Then complete <color=yellow>Science Project</color> research."",
+        ""russian"": ""Разместите <color=yellow>Исследовательское устройство</color> на своей базе, чтобы получать очки исследования. Затем завершите исследование <color=yellow>Научного проекта</color>."",
+        ""chinese"": ""在你的基地放置一个<color=yellow>研究装置</color>来生成研究点。然后完成<color=yellow>科学项目</color>研究。"",
+        ""slovak"": ""Umiestnite <color=yellow>Výskumné zariadenie</color> do svojej základne a generujte výskumné body. Potom dokončite výskum <color=yellow>Vedeckého projektu</color>.""
+      },
+      {
         ""identifier"": ""ScienceProjects"",
         ""english"": ""Science projects"",
         ""russian"": ""Научные проекты"",
@@ -1554,6 +1575,202 @@
         ""russian"": ""Требования:"",
         ""chinese"": ""要求："",
         ""slovak"": ""Požiadavky:""
+      },
+      {
+        ""identifier"": ""SteamPower"",
+        ""english"": ""Steam power"",
+        ""russian"": ""Сила пара"",
+        ""chinese"": ""蒸汽动力"",
+        ""slovak"": ""Parný pohon""
+      },
+      {
+        ""identifier"": ""SteamPowerDesc"",
+        ""english"": ""Unlocks the usage of steam as a resource together with steam powered buildings."",
+        ""russian"": ""Открывает возможность использования пара в качестве ресурса вместе со зданиями, работающими на паре."",
+        ""chinese"": ""解锁蒸汽作为资源以及蒸汽动力建筑的使用。"",
+        ""slovak"": ""Odomkne využitie pary ako zdroja spolu s budovami poháňanými parou.""
+      },
+      {
+        ""identifier"": ""AllProduction"",
+        ""english"": ""All production"",
+        ""russian"": ""Вся продукция"",
+        ""chinese"": ""全部生产"",
+        ""slovak"": ""Celá výroba""
+      },
+      {
+        ""identifier"": ""ByType"",
+        ""english"": ""Type"",
+        ""russian"": ""Тип"",
+        ""chinese"": ""类型"",
+        ""slovak"": ""Typ""
+      },
+      {
+        ""identifier"": ""Quantity"",
+        ""english"": ""Quantity :"",
+        ""russian"": ""Количество :"",
+        ""chinese"": ""数量 ："",
+        ""slovak"": ""Množstvo :""
+      },
+      {
+        ""identifier"": ""FishMeat"",
+        ""english"": ""Fish meat"",
+        ""russian"": ""Рыбное мясо"",
+        ""chinese"": ""鱼肉"",
+        ""slovak"": ""Rybie mäso""
+      },
+      {
+        ""identifier"": ""FishMeatDesc"",
+        ""english"": ""Healthy protein resource and also can be a recipe ingredient."",
+        ""russian"": ""Полезный белковый ресурс, а также может быть ингредиентом рецепта."",
+        ""chinese"": ""鱼肉是一种有用的蛋白质资源，也可以作为食谱成分。"",
+        ""slovak"": ""Zdravý zdroj bielkovín a tiež môže byť zložkou receptu.""
+      },
+      {
+        ""identifier"": ""AnimalMeat"",
+        ""english"": ""Animal meat"",
+        ""russian"": ""Мясо животных"",
+        ""chinese"": ""动物肉"",
+        ""slovak"": ""Zvieracie mäso""
+      },
+      {
+        ""identifier"": ""AnimalMeatDesc"",
+        ""english"": ""Food resource acquired from animals that requires further processing."",
+        ""russian"": ""Пищевой ресурс, полученный от животных и требующий дальнейшей переработки."",
+        ""chinese"": ""这是从动物身上获得的食物资源，需要进一步加工。"",
+        ""slovak"": ""Potravinový zdroj získaný zo zvierat, ktorý si vyžaduje ďalšie spracovanie.""
+      },
+      {
+        ""identifier"": ""SmallFish"",
+        ""english"": ""Small fish"",
+        ""russian"": ""Маленькая рыба"",
+        ""chinese"": ""小鱼"",
+        ""slovak"": ""Malá ryba""
+      },
+      {
+        ""identifier"": ""Whale"",
+        ""english"": ""Whale"",
+        ""russian"": ""Кит"",
+        ""chinese"": ""鲸"",
+        ""slovak"": ""Veľryba""
+      },
+      {
+        ""identifier"": ""Kuleoma"",
+        ""english"": ""Kuleoma"",
+        ""russian"": ""Кулеома"",
+        ""chinese"": ""Kuleoma"",
+        ""slovak"": ""Kuleoma""
+      },
+      {
+        ""identifier"": ""SeaTurtle"",
+        ""english"": ""Sea turtle"",
+        ""russian"": ""Морская черепаха"",
+        ""chinese"": ""海龟"",
+        ""slovak"": ""Morská korytnačka""
+      },
+      {
+        ""identifier"": ""Shark"",
+        ""english"": ""Shark"",
+        ""russian"": ""Акула"",
+        ""chinese"": ""鲨鱼"",
+        ""slovak"": ""Žralok""
+      },
+      {
+        ""identifier"": ""Octopus"",
+        ""english"": ""Octopus"",
+        ""russian"": ""Осьминог"",
+        ""chinese"": ""章鱼"",
+        ""slovak"": ""Chobotnica""
+      },
+      {
+        ""identifier"": ""SilicaSand"",
+        ""english"": ""Silica sand"",
+        ""russian"": ""Кварцевый песок"",
+        ""chinese"": ""硅砂"",
+        ""slovak"": ""Kremičitý piesok""
+      },
+      {
+        ""identifier"": ""Clay"",
+        ""english"": ""Clay"",
+        ""russian"": ""Глина"",
+        ""chinese"": ""黏土"",
+        ""slovak"": ""Hlina""
+      },
+      {
+        ""identifier"": ""Limestone"",
+        ""english"": ""Limestone"",
+        ""russian"": ""Известняк"",
+        ""chinese"": ""石灰石"",
+        ""slovak"": ""Vápenec""
+      },
+      {
+        ""identifier"": ""CopperOre"",
+        ""english"": ""Copper ore"",
+        ""russian"": ""Медная руда"",
+        ""chinese"": ""铜矿"",
+        ""slovak"": ""Medená ruda""
+      },
+      {
+        ""identifier"": ""Stone"",
+        ""english"": ""Stone"",
+        ""russian"": ""Камень"",
+        ""chinese"": ""石头"",
+        ""slovak"": ""Kameň""
+      },
+      {
+        ""identifier"": ""GoldOre"",
+        ""english"": ""Gold ore"",
+        ""russian"": ""Золотая руда"",
+        ""chinese"": ""金矿"",
+        ""slovak"": ""Zlatá ruda""
+      },
+      {
+        ""identifier"": ""SilverOre"",
+        ""english"": ""Silver ore"",
+        ""russian"": ""Серебряная руда"",
+        ""chinese"": ""银矿石"",
+        ""slovak"": ""Strieborná ruda""
+      },
+      {
+        ""identifier"": ""RedHorn"",
+        ""english"": ""Red horn"",
+        ""russian"": ""Красный рог"",
+        ""chinese"": ""红角"",
+        ""slovak"": ""Červený roháč""
+      },
+      {
+        ""identifier"": ""Bantir"",
+        ""english"": ""Bantir"",
+        ""russian"": ""Бантир"",
+        ""chinese"": ""Bantir"",
+        ""slovak"": ""Bantir""
+      },
+      {
+        ""identifier"": ""AnimalSkin"",
+        ""english"": ""Animal skin"",
+        ""russian"": ""Кожа животного"",
+        ""chinese"": ""动物皮"",
+        ""slovak"": ""Zvieracia koža""
+      },
+      {
+        ""identifier"": ""Milk"",
+        ""english"": ""Milk"",
+        ""russian"": ""Молоко"",
+        ""chinese"": ""牛奶"",
+        ""slovak"": ""Mlieko""
+      },
+      {
+        ""identifier"": ""DeleteData"",
+        ""english"": ""Delete data?"",
+        ""russian"": ""Удалить данные?"",
+        ""chinese"": ""删除数据？"",
+        ""slovak"": ""Odstrániť údaje?""
+      },
+      {
+        ""identifier"": ""DeleteDataDesc"",
+        ""english"": ""All saved progress will be deleted permantnely."",
+        ""russian"": ""Эти игровые данные будут удалены навсегда."",
+        ""chinese"": ""该游戏数据将被永久删除。"",
+        ""slovak"": ""Tieto herné údaje budú natrvalo vymazané.""
       }
     ]
   }

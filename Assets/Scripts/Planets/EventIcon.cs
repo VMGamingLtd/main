@@ -1,6 +1,20 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+public enum EventIconType
+{
+    Player,
+    FriendlyPlayer,
+    EnemyPlayer,
+    Fish,
+    Plant,
+    Mineral,
+    FurAnimal,
+    MilkAnimal,
+    Animal
+}
 
 public class EventIcon : MonoBehaviour
 {
@@ -10,16 +24,36 @@ public class EventIcon : MonoBehaviour
     private GameObject iconPrefab;
     private Camera renderCamera;
     private GameObject iconInstance;
-    [SerializeField]
-    private float sphericalRadius = 3.6f;
-
     private GameObject planet;
-    
-    public void setPlanet(GameObject planet)
+    private GameObject playerIcon;
+
+    [SerializeField]
+    private float sphericalRadius = Player.VisibilityRadius / 20;
+
+    public EventIconType iconType;
+    public float CurrentQuantity;
+    public float MinQuantityRange;
+    public float MaxQuantityRange;
+    public float Elevation;
+    public Guid RecipeGuid;
+    public Guid RecipeGuid2;
+    public Guid RecipeGuid3;
+    public Guid RecipeGuid4;
+    public int RecipeIndex = -1;
+    public int RecipeIndex2 = -1;
+    public int RecipeIndex3 = -1;
+    public int RecipeIndex4 = -1;
+    public string RecipeProduct = string.Empty;
+    public string RecipeProduct2 = string.Empty;
+    public string RecipeProduct3 = string.Empty;
+    public string RecipeProduct4 = string.Empty;
+    public bool PlayerDistance;
+
+    public void SetPlanet(GameObject planet)
     {
         this.planet = planet;
     }
-    
+
     void Start()
     {
         eventObjectContainer = GameObject.Find("PlanetParent").GetComponent<EventObjectContainer>();
@@ -31,16 +65,26 @@ public class EventIcon : MonoBehaviour
         Sprite sprite = AssignSpriteToSlot(transform.name);
         iconInstance.transform.Find("Image/Icon").GetComponent<Image>().sprite = sprite;
         iconInstance.name = transform.name;
+        playerIcon = GameObject.Find("PlanetParent/StartPlanet/Player");
+
+        var component = iconInstance.AddComponent<EventIconData>();
+        component.Name = transform.name;
+        component.Type = iconType;
+        component.CurrentQuantity = MaxQuantityRange;
+        component.MinQuantityRange = MinQuantityRange;
+        component.MaxQuantityRange = MaxQuantityRange;
     }
 
     void Update()
     {
         if (renderTexture != null && iconInstance != null)
         {
+            sphericalRadius = Player.VisibilityRadius / 20;
             float distanceToCamera = Vector3.Distance(transform.position, renderCamera.transform.position);
+            float distanceToPlayer = Vector3.Distance(transform.position, playerIcon.transform.position);
 
             // Check if the sprite is outside the spherical radius
-            if (distanceToCamera > sphericalRadius && transform.name != "Player")
+            if (distanceToPlayer > sphericalRadius && transform.name != "Player")
             {
                 iconInstance.SetActive(false);
             }
@@ -69,6 +113,11 @@ public class EventIcon : MonoBehaviour
                 );
                 iconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
             }
+
+            if (PlayerDistance)
+            {
+                _ = iconInstance.GetComponent<Image>().color = Color.green;
+            }
         }
     }
 
@@ -79,16 +128,16 @@ public class EventIcon : MonoBehaviour
             return;
         }
         List<GameObject> eventObjects = planet.GetComponent<Planet>().eventObjects;
-        
+
         // remove the event object from the list
         eventObjects.Remove(gameObject);
-        
+
         if (iconInstance != null)
         {
             // destroy the icon
             Destroy(iconInstance);
         }
-        
+
     }
 
     private Sprite AssignSpriteToSlot(string spriteName)

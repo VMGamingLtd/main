@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,6 +32,8 @@ public class Planet : MonoBehaviour
 
     ShapeGenerator shapeGenerator = new();
     ColourGenerator colourGenerator = new();
+
+    readonly ResourceSpawn resourceSpawn = new();
 
     void Initialize()
     {
@@ -66,25 +69,25 @@ public class Planet : MonoBehaviour
         }
 
     }
-    
+
     private void FixMeshPosition()
     {
-        for (int i=0; i < 6; i++)
+        for (int i = 0; i < 6; i++)
         {
             meshFilters[i].transform.localPosition = new Vector3(-12.44094f, 6.144372f, -1.966287f);
         }
     }
-    
-    private GameObject FindPlayerTemplate() 
+
+    private GameObject FindPlayerTemplate()
     {
         const string parentPath = "/PlanetParent";
         GameObject parent = GameObject.Find(parentPath);
         if (parent == null)
         {
             Debug.LogError($"parent not found: {parentPath}");
-            throw new System.Exception($"parent not found: {parentPath}"); 
+            throw new System.Exception($"parent not found: {parentPath}");
         }
-        
+
         // iterate over parent's children
         foreach (Transform child in parent.transform)
         {
@@ -94,10 +97,10 @@ public class Planet : MonoBehaviour
             }
         }
         Debug.LogError("template not found");
-        throw new System.Exception("template not found"); 
+        throw new System.Exception("template not found");
     }
-    
-    private GameObject FindPlayer() 
+
+    private GameObject FindPlayer()
     {
         // iterate over parent's children
         foreach (Transform child in gameObject.transform)
@@ -107,7 +110,7 @@ public class Planet : MonoBehaviour
                 return child.gameObject;
             }
         }
-        
+
         return null;
     }
 
@@ -139,7 +142,7 @@ public class Planet : MonoBehaviour
         Initialize();
         GenerateMesh();
         GenerateColours();
-        
+
         if (!Application.isPlaying)
         {
             FixMeshPosition();
@@ -171,6 +174,8 @@ public class Planet : MonoBehaviour
 
     void GenerateMesh()
     {
+        CreateStartResources();
+
         for (int i = 0; i < 6; i++)
         {
             if (meshFilters[i].gameObject.activeSelf)
@@ -179,7 +184,7 @@ public class Planet : MonoBehaviour
                 // if in playing mode, spawn event objects on the surface
                 if (Application.isPlaying)
                 {
-                    SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 4);
+                    SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 56);
                 }
             }
         }
@@ -198,31 +203,62 @@ public class Planet : MonoBehaviour
             }
         }
     }
-    
+
     private void AddEventObjectToList(GameObject eventObject)
     {
         EventIcon eventIcon = eventObject.GetComponent<EventIcon>();
-        eventIcon.setPlanet(gameObject);
+        eventIcon.SetPlanet(gameObject);
         eventObjects.Add(eventObject);
     }
 
-    public void RecreateEventObject(string Name, Vector3 position)
+    public void RecreateEventObject(string Name, Vector3 position, EventIconType iconType, float currentQuantity, float minQuantityRange, float maxQuantityRange,
+        int recipeIndex, int recipeIndex2, int recipeIndex3, int recipeIndex4, string recipeProduct, string recipeProduct2, string recipeProduct3, string recipeProduct4,
+        Guid recipeGuid, Guid recipeGuid2, Guid recipeGuid3, Guid recipeGuid4)
     {
-        GameObject eventObject = new(Name);
+        GameObject eventObject = new(Name)
+        {
+            tag = "EventIcon"
+        };
         eventObject.transform.parent = transform;
         eventObject.transform.position = position;
-        eventObject.AddComponent<EventIcon>();
+        var component = eventObject.AddComponent<EventIcon>();
+        component.name = Name;
+        component.iconType = iconType;
+        component.CurrentQuantity = currentQuantity;
+        component.MinQuantityRange = minQuantityRange;
+        component.MaxQuantityRange = maxQuantityRange;
+        component.RecipeGuid = recipeGuid;
+        component.RecipeGuid2 = recipeGuid2;
+        component.RecipeGuid3 = recipeGuid3;
+        component.RecipeGuid4 = recipeGuid4;
+        component.RecipeIndex = recipeIndex;
+        component.RecipeIndex2 = recipeIndex2;
+        component.RecipeIndex3 = recipeIndex3;
+        component.RecipeIndex4 = recipeIndex4;
+        component.RecipeProduct = recipeProduct;
+        component.RecipeProduct2 = recipeProduct2;
+        component.RecipeProduct3 = recipeProduct3;
+        component.RecipeProduct4 = recipeProduct4;
+        SphereCollider sphereCollider = eventObject.AddComponent<SphereCollider>();
+        sphereCollider.radius = 0.05f;
+        sphereCollider.isTrigger = true;
+        sphereCollider.includeLayers |= (1 << 0) | (1 << 7);
         AddEventObjectToList(eventObject);
     }
 
     public void SpawnEventObjectsOnSurface(Mesh mesh, int numberOfObjects)
     {
+        GameObject player = transform.Find("Player").gameObject;
+        Transform playerTransform = player.transform;
+
+        List<Vector3> existingCoordinates = new();
+
         // Quit if in the editor
         if (!Application.isPlaying)
         {
             return;
         }
-        
+
         for (int i = 0; i < numberOfObjects; i++)
         {
             // Get a random point on the mesh surface
@@ -231,8 +267,14 @@ public class Planet : MonoBehaviour
             // Use the ShapeGenerator to calculate the elevation at the random point
             float elevation = shapeGenerator.CaulculateUnscaledElevation(randomPoint.normalized);
 
-            // Create a new empty GameObject
-            GameObject eventObject = new("EventObject");
+            // Create a new empty GameObject with a sphere collider
+            GameObject eventObject = new("EventObject")
+            {
+                tag = "EventIcon"
+            };
+            SphereCollider sphereCollider = eventObject.AddComponent<SphereCollider>();
+            sphereCollider.radius = 0.05f;
+            sphereCollider.isTrigger = true;
 
             // Set the position of the eventObject at the random point
             eventObject.transform.position = randomPoint;
@@ -243,35 +285,209 @@ public class Planet : MonoBehaviour
             // Move the object on the z-axis by adding 3.6 to its current z position
             eventObject.transform.position += new Vector3(0f, 0f, 3.6f);
 
-            if (elevation < 0.0f)
+            existingCoordinates.Add(eventObject.transform.position);
+
+            float distance = Vector3.Distance(eventObject.transform.position, playerTransform.position);
+
+            // we prohibit od spawning any random resources near player location
+            if (distance < 0.5f)
             {
-                eventObject.name = "Fish";
-            }
-            else if (elevation < 0.02f)
-            {
-                eventObject.name = "FibrousLeaves";
+                Destroy(eventObject);
+                continue;
             }
             else
             {
-                eventObject.name = "IronOre";
+                // check and avoid overlap of each event icon on the planet
+                foreach (var coordinate in existingCoordinates)
+                {
+                    float distance2 = Vector3.Distance(coordinate, eventObject.transform.position);
+
+                    if (distance2 == 0)
+                    {
+                        continue;
+                    }
+                    else if (distance2 < 0.05)
+                    {
+                        Vector3 offset = new(0.2f, 0f, 0f);
+                        eventObject.transform.position += offset;
+                    }
+                }
             }
 
-            eventObject.AddComponent<EventIcon>();
+            if (elevation < -0.06f)
+            {
+                resourceSpawn.SpawnResource(eventObject, "Whale", EventIconType.Fish, elevation);
+            }
+            else if (elevation < -0.03f)
+            {
+                var option = UnityEngine.Random.Range(0, 3);
+                if (option == 0)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Kuleoma", EventIconType.Fish, elevation);
+                }
+                else if (option == 1)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Octopus", EventIconType.Fish, elevation);
+                }
+                else
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Shark", EventIconType.Fish, elevation);
+                }
+            }
+            else if (elevation < 0.0f)
+            {
+                var option = UnityEngine.Random.Range(0, 2);
+                if (option == 0)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "SmallFish", EventIconType.Fish, elevation);
+                }
+                else
+                {
+                    resourceSpawn.SpawnResource(eventObject, "SeaTurtle", EventIconType.Fish, elevation);
+                }
+            }
+            else if (elevation < 0.01f)
+            {
+                var option = UnityEngine.Random.Range(0, 3);
+                if (option == 0)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "SilicaSand", EventIconType.Mineral, elevation);
+                }
+                else if (option == 1)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Limestone", EventIconType.Mineral, elevation);
+                }
+                else
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Clay", EventIconType.Mineral, elevation);
+                }
+            }
+            else if (elevation < 0.03f)
+            {
+                var option = UnityEngine.Random.Range(0, 5);
+                if (option == 0)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "FibrousLeaves", EventIconType.Plant, elevation);
+                }
+                else if (option == 1)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "RedHorn", EventIconType.FurAnimal, elevation);
+                }
+                else if (option == 2)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Bantir", EventIconType.MilkAnimal, elevation);
+                }
+                else if (option == 3)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Wood", EventIconType.Plant, elevation);
+                }
+                else
+                {
+                    resourceSpawn.SpawnResource(eventObject, "ProteinBeans", EventIconType.Plant, elevation);
+                }
+            }
+            else
+            {
+                var option = UnityEngine.Random.Range(0, 6);
+                if (option == 0)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "IronOre", EventIconType.Mineral, elevation);
+                }
+                else if (option == 1)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "CopperOre", EventIconType.Mineral, elevation);
+                }
+                else if (option == 2)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "SilverOre", EventIconType.Mineral, elevation);
+                }
+                else if (option == 3)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "GoldOre", EventIconType.Mineral, elevation);
+                }
+                else if (option == 4)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Coal", EventIconType.Mineral, elevation);
+                }
+                else if (option == 5)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Wood", EventIconType.Plant, elevation);
+                }
+                else
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Stone", EventIconType.Mineral, elevation);
+                }
+            }
+
             AddEventObjectToList(eventObject);
         }
+    }
+
+    private void CreateStartResources()
+    {
+        CreateManualEventObject("FibrousLeaves", -0.3f, -0.1f, 0f);
+        CreateManualEventObject("Wood", -0.1f, -0.35f, 0f);
+        CreateManualEventObject("IronOre", 0.12f, -0.28f, 0f);
+        CreateManualEventObject("Coal", 0.3f, -0.2f, 0f);
+    }
+
+    /// <summary>
+    /// Manually create a resource near player start location. Offsets are based off players XYZ coordinates.
+    /// This is to spawn resources necessary to perform the first tasks, like FibrousLeaves, Coal, Wood and IronOre.
+    /// </summary>
+    /// <param name="resourceName"></param>
+    /// <param name="offsetX"></param>
+    /// <param name="offsetY"></param>
+    /// <param name="offsetZ"></param>
+    private void CreateManualEventObject(string resourceName, float offsetX, float offsetY, float offsetZ)
+    {
+        GameObject player = transform.Find("Player").gameObject;
+        Transform playerTransform = player.transform;
+
+        GameObject eventObjectStart = new("EventObject")
+        {
+            tag = "EventIcon"
+        };
+
+        SphereCollider sphereCollider = eventObjectStart.AddComponent<SphereCollider>();
+        sphereCollider.radius = 0.05f;
+        sphereCollider.isTrigger = true;
+
+        Vector3 positionOffset = new(offsetX, offsetY, offsetZ);
+        eventObjectStart.transform.SetPositionAndRotation(playerTransform.position + positionOffset, playerTransform.rotation);
+        eventObjectStart.transform.localScale = playerTransform.localScale;
+
+        if (resourceName == "FibrousLeaves")
+        {
+            resourceSpawn.SpawnResource(eventObjectStart, "FibrousLeaves", EventIconType.Plant, 0);
+        }
+        else if (resourceName == "Wood")
+        {
+            resourceSpawn.SpawnResource(eventObjectStart, "Wood", EventIconType.Plant, 0);
+        }
+        else if (resourceName == "IronOre")
+        {
+            resourceSpawn.SpawnResource(eventObjectStart, "IronOre", EventIconType.Mineral, 0);
+        }
+        else if (resourceName == "Coal")
+        {
+            resourceSpawn.SpawnResource(eventObjectStart, "Coal", EventIconType.Mineral, 0);
+        }
+
+        AddEventObjectToList(eventObjectStart);
     }
 
     Vector3 GetRandomPointOnMesh(Mesh mesh)
     {
         // Get a random triangle from the mesh
-        int triangleIndex = Random.Range(0, mesh.triangles.Length / 3);
+        int triangleIndex = UnityEngine.Random.Range(0, mesh.triangles.Length / 3);
         int vertexIndex1 = mesh.triangles[triangleIndex * 3];
         int vertexIndex2 = mesh.triangles[triangleIndex * 3 + 1];
         int vertexIndex3 = mesh.triangles[triangleIndex * 3 + 2];
 
         // Get random barycentric coordinates
-        float u = Random.Range(0f, 1f);
-        float v = Random.Range(0f, 1f - u);
+        float u = UnityEngine.Random.Range(0f, 1f);
+        float v = UnityEngine.Random.Range(0f, 1f - u);
 
         // Calculate the barycentric coordinates for the third vertex
         float w = 1 - u - v;

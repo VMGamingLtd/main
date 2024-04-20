@@ -9,6 +9,7 @@ TagManager:
   - Consume
   - StudentRow
   - Research
+  - EventIcon
   layers:
   - Default
   - TransparentFX

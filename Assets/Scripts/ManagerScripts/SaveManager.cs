@@ -100,8 +100,25 @@ public class SaveManager : MonoBehaviour
     [Serializable]
     public class EventIconModel
     {
+        public Guid recipeGuid;
+        public Guid recipeGuid2;
+        public Guid recipeGuid3;
+        public Guid recipeGuid4;
         public string Name;
         public Vector3 position;
+        public EventIconType iconType;
+        public float currentQuantity;
+        public float elevation;
+        public float minQuantityRange;
+        public float maxQuantityRange;
+        public int recipeIndex;
+        public int recipeIndex2;
+        public int recipeIndex3;
+        public int recipeIndex4;
+        public string recipeProduct;
+        public string recipeProduct2;
+        public string recipeProduct3;
+        public string recipeProduct4;
     }
 
     [Serializable]
@@ -212,6 +229,7 @@ public class SaveManager : MonoBehaviour
     [Serializable]
     public class RecipeItemDataModel
     {
+        public Guid guid;
         public int index;
         public int orderAdded;
         public string recipeName;
@@ -221,6 +239,7 @@ public class SaveManager : MonoBehaviour
         public int experience;
         public float productionTime;
         public float outputValue;
+        public float currentQuantity;
         public bool hasRequirements;
         public List<ChildData> childData;
     }
@@ -479,13 +498,36 @@ public class SaveManager : MonoBehaviour
         Planet planet = GameObject.Find("PlanetParent/StartPlanet").GetComponent<Planet>();
         foreach (GameObject eventObject in planet.eventObjects)
         {
-            EventIconModel itemData = new()
-            {
-                Name = eventObject.name,
-                position = eventObject.transform.position,
-            };
+            eventObject.TryGetComponent(out EventIcon component);
 
-            currentSaveData.EventObjects.Add(itemData);
+            if (component != null)
+            {
+                EventIconModel itemData = new()
+                {
+                    Name = eventObject.name,
+                    position = eventObject.transform.position,
+                    iconType = component.iconType,
+                    currentQuantity = component.CurrentQuantity,
+                    minQuantityRange = component.MinQuantityRange,
+                    maxQuantityRange = component.MaxQuantityRange,
+                    recipeGuid = component.RecipeGuid,
+                    recipeGuid2 = component.RecipeGuid2,
+                    recipeGuid3 = component.RecipeGuid3,
+                    recipeGuid4 = component.RecipeGuid4,
+                    recipeIndex = component.RecipeIndex,
+                    recipeIndex2 = component.RecipeIndex2,
+                    recipeIndex3 = component.RecipeIndex3,
+                    recipeIndex4 = component.RecipeIndex4,
+                    recipeProduct = component.RecipeProduct,
+                    recipeProduct2 = component.RecipeProduct2,
+                    recipeProduct3 = component.RecipeProduct3,
+                    recipeProduct4 = component.RecipeProduct4,
+                    elevation = component.Elevation,
+                };
+
+                currentSaveData.EventObjects.Add(itemData);
+            }
+
         }
 
         // Access the itemArrays dictionary through the inventoryManager reference
@@ -707,6 +749,7 @@ public class SaveManager : MonoBehaviour
             itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
             RecipeItemDataModel recipeData = new()
             {
+                guid = itemDataComponent.guid,
                 index = itemDataComponent.index,
                 orderAdded = itemDataComponent.orderAdded,
                 recipeName = itemDataComponent.recipeName,
@@ -716,6 +759,7 @@ public class SaveManager : MonoBehaviour
                 experience = itemDataComponent.experience,
                 productionTime = itemDataComponent.productionTime,
                 outputValue = itemDataComponent.outputValue,
+                currentQuantity = itemDataComponent.currentQuantity,
                 hasRequirements = itemDataComponent.hasRequirements,
                 childData = itemDataComponent.childData
             };
@@ -732,6 +776,7 @@ public class SaveManager : MonoBehaviour
             itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
             RecipeItemDataModel recipeData = new()
             {
+                guid = itemDataComponent.guid,
                 index = itemDataComponent.index,
                 orderAdded = itemDataComponent.orderAdded,
                 recipeName = itemDataComponent.recipeName,
@@ -741,6 +786,7 @@ public class SaveManager : MonoBehaviour
                 experience = itemDataComponent.experience,
                 productionTime = itemDataComponent.productionTime,
                 outputValue = itemDataComponent.outputValue,
+                currentQuantity = itemDataComponent.currentQuantity,
                 hasRequirements = itemDataComponent.hasRequirements,
                 childData = itemDataComponent.childData
             };
@@ -756,6 +802,7 @@ public class SaveManager : MonoBehaviour
             itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
             RecipeItemDataModel recipeData = new()
             {
+                guid = itemDataComponent.guid,
                 index = itemDataComponent.index,
                 orderAdded = itemDataComponent.orderAdded,
                 recipeName = itemDataComponent.recipeName,
@@ -765,6 +812,7 @@ public class SaveManager : MonoBehaviour
                 experience = itemDataComponent.experience,
                 productionTime = itemDataComponent.productionTime,
                 outputValue = itemDataComponent.outputValue,
+                currentQuantity = itemDataComponent.currentQuantity,
                 hasRequirements = itemDataComponent.hasRequirements,
                 childData = itemDataComponent.childData
             };
@@ -780,6 +828,7 @@ public class SaveManager : MonoBehaviour
             itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
             RecipeItemDataModel recipeData = new()
             {
+                guid = itemDataComponent.guid,
                 index = itemDataComponent.index,
                 orderAdded = itemDataComponent.orderAdded,
                 recipeName = itemDataComponent.recipeName,
@@ -789,6 +838,7 @@ public class SaveManager : MonoBehaviour
                 experience = itemDataComponent.experience,
                 productionTime = itemDataComponent.productionTime,
                 outputValue = itemDataComponent.outputValue,
+                currentQuantity = itemDataComponent.currentQuantity,
                 hasRequirements = itemDataComponent.hasRequirements,
                 childData = itemDataComponent.childData
             };
@@ -804,6 +854,7 @@ public class SaveManager : MonoBehaviour
             itemDataComponent.recipeName = itemDataComponent.recipeName.Replace("(Clone)", "");
             RecipeItemDataModel recipeData = new()
             {
+                guid = itemDataComponent.guid,
                 index = itemDataComponent.index,
                 orderAdded = itemDataComponent.orderAdded,
                 recipeName = itemDataComponent.recipeName,
@@ -813,6 +864,7 @@ public class SaveManager : MonoBehaviour
                 experience = itemDataComponent.experience,
                 productionTime = itemDataComponent.productionTime,
                 outputValue = itemDataComponent.outputValue,
+                currentQuantity = itemDataComponent.currentQuantity,
                 hasRequirements = itemDataComponent.hasRequirements,
                 childData = itemDataComponent.childData
             };

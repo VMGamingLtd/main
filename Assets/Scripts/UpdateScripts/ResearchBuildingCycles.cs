@@ -18,7 +18,7 @@ public class ResearchBuildingCycles : MonoBehaviour
     private InventoryManager inventoryManagerRef;
     private CoroutineManager coroutineManagerRef;
     private ResearchBuildingItemData itemData;
-    private new Animation animation;
+    private Animation Animation;
     public float currentFillAmount;
     private CancellationTokenSource cts = null;
     private CancellationToken cancellationToken;
@@ -111,10 +111,10 @@ public class ResearchBuildingCycles : MonoBehaviour
         timebarControl.ChangeTimeBarColor(UIColors.timebarColorRed);
         productionCreator.ChangeProductionItemBackground(UIColors.timebarColorRed, null, null, itemData);
         itemData.efficiency = 0;
-        animation = GetComponent<Animation>();
-        animation.Play("NotEnoughMaterialsBuilding");
+        Animation = GetComponent<Animation>();
+        Animation.Play("NotEnoughMaterialsBuilding");
         await UniTask.DelayFrame(60);
-        animation.Stop();
+        Animation.Stop();
         await StartResearchCycle(cancellationToken);
     }
 

@@ -36,6 +36,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         HideAllTooltips();
         exitedTooltip = true;
     }
+
     private GameObject FindTooltipObject(string objectName)
     {
         foreach (GameObject tooltipObj in itemTooltipObjects.tooltipObjectItems)
@@ -48,6 +49,11 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         return null;
     }
 
+    /// <summary>
+    /// Displays the actual tooltip after mouse over where object name is also the actual ID of the entry in the json file ResearchListJson.
+    /// </summary>
+    /// <param name="objectName"></param>
+    /// <returns></returns>
     public IEnumerator DisplayTooltip(string objectName)
     {
         HideAllTooltips();
@@ -58,6 +64,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
             {
                 tooltipFollowMouse.enabled = true;
             }
+
             exitedTooltip = false;
             FadeCanvasGroup(tooltipObject, 0);
             float timer = 0f;
@@ -68,14 +75,17 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
             if (int.TryParse(objectName, out int objectID))
             {
                 var researchData = recipeCreator.researchDataList[objectID];
-                Debug.Log(objectID);
+
                 if (researchData != null)
                 {
                     tooltipObject.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectName);
                     tooltipObject.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSkillSpriteToSlot(researchData.projectName);
+                    tooltipObject.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectProduct);
                     tooltipObject.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectType);
                     tooltipObject.transform.Find("Class").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectClass);
                     tooltipObject.transform.Find("Desc").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(researchData.projectName + "Desc");
+                    tooltipObject.transform.Find("RequirementsTitle").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Requirements");
+                    tooltipObject.transform.Find("RewardsTitle").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Rewards");
 
                     stat = GameObject.Find("ItemCreatorList/BuildingTooltipStatTemplate");
 
@@ -115,6 +125,10 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
     }
 
+    /// <summary>
+    /// Instantiates a game object inside Research tooltip - RequirementStatList game object with values from json file.
+    /// </summary>
+    /// <param name="childData"></param>
     private void CreateRequirementStat(ChildData childData)
     {
         GameObject newStat = Instantiate(stat, requirementsStatList);
@@ -123,7 +137,7 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
         if (childData.type == "SKILLPOINT")
         {
-            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignSkillSpriteToSlot(childData.name);
+            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignResourceSpriteToSlot(childData.name);
         }
         else
         {
@@ -134,19 +148,34 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         newStat.transform.localScale = Vector3.one;
     }
 
+    /// <summary>
+    /// Instantiates a game object inside Research tooltip - RewardStatList game object with values from json file.
+    /// </summary>
+    /// <param name="childData"></param>
     private void CreateRewardStat(ChildData childData)
     {
         GameObject newStat = Instantiate(stat, rewardsStatList);
         newStat.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(childData.name);
-        newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = childData.quantity.ToString();
 
         if (childData.type == "SKILLPOINT")
         {
-            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignSkillSpriteToSlot(childData.name);
+            newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignResourceSpriteToSlot(childData.name);
+            newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = childData.quantity.ToString();
+        }
+        else if (childData.type == "GENERALSTAT")
+        {
+            GameObject childIcon = newStat.transform.Find("Icon").gameObject;
+            childIcon.SetActive(false);
+
+            if (childData.name == "AllProduction")
+            {
+                newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = childData.quantity.ToString() + " + %";
+            }
         }
         else
         {
             newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignBuildingSpriteToSlot(childData.name);
+            newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Blueprint");
         }
 
         newStat.transform.localPosition = Vector3.one;
@@ -171,10 +200,14 @@ public class ResearchTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExit
         return sprite;
     }
 
+    /// <summary>
+    /// Fades the alpha value of the Canvas object over a desired time to create 'FadeIn' or 'FadeOut' transition effect.
+    /// </summary>
+    /// <param name="targetObject"></param>
+    /// <param name="alpha"></param>
     private void FadeCanvasGroup(GameObject targetObject, float alpha)
     {
-        CanvasGroup canvasGroup = targetObject.transform.parent.GetComponent<CanvasGroup>();
-        if (canvasGroup != null)
+        if (targetObject.transform.parent.TryGetComponent<CanvasGroup>(out var canvasGroup))
         {
             canvasGroup.alpha = alpha;
         }

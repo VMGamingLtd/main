@@ -1,11 +1,8 @@
 using Gaos.Routes.Model.GameDataJson;
 using Newtonsoft.Json;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Gaos.Environment;
-using UnityEditor.Compilation;
 using Newtonsoft.Json.Linq;
 
 
@@ -37,6 +34,7 @@ namespace Gaos.GameData
         {
             slotToVersion[slotId] = new DocumentVersion { DocId = docId, DocVersion = docVersion, GameDataJson = gameDataJson };
         }
+
     }
 
     public class UserGameDataGet
@@ -159,13 +157,38 @@ namespace Gaos.GameData
             yield return null;
         }
 
+        private static RequestQueteItem cloneQueueItem(RequestQueteItem item)
+        {
+            return new RequestQueteItem
+            {
+                slotId = item.slotId,
+                request = new UserGameDataSaveRequest
+                {
+                    UserId = item.request.UserId,
+                    SlotId = item.request.SlotId,
+                    Version = item.request.Version,
+                    GameDataJson = item.request.GameDataJson,
+                    IsGameDataDiff = item.request.IsGameDataDiff
+                },
+                onUserGameDataSaveComplete = item.onUserGameDataSaveComplete
+            };
+        }
 
         private static OnUserGameDataSaveComplete makeOnRequestQueueItemSaveComplete(MonoBehaviour gameObject, RequestQueteItem item)
         {
             return (UserGameDataSaveResponse response) =>
             {
                 var previousVersion = LastGameDataVersion.getVersion(item.slotId);
-                LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
+                if (response != null)
+                {
+                    LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
+                }
+                else
+                {
+                    // error saving game data
+                    LastGameDataVersion.setVersion(item.slotId, previousVersion.DocId, previousVersion.DocVersion, null);
+
+                }
                 item.onUserGameDataSaveComplete(response);
                 if (requestsQueue.Count > 0)
                 {
@@ -174,7 +197,7 @@ namespace Gaos.GameData
                     {
                         item = requestsQueue.Dequeue();
                     }
-                    var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, item);
+                    var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item));
                     if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                     {
                         if (previousVersion != null && previousVersion.GameDataJson != null)
@@ -182,6 +205,22 @@ namespace Gaos.GameData
                             JObject objA = JObject.Parse(previousVersion.GameDataJson);
                             JObject objB = JObject.Parse(item.request.GameDataJson);
                             var diff = jsondiff.Difference.CompareValues(objA, objB);
+                            if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_GAME_DATA"] == "true")
+                            {
+                                var strA = JsonConvert.SerializeObject(objA, jsonSerializerSettings);
+                                var strB = JsonConvert.SerializeObject(objB, jsonSerializerSettings);
+                                var strDiff = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: objaA: {strA.Length}");
+                                Debug.Log(strA);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: objaB: {strB.Length}");
+                                Debug.Log(strB);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: diff: {strDiff.Length}");
+                                Debug.Log(strDiff);
+                            }
+                            if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_SEND_GAMEDATA_BASE"] == "true")
+                            {
+                                item.request.GameDataDiffBase = previousVersion.GameDataJson;
+                            }
                             var diffJson = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
                             item.request.GameDataJson = diffJson;
                             item.request.IsGameDataDiff = true;
@@ -202,8 +241,6 @@ namespace Gaos.GameData
             };
         }
 
-        private static bool isProcessingSendQueueRunning = false;
-
         public static IEnumerator ProcessSendQueue(MonoBehaviour gameObject)
         {
             if (requestsQueue.Count > 0)
@@ -213,7 +250,7 @@ namespace Gaos.GameData
                 {
                     item = requestsQueue.Dequeue();
                 }
-                var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, item);
+                var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item));
 
                 if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                 {
@@ -223,6 +260,25 @@ namespace Gaos.GameData
                         JObject objA = JObject.Parse(previousVersion.GameDataJson);
                         JObject objB = JObject.Parse(item.request.GameDataJson);
                         var diff = jsondiff.Difference.CompareValues(objA, objB);
+                        if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_GAME_DATA"] == "true")
+                        {
+                            if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_GAME_DATA"] == "true")
+                            {
+                                var strA = JsonConvert.SerializeObject(objA, jsonSerializerSettings);
+                                var strB = JsonConvert.SerializeObject(objB, jsonSerializerSettings);
+                                var strDiff = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: objaA: {strA.Length}");
+                                Debug.Log(strA);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: objaB: {strB.Length}");
+                                Debug.Log(strB);
+                                Debug.Log($"@@@@@@@@@@@@@@@@@@@@ gamedata: diff: {strDiff.Length}");
+                                Debug.Log(strDiff);
+                            }
+                        }
+                        if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true" && Environment.Environment.GetEnvironment()["IS_DEBUG_SEND_GAMEDATA_BASE"] == "true")
+                        {
+                            item.request.GameDataDiffBase = previousVersion.GameDataJson;
+                        }
                         var diffJson = JsonConvert.SerializeObject(diff, jsonSerializerSettings);
                         item.request.GameDataJson = diffJson;
                         item.request.IsGameDataDiff = true;
@@ -327,6 +383,47 @@ namespace Gaos.GameData
                 }
                 Gaos.GameData.LastGameDataVersion.setVersion(slotId, response.MongoDocumentVersion, response.MongoDocumentVersion, null);
                 onEnsureNewSlotComplete(response);
+            }
+
+        }
+    }
+
+    public class DeleteSlot
+    {
+        private readonly static string CLASS_NAME = typeof(DeleteSlot).Name;
+
+        public delegate void OnDeleteSlotComplete(DeleteSlotResponse response);
+
+        public static IEnumerator DeleteSlotCall(int slotId, OnDeleteSlotComplete onDeleteSlotComplete)
+        {
+            const string METHOD_NAME = "DeleteSlotCall()";
+            Debug.Log("@@@@@@@@@@@@@@@@@@@@@ cp 3000: DeleteSlotCall()");
+
+            DeleteSlotRequest request = new DeleteSlotRequest();
+            request.UserId = Context.Authentication.GetUserId();
+            request.SlotId = slotId;
+
+            string requestJsonStr = JsonConvert.SerializeObject(request);
+
+            Api.ApiCall apiCall = new("api/gameData/deleteGameSlot", requestJsonStr);
+            yield return apiCall.Call();
+
+            if (apiCall.IsResponseError)
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error deleting slot");
+                onDeleteSlotComplete(null);
+
+            }
+            else
+            {
+                DeleteSlotResponse response = JsonConvert.DeserializeObject<DeleteSlotResponse>(apiCall.ResponseJsonStr);
+                if (response.IsError == true)
+                {
+                    Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error deleting slot: {response.ErrorMessage}");
+                    onDeleteSlotComplete(null);
+                    yield break;
+                }
+                onDeleteSlotComplete(response);
             }
 
         }

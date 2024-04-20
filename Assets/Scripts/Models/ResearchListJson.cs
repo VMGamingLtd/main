@@ -8,12 +8,12 @@ namespace Assets.Scripts.Models
   ""projects"": [
     {
       ""index"": 0,
-      ""projectName"": ""ScienceProject"",
+      ""projectName"": ""ScienceProjects"",
       ""projectProduct"": ""BASIC"",
       ""projectType"": ""LABORATORY"",
       ""projectClass"": ""CLASS-F"",
       ""experience"": 1,
-      ""researchTime"": 10,
+      ""researchTime"": 60,
       ""hasRequirements"": true,
       ""requirementsList"": [
         {
@@ -42,8 +42,8 @@ namespace Assets.Scripts.Models
       ""projectProduct"": ""BASIC"",
       ""projectType"": ""LABORATORY"",
       ""projectClass"": ""CLASS-F"",
-      ""experience"": 2,
-      ""researchTime"": 60,
+      ""experience"": 10,
+      ""researchTime"": 120,
       ""hasRequirements"": true,
       ""requirementsList"": [
         {
@@ -81,7 +81,7 @@ namespace Assets.Scripts.Models
       ""projectType"": ""LABORATORY"",
       ""projectClass"": ""CLASS-F"",
       ""experience"": 2,
-      ""researchTime"": 60,
+      ""researchTime"": 120,
       ""hasRequirements"": true,
       ""requirementsList"": [
         {
@@ -111,7 +111,7 @@ namespace Assets.Scripts.Models
       ""projectType"": ""LABORATORY"",
       ""projectClass"": ""CLASS-F"",
       ""experience"": 2,
-      ""researchTime"": 60,
+      ""researchTime"": 120,
       ""hasRequirements"": true,
       ""requirementsList"": [
         {
@@ -141,14 +141,14 @@ namespace Assets.Scripts.Models
       ""projectType"": ""LABORATORY"",
       ""projectClass"": ""CLASS-F"",
       ""experience"": 2,
-      ""researchTime"": 60,
+      ""researchTime"": 120,
       ""hasRequirements"": true,
       ""requirementsList"": [
         {
           ""index"": 0,
           ""name"": ""ResearchPoint"",
           ""product"": ""BASIC"",
-          ""type"": ""LABORATORY"",
+          ""type"": ""SKILLPOINT"",
           ""itemClass"": ""CLASS-F"",
           ""quantity"": 5
         }
@@ -171,7 +171,7 @@ namespace Assets.Scripts.Models
       ""projectType"": ""LABORATORY"",
       ""projectClass"": ""CLASS-F"",
       ""experience"": 2,
-      ""researchTime"": 60,
+      ""researchTime"": 120,
       ""hasRequirements"": true,
       ""requirementsList"": [
         {
@@ -201,7 +201,7 @@ namespace Assets.Scripts.Models
       ""projectType"": ""LABORATORY"",
       ""projectClass"": ""CLASS-F"",
       ""experience"": 2,
-      ""researchTime"": 60,
+      ""researchTime"": 120,
       ""hasRequirements"": true,
       ""requirementsList"": [
         {
@@ -221,6 +221,36 @@ namespace Assets.Scripts.Models
           ""type"": ""SKILLPOINT"",
           ""itemClass"": ""CLASS-F"",
           ""quantity"": 1
+        }
+      ]
+    },
+    {
+      ""index"": 7,
+      ""projectName"": ""PoweredEngineering"",
+      ""projectProduct"": ""BASIC"",
+      ""projectType"": ""LABORATORY"",
+      ""projectClass"": ""CLASS-F"",
+      ""experience"": 14,
+      ""researchTime"": 160,
+      ""hasRequirements"": true,
+      ""requirementsList"": [
+        {
+          ""index"": 0,
+          ""name"": ""ResearchPoint"", 
+          ""product"": ""BASIC"",
+          ""type"": ""SKILLPOINT"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 6
+        }
+      ],
+      ""rewardsList"": [
+        {
+          ""index"": 0,
+          ""name"": ""AllProduction"",
+          ""product"": ""BASIC"",
+          ""type"": ""GENERALSTAT"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 10
         }
       ]
     }

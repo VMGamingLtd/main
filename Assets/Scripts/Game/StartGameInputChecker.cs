@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using ItemManagement;
 using RecipeManagement;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +24,6 @@ public class StartGameInputChecker : MonoBehaviour
     // Update is called once per frame
     public void startGameCheckForUsername()
     {
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2500: startGameCheckForUsername");
         globalCalculator = GameObject.Find("GlobalCalculator").GetComponent<GlobalCalculator>();
         planet = GameObject.Find("PlanetParent/StartPlanet").GetComponent<Planet>();
         globalCalculator.UpdatePlayerConsumption();
@@ -37,22 +37,11 @@ public class StartGameInputChecker : MonoBehaviour
 
         _ = LoadMenus();
 
-        recipeCreator.CreateRecipe(1);
-        recipeCreator.CreateRecipe(3);
+        equipmentManager.InitStartEquip();
 
         //initialize starting resources
         Credits.ResetCredits();
         Credits.AddCredits(42);
-
-        equipmentManager.InitStartEquip();
-
-        var suitRectTransform = equipmentManager.SuitSlot.GetComponent<RectTransform>();
-        var helmetRectTransfrom = equipmentManager.HelmetSlot.GetComponent<RectTransform>();
-        var toolRectTransfrom = equipmentManager.LeftHandSlot.GetComponent<RectTransform>();
-
-        itemCreator.CreateSuit(0, null, suitRectTransform);
-        itemCreator.CreateHelmet(0, null, helmetRectTransfrom);
-        itemCreator.CreateTool(0, null, toolRectTransfrom);
 
         // force button click action to open the Exploration menu that the button is set for
         buttonToClick.onClick.Invoke();
@@ -86,10 +75,21 @@ public class StartGameInputChecker : MonoBehaviour
             await UniTask.Yield();
         }
 
+
+        var suitRectTransform = equipmentManager.SuitSlot.GetComponent<RectTransform>();
+        var helmetRectTransfrom = equipmentManager.HelmetSlot.GetComponent<RectTransform>();
+        var toolRectTransfrom = equipmentManager.LeftHandSlot.GetComponent<RectTransform>();
+
+        itemCreator.CreateSuit(0, null, suitRectTransform);
+        itemCreator.CreateHelmet(0, null, helmetRectTransfrom);
+        itemCreator.CreateTool(0, null, toolRectTransfrom);
+
+        recipeCreator.CreateRecipe(1, Guid.NewGuid());
+        recipeCreator.CreateRecipe(3, Guid.NewGuid());
+
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
-
     }
 }
 

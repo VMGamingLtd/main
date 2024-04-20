@@ -5,7 +5,7 @@ public class TooltipFollowMouse : MonoBehaviour
     public float xOffset = 0f;
     public float yOffset = 0f;
     private RectTransform canvasRect;
-    private RectTransform tooltipRect;
+    public RectTransform tooltipRect;
 
     private void Awake()
     {
@@ -42,7 +42,7 @@ public class TooltipFollowMouse : MonoBehaviour
         float startX = -600f;
         float endX = 900f;
         float startAdjustmentX = 100f;
-        float endAdjustmentX = -200f;
+        float endAdjustmentX = -170f;
 
         float smoothAdjustmentX = Mathf.Lerp(startAdjustmentX, endAdjustmentX, Mathf.InverseLerp(startX, endX, xPosition));
 
@@ -52,7 +52,7 @@ public class TooltipFollowMouse : MonoBehaviour
     {
         // Define the start and end yPosition values and corresponding adjustment values
         float startY = 500f;
-        float endY = -500f;
+        float endY = -600f;
         float startAdjustmentY = -100f;
         float endAdjustmentY = 170f;
 
@@ -63,7 +63,7 @@ public class TooltipFollowMouse : MonoBehaviour
     }
 
     // Moves the tooltip object list away from the camera to avoid window intersection when moving fast in-between multiple objects with mouse cursor
-    private void OnDisable()
+    public void ResetTooltipPosition()
     {
         tooltipRect.localPosition = new Vector2(-500, -2000);
     }

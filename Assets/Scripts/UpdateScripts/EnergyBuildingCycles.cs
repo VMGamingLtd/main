@@ -18,7 +18,7 @@ public class EnergyBuildingCycles : MonoBehaviour
     private CoroutineManager coroutineManagerRef;
     private ItemCreator itemCreatorRef;
     private EnergyBuildingItemData itemData;
-    private new Animation animation;
+    private Animation Animation;
     public float currentFillAmount;
     private CancellationTokenSource cts = null;
     private CancellationToken cancellationToken;
@@ -108,10 +108,10 @@ public class EnergyBuildingCycles : MonoBehaviour
         productionCreator.ChangeProductionItemBackground(UIColors.timebarColorRed, itemData);
         itemData.efficiency = 0;
         itemData.actualPowerOutput = 0;
-        animation = GetComponent<Animation>();
-        animation.Play("NotEnoughMaterialsBuilding");
+        Animation = GetComponent<Animation>();
+        Animation.Play("NotEnoughMaterialsBuilding");
         await UniTask.DelayFrame(60);
-        animation.Stop();
+        Animation.Stop();
         await StartBuildingCycleEnergy(cancellationToken);
     }
 

@@ -48,9 +48,21 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {
                 StartCoroutine(DisplayTooltip("ItemRecipeTooltip", null, null, null, null, null, recipeItemData));
             }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<EventIconData>(out var eventIconData))
+            {
+                StartCoroutine(DisplayTooltip("EventIconTooltip", null, null, null, null, null, null, eventIconData));
+            }
             else
             {
                 StartCoroutine(DisplayTooltip(eventData.pointerEnter.transform.name));
+
+                var parent = eventData.pointerEnter.transform.parent;
+                var grandParent = parent.transform.parent;
+
+                if (grandParent.TryGetComponent(out Animation animation))
+                {
+                    animation.Stop();
+                }
             }
 
         }
@@ -59,9 +71,25 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        var parent = eventData.pointerEnter.transform.parent;
+        var grandParent = parent.transform.parent;
+
+        if (grandParent.TryGetComponent(out Animation animation))
+        {
+            animation.Play();
+        }
+
         HideAllTooltips();
+
+        if (tooltipFollowMouse != null)
+        {
+            tooltipFollowMouse.ResetTooltipPosition();
+            tooltipFollowMouse.enabled = false;
+        }
+
         exitedTooltip = true;
     }
+
     private GameObject FindTooltipObject(string objectName)
     {
         foreach (GameObject tooltipObj in tooltipObjects.tooltipObjects)
@@ -89,23 +117,29 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
 
     public IEnumerator DisplayTooltip(string objectName, SuitData suitData = null, HelmetData helmetData = null,
-        ToolData toolData = null, ItemData itemData = null, BuildingItemData buildingItemData = null, RecipeItemData recipeItemData = null)
+        ToolData toolData = null, ItemData itemData = null, BuildingItemData buildingItemData = null, RecipeItemData recipeItemData = null,
+        EventIconData eventIconData = null)
     {
         HideAllTooltips();
         GameObject tooltipObject = FindTooltipObject(objectName);
+
         if (tooltipObject != null)
         {
             tooltipFollowMouse = tooltipObject.transform.parent.GetComponent<TooltipFollowMouse>();
+
             if (tooltipFollowMouse != null)
             {
                 tooltipFollowMouse.enabled = true;
             }
+
             exitedTooltip = false;
             FadeCanvasGroup(tooltipObject, 0);
             float timer = 0f;
             float totalTime = 0.1f;
             float delay = 0.5f;
+
             tooltipObject.SetActive(true);
+
             if (suitData != null)
             {
                 SuitDataInjector suitDataInjector = tooltipObject.GetComponent<SuitDataInjector>();
@@ -135,6 +169,11 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {
                 RecipeDataInjector recipeDataInjector = tooltipObject.GetComponent<RecipeDataInjector>();
                 recipeDataInjector.InjectData(recipeItemData);
+            }
+            else if (eventIconData != null)
+            {
+                EventIconDataInjector eventIconDataInjector = tooltipObject.GetComponent<EventIconDataInjector>();
+                eventIconDataInjector.InjectData(eventIconData);
             }
 
             yield return new WaitForSeconds(delay);
@@ -167,11 +206,12 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             if (tooltipFollowMouse != null)
             {
-                tooltipFollowMouse.enabled = true;
+                tooltipFollowMouse.enabled = false;
             }
             tooltipObject.SetActive(false);
         }
     }
+
     public void HideAllTooltips()
     {
         foreach (GameObject tooltipObject in tooltipObjects.tooltipObjects)

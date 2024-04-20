@@ -15,6 +15,7 @@ public class ResearchManager : MonoBehaviour
     public List<GameObject> AvailableProjects;
     public Image fillImg;
     public CoroutineManager coroutineManager;
+    public BuildingIncrementor buildingIncrementor;
     public static bool FirstTimeStarted = false;
 
     private List<ResearchDataJson> projectsDataList;
@@ -127,9 +128,16 @@ public class ResearchManager : MonoBehaviour
         {
             Player.ResearchPoints++;
         }
+        else if (projectData.projectName == "SteamPower")
+        {
+            Planet0Buildings.BoilerUnlocked = true;
+            Planet0Buildings.SteamGeneratorUnlocked = true;
+            buildingIncrementor.InitializeAvailableBuildings();
+        }
 
         coroutineManager.researchPointsText.text = Player.ResearchPoints.ToString();
 
+        // after research is finished, we make sure that a bool representing the research progress is also switched to true
         System.Reflection.FieldInfo targetVariable = typeof(Player).GetField(thisName);
 
         if (targetVariable != null && targetVariable.FieldType == typeof(bool))
@@ -232,6 +240,12 @@ public class ResearchManager : MonoBehaviour
                         yield return null;
                     }
                 }
+            }
+
+            if (!Player.PoweredEngineeringResearch)
+            {
+                if (Connections.TryGetValue(7, out var connectionObject)) connectionObject.SetActive(false);
+                if (Projects.TryGetValue(7, out var projectObject)) projectObject.SetActive(false);
             }
         }
     }

@@ -1,0 +1,3 @@
+20240420 - milan:
+=================
+- ntegrated delete of slot game data

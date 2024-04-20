@@ -11,5 +11,6 @@ namespace Gaos.Routes.Model.GameDataJson
         public string? Version;
         public string? GameDataJson;
         public bool? IsGameDataDiff;
+        public string? GameDataDiffBase;
     }
 }
