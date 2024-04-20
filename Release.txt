@@ -1,3 +1,7 @@
+20240210 - milan:
+=================
+- added versioning concurrency control to game data collection
+- implemented game data diffing (we send to backend only diffrence against previous game data to minimize payload size) 
 20240420 - milan:
 =================
-- ntegrated delete of slot game data
+- integrated delete of slot game data
