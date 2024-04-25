@@ -63,9 +63,10 @@ public class ResourceSpawn
         }
 
         eventObject.name = resourceName;
-        component.iconType = type;
+        component.IconType = type;
         component.MinQuantityRange = recipeData.minQuantityRange;
         component.MaxQuantityRange = recipeData.maxQuantityRange;
+        component.CurrentQuantity = recipeData.maxQuantityRange;
         component.Elevation = elevation;
 
         return eventObject;

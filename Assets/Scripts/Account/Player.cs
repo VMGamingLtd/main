@@ -62,7 +62,7 @@ public static class Player
     public static bool CanProduce; // represents if player has Fabricator tool equipped
 
     // PLAYER RESEARCH PROGRESS
-    public static bool ScienceProjectResearch;
+    public static bool ScienceProjectsResearch;
     public static bool SteamPowerResearch;
     public static bool BasicAlchemyResearch;
     public static bool ElectricityFundamentalsResearch;

@@ -58,10 +58,10 @@ public class GoalManager : MonoBehaviour
         goalAnimation.Play("Success");
         await UniTask.Delay(1000);
         ChangeGoal("CraftBattery");
-        recipeCreator.CreateRecipe(2, Guid.NewGuid());
         recipeCreator.CreateRecipe(15, Guid.NewGuid());
         recipeCreator.CreateRecipe(17, Guid.NewGuid());
         recipeCreator.CreateRecipe(20, Guid.NewGuid());
+        recipeCreator.CreateRecipe(2, Guid.NewGuid());
         recipeCreator.CreateRecipe(6, Guid.NewGuid());
         recipeCreator.CreateRecipe(4, Guid.NewGuid());
         goalAnimation.Play("Idle");
@@ -74,6 +74,10 @@ public class GoalManager : MonoBehaviour
         goalAnimation.Play("Success");
         await UniTask.Delay(1000);
         ChangeGoal("BuildBase");
+        recipeCreator.CreateRecipe(11, Guid.NewGuid());
+        recipeCreator.CreateRecipe(13, Guid.NewGuid());
+        recipeCreator.CreateRecipe(14, Guid.NewGuid());
+        recipeCreator.CreateRecipe(12, Guid.NewGuid());
         goalAnimation.Play("Idle");
         secondGoal = true;
         buttonManager.UnlockBaseButton();
@@ -90,6 +94,10 @@ public class GoalManager : MonoBehaviour
         buttonManager.UnlockResearchButton();
         buildingIncrementor.InitializeAvailableBuildings();
         ChangeGoal("ResearchScienceProjects");
+        recipeCreator.CreateRecipe(21, Guid.NewGuid());
+        recipeCreator.CreateRecipe(22, Guid.NewGuid());
+        recipeCreator.CreateRecipe(23, Guid.NewGuid());
+        recipeCreator.CreateRecipe(24, Guid.NewGuid());
         goalAnimation.Play("Idle");
         thirdGoal = true;
         coroutineManager.InitializeResourceMap();

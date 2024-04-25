@@ -413,6 +413,8 @@ public class BuildingCreator : MonoBehaviour
                                 int powerConsumption,
                                 float researchPoints)
     {
+        CoroutineManager coroutineManager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
+
         if (buildingType == "POWERPLANT")
         {
             itemDataEnergy = draggedObject.AddComponent<EnergyBuildingItemData>();
@@ -431,20 +433,22 @@ public class BuildingCreator : MonoBehaviour
             BuildingUniqueID++;
             itemDataEnergy.ID = BuildingUniqueID;
             itemDataEnergy.spriteIconName = draggedObject.transform.Find("Icon").GetComponent<Image>().sprite.name;
+
             if (draggedObject.name == "BiofuelGenerator")
             {
                 Planet0Buildings.Planet0BiofuelGenerator++;
                 Planet0Buildings.Planet0BiofuelGeneratorBlueprint--;
                 itemDataEnergy.buildingCount = Planet0Buildings.Planet0BiofuelGenerator;
-
+                coroutineManager.UpdateBuildingText(Constants.BiofuelGenerator, Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString());
             }
+
             draggedObject.tag = "Energy";
             translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
             string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
             itemDataEnergy.buildingName = $"{titleText} #{itemDataEnergy.buildingCount}";
             draggedObject.AddComponent<EnergyBuildingCycles>();
         }
-        else if (buildingType == "LABORATORY")
+        else if (buildingType == Constants.Laboratory)
         {
             itemDataResearch = draggedObject.AddComponent<ResearchBuildingItemData>();
             itemDataResearch.buildingType = buildingType;
@@ -463,13 +467,14 @@ public class BuildingCreator : MonoBehaviour
             itemDataResearch.ID = BuildingUniqueID;
             itemDataResearch.spriteIconName = draggedObject.transform.Find("Icon").GetComponent<Image>().sprite.name;
 
-            if (draggedObject.name == "ResearchDevice")
+            if (draggedObject.name == Constants.ResearchDevice)
             {
                 Planet0Buildings.Planet0ResearchDevice++;
                 Planet0Buildings.Planet0ResearchDeviceBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0ResearchDevice;
-
+                coroutineManager.UpdateBuildingText(Constants.ResearchDevice, Planet0Buildings.Planet0ResearchDeviceBlueprint.ToString());
             }
+
             draggedObject.tag = "Research";
             translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
             string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
@@ -495,48 +500,57 @@ public class BuildingCreator : MonoBehaviour
             BuildingUniqueID++;
             itemData.ID = BuildingUniqueID;
             itemData.spriteIconName = draggedObject.transform.Find("Icon").GetComponent<Image>().sprite.name;
-            if (draggedObject.name == "WaterPump")
+
+            if (draggedObject.name == Constants.WaterPump)
             {
                 Planet0Buildings.Planet0WaterPump++;
                 Planet0Buildings.Planet0WaterPumpBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0WaterPump;
                 draggedObject.tag = "NoConsume";
+                coroutineManager.UpdateBuildingText(Constants.WaterPump, Planet0Buildings.Planet0WaterPumpBlueprint.ToString());
             }
-            else if (draggedObject.name == "FibrousPlantField")
+            else if (draggedObject.name == Constants.FibrousPlantField)
             {
                 Planet0Buildings.Planet0FibrousPlantField++;
                 Planet0Buildings.Planet0FibrousPlantFieldBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0FibrousPlantField;
                 draggedObject.tag = "Consume";
+                coroutineManager.UpdateBuildingText(Constants.FibrousPlantField, Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString());
             }
-            else if (draggedObject.name == "Boiler")
+            else if (draggedObject.name == Constants.Boiler)
             {
                 Planet0Buildings.Planet0Boiler++;
                 Planet0Buildings.Planet0BoilerBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0Boiler;
                 draggedObject.tag = "Consume";
+                coroutineManager.UpdateBuildingText(Constants.Boiler, Planet0Buildings.Planet0BoilerBlueprint.ToString());
             }
-            else if (draggedObject.name == "SteamGenerator")
+            else if (draggedObject.name == Constants.SteamGenerator)
             {
                 Planet0Buildings.Planet0SteamGenerator++;
                 Planet0Buildings.Planet0SteamGeneratorBlueprint--;
                 itemDataEnergy.buildingCount = Planet0Buildings.Planet0SteamGenerator;
                 draggedObject.tag = "Energy";
+                coroutineManager.UpdateBuildingText(Constants.SteamGenerator, Planet0Buildings.Planet0SteamGeneratorBlueprint.ToString());
             }
-            else if (draggedObject.name == "Furnace")
+            else if (draggedObject.name == Constants.Furnace)
             {
                 Planet0Buildings.Planet0Furnace++;
                 Planet0Buildings.Planet0FurnaceBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0Furnace;
                 draggedObject.tag = "Consume";
+                coroutineManager.UpdateBuildingText(Constants.Furnace, Planet0Buildings.Planet0FurnaceBlueprint.ToString());
             }
+
             translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
             string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
             itemData.buildingName = $"{titleText} #{itemData.buildingCount}";
             draggedObject.AddComponent<BuildingCycles>();
         }
+
         buildingManager.AddToItemArray(buildingType, draggedObject);
         buildingIncrementor.InitializeBuildingCounts();
+
         if (GoalManager.thirdGoal == false)
         {
             GoalManager goalManager = GameObject.Find("GOALMANAGER").GetComponent<GoalManager>();

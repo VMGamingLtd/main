@@ -218,10 +218,10 @@
       },
       {
         ""identifier"": ""Output"",
-        ""english"": ""Output:"",
-        ""russian"": ""Выход:"",
-        ""chinese"": ""建筑输出："",
-        ""slovak"": ""Výkon:""
+        ""english"": ""Received quantity:"",
+        ""russian"": ""Полученное количество:"",
+        ""chinese"": ""收到数量："",
+        ""slovak"": ""Prijaté množstvo:""
       },
       {
         ""identifier"": ""Materials"",
@@ -1771,6 +1771,13 @@
         ""russian"": ""Эти игровые данные будут удалены навсегда."",
         ""chinese"": ""该游戏数据将被永久删除。"",
         ""slovak"": ""Tieto herné údaje budú natrvalo vymazané.""
+      },
+      {
+        ""identifier"": ""RemainingQuantity"",
+        ""english"": ""Оставшееся количество:"",
+        ""russian"": ""Удалить данные?"",
+        ""chinese"": ""剩余数量："",
+        ""slovak"": ""Zostávajúce množstvo:""
       }
     ]
   }

@@ -12,6 +12,7 @@ using UnityEngine.UI;
 
 public class CoroutineManager : MonoBehaviour
 {
+    // Referrences to managers
     public ItemCreator itemCreator;
     public RecipeCreator recipeCreator;
     public TranslationManager translationManager;
@@ -20,6 +21,8 @@ public class CoroutineManager : MonoBehaviour
     public ProductionCreator productionCreator;
     public StatsManager statsManager;
     public SaveManager saveManager;
+    public Planet planet;
+
     public GameObject RecipeList;
     public GameObject loadingBar;
     public GameObject saveSlots;
@@ -653,6 +656,27 @@ public class CoroutineManager : MonoBehaviour
             else
             {
                 itemCreator.CreateItem(recipeData.index, recipeData.outputValue * Player.OutcomeRate);
+
+                if (recipeData.currentQuantity > 0)
+                {
+                    recipeData.currentQuantity -= recipeData.outputValue;
+
+                    if (recipeData.currentQuantity < 0) { recipeData.currentQuantity = 0; }
+
+                    foreach (var eventIcon in planet.eventObjects)
+                    {
+                        var component = eventIcon.GetComponent<EventIcon>();
+
+                        if (component.RecipeGuid == recipeData.guid || component.RecipeGuid2 == recipeData.guid ||
+                            component.RecipeGuid3 == recipeData.guid || component.RecipeGuid4 == recipeData.guid)
+                        {
+                            component.CurrentQuantity = recipeData.currentQuantity;
+                            component.Component.CurrentQuantity = recipeData.currentQuantity;
+                            break;
+                        }
+                    }
+                }
+
                 UpdateQuantityTexts(recipeData.recipeName, recipeData.recipeProduct);
             }
             StartCoroutine("CreateRecipe", recipeData);
