@@ -17,6 +17,7 @@ public class ResearchManager : MonoBehaviour
     public CoroutineManager coroutineManager;
     public BuildingIncrementor buildingIncrementor;
     public static bool FirstTimeStarted = false;
+    public static bool ResearchStarted = false;
 
     private List<ResearchDataJson> projectsDataList;
 
@@ -58,7 +59,7 @@ public class ResearchManager : MonoBehaviour
     /// <param name="startingObject"></param>
     public void ResearchProject(GameObject startingObject)
     {
-        if (int.TryParse(startingObject.name, out int researchProjectID))
+        if (!ResearchStarted && int.TryParse(startingObject.name, out int researchProjectID))
         {
             var projectData = projectsDataList[researchProjectID];
 
@@ -66,7 +67,7 @@ public class ResearchManager : MonoBehaviour
             {
                 fillImg = startingObject.transform.Find("FillCircle").GetComponent<Image>();
 
-                if (projectData.projectName == "ScienceProject")
+                if (projectData.projectName == Constants.ScienceProjects)
                 {
                     if (Planet0Buildings.Planet0ResearchDevice > 0)
                     {
@@ -80,7 +81,7 @@ public class ResearchManager : MonoBehaviour
                         bool startProject = false;
                         foreach (var childData in projectData.requirementsList)
                         {
-                            if (childData != null && childData.name == "ResearchPoint" &&
+                            if (childData != null && childData.name == Constants.ResearchPoint &&
                                 Player.ResearchPoints >= childData.quantity &&
                                 Planet0Buildings.Planet0ResearchDevice > 0)
                             {
@@ -100,6 +101,10 @@ public class ResearchManager : MonoBehaviour
                     }
                 }
             }
+            else
+            {
+                Debug.LogWarning("Project data is null");
+            }
         }
     }
 
@@ -113,7 +118,9 @@ public class ResearchManager : MonoBehaviour
     /// <returns></returns>
     public IEnumerator StartResearch(ResearchDataJson projectData)
     {
+        ResearchStarted = true;
         float startTime = 0f;
+
         while (startTime < projectData.researchTime)
         {
             float currentFillAmount = Mathf.Lerp(0f, 1f, startTime / projectData.researchTime);
@@ -124,17 +131,18 @@ public class ResearchManager : MonoBehaviour
 
         string thisName = projectData.projectName + "Research";
 
-        if (projectData.projectName == "ScienceProject")
+        if (projectData.projectName == Constants.ScienceProjects)
         {
             Player.ResearchPoints++;
         }
-        else if (projectData.projectName == "SteamPower")
+        else if (projectData.projectName == Constants.SteamPower)
         {
             Planet0Buildings.BoilerUnlocked = true;
             Planet0Buildings.SteamGeneratorUnlocked = true;
             buildingIncrementor.InitializeAvailableBuildings();
         }
 
+        ResearchStarted = false;
         coroutineManager.researchPointsText.text = Player.ResearchPoints.ToString();
 
         // after research is finished, we make sure that a bool representing the research progress is also switched to true
@@ -190,7 +198,7 @@ public class ResearchManager : MonoBehaviour
     /// </summary>
     private IEnumerator ValidatedResearchProjects()
     {
-        if (!Player.ScienceProjectResearch)
+        if (!Player.ScienceProjectsResearch)
         {
             foreach (var project in Projects.Keys)
             {
@@ -198,7 +206,6 @@ public class ResearchManager : MonoBehaviour
                 {
                     Projects.TryGetValue(project, out var projectObject);
                     projectObject.SetActive(false);
-
                 }
             }
 

@@ -45,25 +45,25 @@ public class PlayerRangeCollider : MonoBehaviour
             if (eventIcon.RecipeIndex > -1)
             {
                 if (!CheckIfRecipeExists(eventIcon))
-                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex, eventIcon.RecipeGuid);
+                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex, eventIcon.RecipeGuid, eventIcon.CurrentQuantity);
             }
 
             if (eventIcon.RecipeIndex2 > -1)
             {
                 if (!CheckIfRecipeExists(eventIcon))
-                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex2, eventIcon.RecipeGuid2);
+                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex2, eventIcon.RecipeGuid2, eventIcon.CurrentQuantity);
             }
 
             if (eventIcon.RecipeIndex3 > -1)
             {
                 if (!CheckIfRecipeExists(eventIcon))
-                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex3, eventIcon.RecipeGuid3);
+                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex3, eventIcon.RecipeGuid3, eventIcon.CurrentQuantity);
             }
 
             if (eventIcon.RecipeIndex4 > -1)
             {
                 if (!CheckIfRecipeExists(eventIcon))
-                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex4, eventIcon.RecipeGuid4);
+                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex4, eventIcon.RecipeGuid4, eventIcon.CurrentQuantity);
             }
         }
     }

@@ -23,14 +23,16 @@ public class EventIcon : MonoBehaviour
     private Transform explorationArea;
     private GameObject iconPrefab;
     private Camera renderCamera;
-    private GameObject iconInstance;
+    private GameObject IconInstance;
     private GameObject planet;
     private GameObject playerIcon;
+
+    public EventIconData Component;
 
     [SerializeField]
     private float sphericalRadius = Player.VisibilityRadius / 20;
 
-    public EventIconType iconType;
+    public EventIconType IconType;
     public float CurrentQuantity;
     public float MinQuantityRange;
     public float MaxQuantityRange;
@@ -60,63 +62,64 @@ public class EventIcon : MonoBehaviour
         explorationArea = eventObjectContainer.ExplorationAreaRef;
         iconPrefab = eventObjectContainer.EventObject;
         renderCamera = GameObject.Find("CameraParent/PlanetCamera").GetComponent<Camera>();
-        iconInstance = Instantiate(iconPrefab, explorationArea);
+        IconInstance = Instantiate(iconPrefab, explorationArea);
         renderTexture = renderCamera.targetTexture;
         Sprite sprite = AssignSpriteToSlot(transform.name);
-        iconInstance.transform.Find("Image/Icon").GetComponent<Image>().sprite = sprite;
-        iconInstance.name = transform.name;
+        IconInstance.transform.Find("Image/Icon").GetComponent<Image>().sprite = sprite;
+        IconInstance.name = transform.name;
         playerIcon = GameObject.Find("PlanetParent/StartPlanet/Player");
 
-        var component = iconInstance.AddComponent<EventIconData>();
-        component.Name = transform.name;
-        component.Type = iconType;
-        component.CurrentQuantity = MaxQuantityRange;
-        component.MinQuantityRange = MinQuantityRange;
-        component.MaxQuantityRange = MaxQuantityRange;
+        Component = IconInstance.AddComponent<EventIconData>();
+        Component.Name = transform.name;
+        Component.Type = IconType;
+        Component.CurrentQuantity = CurrentQuantity;
+        Component.MinQuantityRange = MinQuantityRange;
+        Component.MaxQuantityRange = MaxQuantityRange;
     }
 
     void Update()
     {
-        if (renderTexture != null && iconInstance != null)
+        if (renderTexture != null && IconInstance != null)
         {
             sphericalRadius = Player.VisibilityRadius / 20;
             float distanceToCamera = Vector3.Distance(transform.position, renderCamera.transform.position);
             float distanceToPlayer = Vector3.Distance(transform.position, playerIcon.transform.position);
 
             // Check if the sprite is outside the spherical radius
-            if (distanceToPlayer > sphericalRadius && transform.name != "Player")
+            if (distanceToPlayer > sphericalRadius && transform.name != "Player" ||
+                distanceToPlayer > sphericalRadius && transform.name != "Player" && Component.CurrentQuantity <= 0)
             {
-                iconInstance.SetActive(false);
+                IconInstance.SetActive(false);
             }
             else if (distanceToCamera > sphericalRadius && transform.name == "Player")
             {
-                iconInstance.SetActive(true);
-                _ = iconInstance.GetComponent<Image>().color = Color.red;
-                _ = iconInstance.GetComponent<Button>().interactable = false;
+                IconInstance.SetActive(true);
+                _ = IconInstance.GetComponent<Image>().color = Color.red;
+                _ = IconInstance.GetComponent<Button>().interactable = false;
                 Vector2 pixelPosition = renderCamera.WorldToScreenPoint(transform.position);
                 Vector2 viewportPosition = new(
                     pixelPosition.x - 510f,
                     pixelPosition.y - 430f
                 );
-                iconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
+                IconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
             }
             else
             {
                 // Sprite is within the desired range, make sure it's active
-                iconInstance.SetActive(true);
-                _ = iconInstance.GetComponent<Image>().color = Color.white;
-                _ = iconInstance.GetComponent<Button>().interactable = true;
+                IconInstance.SetActive(true);
+                _ = IconInstance.GetComponent<Image>().color = Color.white;
+                _ = IconInstance.GetComponent<Button>().interactable = true;
                 Vector2 pixelPosition = renderCamera.WorldToScreenPoint(transform.position);
                 Vector2 viewportPosition = new(
                     pixelPosition.x - 510f,
                     pixelPosition.y - 430f
                 );
-                iconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
+                IconInstance.GetComponent<RectTransform>().anchoredPosition = viewportPosition;
             }
 
             if (PlayerDistance)
             {
-                _ = iconInstance.GetComponent<Image>().color = Color.green;
+                _ = IconInstance.GetComponent<Image>().color = Color.green;
             }
         }
     }
@@ -132,10 +135,10 @@ public class EventIcon : MonoBehaviour
         // remove the event object from the list
         eventObjects.Remove(gameObject);
 
-        if (iconInstance != null)
+        if (IconInstance != null)
         {
             // destroy the icon
-            Destroy(iconInstance);
+            Destroy(IconInstance);
         }
 
     }

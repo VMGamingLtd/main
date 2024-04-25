@@ -18,6 +18,9 @@ public static class Constants
     public const string WaterButton = "WaterButton";
     public const string HungerButton = "HungerButton";
 
+    // building types
+    public const string Laboratory = "LABORATORY";
+
     // Item type names
     public const string Suit = "SUIT";
     public const string Helmet = "HELMET";
@@ -58,7 +61,13 @@ public static class Constants
     public const string HighlightImage = "HighlightImage";
     public const string NoEnergyObjects = "NoEnergyObjects";
 
-    // Inventory item names
+    // Science projects
+    public const string ResearchPoint = "ResearchPoint";
+    public const string ScienceProjects = "ScienceProjects";
+    public const string SteamPower = "SteamPower";
+
+
+    // Inventory item and building names 
     public const string FibrousLeaves = "FibrousLeaves";
     public const string Water = "Water";
     public const string Biofuel = "Biofuel";
@@ -70,10 +79,13 @@ public static class Constants
     public const string Coal = "Coal";
     public const string IronBeam = "IronBeam";
     public const string BiofuelGenerator = "BiofuelGenerator";
+    public const string SteamGenerator = "SteamGenerator";
+    public const string Boiler = "Boiler";
+    public const string Furnace = "Furnace";
     public const string IronSheet = "IronSheet";
     public const string BiomassLeaves = "BiomassLeaves";
     public const string BiomassWood = "BiomassWood";
-    public const string LatexFoam = "LatesFoam";
+    public const string LatexFoam = "LatexFoam";
     public const string ProteinBeans = "ProteinBeans";
     public const string ProteinPowder = "ProteinPowder";
     public const string BioOil = "BioOil";

@@ -10,6 +10,9 @@ public class RecipeDataInjector : MonoBehaviour
     public Transform outputStatList;
     public TranslationManager translationManager;
     public GameObject stat;
+    public GameObject MaterialsTitleText;
+    public GameObject RemainingTitleText;
+    public GameObject RemainingQuantityText;
 
     public void InjectData(RecipeItemData recipeData)
     {
@@ -29,6 +32,31 @@ public class RecipeDataInjector : MonoBehaviour
         tooltip.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(recipeData.recipeType);
         tooltip.transform.Find("Class").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(recipeData.itemClass);
         tooltip.transform.Find("Desc").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(recipeData.recipeName + "Desc");
+        tooltip.transform.Find("OutputTitle").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Output");
+
+        if (recipeData.currentQuantity >= 0)
+        {
+            RemainingTitleText.SetActive(true);
+            RemainingQuantityText.SetActive(true);
+            tooltip.transform.Find("RemainingTitle").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("RemainingQuantity");
+            tooltip.transform.Find("RemainingQuantity").GetComponent<TextMeshProUGUI>().text = recipeData.currentQuantity.ToString();
+        }
+        else
+        {
+            RemainingTitleText.SetActive(false);
+            RemainingQuantityText.SetActive(false);
+        }
+
+        if (recipeData.childData.Count > 0)
+        {
+            MaterialsTitleText.SetActive(true);
+            var textMeshPro = MaterialsTitleText.transform.GetComponent<TextMeshProUGUI>();
+            textMeshPro.text = translationManager.Translate("Materials");
+        }
+        else
+        {
+            MaterialsTitleText.SetActive(false);
+        }
 
         foreach (ChildData consumeItem in recipeData.childData)
         {

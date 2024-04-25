@@ -396,10 +396,14 @@ public class DragAndDrop : MonoBehaviour, IPointerEnterHandler, IBeginDragHandle
                     ItemData itemData = draggedObj.GetComponent<ItemData>();
                     itemData.isEquipped = false;
                 }
-                emptyButton.GetComponent<Image>().gameObject.SetActive(true);
-                Transform inventoryManagerObj = highlightObj.transform.Find("List/INVENTORYMANAGER");
-                gameObject.transform.SetParent(inventoryManagerObj);
-                audioManager.PlayUnequipSlotSound();
+
+                if (emptyButton != null)
+                {
+                    emptyButton.GetComponent<Image>().gameObject.SetActive(true);
+                    Transform inventoryManagerObj = highlightObj.transform.Find("List/INVENTORYMANAGER");
+                    gameObject.transform.SetParent(inventoryManagerObj);
+                    audioManager.PlayUnequipSlotSound();
+                }
             }
             // because any of the above objects may have altered consumption or any important value, that GlobalCalculator holds, it needs to be updated
             globalCalculator = GameObject.Find(Constants.GlobalCalculator).GetComponent<GlobalCalculator>();

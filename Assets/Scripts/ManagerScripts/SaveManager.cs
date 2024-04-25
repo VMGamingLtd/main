@@ -505,8 +505,8 @@ public class SaveManager : MonoBehaviour
                 EventIconModel itemData = new()
                 {
                     Name = eventObject.name,
-                    position = eventObject.transform.position,
-                    iconType = component.iconType,
+                    position = eventObject.transform.localPosition,
+                    iconType = component.IconType,
                     currentQuantity = component.CurrentQuantity,
                     minQuantityRange = component.MinQuantityRange,
                     maxQuantityRange = component.MaxQuantityRange,

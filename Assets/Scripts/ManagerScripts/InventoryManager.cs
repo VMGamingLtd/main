@@ -279,8 +279,11 @@ public class InventoryManager : MonoBehaviour
 
                     if (itemPrefab.transform.Find("CountInventory").TryGetComponent<TextMeshProUGUI>(out var countText))
                     {
-                        if (currentResource.EndsWith(".00")) _ = currentResource[..^3];
-                        countText.text = currentResource;
+                        if (currentResource.EndsWith(".00"))
+                        {
+                            currentResource = currentResource[..^3];
+                            countText.text = currentResource;
+                        }
                     }
 
                     // Ensure the item quantity doesn't go below zero

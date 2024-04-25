@@ -25,7 +25,7 @@ public class Planet : MonoBehaviour
 
     public ShapeSettings shapeSettings;
     public ColourSettings colourSettings;
-    [HideInInspector] public List<GameObject> eventObjects = new();
+    public List<GameObject> eventObjects = new();
 
     [HideInInspector] public bool shapeSettingsFoldout;
     [HideInInspector] public bool colourSettingsFoldout;
@@ -220,10 +220,10 @@ public class Planet : MonoBehaviour
             tag = "EventIcon"
         };
         eventObject.transform.parent = transform;
-        eventObject.transform.position = position;
+        eventObject.transform.localPosition = position;
         var component = eventObject.AddComponent<EventIcon>();
         component.name = Name;
-        component.iconType = iconType;
+        component.IconType = iconType;
         component.CurrentQuantity = currentQuantity;
         component.MinQuantityRange = minQuantityRange;
         component.MaxQuantityRange = maxQuantityRange;
@@ -448,6 +448,8 @@ public class Planet : MonoBehaviour
         {
             tag = "EventIcon"
         };
+
+        eventObjectStart.transform.parent = transform;
 
         SphereCollider sphereCollider = eventObjectStart.AddComponent<SphereCollider>();
         sphereCollider.radius = 0.05f;
