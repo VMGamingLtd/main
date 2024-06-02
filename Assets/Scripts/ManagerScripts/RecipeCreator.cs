@@ -49,6 +49,7 @@ namespace RecipeManagement
         public string itemClass;
         public float quantity;
     }
+
     public class RecipeItemData : MonoBehaviour
     {
         public Guid guid;
@@ -65,11 +66,18 @@ namespace RecipeManagement
         public bool hasRequirements;
         public List<ChildData> childData;
     }
+
     public class RecipeCreator : MonoBehaviour
     {
         public GameObject recipeTemplate;
+        public GameObject queueRecipeTemplate;
+        public GameObject queueInputRecipeTemplate;
         public RecipeManager recipeManager;
         public Transform recipeList;
+        public Transform queueRecipeList;
+        public Transform queueInputRecipeList;
+        public List<GameObject> queueRecipes;
+        public List<GameObject> queueInputRecipes;
         public List<RecipeDataJson> recipeDataList;
         public List<ResearchDataJson> researchDataList;
         private TranslationManager translationManager;
@@ -80,10 +88,12 @@ namespace RecipeManagement
         {
             public List<RecipeDataJson> recipes;
         }
+
         private class JsonArray2
         {
             public List<ResearchDataJson> projects;
         }
+
         private void Awake()
         {
             string jsonText = Assets.Scripts.Models.RecipeListJson.json;
@@ -100,12 +110,187 @@ namespace RecipeManagement
                 researchDataList = jsonArray2.projects;
             }
         }
+
+        public void StartManualQueueProduction()
+        {
+            if (queueRecipes.Count > 0)
+            {
+                GameObject obj = queueRecipeList.transform.GetChild(0).gameObject;
+                string quantityText = obj.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text;
+
+                if (int.TryParse(quantityText, out int quantity) &&
+                    int.TryParse(obj.name, out int index))
+                {
+                    if (quantity > 0)
+                    {
+                        CoroutineManager.autoProduction = true;
+
+                        // we have to link the queue recipe to any of the player's actual recipe by index because they can be
+                        // modified by items altering their attributes
+                        foreach (Transform recipe in recipeList)
+                        {
+                            RecipeItemData recipeData = recipe.GetComponent<RecipeItemData>();
+
+                            if (recipeData.index == index)
+                            {
+                                BuildingBarPlanet0 buildingBar = GameObject.Find("Planet0Production").GetComponent<BuildingBarPlanet0>();
+                                bool result = buildingBar.StartRecipeCreation(recipeData);
+
+                                if (result)
+                                {
+                                    obj.transform.Find("NoMats").GetComponent<Image>().enabled = false;
+                                    quantity--;
+                                }
+                                else
+                                {
+                                    obj.transform.Find("NoMats").GetComponent<Image>().enabled = true;
+
+                                    if (queueRecipes.Count > 1)
+                                    {
+                                        obj.transform.SetAsLastSibling();
+                                        queueRecipes.RemoveAt(0);
+                                        queueRecipes.Add(obj);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (quantity <= 0)
+                        {
+                            Destroy(obj);
+                            queueRecipes.RemoveAt(0);
+                        }
+                        else
+                        {
+                            obj.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = quantity.ToString();
+                        }
+                    }
+                    else
+                    {
+                        Destroy(obj);
+                        queueRecipes.RemoveAt(0);
+                    }
+                }
+            }
+            else
+            {
+                CoroutineManager.autoProduction = false;
+            }
+        }
+
+        public void RefreshQueueRecipes()
+        {
+            List<GameObject> itemsToAdd = new();
+
+            foreach (var recipe in recipeDataList)
+            {
+                if (recipeManager.TryGetRecipe(recipe.recipeName, out GameObject gameObject))
+                {
+                    bool found = false;
+
+                    foreach (var item in queueInputRecipes)
+                    {
+                        if (item.name == recipe.index.ToString())
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        GameObject newItem = Instantiate(queueInputRecipeTemplate, queueInputRecipeList);
+                        newItem.name = recipe.index.ToString();
+                        newItem.transform.Find("Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(recipe.recipeName, recipe.recipeProduct);
+                        newItem.transform.Find("Output").GetComponent<TextMeshProUGUI>().text = recipe.outputValue.ToString();
+                        itemsToAdd.Add(newItem);
+                        newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+                        newItem.transform.localScale = Vector3.one;
+                    }
+                }
+            }
+            queueInputRecipes.AddRange(itemsToAdd);
+        }
+
+        public void RecreateQueueRecipe(int recipeIndex, int recipeQuantity)
+        {
+            var itemData = recipeDataList[recipeIndex];
+
+            GameObject newItem = Instantiate(queueRecipeTemplate, queueRecipeList);
+            newItem.name = recipeIndex.ToString();
+            newItem.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(itemData.recipeName, itemData.recipeProduct);
+            newItem.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = recipeQuantity.ToString();
+            newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+            newItem.transform.localScale = Vector3.one;
+            queueRecipes.Add(newItem);
+        }
+
+        public void RecreateQueueInputRecipe(int recipeIndex, int recipeQuantity, int recipeOutput)
+        {
+            var itemData = recipeDataList[recipeIndex];
+
+            GameObject newItem = Instantiate(queueInputRecipeTemplate, queueInputRecipeList);
+            newItem.name = itemData.index.ToString();
+            newItem.transform.Find("Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(itemData.recipeName, itemData.recipeProduct);
+            newItem.transform.Find("Quantity").GetComponent<TMP_InputField>().text = recipeQuantity.ToString();
+            newItem.transform.Find("Output").GetComponent<TextMeshProUGUI>().text = recipeOutput.ToString();
+            newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+            newItem.transform.localScale = Vector3.one;
+            queueInputRecipes.Add(newItem);
+        }
+
+        public void CreateQueueRecipe(int recipeIndex, int recipeQuantity)
+        {
+            var itemData = recipeDataList[recipeIndex];
+
+            if (queueRecipeList.Find(itemData.index.ToString()))
+            {
+                var existingItem = queueRecipeList.transform.Find(itemData.index.ToString());
+                if (int.TryParse(existingItem.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text, out int existingQuantity))
+                {
+                    existingQuantity += recipeQuantity;
+                    existingItem.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = existingQuantity.ToString();
+                }
+            }
+            else
+            {
+                GameObject newItem = Instantiate(queueRecipeTemplate, queueRecipeList);
+                newItem.name = recipeIndex.ToString();
+                newItem.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(itemData.recipeName, itemData.recipeProduct);
+                newItem.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = recipeQuantity.ToString();
+                newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
+                newItem.transform.localScale = Vector3.one;
+                queueRecipes.Add(newItem);
+            }
+        }
+
+        public void DestroyQueueRecipe(int index)
+        {
+            var existingItem = queueRecipeList.transform.Find(index.ToString());
+
+            if (existingItem != null)
+            {
+                Destroy(existingItem.gameObject);
+            }
+        }
+
+        public void DestroyQueueInputRecipe(int index)
+        {
+            var existingItem = queueInputRecipeList.transform.Find(index.ToString());
+
+            if (existingItem != null)
+            {
+                Destroy(existingItem.gameObject);
+            }
+        }
+
         public void RecreateRecipe(string recipeProduct, Guid guid, string recipeType, string itemClass, string recipeName, int index, int experience,
             float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, int orderAdded, float currentQuantity)
         {
             RecreateRecipe(recipeTemplate, guid, recipeProduct, recipeType, itemClass, recipeName, index,
                 experience, productionTime, outputValue, hasRequirements, childDataList, orderAdded, currentQuantity);
         }
+
         public void CreateRecipe(int recipeIndex, Guid guid, float? quantity = null)
         {
             var itemData = recipeDataList[recipeIndex];
@@ -122,6 +307,7 @@ namespace RecipeManagement
             CreateRecipe(recipeTemplate, guid, itemData.recipeProduct, itemData.recipeType, itemData.itemClass, itemData.recipeName, itemData.index,
                 itemData.experience, itemData.productionTime, itemData.outputValue, itemData.hasRequirements, itemData.childDataList, itemData.currentQuantity);
         }
+
         private void RecreateRecipe(GameObject template, Guid guid, string recipeProduct, string recipeType, string itemClass, string recipeName, int index,
             int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, int orderAdded, float currentQuantity)
         {
@@ -184,6 +370,7 @@ namespace RecipeManagement
                     }
                 }
             }
+
             // Initialize RecipeItemData component that will hold all recipe data througout the game
             RecipeItemData newRecipeData = newItem.GetComponent<RecipeItemData>() ?? newItem.AddComponent<RecipeItemData>();
             newRecipeData.guid = guid;
@@ -205,6 +392,7 @@ namespace RecipeManagement
             newItem.transform.position = new Vector3(newItem.transform.position.x, newItem.transform.position.y, 0f);
             newItem.transform.localScale = Vector3.one;
         }
+
         private void CreateRecipe(GameObject template, Guid guid, string recipeProduct, string recipeType, string itemClass, string recipeName,
             int index, int experience, float productionTime, float outputValue, bool hasRequirements, List<ChildData> childDataList, float currentQuantity)
         {
@@ -268,6 +456,7 @@ namespace RecipeManagement
                     }
                 }
             }
+
             // Initialize RecipeItemData component that will hold all recipe data througout the game
             RecipeItemData newRecipeData = newItem.GetComponent<RecipeItemData>() ?? newItem.AddComponent<RecipeItemData>();
             newRecipeData.guid = guid;

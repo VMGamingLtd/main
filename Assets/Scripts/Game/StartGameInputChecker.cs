@@ -18,14 +18,20 @@ public class StartGameInputChecker : MonoBehaviour
     public Button buttonToClick;
     public EquipmentManager equipmentManager;
     private GlobalCalculator globalCalculator;
+    private MessageManager messageManager;
+    private TranslationManager translationManager;
     public BuildingIncrementor buildingIncrementor;
     private Planet planet;
+    private SwitchSettingsManager switchSettingsManager;
 
     // Update is called once per frame
     public void startGameCheckForUsername()
     {
         globalCalculator = GameObject.Find("GlobalCalculator").GetComponent<GlobalCalculator>();
+        messageManager = GameObject.Find("MESSAGEMANAGER").GetComponent<MessageManager>();
         planet = GameObject.Find("PlanetParent/StartPlanet").GetComponent<Planet>();
+        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+        switchSettingsManager = GameObject.Find("SWITCHSETTINGSMANAGER").GetComponent<SwitchSettingsManager>();
         globalCalculator.UpdatePlayerConsumption();
         GlobalCalculator.GameStarted = true;
         NewGamePopup.SetActive(false);
@@ -53,6 +59,7 @@ public class StartGameInputChecker : MonoBehaviour
         CoroutineManager.ResetAllCoroutineBooleans();
         inventoryManager.CalculateInventorySlots();
         buildingIncrementor.InitializeBuildingCounts();
+        InitializeStartSettings();
     }
 
     private async UniTask LoadMenus()
@@ -75,7 +82,6 @@ public class StartGameInputChecker : MonoBehaviour
             await UniTask.Yield();
         }
 
-
         var suitRectTransform = equipmentManager.SuitSlot.GetComponent<RectTransform>();
         var helmetRectTransfrom = equipmentManager.HelmetSlot.GetComponent<RectTransform>();
         var toolRectTransfrom = equipmentManager.LeftHandSlot.GetComponent<RectTransform>();
@@ -86,10 +92,44 @@ public class StartGameInputChecker : MonoBehaviour
 
         recipeCreator.CreateRecipe(1, Guid.NewGuid());
         recipeCreator.CreateRecipe(3, Guid.NewGuid());
+        recipeCreator.RefreshQueueRecipes();
 
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
+        messageManager.CreateEventMessage(translationManager.Translate("FirstEventMessage"));
+    }
+
+    private void InitializeStartSettings()
+    {
+        Player.CavesSwitch = true;
+        Player.VolcanicCaveSwitch = true;
+        Player.IceCaveSwitch = true;
+        Player.HiveNestSwitch = true;
+        Player.CyberHideoutSwitch = true;
+        Player.MissionsSwitch = true;
+        Player.AlienBaseSwitch = true;
+        Player.WormTunnelsSwitch = true;
+        Player.ShipwreckSwitch = true;
+        Player.MysticTempleSwitch = true;
+        Player.MonstersSwitch = true;
+        Player.XenoSpiderSwitch = true;
+        Player.SporeBehemothSwitch = true;
+        Player.ElectroBeastSwitch = true;
+        Player.VoidReaperSwitch = true;
+        Player.ResourcesDiscoverySwitch = true;
+        Player.LiquidsDiscoverySwitch = true;
+        Player.MineralsDiscoverySwitch = true;
+        Player.GasDiscoverySwitch = true;
+        Player.FoamsDiscoverySwitch = true;
+        Player.MeatDiscoverySwitch = true;
+        Player.AnomalySwitch = true;
+        Player.MysteryDevicesSwitch = true;
+
+        Player.ItemsCollectionSwitch = false;
+        Player.ResourcesCollectionSwitch = false;
+
+        switchSettingsManager.InitializeAllSwitches();
     }
 }
 

@@ -1,3 +1,4 @@
+using RecipeManagement;
 using System;
 using System.Globalization;
 using TMPro;
@@ -27,8 +28,9 @@ public class GlobalCalculator : MonoBehaviour
     public BuildingManager buildingManager;
     public TranslationManager translationManager;
     public TrackManager trackManager;
+    public RecipeCreator recipeCreator;
 
-    private LineRendererController lineRendererController;
+    private DiscoveryManager discoveryManager;
 
     public SaveManager saveManager;
     public WeatherManager weatherManager;
@@ -52,7 +54,7 @@ public class GlobalCalculator : MonoBehaviour
     void Start()
     {
         timer = 0f;
-        lineRendererController = GameObject.Find("PlanetParent/StartPlanet/Player").GetComponent<LineRendererController>();
+        discoveryManager = new DiscoveryManager();
     }
 
     /// <summary>
@@ -68,6 +70,11 @@ public class GlobalCalculator : MonoBehaviour
             {
                 timer -= delayTime;
                 seconds++;
+
+                if (!CoroutineManager.manualProduction)
+                {
+                    recipeCreator.StartManualQueueProduction();
+                }
 
                 if (seconds == 0 || seconds == 5 || seconds == 10 || seconds == 15 || seconds == 20 || seconds == 25 || seconds == 30 || seconds == 35 ||
                     seconds == 40 || seconds == 45 || seconds == 50 || seconds == 55)
@@ -201,8 +208,6 @@ public class GlobalCalculator : MonoBehaviour
             trackManager.CurrentProgress.text = PlayerResources.PlayerCurrentTravelProgress.ToString("F2") + "%";
             trackManager.UpdateArrivalTime(PlayerResources.PlayerRemainingTravelTime);
             trackManager.UpdateDistance(PlayerResources.PlayerRemainingDistance);
-
-
         }
     }
 

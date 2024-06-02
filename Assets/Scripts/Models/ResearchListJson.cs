@@ -95,10 +95,18 @@ namespace Assets.Scripts.Models
       ],
       ""rewardsList"": [
         {
-          ""index"": 0,
-          ""name"": ""ResearchPoint"",
-          ""product"": ""BASIC"",
-          ""type"": ""SKILLPOINT"",
+          ""index"": 38,
+          ""name"": ""ExplosivePowder"",
+          ""product"": ""PROCESSED"",
+          ""type"": ""POWDER"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 1
+        },
+        {
+          ""index"": 39,
+          ""name"": ""Disinfectant"",
+          ""product"": ""PROCESSED"",
+          ""type"": ""LIQUID"",
           ""itemClass"": ""CLASS-F"",
           ""quantity"": 1
         }

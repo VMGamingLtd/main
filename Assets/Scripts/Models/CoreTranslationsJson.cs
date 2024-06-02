@@ -29,10 +29,10 @@
       },
       {
         ""identifier"": ""FibrousLeavesDesc"",
-        ""english"": ""Basic resource needed to produce higher level items, such as bio fuel."",
-        ""russian"": ""Основной съедобный ресурс, необходимый для производства предметов более высокого уровня, таких как биотопливо."",
-        ""chinese"": ""这是生产生物燃料等高级物品所需的基本且可食用的资源。"",
-        ""slovak"": ""Základný zdroj surovín vužiteľný na výrobu predmetov vyššej úrovne, ako je biopalivo alebo na jedenie.""
+        ""english"": ""Basic resource needed to produce higher level items, such as bio fuel. <color=yellow>Food consumption</color>: 0.001/s."",
+        ""russian"": ""Основной съедобный ресурс, необходимый для производства предметов более высокого уровня, таких как биотопливо. <color=yellow>Потребление еды</color>: 0,001/с."",
+        ""chinese"": ""这是生产生物燃料等高级物品所需的基本且可食用的资源。<color=yellow>食物消耗</color>：0.001/s。"",
+        ""slovak"": ""Základný zdroj surovín vužiteľný na výrobu predmetov vyššej úrovne, ako je biopalivo alebo na jedenie. <color=yellow>Spotreba potravy</color>: 0,001/s.""
       },
       {
         ""identifier"": ""Water"",
@@ -172,7 +172,7 @@
         ""english"": ""Processed amount of biological material."",
         ""russian"": ""Переработанное количество биологического материала."",
         ""chinese"": ""这是经过加工的生物材料。"",
-        ""slovak"": ""Spracovaný množstvo biologického materiálu.""
+        ""slovak"": ""Spracované množstvo biologického materiálu.""
       },
       {
         ""identifier"": ""BiomassWood"",
@@ -186,7 +186,7 @@
         ""english"": ""Processed amount of biological material."",
         ""russian"": ""Переработанное количество биологического материала."",
         ""chinese"": ""这是经过加工的生物材料。"",
-        ""slovak"": ""Spracovaný množstvo biologického materiálu.""
+        ""slovak"": ""Spracované množstvo biologického materiálu.""
       },
       {
         ""identifier"": ""BioOil"",
@@ -200,7 +200,7 @@
         ""english"": ""Transparent, greasy substance made from natural resources."",
         ""russian"": ""Прозрачное, жирное вещество, изготовленное из природных ресурсов."",
         ""chinese"": ""这种油是一种由自然资源制成的透明油状物质。"",
-        ""slovak"": ""Transparentná, mastná látka vyrobená z prírodných zdrojov.""
+        ""slovak"": ""Transparentná, olejovitá látka vyrobená z prírodných zdrojov.""
       },
       {
         ""identifier"": ""BuildingType"",
@@ -1591,6 +1591,20 @@
         ""slovak"": ""Odomkne využitie pary ako zdroja spolu s budovami poháňanými parou.""
       },
       {
+        ""identifier"": ""BasicAlchemy"",
+        ""english"": ""Basic alchemy"",
+        ""russian"": ""Базовая алхимия"",
+        ""chinese"": ""基础炼金术"",
+        ""slovak"": ""Základná alchýmia""
+      },
+      {
+        ""identifier"": ""BasicAlchemyDesc"",
+        ""english"": ""Introduces the concept of combining materials to create potions and chemicals with various effects."",
+        ""russian"": ""Представляет концепцию объединения материалов для создания зелий и химикатов с различными эффектами."",
+        ""chinese"": ""这项研究引入了结合材料来制造具有各种效果的药水和化学品的概念。"",
+        ""slovak"": ""Predstavuje koncept kombinovania materiálov na vytváranie elixírov a chemikálií s rôznymi účinkami.""
+      },
+      {
         ""identifier"": ""AllProduction"",
         ""english"": ""All production"",
         ""russian"": ""Вся продукция"",
@@ -1759,6 +1773,20 @@
         ""slovak"": ""Mlieko""
       },
       {
+        ""identifier"": ""Sulfur"",
+        ""english"": ""Sulfur"",
+        ""russian"": ""Cера"",
+        ""chinese"": ""硫"",
+        ""slovak"": ""Síra""
+      },
+      {
+        ""identifier"": ""Saltpeter"",
+        ""english"": ""Potassium nitrate"",
+        ""russian"": ""Азотнокислый калий"",
+        ""chinese"": ""硝酸钾"",
+        ""slovak"": ""Dusičnan draselný""
+      },
+      {
         ""identifier"": ""DeleteData"",
         ""english"": ""Delete data?"",
         ""russian"": ""Удалить данные?"",
@@ -1774,10 +1802,206 @@
       },
       {
         ""identifier"": ""RemainingQuantity"",
-        ""english"": ""Оставшееся количество:"",
-        ""russian"": ""Удалить данные?"",
+        ""english"": ""Remaining quantity:"",
+        ""russian"": ""Оставшееся количество:"",
         ""chinese"": ""剩余数量："",
         ""slovak"": ""Zostávajúce množstvo:""
+      },
+      {
+        ""identifier"": ""FirstEventMessage"",
+        ""english"": ""This planet looks habitable and luckily got atmosphere with oxygen. All items that I was able to save from the spaceship are now in my inventory."",
+        ""russian"": ""Эта планета выглядит обитаемой и, к счастью, имеет атмосферу с кислородом. Все предметы, которые мне удалось сохранить с космического корабля, теперь находятся у меня в инвентаре."",
+        ""chinese"": ""这颗行星看起来适合居住，并且有含有氧气的大气层。我能够从宇宙飞船中保存的所有物品现在都在我的库存中。"",
+        ""slovak"": ""Táto planéta vyzerá obývateľná a našťastie má atmosféru s kyslíkom. Všetky predmety, ktoré sa mi podarilo zachrániť z vesmírnej lode sú teraz v mojom inventári.""
+      },
+      {
+        ""identifier"": ""MaterialDiscoveryMessage"",
+        ""english"": ""You have discovered"",
+        ""russian"": ""Вы обнаружили"",
+        ""chinese"": ""您发现了"",
+        ""slovak"": ""Objavili ste""
+      },
+      {
+        ""identifier"": ""Discovery"",
+        ""english"": ""Discovery"",
+        ""russian"": ""Открытие"",
+        ""chinese"": ""发现"",
+        ""slovak"": ""Objavovanie""
+      },
+      {
+        ""identifier"": ""Collecting"",
+        ""english"": ""Collecting"",
+        ""russian"": ""Сбор"",
+        ""chinese"": ""搜集"",
+        ""slovak"": ""Zbieranie""
+      },
+      {
+        ""identifier"": ""All"",
+        ""english"": ""All"",
+        ""russian"": ""Все"",
+        ""chinese"": ""所有"",
+        ""slovak"": ""Všetky""
+      },
+      {
+        ""identifier"": ""Caves"",
+        ""english"": ""Caves"",
+        ""russian"": ""Пещеры"",
+        ""chinese"": ""洞穴"",
+        ""slovak"": ""Jaskyne""
+      },
+      {
+        ""identifier"": ""VolcanicCave"",
+        ""english"": ""Volcanic cave"",
+        ""russian"": ""Вулканическая пещера"",
+        ""chinese"": ""火山洞穴"",
+        ""slovak"": ""Vulkanická jaskyňa""
+      },
+      {
+        ""identifier"": ""IceCave"",
+        ""english"": ""Ice cave"",
+        ""russian"": ""Ледяные пещера"",
+        ""chinese"": ""冰洞"",
+        ""slovak"": ""Ľadová jaskyňa""
+      },
+      {
+        ""identifier"": ""HiveNest"",
+        ""english"": ""Hive nest"",
+        ""russian"": ""Ульевые гнездо"",
+        ""chinese"": ""蜂巢"",
+        ""slovak"": ""Úľové hniezdo""
+      },
+      {
+        ""identifier"": ""CyberHideout"",
+        ""english"": ""Cyber hideout"",
+        ""russian"": ""Кибер-убежище"",
+        ""chinese"": ""网络藏身处"",
+        ""slovak"": ""Kybernetický úkryt""
+      },
+      {
+        ""identifier"": ""Missions"",
+        ""english"": ""Missions"",
+        ""russian"": ""Миссии"",
+        ""chinese"": ""使命"",
+        ""slovak"": ""Misie""
+      },
+      {
+        ""identifier"": ""AlienBase"",
+        ""english"": ""Alien base"",
+        ""russian"": ""База пришельцев"",
+        ""chinese"": ""外星人基地"",
+        ""slovak"": ""Mimozemská základňa""
+      },
+      {
+        ""identifier"": ""WormTunnels"",
+        ""english"": ""Worm tunnel"",
+        ""russian"": ""Червячные туннели"",
+        ""chinese"": ""蠕虫隧道"",
+        ""slovak"": ""Červové tunely""
+      },
+      {
+        ""identifier"": ""Shipwreck"",
+        ""english"": ""Shipwreck"",
+        ""russian"": ""Кораблекрушение"",
+        ""chinese"": ""海难"",
+        ""slovak"": ""Stroskotaná loď""
+      },
+      {
+        ""identifier"": ""MysticTemple"",
+        ""english"": ""Mystic temple"",
+        ""russian"": ""Мистический храм"",
+        ""chinese"": ""神秘寺庙"",
+        ""slovak"": ""Mystický chrám""
+      },
+      {
+        ""identifier"": ""Monsters"",
+        ""english"": ""Monsters"",
+        ""russian"": ""Монстры"",
+        ""chinese"": ""怪物"",
+        ""slovak"": ""Stvorenia""
+      },
+      {
+        ""identifier"": ""XenoSpider"",
+        ""english"": ""Xeno-Spider"",
+        ""russian"": ""Ксено-паук"",
+        ""chinese"": ""异种蜘蛛"",
+        ""slovak"": ""Xeno-pavúk""
+      },
+      {
+        ""identifier"": ""SporeBehemoth"",
+        ""english"": ""Spore behemoth"",
+        ""russian"": ""Споровый бегемот"",
+        ""chinese"": ""孢子巨兽"",
+        ""slovak"": ""Spórový behemot""
+      },
+      {
+        ""identifier"": ""ElectroBeast"",
+        ""english"": ""Electro-Beast"",
+        ""russian"": ""Электрический-монстр"",
+        ""chinese"": ""电兽"",
+        ""slovak"": ""Elektrický netvor""
+      },
+      {
+        ""identifier"": ""VoidReaper"",
+        ""english"": ""Void reaper"",
+        ""russian"": ""Пустотный призрак"",
+        ""chinese"": ""虚空幽灵"",
+        ""slovak"": ""Mátoha prázdnoty""
+      },
+      {
+        ""identifier"": ""Resources"",
+        ""english"": ""Resources"",
+        ""russian"": ""Ресурсы"",
+        ""chinese"": ""资源"",
+        ""slovak"": ""Suroviny""
+      },
+      {
+        ""identifier"": ""Anomaly"",
+        ""english"": ""Anomalies"",
+        ""russian"": ""Аномалия"",
+        ""chinese"": ""不规则"",
+        ""slovak"": ""Anomália""
+      },
+      {
+        ""identifier"": ""MysteryDevice"",
+        ""english"": ""Mystery device"",
+        ""russian"": ""Таинственное устройство"",
+        ""chinese"": ""神秘装置"",
+        ""slovak"": ""Tajomné zariadenie""
+      },
+      {
+        ""identifier"": ""Level"",
+        ""english"": ""Level:"",
+        ""russian"": ""Уровень:"",
+        ""chinese"": ""等级："",
+        ""slovak"": ""Úroveň:""
+      },
+      {
+        ""identifier"": ""Size"",
+        ""english"": ""Size:"",
+        ""russian"": ""Размер:"",
+        ""chinese"": ""大小："",
+        ""slovak"": ""Veľkosť:""
+      },
+      {
+        ""identifier"": ""Large"",
+        ""english"": ""Large"",
+        ""russian"": ""Большой"",
+        ""chinese"": ""大型"",
+        ""slovak"": ""Veľká/ý""
+      },
+      {
+        ""identifier"": ""Large"",
+        ""english"": ""Large"",
+        ""russian"": ""Средний"",
+        ""chinese"": ""普通大小"",
+        ""slovak"": ""Priemerná/ý""
+      },
+      {
+        ""identifier"": ""Small"",
+        ""english"": ""Small"",
+        ""russian"": ""Средний"",
+        ""chinese"": ""小型"",
+        ""slovak"": ""Malá/ý""
       }
     ]
   }
