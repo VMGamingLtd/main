@@ -1,7 +1,24 @@
-20240210 - milan:
+20240210
 =================
 - added versioning concurrency control to game data collection
 - implemented game data diffing (we send to backend only diffrence against previous game data to minimize payload size) 
-20240420 - milan:
+
+20240420 
 =================
 - integrated delete of slot game data
+
+20240602
+=================
+- updated all Recipes that have limited quantity with Current quantity injection and object tooltip display...when recipe reaches 0 quantity, it will be automatically removed from Production menu
+- Production Menu - Planning tab is now functional and contains all currently achieved recipes that can be added into a crafting queue which will be crafted automatically based on recipe and quantity input
+- Items in inventory that can be equipped will be now marked by an icon of a slot they belong to, so that player knows what can be used
+- Exploration menu has now Event messages about resources discovery
+- added new icons for new dungeons
+- dungeons are now spawned on the planet along with resources
+- upgraded gaos to .net 8
+
+Bug fixes:
+
+- fixed a bug that caused planet to be rotated even when player was outside of Exploration menu
+- fixed a bug where clicking to move on the planet was blocked by the player discovery collider
+- fixed crashing websocket js
