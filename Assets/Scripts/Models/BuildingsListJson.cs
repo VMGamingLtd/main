@@ -43,7 +43,7 @@
           ""quantity"": 10.0
         }
       ],
-      ""totalTime"": 10.0,
+      ""totalTime"": 12.0,
       ""basePowerOutput"": 0,
       ""powerConsumption"": 2000,
       ""researchPoints"": 0
@@ -71,7 +71,7 @@
           ""quantity"": 10.0
         }
       ],
-      ""totalTime"": 20.0,
+      ""totalTime"": 30.0,
       ""basePowerOutput"": 0,
       ""powerConsumption"": 2000,
       ""researchPoints"": 0
@@ -165,6 +165,20 @@
       ""basePowerOutput"": 0,
       ""powerConsumption"": 10000,
       ""researchPoints"": 1.0
+    },
+    {
+      ""index"": 7,
+      ""buildingName"": ""SmallPowerGrid"",
+      ""buildingType"": ""ENERGY"",
+      ""buildingClass"": ""CLASS-F"",
+      ""consumedSlotCount"": 0,
+      ""consumedItems"": [],
+      ""producedSlotCount"": 0,
+      ""producedItems"": [],
+      ""totalTime"": 60.0,
+      ""basePowerOutput"": 0,
+      ""powerConsumption"": 0,
+      ""researchPoints"": 0
     }
   ]
 }

@@ -5,6 +5,8 @@ public class Invoker : MonoBehaviour
 {
     public Button buttonToClick;
     public Button buttonToClick2;
+    public Button buttonToClick3;
+    public Button buttonToClick4;
     public int StatusNumber;
 
     // Update is called once per frame
@@ -28,6 +30,14 @@ public class Invoker : MonoBehaviour
         else if (StatusNumber == 1)
         {
             buttonToClick2.onClick.Invoke();
+        }
+        else if (StatusNumber == 2)
+        {
+            buttonToClick3.onClick.Invoke();
+        }
+        else if (StatusNumber == 3)
+        {
+            buttonToClick4.onClick.Invoke();
         }
     }
 

@@ -137,10 +137,19 @@ public class Planet : MonoBehaviour
         gobj.SetActive(true);
     }
 
+    public void RefreshPlanet()
+    {
+        if (autoUpdate)
+        {
+            OnShapeSettingsUpdated();
+            OnColourSettingsUpdated();
+        }
+    }
+
     public void GeneratePlanet()
     {
         Initialize();
-        GenerateMesh();
+        GenerateMesh(false);
         GenerateColours();
 
         if (!Application.isPlaying)
@@ -159,7 +168,7 @@ public class Planet : MonoBehaviour
         if (autoUpdate)
         {
             Initialize();
-            GenerateMesh();
+            GenerateMesh(true);
         }
     }
 
@@ -172,9 +181,12 @@ public class Planet : MonoBehaviour
         }
     }
 
-    void GenerateMesh()
+    void GenerateMesh(bool refresh)
     {
-        CreateStartResources();
+        if (!refresh)
+        {
+            CreateStartResources();
+        }
 
         for (int i = 0; i < 6; i++)
         {
@@ -182,7 +194,7 @@ public class Planet : MonoBehaviour
             {
                 terrainFaces[i].ConstructMesh();
                 // if in playing mode, spawn event objects on the surface
-                if (Application.isPlaying)
+                if (Application.isPlaying && !refresh)
                 {
                     SpawnEventObjectsOnSurface(meshFilters[i].sharedMesh, 56);
                 }
@@ -213,7 +225,7 @@ public class Planet : MonoBehaviour
 
     public void RecreateEventObject(string Name, Vector3 position, EventIconType iconType, float currentQuantity, float minQuantityRange, float maxQuantityRange,
         int recipeIndex, int recipeIndex2, int recipeIndex3, int recipeIndex4, string recipeProduct, string recipeProduct2, string recipeProduct3, string recipeProduct4,
-        Guid recipeGuid, Guid recipeGuid2, Guid recipeGuid3, Guid recipeGuid4)
+        Guid recipeGuid, Guid recipeGuid2, Guid recipeGuid3, Guid recipeGuid4, EventSize eventSize, int eventLevel)
     {
         GameObject eventObject = new(Name)
         {
@@ -224,6 +236,8 @@ public class Planet : MonoBehaviour
         var component = eventObject.AddComponent<EventIcon>();
         component.name = Name;
         component.IconType = iconType;
+        component.EventSize = eventSize;
+        component.EventLevel = eventLevel;
         component.CurrentQuantity = currentQuantity;
         component.MinQuantityRange = minQuantityRange;
         component.MaxQuantityRange = maxQuantityRange;
@@ -250,7 +264,7 @@ public class Planet : MonoBehaviour
     {
         GameObject player = transform.Find("Player").gameObject;
         Transform playerTransform = player.transform;
-
+        DiscoveryManager discoveryManager = new();
         List<Vector3> existingCoordinates = new();
 
         // Quit if in the editor
@@ -364,7 +378,7 @@ public class Planet : MonoBehaviour
             }
             else if (elevation < 0.03f)
             {
-                var option = UnityEngine.Random.Range(0, 5);
+                var option = UnityEngine.Random.Range(0, 4);
                 if (option == 0)
                 {
                     resourceSpawn.SpawnResource(eventObject, "FibrousLeaves", EventIconType.Plant, elevation);
@@ -381,14 +395,14 @@ public class Planet : MonoBehaviour
                 {
                     resourceSpawn.SpawnResource(eventObject, "Wood", EventIconType.Plant, elevation);
                 }
-                else
+                else if (option == 4)
                 {
                     resourceSpawn.SpawnResource(eventObject, "ProteinBeans", EventIconType.Plant, elevation);
                 }
             }
             else
             {
-                var option = UnityEngine.Random.Range(0, 6);
+                var option = UnityEngine.Random.Range(0, 10);
                 if (option == 0)
                 {
                     resourceSpawn.SpawnResource(eventObject, "IronOre", EventIconType.Mineral, elevation);
@@ -413,9 +427,25 @@ public class Planet : MonoBehaviour
                 {
                     resourceSpawn.SpawnResource(eventObject, "Wood", EventIconType.Plant, elevation);
                 }
-                else
+                else if (option == 6)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Sulfur", EventIconType.Plant, elevation);
+                }
+                else if (option == 7)
+                {
+                    resourceSpawn.SpawnResource(eventObject, "Saltpeter", EventIconType.Plant, elevation);
+                }
+                else if (option == 8)
                 {
                     resourceSpawn.SpawnResource(eventObject, "Stone", EventIconType.Mineral, elevation);
+                }
+                else
+                {
+                    if (elevation > 0.03f)
+                    {
+                        discoveryManager.CreateRandomCave();
+                        return;
+                    }
                 }
             }
 
@@ -474,6 +504,47 @@ public class Planet : MonoBehaviour
         else if (resourceName == "Coal")
         {
             resourceSpawn.SpawnResource(eventObjectStart, "Coal", EventIconType.Mineral, 0);
+        }
+
+        AddEventObjectToList(eventObjectStart);
+    }
+
+    public void CreateDungeonObject(EventSize eventSize, EventIconType eventType, int eventLevel,
+        float offsetX, float offsetY, float offsetZ)
+    {
+        GameObject player = transform.Find("Player").gameObject;
+        Transform playerTransform = player.transform;
+
+        GameObject eventObjectStart = new("EventObject")
+        {
+            tag = "EventIcon"
+        };
+
+        eventObjectStart.transform.parent = transform;
+
+        SphereCollider sphereCollider = eventObjectStart.AddComponent<SphereCollider>();
+        sphereCollider.radius = 0.05f;
+        sphereCollider.isTrigger = true;
+
+        Vector3 positionOffset = new(offsetX, offsetY, offsetZ);
+        eventObjectStart.transform.SetPositionAndRotation(playerTransform.position + positionOffset, playerTransform.rotation);
+        eventObjectStart.transform.localScale = playerTransform.localScale;
+
+        if (eventType == EventIconType.VolcanicCave)
+        {
+            resourceSpawn.SpawnEvent(eventObjectStart, "VolcanicCave", eventSize, EventIconType.VolcanicCave, eventLevel);
+        }
+        else if (eventType == EventIconType.IceCave)
+        {
+            resourceSpawn.SpawnEvent(eventObjectStart, "IceCave", eventSize, EventIconType.IceCave, eventLevel);
+        }
+        else if (eventType == EventIconType.HiveNest)
+        {
+            resourceSpawn.SpawnEvent(eventObjectStart, "HiveNest", eventSize, EventIconType.HiveNest, eventLevel);
+        }
+        else if (eventType == EventIconType.CyberHideout)
+        {
+            resourceSpawn.SpawnEvent(eventObjectStart, "CyberHideout", eventSize, EventIconType.CyberHideout, eventLevel);
         }
 
         AddEventObjectToList(eventObjectStart);

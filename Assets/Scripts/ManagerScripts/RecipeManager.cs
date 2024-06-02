@@ -24,6 +24,86 @@ public class RecipeManager : MonoBehaviour
             { "BUILDINGS", new GameObject[0] }
         };
     }
+
+    /// <summary>
+    /// Iterates all player knows recipes and pulls out one with matching 'name'.
+    /// </summary>
+    /// <param name="recipeName"></param>
+    /// <param name="recipe"></param>
+    /// <returns></returns>
+    public bool TryGetRecipe(string recipeName, out GameObject recipe)
+    {
+        recipe = null;
+
+        foreach (var recipeType in itemRecipeArrays)
+        {
+            foreach (var gameObject in recipeType.Value)
+            {
+                if (gameObject.name == recipeName)
+                {
+                    recipe = gameObject;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Iterates all player knows recipes and pulls out one with matching 'Guid'.
+    /// </summary>
+    /// <param name="guid"></param>
+    /// <param name="recipe"></param>
+    /// <returns></returns>
+    public bool TryGetRecipe(Guid guid, out GameObject recipe)
+    {
+        recipe = null;
+
+        foreach (var recipeType in itemRecipeArrays)
+        {
+            foreach (var gameObject in recipeType.Value)
+            {
+                RecipeItemData recipeItemData = gameObject.GetComponent<RecipeItemData>();
+
+                if (recipeItemData.guid == guid)
+                {
+                    recipe = gameObject;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Iterates all player knows recipes and pulls out one with matching 'index'.
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="recipe"></param>
+    /// <returns></returns>
+    public bool TryGetRecipe(int index, out GameObject recipe)
+    {
+        recipe = null;
+
+        foreach (var recipeType in itemRecipeArrays)
+        {
+            foreach (var gameObject in recipeType.Value)
+            {
+                RecipeItemData recipeItemData = gameObject.GetComponent<RecipeItemData>();
+
+                if (recipeItemData.index == index)
+                {
+                    recipe = gameObject;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public void SortItemRecipeArraysByOrderAdded()
     {
         List<Transform> childTransforms = new();

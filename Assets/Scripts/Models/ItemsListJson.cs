@@ -365,6 +365,46 @@
       ""itemType"": ""MINERAL"",
       ""itemClass"": ""CLASS-C"",
       ""equipable"": ""false""
+    },
+    {
+      ""index"": 36,
+      ""quantity"": 2.0,
+      ""stackLimit"": 200.0,
+      ""itemName"": ""Sulfur"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 37,
+      ""quantity"": 2.0,
+      ""stackLimit"": 200.0,
+      ""itemName"": ""Saltpeter"",
+      ""itemProduct"": ""BASIC"",
+      ""itemType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 38,
+      ""quantity"": 2.0,
+      ""stackLimit"": 200.0,
+      ""itemName"": ""ExplosivePowder"",
+      ""itemProduct"": ""PROCESSED"",
+      ""itemType"": ""POWDER"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
+    },
+    {
+      ""index"": 39,
+      ""quantity"": 1.0,
+      ""stackLimit"": 100.0,
+      ""itemName"": ""Disinfectant"",
+      ""itemProduct"": ""PROCESSED"",
+      ""itemType"": ""LIQUID"",
+      ""itemClass"": ""CLASS-F"",
+      ""equipable"": ""false""
     }
   ]
 }

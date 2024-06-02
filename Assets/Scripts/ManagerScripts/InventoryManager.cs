@@ -153,17 +153,22 @@ public class InventoryManager : MonoBehaviour
     }
     public bool CheckItemQuantity(string prefabName, string itemProduct, float quantityThreshold)
     {
+        float currentQuantity = 0f;
+
         if (itemArrays.TryGetValue(itemProduct, out GameObject[] itemArray))
         {
             foreach (GameObject item in itemArray)
             {
                 if (item.name == prefabName)
                 {
-                    ItemData itemData = item.GetComponent<ItemData>();
-
-                    if (itemData != null && itemData.quantity >= quantityThreshold)
+                    if (item.TryGetComponent<ItemData>(out var itemData))
                     {
-                        return true;
+                        currentQuantity += itemData.quantity;
+
+                        if (currentQuantity >= quantityThreshold)
+                        {
+                            return true;
+                        }
                     }
                 }
             }

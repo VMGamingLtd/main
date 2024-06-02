@@ -7,11 +7,8 @@ using UnityEngine.UI;
 
 public class ResearchManager : MonoBehaviour
 {
-    public Dictionary<int, GameObject> Connections;
     public Dictionary<int, GameObject> Projects;
-    public Transform ConnectionsList;
     public Transform ProjectsList;
-    public List<GameObject> AvailableConnections;
     public List<GameObject> AvailableProjects;
     public Image fillImg;
     public CoroutineManager coroutineManager;
@@ -20,6 +17,7 @@ public class ResearchManager : MonoBehaviour
     public static bool ResearchStarted = false;
 
     private List<ResearchDataJson> projectsDataList;
+    private RecipeCreator recipeCreator;
 
     [Serializable]
     private class JsonArray
@@ -29,22 +27,20 @@ public class ResearchManager : MonoBehaviour
 
     private void Awake()
     {
+        recipeCreator = GameObject.Find("RecipeCreatorList").GetComponent<RecipeCreator>();
         string jsonText = Assets.Scripts.Models.ResearchListJson.json;
         JsonArray jsonArray = JsonUtility.FromJson<JsonArray>(jsonText);
         projectsDataList = jsonArray?.projects;
 
-        AvailableConnections = new List<GameObject>();
         AvailableProjects = new List<GameObject>();
     }
 
     public void InitializeResearchManager()
     {
         if (!FirstTimeStarted &&
-            ConnectionsList.gameObject.activeSelf &&
             ProjectsList.gameObject.activeSelf)
         {
             FillResearchLists();
-            InitializeConnectionsMap();
             InitializeProjectsMap();
             _ = StartCoroutine(nameof(ValidatedResearchProjects));
             FirstTimeStarted = true;
@@ -141,6 +137,11 @@ public class ResearchManager : MonoBehaviour
             Planet0Buildings.SteamGeneratorUnlocked = true;
             buildingIncrementor.InitializeAvailableBuildings();
         }
+        else if (projectData.projectName == Constants.BasicAlchemy)
+        {
+            recipeCreator.CreateRecipe(38, Guid.NewGuid());
+            recipeCreator.CreateRecipe(39, Guid.NewGuid());
+        }
 
         ResearchStarted = false;
         coroutineManager.researchPointsText.text = Player.ResearchPoints.ToString();
@@ -165,19 +166,7 @@ public class ResearchManager : MonoBehaviour
         for (int i = 0; i < projectsDataList.Count; i++)
         {
             var projectData = projectsDataList[i];
-            AvailableConnections.Add(ConnectionsList.Find(projectData?.index.ToString()).gameObject);
             AvailableProjects.Add(ProjectsList.Find(projectData?.index.ToString()).gameObject);
-        }
-    }
-
-    private void InitializeConnectionsMap()
-    {
-        Connections = new Dictionary<int, GameObject>();
-
-        for (int i = 0; i < projectsDataList.Count; i++)
-        {
-            var projectData = projectsDataList[i];
-            Connections.Add(projectData.index, AvailableConnections[i]);
         }
     }
 
@@ -209,15 +198,29 @@ public class ResearchManager : MonoBehaviour
                 }
             }
 
-            foreach (var connection in Connections.Values)
-            {
-                connection.SetActive(false);
-            }
-
             yield return null;
         }
         else
         {
+
+            if (!Player.PoweredEngineeringResearch)
+            {
+                if (Projects.TryGetValue(7, out var projectObject)) projectObject.SetActive(false);
+            }
+            else { if (Projects.TryGetValue(7, out var projectObject)) projectObject.SetActive(true); }
+
+            if (!Player.BasicAlchemyResearch)
+            {
+                if (Projects.TryGetValue(8, out var projectObject)) projectObject.SetActive(false);
+            }
+            else { if (Projects.TryGetValue(8, out var projectObject)) projectObject.SetActive(true); }
+
+            if (!Player.ExplosivesResearch)
+            {
+                if (Projects.TryGetValue(9, out var projectObject)) projectObject.SetActive(false);
+            }
+            else { if (Projects.TryGetValue(9, out var projectObject)) projectObject.SetActive(true); }
+
             foreach (var project in Projects.Keys)
             {
                 if (project > 0 && project < 7)
@@ -228,31 +231,6 @@ public class ResearchManager : MonoBehaviour
                     animation.Play("ResearchProject");
                     yield return new WaitForSeconds(0.1f);
                 }
-            }
-
-            foreach (var connection in Connections.Keys)
-            {
-                if (connection > 0 && connection < 7)
-                {
-                    Connections.TryGetValue(connection, out var connectionObject);
-                    connectionObject.SetActive(true);
-                    Image image = connectionObject.GetComponent<Image>();
-                    image.fillAmount = 0;
-                    float currentAmount = 0f;
-                    while (currentAmount < 0.2f)
-                    {
-                        float totalAmount = Mathf.Lerp(0f, 1f, currentAmount / 0.1f);
-                        image.fillAmount += totalAmount;
-                        currentAmount += Time.deltaTime;
-                        yield return null;
-                    }
-                }
-            }
-
-            if (!Player.PoweredEngineeringResearch)
-            {
-                if (Connections.TryGetValue(7, out var connectionObject)) connectionObject.SetActive(false);
-                if (Projects.TryGetValue(7, out var projectObject)) projectObject.SetActive(false);
             }
         }
     }

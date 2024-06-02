@@ -12,7 +12,19 @@ public class AnimationSwitcher : MonoBehaviour
     }
     private void OnEnable()
     {
+        if (gameObject.name == "ExplorationMenu")
+        {
+            PlanetControl.isPlayerInExplorationMenu = true;
+        }
         animator.Play("Panel In");
         audioManager.PlayPanelInSound();
+    }
+
+    private void OnDisable()
+    {
+        if (gameObject.name == "ExplorationMenu")
+        {
+            PlanetControl.isPlayerInExplorationMenu = false;
+        }
     }
 }

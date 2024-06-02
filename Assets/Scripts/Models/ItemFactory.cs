@@ -594,7 +594,7 @@ namespace Assets.Scripts.ItemFactory
                 newItem.transform.Find("Image").GetComponent<Image>().sprite = AssignSpriteToSlot(prefabName);
             }
             var dragAndDropComponent = newItem.GetComponent<DragAndDrop>();
-            CheckItemTypes(itemType, equipable, dragAndDropComponent);
+            CheckItemTypes(newItem, itemType, equipable, dragAndDropComponent);
         }
         private Sprite AssignSpriteToSlot(string spriteName)
         {
@@ -724,42 +724,54 @@ namespace Assets.Scripts.ItemFactory
         }
 
 
-        private void CheckItemTypes(string itemType, bool equipable, DragAndDrop dragAndDropComponent)
+        private void CheckItemTypes(GameObject newItem, string itemType, bool equipable, DragAndDrop dragAndDropComponent)
         {
+            if (equipable)
+            {
+                newItem.transform.Find("SlotIcon").GetComponent<Image>().enabled = true;
+            }
+
             if (itemType == Constants.Plants && equipable || itemType == Constants.Meat && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[7]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[7]);
+                newItem.transform.Find("SlotIcon").GetComponent<Image>().sprite = AssignEquipmentSpriteToSlot(Constants.EmptyFoodSlot);
             }
             else if (itemType == Constants.Energy && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[5]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[5]);
+                newItem.transform.Find("SlotIcon").GetComponent<Image>().sprite = AssignEquipmentSpriteToSlot(Constants.EmptyEnergySlot);
             }
             else if (itemType == Constants.Oxygen && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[6]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[6]);
+                newItem.transform.Find("SlotIcon").GetComponent<Image>().sprite = AssignEquipmentSpriteToSlot(Constants.EmptyOxygenSlot);
             }
             else if (itemType == Constants.Liquid && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[8]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[8]);
+                newItem.transform.Find("SlotIcon").GetComponent<Image>().sprite = AssignEquipmentSpriteToSlot(Constants.EmptyWaterSlot);
             }
             else if (itemType == Constants.Suit && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[1]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[1]);
+                newItem.transform.Find("SlotIcon").GetComponent<Image>().sprite = AssignEquipmentSpriteToSlot(Constants.EmptySuitSlot);
             }
             else if (itemType == Constants.Helmet && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[0]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[0]);
+                newItem.transform.Find("SlotIcon").GetComponent<Image>().sprite = AssignEquipmentSpriteToSlot(Constants.EmptyHelmetSlot);
             }
             else if (itemType == Constants.Fabricator && equipable)
             {
                 dragAndDropComponent.highlightObject = ExtendArray(dragAndDropComponent.highlightObject, slotButtons[2]);
                 dragAndDropComponent.placeholderObjects = ExtendArray(dragAndDropComponent.placeholderObjects, placeholderImages[2]);
+                newItem.transform.Find("SlotIcon").GetComponent<Image>().sprite = AssignEquipmentSpriteToSlot(Constants.EmptyLeftHandSlot);
             }
         }
         private GameObject[] ExtendArray(GameObject[] oldArray, GameObject newElement)
@@ -776,6 +788,5 @@ namespace Assets.Scripts.ItemFactory
 
             return newArray;
         }
-
     }
 }

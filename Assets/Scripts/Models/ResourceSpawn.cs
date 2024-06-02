@@ -22,36 +22,36 @@ public class ResourceSpawn
 
         if (type == EventIconType.Fish)
         {
-            recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == "FishMeat");
+            recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == Constants.FishMeat);
             component.RecipeIndex = recipeData.index;
             component.RecipeProduct = recipeData.recipeProduct;
             component.RecipeGuid = Guid.NewGuid();
         }
         else if (type == EventIconType.Animal)
         {
-            recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == "AnimalMeat");
+            recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == Constants.AnimalMeat);
             component.RecipeIndex = recipeData.index;
             component.RecipeProduct = recipeData.recipeProduct;
             component.RecipeGuid = Guid.NewGuid();
         }
         else if (type == EventIconType.FurAnimal)
         {
-            recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == "AnimalMeat");
+            recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == Constants.AnimalMeat);
             component.RecipeIndex = recipeData.index;
             component.RecipeProduct = recipeData.recipeProduct;
             component.RecipeGuid = Guid.NewGuid();
-            component.RecipeIndex2 = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == "AnimalSkin").index;
-            component.RecipeProduct2 = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == "AnimalSkin").recipeProduct;
+            component.RecipeIndex2 = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == Constants.AnimalSkin).index;
+            component.RecipeProduct2 = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == Constants.AnimalSkin).recipeProduct;
             component.RecipeGuid2 = Guid.NewGuid();
         }
         else if (type == EventIconType.MilkAnimal)
         {
-            recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == "AnimalMeat");
+            recipeData = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == Constants.AnimalMeat);
             component.RecipeIndex = recipeData.index;
             component.RecipeProduct = recipeData.recipeProduct;
             component.RecipeGuid = Guid.NewGuid();
-            component.RecipeIndex2 = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == "Milk").index;
-            component.RecipeProduct2 = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == "Milk").recipeProduct;
+            component.RecipeIndex2 = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == Constants.Milk).index;
+            component.RecipeProduct2 = recipeCreator.recipeDataList.Find(recipe => recipe.recipeName == Constants.Milk).recipeProduct;
             component.RecipeGuid2 = Guid.NewGuid();
         }
         else
@@ -68,6 +68,18 @@ public class ResourceSpawn
         component.MaxQuantityRange = recipeData.maxQuantityRange;
         component.CurrentQuantity = recipeData.maxQuantityRange;
         component.Elevation = elevation;
+
+        return eventObject;
+    }
+
+    public GameObject SpawnEvent(GameObject eventObject, string eventName, EventSize eventSize, EventIconType type, int eventLevel)
+    {
+        var component = eventObject.AddComponent<EventIcon>();
+
+        eventObject.name = eventName;
+        component.IconType = type;
+        component.EventLevel = eventLevel;
+        component.EventSize = eventSize;
 
         return eventObject;
     }

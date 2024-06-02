@@ -3,7 +3,7 @@ function GAO_WebSocketCreate(GAOS_WS) {
   if (!window.GAO_WEB_SOCKETS) {
     window.GAO_WEB_SOCKETS = [];
   }
-  var ws = new WebSocket(Pointer_stringify(GAOS_WS));
+  var ws = new WebSocket(UTF8ToString(GAOS_WS));
   console.log('@@@@@@@@@@@@@@@@@@@@@ cp 3000: GAO_WebSocketCreate: ' + GAOS_WS);
   console.log('@@@@@@@@@@@@@@@@@@@@@ cp 3010: GAO_WebSocketCreate: ' + ws);
   window.GAO_WEB_SOCKETS.push(ws);
@@ -11,7 +11,7 @@ function GAO_WebSocketCreate(GAOS_WS) {
 }
 
 function GAO_WebSocketOnOpen(ws, fnName) {
-  fnName = Pointer_stringify(fnName);
+  fnName = UTF8ToString(fnName);
   console.log('@@@@@@@@@@@@@@@@@@@@@ cp 3020: GAO_WebSocketOnOpen: ' + ws);
   window.GAO_WEB_SOCKETS[ws].addEventListener('open', function (event) {
     console.info('websocket opend');
@@ -21,7 +21,7 @@ function GAO_WebSocketOnOpen(ws, fnName) {
 }
 
 function GAO_WebSocketOnClose(ws, fnName) {
-  fnName = Pointer_stringify(fnName);
+  fnName = UTF8ToString(fnName);
   window.GAO_WEB_SOCKETS[ws].addEventListener('close', function (event) {
     console.info('websocket closed');
     window.unityInstance.SendMessage('WebSocketClientJs', fnName);
@@ -29,7 +29,7 @@ function GAO_WebSocketOnClose(ws, fnName) {
 }
 
 function GAO_WebSocketOnError(ws, fnName, errorStr) {
-  fnName = Pointer_stringify(fnName);
+  fnName = UTF8ToString(fnName);
   window.GAO_WEB_SOCKETS[ws].addEventListener('error', function (event) {
     console.error('websocket error:', err);
     window.unityInstance.SendMessage('WebSocketClientJs', fnName, event.data.toString());
@@ -37,7 +37,7 @@ function GAO_WebSocketOnError(ws, fnName, errorStr) {
 }
 
 function GAO_WebSocketOnMessage(ws, fnName) {
-  fnName = Pointer_stringify(fnName);
+  fnName = UTF8ToString(fnName);
   window.GAO_WEB_SOCKETS[ws].addEventListener('message', function (event) {
     if (typeof event.data === 'string') {
       window.unityInstance.SendMessage('WebSocketClientJs', fnName, event.data);
@@ -50,13 +50,13 @@ function GAO_WebSocketOnMessage(ws, fnName) {
 }
 
 function GAO_WebSocketSend(ws, data) {
-  data = Pointer_stringify(data);
+  data = UTF8ToString(data);
   if (typeof data !== 'string') {
     console.error('GAO_WebSocketSend(): websocket - only string data supported');
     throw new Error('only string data supported')
   }
   console.info('websocket send: ' + data);
-  var str = Pointer_stringify(data)
+  var str = UTF8ToString(data)
   window.GAO_WEB_SOCKETS[ws].send(str);
 }
 

@@ -10,6 +10,7 @@ TagManager:
   - StudentRow
   - Research
   - EventIcon
+  - Event
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Range
   - Planet
   - Mask
-  - 
+  - Radiuses
   - 
   - 
   - 

@@ -49,7 +49,7 @@ public static class Player
 
     // UTILITY STATS
     public static int EnergyCapacity;
-    public static int InventorySlots = 10;
+    public static int InventorySlots = 30;
     public static int ExplorationRadius;
     public static int VisibilityRadius;
     public static int PickupRadius;
@@ -61,6 +61,36 @@ public static class Player
     // MODE VARIABLES
     public static bool CanProduce; // represents if player has Fabricator tool equipped
 
+    // DISCOVERY FILTER
+    public static bool CavesSwitch;
+    public static bool VolcanicCaveSwitch;
+    public static bool IceCaveSwitch;
+    public static bool HiveNestSwitch;
+    public static bool CyberHideoutSwitch;
+    public static bool MissionsSwitch;
+    public static bool AlienBaseSwitch;
+    public static bool WormTunnelsSwitch;
+    public static bool ShipwreckSwitch;
+    public static bool MysticTempleSwitch;
+    public static bool MonstersSwitch;
+    public static bool XenoSpiderSwitch;
+    public static bool SporeBehemothSwitch;
+    public static bool ElectroBeastSwitch;
+    public static bool VoidReaperSwitch;
+    public static bool ResourcesDiscoverySwitch;
+    public static bool PlantsDiscoverySwitch;
+    public static bool LiquidsDiscoverySwitch;
+    public static bool MineralsDiscoverySwitch;
+    public static bool GasDiscoverySwitch;
+    public static bool FoamsDiscoverySwitch;
+    public static bool MeatDiscoverySwitch;
+    public static bool AnomalySwitch;
+    public static bool MysteryDevicesSwitch;
+
+    // COLLECTING FILTER
+    public static bool ItemsCollectionSwitch;
+    public static bool ResourcesCollectionSwitch;
+
     // PLAYER RESEARCH PROGRESS
     public static bool ScienceProjectsResearch;
     public static bool SteamPowerResearch;
@@ -70,6 +100,8 @@ public static class Player
     public static bool DataAnalysisResearch;
     public static bool CognitiveEnhancementResearch;
     public static bool PoweredEngineeringResearch;
+    public static bool PharmaceuticalsResearch;
+    public static bool ExplosivesResearch;
 
     public static int AddCurrentResource(ref int currentResourceSet, int amount)
     {

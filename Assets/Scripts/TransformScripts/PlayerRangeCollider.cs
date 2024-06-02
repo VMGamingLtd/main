@@ -19,14 +19,17 @@ public class EventIconObject
     }
 }
 
-
 public class PlayerRangeCollider : MonoBehaviour
 {
     private RecipeCreator recipeCreator;
+    private MessageManager messageManager;
+    private TranslationManager translationManager;
 
     void Start()
     {
         recipeCreator = GameObject.Find("RecipeCreatorList").GetComponent<RecipeCreator>();
+        messageManager = GameObject.Find("MESSAGEMANAGER").GetComponent<MessageManager>();
+        translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
     }
     void OnTriggerEnter(Collider other)
     {
@@ -37,34 +40,47 @@ public class PlayerRangeCollider : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        if (other.CompareTag("EventIcon"))
+        if (other.CompareTag(Constants.EventIcon))
         {
             var eventIcon = other.gameObject.GetComponent<EventIcon>();
             eventIcon.PlayerDistance = true;
 
-            if (eventIcon.RecipeIndex > -1)
+            if (!CheckIfRecipeExists(eventIcon))
             {
-                if (!CheckIfRecipeExists(eventIcon))
+                if (eventIcon.RecipeIndex > -1)
+                {
                     recipeCreator.CreateRecipe(eventIcon.RecipeIndex, eventIcon.RecipeGuid, eventIcon.CurrentQuantity);
-            }
 
-            if (eventIcon.RecipeIndex2 > -1)
-            {
-                if (!CheckIfRecipeExists(eventIcon))
+                    var itemData = recipeCreator.recipeDataList[eventIcon.RecipeIndex];
+                    messageManager.CreateEventMessage($"{translationManager.Translate("MaterialDiscoveryMessage")} <color=yellow>[{translationManager.Translate(itemData.recipeName)}]</color>");
+                }
+
+                if (eventIcon.RecipeIndex2 > -1)
+                {
                     recipeCreator.CreateRecipe(eventIcon.RecipeIndex2, eventIcon.RecipeGuid2, eventIcon.CurrentQuantity);
-            }
 
-            if (eventIcon.RecipeIndex3 > -1)
-            {
-                if (!CheckIfRecipeExists(eventIcon))
+                    var itemData = recipeCreator.recipeDataList[eventIcon.RecipeIndex2];
+                    messageManager.CreateEventMessage($"{translationManager.Translate("MaterialDiscoveryMessage")} <color=yellow>[ {translationManager.Translate(itemData.recipeName)} ]</color>");
+                }
+
+                if (eventIcon.RecipeIndex3 > -1)
+                {
                     recipeCreator.CreateRecipe(eventIcon.RecipeIndex3, eventIcon.RecipeGuid3, eventIcon.CurrentQuantity);
+
+                    var itemData = recipeCreator.recipeDataList[eventIcon.RecipeIndex3];
+                    messageManager.CreateEventMessage($"{translationManager.Translate("MaterialDiscoveryMessage")} <color=yellow>[{translationManager.Translate(itemData.recipeName)}]</color>");
+                }
+
+                if (eventIcon.RecipeIndex4 > -1)
+                {
+                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex4, eventIcon.RecipeGuid4, eventIcon.CurrentQuantity);
+
+                    var itemData = recipeCreator.recipeDataList[eventIcon.RecipeIndex4];
+                    messageManager.CreateEventMessage($"{translationManager.Translate("MaterialDiscoveryMessage")} <color=yellow>[ {translationManager.Translate(itemData.recipeName)} ]</color>");
+                }
             }
 
-            if (eventIcon.RecipeIndex4 > -1)
-            {
-                if (!CheckIfRecipeExists(eventIcon))
-                    recipeCreator.CreateRecipe(eventIcon.RecipeIndex4, eventIcon.RecipeGuid4, eventIcon.CurrentQuantity);
-            }
+            recipeCreator.RefreshQueueRecipes();
         }
     }
 
@@ -75,7 +91,7 @@ public class PlayerRangeCollider : MonoBehaviour
     /// <param name="other"></param>
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("EventIcon"))
+        if (other.CompareTag(Constants.EventIcon))
         {
             var eventIcon = other.gameObject.GetComponent<EventIcon>();
             eventIcon.PlayerDistance = false;
@@ -92,6 +108,11 @@ public class PlayerRangeCollider : MonoBehaviour
                         if (recipeData.guid == eventIcon.RecipeGuid)
                         {
                             objectsToRemove.Add(new EventIconObject(eventIcon.RecipeProduct, itemObject, eventIcon.RecipeGuid));
+
+                            if (!CheckIfRecipeExists(eventIcon))
+                            {
+                                RemoveInputRecipe(recipeData);
+                            }
                         }
                     }
                 }
@@ -107,6 +128,11 @@ public class PlayerRangeCollider : MonoBehaviour
                         if (recipeData.guid == eventIcon.RecipeGuid2)
                         {
                             objectsToRemove.Add(new EventIconObject(eventIcon.RecipeProduct2, itemObject, eventIcon.RecipeGuid2));
+
+                            if (!CheckIfRecipeExists(eventIcon))
+                            {
+                                RemoveInputRecipe(recipeData);
+                            }
                         }
                     }
                 }
@@ -122,6 +148,11 @@ public class PlayerRangeCollider : MonoBehaviour
                         if (recipeData.guid == eventIcon.RecipeGuid3)
                         {
                             objectsToRemove.Add(new EventIconObject(eventIcon.RecipeProduct3, itemObject, eventIcon.RecipeGuid3));
+
+                            if (!CheckIfRecipeExists(eventIcon))
+                            {
+                                RemoveInputRecipe(recipeData);
+                            }
                         }
                     }
                 }
@@ -137,6 +168,11 @@ public class PlayerRangeCollider : MonoBehaviour
                         if (recipeData.guid == eventIcon.RecipeGuid4)
                         {
                             objectsToRemove.Add(new EventIconObject(eventIcon.RecipeProduct4, itemObject, eventIcon.RecipeGuid4));
+
+                            if (!CheckIfRecipeExists(eventIcon))
+                            {
+                                RemoveInputRecipe(recipeData);
+                            }
                         }
                     }
                 }
@@ -187,5 +223,25 @@ public class PlayerRangeCollider : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void RemoveInputRecipe(RecipeItemData recipeData)
+    {
+        List<GameObject> recipesToRemove = new();
+
+        foreach (var recipe in recipeCreator.queueInputRecipes)
+        {
+            if (recipe.name == recipeData.index.ToString())
+            {
+                recipesToRemove.Add(recipe);
+            }
+        }
+
+        foreach (var recipeToRemove in recipesToRemove)
+        {
+            recipeCreator.queueInputRecipes.Remove(recipeToRemove);
+        }
+
+        recipeCreator.DestroyQueueInputRecipe(recipeData.index);
     }
 }

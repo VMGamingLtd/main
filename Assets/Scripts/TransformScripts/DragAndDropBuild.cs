@@ -30,8 +30,6 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         buildingAreaRectTransform = BuildingArea.GetComponent<RectTransform>();
         buildingAreaImage = BuildingArea.GetComponent<Image>();
         buildingCreator = GameObject.Find("BuildingCreatorList").GetComponent<BuildingCreator>();
-        objectTemplate = GameObject.Find("BuildingCreatorList/BuildingTemplate");
-        //dragImage = GameObject.Find("BuildingIcon");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -41,6 +39,16 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         if (currentCount != "0")
         {
             objName = transform.name;
+
+            if (objName == Constants.SmallPowerGrid)
+            {
+                objectTemplate = GameObject.Find("BuildingCreatorList/SmallPowerGridTemplate");
+            }
+            else
+            {
+                objectTemplate = GameObject.Find("BuildingCreatorList/BuildingTemplate");
+            }
+
             draggedObject = Instantiate(objectTemplate, BuildingArea.transform);
             draggedObject.transform.localScale = BuildingManagerArea.transform.localScale;
             draggedObject.transform.position = eventData.position;
@@ -118,26 +126,29 @@ public class DragAndDropBuild : MonoBehaviour, IBeginDragHandler, IDragHandler, 
 
         switch (objName)
         {
-            case "BiofuelGenerator":
+            case Constants.BiofuelGenerator:
                 buildingCreator.CreateBuilding(draggedObject, 0);
                 break;
-            case "WaterPump":
+            case Constants.WaterPump:
                 buildingCreator.CreateBuilding(draggedObject, 1);
                 break;
-            case "FibrousPlantField":
+            case Constants.FibrousPlantField:
                 buildingCreator.CreateBuilding(draggedObject, 2);
                 break;
-            case "Boiler":
+            case Constants.Boiler:
                 buildingCreator.CreateBuilding(draggedObject, 3);
                 break;
-            case "SteamGenerator":
+            case Constants.SteamGenerator:
                 buildingCreator.CreateBuilding(draggedObject, 4);
                 break;
-            case "Furnace":
+            case Constants.Furnace:
                 buildingCreator.CreateBuilding(draggedObject, 5);
                 break;
-            case "ResearchDevice":
+            case Constants.ResearchDevice:
                 buildingCreator.CreateBuilding(draggedObject, 6);
+                break;
+            case Constants.SmallPowerGrid:
+                buildingCreator.CreateBuilding(draggedObject, 7);
                 break;
             default:
                 Debug.LogWarning("Unknown building type: " + objName);

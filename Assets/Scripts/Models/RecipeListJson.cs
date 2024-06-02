@@ -797,6 +797,98 @@
       ""outputValue"": 2,
       ""currentQuantity"": -1,
       ""hasRequirements"": false
+    },
+    {
+      ""index"": 36,
+      ""recipeName"": ""Sulfur"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 1,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 10000,
+      ""productionTime"": 4,
+      ""outputValue"": 2,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 37,
+      ""recipeName"": ""Saltpeter"",
+      ""recipeProduct"": ""BASIC"",
+      ""recipeType"": ""MINERAL"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 1,
+      ""minQuantityRange"": 1000,
+      ""maxQuantityRange"": 10000,
+      ""productionTime"": 4,
+      ""outputValue"": 2,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": false
+    },
+    {
+      ""index"": 38,
+      ""recipeName"": ""ExplosivePowder"",
+      ""recipeProduct"": ""PROCESSED"",
+      ""recipeType"": ""POWDER"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 3,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
+      ""productionTime"": 9,
+      ""outputValue"": 2,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 36,
+          ""name"": ""Sulfur"",
+          ""product"": ""BASIC"",
+          ""type"": ""MINERAL"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 4
+        },
+        {
+          ""index"": 37,
+          ""name"": ""Saltpeter"",
+          ""product"": ""BASIC"",
+          ""type"": ""MINERAL"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 4
+        }
+      ]
+    },
+    {
+      ""index"": 39,
+      ""recipeName"": ""Disinfectant"",
+      ""recipeProduct"": ""PROCESSED"",
+      ""recipeType"": ""LIQUID"",
+      ""itemClass"": ""CLASS-F"",
+      ""experience"": 3,
+      ""minQuantityRange"": -1,
+      ""maxQuantityRange"": -1,
+      ""productionTime"": 12,
+      ""outputValue"": 1,
+      ""currentQuantity"": -1,
+      ""hasRequirements"": true,
+      ""childDataList"": [
+        {
+          ""index"": 1,
+          ""name"": ""Water"",
+          ""product"": ""BASIC"",
+          ""type"": ""LIQUID"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 40
+        },
+        {
+          ""index"": 37,
+          ""name"": ""Saltpeter"",
+          ""product"": ""BASIC"",
+          ""type"": ""MINERAL"",
+          ""itemClass"": ""CLASS-F"",
+          ""quantity"": 10
+        }
+      ]
     }
   ]
 }

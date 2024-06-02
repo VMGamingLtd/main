@@ -9,7 +9,6 @@ public class EventIconDataInjector : MonoBehaviour
     public TranslationManager translationManager;
     public GameObject stat;
 
-
     public void InjectData(EventIconData eventIconData)
     {
         equipment = transform.gameObject;
@@ -21,9 +20,24 @@ public class EventIconDataInjector : MonoBehaviour
             equipment.transform.Find("Header/Image").gameObject.SetActive(false);
             return;
         }
+        else if (eventIconData.EventLevel > -1)
+        {
+            equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = UserName.userName;
+            equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignBuildingSpriteToSlot(eventIconData.name);
+            equipment.transform.Find("Stats/Quantity").gameObject.SetActive(false);
+            equipment.transform.Find("Stats/Level").gameObject.SetActive(true);
+            equipment.transform.Find("Stats/Size").gameObject.SetActive(true);
+            equipment.transform.Find("Stats/Level/Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Level");
+            equipment.transform.Find("Stats/Size/Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Size");
+            equipment.transform.Find("Stats/Level/Value").GetComponent<TextMeshProUGUI>().text = eventIconData.EventLevel.ToString();
+            equipment.transform.Find("Stats/Size/Value").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(eventIconData.Size.ToString());
+            return;
+        }
 
         NumberFormater numberFormater = new();
         equipment.transform.Find("Stats/Quantity").gameObject.SetActive(true);
+        equipment.transform.Find("Stats/Level").gameObject.SetActive(false);
+        equipment.transform.Find("Stats/Size").gameObject.SetActive(false);
         equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(eventIconData.Name);
         equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(eventIconData.name);
         equipment.transform.Find("Stats/Quantity/Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Quantity");
@@ -51,7 +65,7 @@ public class EventIconDataInjector : MonoBehaviour
     {
         foreach (Transform child in statList)
         {
-            if (child.name != "Quantity") Destroy(child.gameObject);
+            if (child.name != "Quantity" && child.name != "Level" && child.name != "Size") Destroy(child.gameObject);
         }
     }
 
@@ -67,7 +81,11 @@ public class EventIconDataInjector : MonoBehaviour
 
     private Sprite AssignSpriteToSlot(string spriteName)
     {
-        Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
-        return sprite;
+        return AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
+    }
+
+    private Sprite AssignBuildingSpriteToSlot(string spriteName)
+    {
+        return AssetBundleManager.LoadAssetFromBundle<Sprite>("buildingicons", spriteName);
     }
 }

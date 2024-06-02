@@ -173,6 +173,7 @@ namespace BuildingManagement
 public class BuildingCreator : MonoBehaviour
 {
     public GameObject buildingTemplate;
+    public GameObject smallPowerGridTemplate;
     public GameObject newItemParent;
     public BuildingManager buildingManager;
     public BuildingIncrementor buildingIncrementor;
@@ -240,7 +241,7 @@ public class BuildingCreator : MonoBehaviour
         itemDataResearch.ID = ID;
         itemDataResearch.enlistedProduction = enlistedProduction;
         itemDataResearch.researchPoints = researchPoints;
-        newBuilding.tag = "Research";
+        newBuilding.tag = Constants.ResearchTag;
 
         translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
         itemDataResearch.buildingName = buildingName;
@@ -297,25 +298,25 @@ public class BuildingCreator : MonoBehaviour
         itemData.ID = ID;
         itemData.enlistedProduction = enlistedProduction;
 
-        if (newBuilding.name == "WaterPump")
+        if (newBuilding.name == Constants.WaterPump)
         {
-            newBuilding.tag = "NoConsume";
+            newBuilding.tag = Constants.NoConsumeTag;
         }
-        else if (newBuilding.name == "FibrousPlantField")
+        else if (newBuilding.name == Constants.FibrousPlantField)
         {
-            newBuilding.tag = "Consume";
+            newBuilding.tag = Constants.ConsumeTag;
         }
-        else if (newBuilding.name == "Boiler")
+        else if (newBuilding.name == Constants.Boiler)
         {
-            newBuilding.tag = "Consume";
+            newBuilding.tag = Constants.ConsumeTag;
         }
-        else if (newBuilding.name == "SteamGenerator")
+        else if (newBuilding.name == Constants.SteamGenerator)
         {
-            newBuilding.tag = "Energy";
+            newBuilding.tag = Constants.EnergyTag;
         }
-        else if (newBuilding.name == "Furnace")
+        else if (newBuilding.name == Constants.Furnace)
         {
-            newBuilding.tag = "Consume";
+            newBuilding.tag = Constants.ConsumeTag;
         }
 
         translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
@@ -370,7 +371,7 @@ public class BuildingCreator : MonoBehaviour
         itemDataEnergy.spriteIconName = spriteIconName;
         itemDataEnergy.ID = ID;
         itemDataEnergy.enlistedProduction = enlistedProduction;
-        newBuilding.tag = "Energy";
+        newBuilding.tag = Constants.EnergyTag;
         translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
         itemDataEnergy.buildingName = buildingName;
         newBuilding.AddComponent<EnergyBuildingCycles>();
@@ -415,7 +416,7 @@ public class BuildingCreator : MonoBehaviour
     {
         CoroutineManager coroutineManager = GameObject.Find("CoroutineManager").GetComponent<CoroutineManager>();
 
-        if (buildingType == "POWERPLANT")
+        if (buildingType == Constants.Powerplant)
         {
             itemDataEnergy = draggedObject.AddComponent<EnergyBuildingItemData>();
             itemDataEnergy.buildingType = buildingType;
@@ -434,7 +435,7 @@ public class BuildingCreator : MonoBehaviour
             itemDataEnergy.ID = BuildingUniqueID;
             itemDataEnergy.spriteIconName = draggedObject.transform.Find("Icon").GetComponent<Image>().sprite.name;
 
-            if (draggedObject.name == "BiofuelGenerator")
+            if (draggedObject.name == Constants.BiofuelGenerator)
             {
                 Planet0Buildings.Planet0BiofuelGenerator++;
                 Planet0Buildings.Planet0BiofuelGeneratorBlueprint--;
@@ -442,7 +443,7 @@ public class BuildingCreator : MonoBehaviour
                 coroutineManager.UpdateBuildingText(Constants.BiofuelGenerator, Planet0Buildings.Planet0BiofuelGeneratorBlueprint.ToString());
             }
 
-            draggedObject.tag = "Energy";
+            draggedObject.tag = Constants.EnergyTag;
             translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
             string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
             itemDataEnergy.buildingName = $"{titleText} #{itemDataEnergy.buildingCount}";
@@ -475,7 +476,7 @@ public class BuildingCreator : MonoBehaviour
                 coroutineManager.UpdateBuildingText(Constants.ResearchDevice, Planet0Buildings.Planet0ResearchDeviceBlueprint.ToString());
             }
 
-            draggedObject.tag = "Research";
+            draggedObject.tag = Constants.ResearchTag;
             translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
             string titleText = draggedObject.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingName);
             itemDataResearch.buildingName = $"{titleText} #{itemData.buildingCount}";
@@ -506,7 +507,7 @@ public class BuildingCreator : MonoBehaviour
                 Planet0Buildings.Planet0WaterPump++;
                 Planet0Buildings.Planet0WaterPumpBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0WaterPump;
-                draggedObject.tag = "NoConsume";
+                draggedObject.tag = Constants.NoConsumeTag;
                 coroutineManager.UpdateBuildingText(Constants.WaterPump, Planet0Buildings.Planet0WaterPumpBlueprint.ToString());
             }
             else if (draggedObject.name == Constants.FibrousPlantField)
@@ -514,7 +515,7 @@ public class BuildingCreator : MonoBehaviour
                 Planet0Buildings.Planet0FibrousPlantField++;
                 Planet0Buildings.Planet0FibrousPlantFieldBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0FibrousPlantField;
-                draggedObject.tag = "Consume";
+                draggedObject.tag = Constants.ConsumeTag;
                 coroutineManager.UpdateBuildingText(Constants.FibrousPlantField, Planet0Buildings.Planet0FibrousPlantFieldBlueprint.ToString());
             }
             else if (draggedObject.name == Constants.Boiler)
@@ -522,7 +523,7 @@ public class BuildingCreator : MonoBehaviour
                 Planet0Buildings.Planet0Boiler++;
                 Planet0Buildings.Planet0BoilerBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0Boiler;
-                draggedObject.tag = "Consume";
+                draggedObject.tag = Constants.ConsumeTag;
                 coroutineManager.UpdateBuildingText(Constants.Boiler, Planet0Buildings.Planet0BoilerBlueprint.ToString());
             }
             else if (draggedObject.name == Constants.SteamGenerator)
@@ -530,7 +531,7 @@ public class BuildingCreator : MonoBehaviour
                 Planet0Buildings.Planet0SteamGenerator++;
                 Planet0Buildings.Planet0SteamGeneratorBlueprint--;
                 itemDataEnergy.buildingCount = Planet0Buildings.Planet0SteamGenerator;
-                draggedObject.tag = "Energy";
+                draggedObject.tag = Constants.EnergyTag;
                 coroutineManager.UpdateBuildingText(Constants.SteamGenerator, Planet0Buildings.Planet0SteamGeneratorBlueprint.ToString());
             }
             else if (draggedObject.name == Constants.Furnace)
@@ -538,7 +539,7 @@ public class BuildingCreator : MonoBehaviour
                 Planet0Buildings.Planet0Furnace++;
                 Planet0Buildings.Planet0FurnaceBlueprint--;
                 itemData.buildingCount = Planet0Buildings.Planet0Furnace;
-                draggedObject.tag = "Consume";
+                draggedObject.tag = Constants.ConsumeTag;
                 coroutineManager.UpdateBuildingText(Constants.Furnace, Planet0Buildings.Planet0FurnaceBlueprint.ToString());
             }
 
