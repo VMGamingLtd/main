@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3672419699
+CRC: 401573259
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: dfaa2f8347ac64b3224be8674b0354dc
+    Hash: 30d7290210a37768ce57882245ded82d
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -24,6 +24,7 @@ Assets:
 - Assets/AssetBundlesRepo/ResourceIcons/SilicaSand.png
 - Assets/AssetBundlesRepo/ResourceIcons/ResearchPoint.png
 - Assets/AssetBundlesRepo/ResourceIcons/CopperOre.png
+- Assets/AssetBundlesRepo/ResourceIcons/Saltpeter.png
 - Assets/AssetBundlesRepo/ResourceIcons/Biofuel.png
 - Assets/AssetBundlesRepo/ResourceIcons/Wood.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronRod.png
@@ -38,6 +39,7 @@ Assets:
 - Assets/AssetBundlesRepo/ResourceIcons/Water.png
 - Assets/AssetBundlesRepo/ResourceIcons/AnimalMeat.png
 - Assets/AssetBundlesRepo/ResourceIcons/IronSheet.png
+- Assets/AssetBundlesRepo/ResourceIcons/Sulfur.png
 - Assets/AssetBundlesRepo/ResourceIcons/Whale.png
 - Assets/AssetBundlesRepo/ResourceIcons/GoldOre.png
 - Assets/AssetBundlesRepo/ResourceIcons/RedHorn.png
@@ -51,6 +53,8 @@ Assets:
 - Assets/AssetBundlesRepo/ResourceIcons/Electricity.png
 - Assets/AssetBundlesRepo/ResourceIcons/Stone.png
 - Assets/AssetBundlesRepo/ResourceIcons/SeaTurtle.png
+- Assets/AssetBundlesRepo/ResourceIcons/Disinfectant.png
+- Assets/AssetBundlesRepo/ResourceIcons/ExplosivePowder.png
 - Assets/AssetBundlesRepo/ResourceIcons/Octopus.png
 - Assets/AssetBundlesRepo/ResourceIcons/ProteinBeans.png
 - Assets/AssetBundlesRepo/ResourceIcons/Milk.png

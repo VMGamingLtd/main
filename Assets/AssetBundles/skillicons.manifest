@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2411704483
+CRC: 2676840024
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2549f514ccc1b7c06aafd80960727b50
+    Hash: 91fd327331fd43bfb026fbcaf9fa3ef0
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -27,6 +27,8 @@ Assets:
 - Assets/AssetBundlesRepo/SkillIcons/CognitiveEnhancement.png
 - Assets/AssetBundlesRepo/SkillIcons/ElectricityFundamentals.png
 - Assets/AssetBundlesRepo/SkillIcons/brain.png
+- Assets/AssetBundlesRepo/SkillIcons/Explosives.png
+- Assets/AssetBundlesRepo/SkillIcons/Pharmaceuticals.png
 - Assets/AssetBundlesRepo/SkillIcons/PoweredMechanics.png
 - Assets/AssetBundlesRepo/SkillIcons/DataAnalysis.png
 Dependencies: []

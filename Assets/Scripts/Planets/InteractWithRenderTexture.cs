@@ -28,17 +28,14 @@ public class InteractWithRenderTexture : MonoBehaviour
 
             // Cast a ray from the camera
             Ray ray = renderCamera.ScreenPointToRay(mousePosition);
-            Debug.Log("Mouse Position: " + mousePosition);
             float xOffset = currentZoomLevel * -1;
             float yOffset = currentZoomLevel * -1;
             // Apply the offsets to the ray's origin as Overlay canvas always makes an offset to actual viewport
             Vector3 offset = renderCamera.transform.TransformVector(new Vector3(xOffset, yOffset, 0));
             ray.origin += offset;
-            Debug.Log("ray: " + ray);
 
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, interactionLayer))
             {
-                Debug.Log("Raycast started");
                 Vector3 destinationPosition = hit.point + hit.normal * distanceFromSurface;
                 GameObject oldMarker = GameObject.Find("PlanetParent/StartPlanet/Marker(Clone)");
                 Destroy(oldMarker);

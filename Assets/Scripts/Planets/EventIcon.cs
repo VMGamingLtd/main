@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public enum EventIconType
@@ -13,10 +14,30 @@ public enum EventIconType
     Mineral,
     FurAnimal,
     MilkAnimal,
-    Animal
+    Animal,
+    VolcanicCave,
+    IceCave,
+    HiveNest,
+    CyberHideout,
+    AlienBase,
+    WormTunnels,
+    Shipwreck,
+    MysticTemple,
+    XenoSpider,
+    SporeBehemoth,
+    ElectroBeast,
+    VoidReaper
 }
 
-public class EventIcon : MonoBehaviour
+public enum EventSize
+{
+    Small,
+    Medium,
+    Large,
+}
+
+
+public class EventIcon : MonoBehaviour, IPointerClickHandler
 {
     private EventObjectContainer eventObjectContainer;
     private RenderTexture renderTexture;
@@ -29,10 +50,15 @@ public class EventIcon : MonoBehaviour
 
     public EventIconData Component;
 
+    #region Attributes
+
     [SerializeField]
     private float sphericalRadius = Player.VisibilityRadius / 20;
-
     public EventIconType IconType;
+    public EventSize EventSize;
+
+    #region Resource Icon Attributes
+
     public float CurrentQuantity;
     public float MinQuantityRange;
     public float MaxQuantityRange;
@@ -49,7 +75,18 @@ public class EventIcon : MonoBehaviour
     public string RecipeProduct2 = string.Empty;
     public string RecipeProduct3 = string.Empty;
     public string RecipeProduct4 = string.Empty;
+
+    #endregion Resource Icon Attributes
+
+    #region Dungeon Icon Attributes
+
+    public int EventLevel = -1;
+
+    #endregion Dungeon Icon Attributes
+
     public bool PlayerDistance;
+
+    #endregion Attributes
 
     public void SetPlanet(GameObject planet)
     {
@@ -72,6 +109,7 @@ public class EventIcon : MonoBehaviour
         Component = IconInstance.AddComponent<EventIconData>();
         Component.Name = transform.name;
         Component.Type = IconType;
+        Component.EventLevel = EventLevel;
         Component.CurrentQuantity = CurrentQuantity;
         Component.MinQuantityRange = MinQuantityRange;
         Component.MaxQuantityRange = MaxQuantityRange;
@@ -124,6 +162,14 @@ public class EventIcon : MonoBehaviour
         }
     }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (EventLevel > -1)
+        {
+
+        }
+    }
+
     private void OnDestroy()
     {
         if (planet == null)
@@ -145,7 +191,16 @@ public class EventIcon : MonoBehaviour
 
     private Sprite AssignSpriteToSlot(string spriteName)
     {
-        Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
+        Sprite sprite;
+
+        if (EventLevel == -1 || IconType == EventIconType.Player)
+        {
+            sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
+        }
+        else
+        {
+            sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("buildingicons", spriteName);
+        }
         return sprite;
     }
 }

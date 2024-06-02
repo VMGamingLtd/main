@@ -13,12 +13,15 @@ public class FunctionCaller : MonoBehaviour
     }
     public void CallFunctionByName()
     {
-        RecipeItemData recipeData = gameObject.GetComponent<RecipeItemData>();
-        buildingBar = GameObject.Find("Planet0Production").GetComponent<BuildingBarPlanet0>();
-        bool result = buildingBar.StartRecipeCreation(recipeData);
-        if (!result)
+        if (!CoroutineManager.autoProduction)
         {
-            StartCoroutine(errorCoroutine());
+            RecipeItemData recipeData = gameObject.GetComponent<RecipeItemData>();
+            buildingBar = GameObject.Find("Planet0Production").GetComponent<BuildingBarPlanet0>();
+            bool result = buildingBar.StartRecipeCreation(recipeData);
+            if (!result)
+            {
+                StartCoroutine(ErrorCoroutine());
+            }
         }
     }
 
@@ -29,12 +32,12 @@ public class FunctionCaller : MonoBehaviour
             Transform errorObjectTransform = transform.Find("ErrorImage");
             if (errorObjectTransform != null)
             {
-                errorObjectTransform.gameObject.SetActive(false);
+                errorObjectTransform?.gameObject.SetActive(false);
             }
         }
     }
 
-    IEnumerator errorCoroutine()
+    private IEnumerator ErrorCoroutine()
     {
         errorMessage.Play("ErrorMessage");
         yield return new WaitForSeconds(1.4f);

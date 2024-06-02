@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
@@ -18,6 +19,7 @@ public class SaveManager : MonoBehaviour
     private string filePath;
     public InventoryManager inventoryManager;
     public RecipeManager recipeManager;
+    public RecipeCreator recipeCreator;
     public BuildingManager buildingManager;
     private SaveDataModel currentSaveData;
     public class SaveDataModel
@@ -95,6 +97,8 @@ public class SaveManager : MonoBehaviour
         public Dictionary<string, object> PlayerStaticVariables = new();
         public Dictionary<string, object> PlayerResourcesStaticVariables = new();
         public List<EventIconModel> EventObjects = new();
+        public List<QueueRecipeModel> QueueRecipes = new();
+        public List<QueueRecipeModel> QueueInputRecipes = new();
     }
 
     [Serializable]
@@ -107,6 +111,7 @@ public class SaveManager : MonoBehaviour
         public string Name;
         public Vector3 position;
         public EventIconType iconType;
+        public EventSize eventSize;
         public float currentQuantity;
         public float elevation;
         public float minQuantityRange;
@@ -115,6 +120,7 @@ public class SaveManager : MonoBehaviour
         public int recipeIndex2;
         public int recipeIndex3;
         public int recipeIndex4;
+        public int eventLevel;
         public string recipeProduct;
         public string recipeProduct2;
         public string recipeProduct3;
@@ -261,6 +267,14 @@ public class SaveManager : MonoBehaviour
         public bool enlistedProduction;
         public int consumedSlotCount;
         public int producedSlotCount;
+    }
+
+    [Serializable]
+    public class QueueRecipeModel
+    {
+        public int index;
+        public int quantity;
+        public int output;
     }
 
     [Serializable]
@@ -489,6 +503,44 @@ public class SaveManager : MonoBehaviour
             currentSaveData.PlayerStaticVariables[field.Name] = field.GetValue(null);
         }
 
+        currentSaveData.QueueRecipes.Clear();
+
+        // recipe creator - queue recipes
+        foreach (var queueRecipe in recipeCreator.queueRecipes)
+        {
+            if (int.TryParse(queueRecipe.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text, out int quantity) &&
+                int.TryParse(queueRecipe.name, out int index))
+            {
+                QueueRecipeModel queueRecipeModel = new()
+                {
+                    index = index,
+                    quantity = quantity,
+                };
+
+                currentSaveData.QueueRecipes.Add(queueRecipeModel);
+            }
+        }
+
+        currentSaveData.QueueInputRecipes.Clear();
+
+        // recipe creator queue input recipes
+        foreach (var queueInputRecipe in recipeCreator.queueInputRecipes)
+        {
+            if (int.TryParse(queueInputRecipe.transform.Find("Quantity").GetComponent<TMP_InputField>().text, out int quantity) &&
+                int.TryParse(queueInputRecipe.transform.Find("Output").GetComponent<TextMeshProUGUI>().text, out int output) &&
+                int.TryParse(queueInputRecipe.name, out int index))
+            {
+                QueueRecipeModel queueRecipeInputModel = new()
+                {
+                    index = index,
+                    quantity = quantity,
+                    output = output
+                };
+
+                currentSaveData.QueueInputRecipes.Add(queueRecipeInputModel);
+            }
+        }
+
         // slot equip array
         currentSaveData.slotEquipped = EquipmentManager.slotEquipped;
         currentSaveData.slotEquippedName = EquipmentManager.slotEquippedName;
@@ -507,6 +559,8 @@ public class SaveManager : MonoBehaviour
                     Name = eventObject.name,
                     position = eventObject.transform.localPosition,
                     iconType = component.IconType,
+                    eventSize = component.EventSize,
+                    eventLevel = component.EventLevel,
                     currentQuantity = component.CurrentQuantity,
                     minQuantityRange = component.MinQuantityRange,
                     maxQuantityRange = component.MaxQuantityRange,

@@ -57,6 +57,7 @@ public class CoroutineManager : MonoBehaviour
     // data for server
     public static bool registeredUser = false;
     public static bool manualProduction = false;
+    public static bool autoProduction = false;
     public static bool[] AllCoroutineBooleans = new bool[36];
     public static int IndexNumber;
 
@@ -70,7 +71,7 @@ public class CoroutineManager : MonoBehaviour
          "LatexFoam", "ProteinBeans", "BiomassLeaves", "BiomassWood", "ProteinPowder",
          "BioOil", "IronTube", "WaterPump", "FibrousPlantField", "ResearchDevice",
          "FishMeat", "AnimalMeat", "AnimalSkin", "Milk", "SilicaSand", "Limestone",
-         "Clay", "Stone", "CopperOre", "SilverOre", "GoldOre"
+         "Clay", "Stone", "CopperOre", "SilverOre", "GoldOre", "Sulfur", "Saltpeter"
     };
 
     public Image imageToFill;
@@ -120,6 +121,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] CopperOreTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] SilverOreTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] GoldOreTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SulfurTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SaltpeterTexts = new TextMeshProUGUI[0];
 
     // production time texts
     public TextMeshProUGUI[] FibrousLeavesProductionTexts = new TextMeshProUGUI[0];
@@ -158,6 +161,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] CopperOreProductionTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] SilverOreProductionTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] GoldOreProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SulfurProductionTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SaltpeterProductionTexts = new TextMeshProUGUI[0];
 
     // material cost texts
     public TextMeshProUGUI[] FibrousLeavesMaterialCostTexts = new TextMeshProUGUI[0];
@@ -196,6 +201,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] CopperOreMaterialCostTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] SilverOreMaterialCostTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] GoldOreMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SulfurMaterialCostTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SaltpeterMaterialCostTexts = new TextMeshProUGUI[0];
 
     // production outcome texts
     public TextMeshProUGUI[] FibrousLeavesOutcomeTexts = new TextMeshProUGUI[0];
@@ -234,6 +241,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] CopperOreOutcomeTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] SilverOreOutcomeTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] GoldOreOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SulfurOutcomeTexts = new TextMeshProUGUI[0];
+    public TextMeshProUGUI[] SaltpeterOutcomeTexts = new TextMeshProUGUI[0];
 
     void Start()
     {
@@ -409,10 +418,6 @@ public class CoroutineManager : MonoBehaviour
                 currentTextArray[i].text = currentResource;
             }
         }
-        else
-        {
-            //Debug.LogError($"Text array for '{consumableName}' not found.");
-        }
     }
     public void UpdateBuildingText(string consumableName, string resourceQuantity)
     {
@@ -422,10 +427,6 @@ public class CoroutineManager : MonoBehaviour
             {
                 currentTextArray[i].text = resourceQuantity;
             }
-        }
-        else
-        {
-            //Debug.LogError($"Text array for '{consumableName}' not found.");
         }
     }
 
@@ -679,7 +680,15 @@ public class CoroutineManager : MonoBehaviour
 
                 UpdateQuantityTexts(recipeData.recipeName, recipeData.recipeProduct);
             }
-            StartCoroutine("CreateRecipe", recipeData);
+
+            if (!autoProduction && recipeCreator.queueRecipes.Count == 0)
+            {
+                StartCoroutine("CreateRecipe", recipeData);
+            }
+            else
+            {
+                StartCoroutine("StopCreateRecipe", recipeData);
+            }
 
         }
         else
@@ -695,7 +704,14 @@ public class CoroutineManager : MonoBehaviour
         if (recipeData.childData.Count > 0)
         {
             List<ChildData> recipeDataChildList = recipeData.childData;
-            ReturnMaterials(recipeDataChildList);
+
+            // we don't return materials back if the product was the last auto produced item
+            // because it can't be cancelled anyway
+            if (!autoProduction)
+            {
+                ReturnMaterials(recipeDataChildList);
+            }
+
             for (int i = 0; i < recipeDataChildList.Count; i++)
             {
                 UpdateQuantityTexts(recipeDataChildList[i].name, recipeDataChildList[i].product);

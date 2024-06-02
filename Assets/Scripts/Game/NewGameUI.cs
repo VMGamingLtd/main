@@ -105,7 +105,7 @@ public class NewGameUI : MonoBehaviour
                 EventIconModel iconModel = gameData.EventObjects[i];
                 planet.RecreateEventObject(iconModel.Name, iconModel.position, iconModel.iconType, iconModel.currentQuantity, iconModel.minQuantityRange, iconModel.maxQuantityRange, iconModel.recipeIndex,
                     iconModel.recipeIndex2, iconModel.recipeIndex3, iconModel.recipeIndex4, iconModel.recipeProduct, iconModel.recipeProduct2, iconModel.recipeProduct3, iconModel.recipeProduct4,
-                    iconModel.recipeGuid, iconModel.recipeGuid2, iconModel.recipeGuid3, iconModel.recipeGuid4);
+                    iconModel.recipeGuid, iconModel.recipeGuid2, iconModel.recipeGuid3, iconModel.recipeGuid4, iconModel.eventSize, iconModel.eventLevel);
             }
 
             // assign current goal
@@ -114,6 +114,20 @@ public class NewGameUI : MonoBehaviour
             // slot equip array
             EquipmentManager.slotEquipped = gameData.slotEquipped;
             EquipmentManager.slotEquippedName = gameData.slotEquippedName;
+
+            // Deserialize QueueRecipes
+            for (int i = 0; i < gameData.QueueRecipes.Count; i++)
+            {
+                QueueRecipeModel recipeModel = gameData.QueueRecipes[i];
+                recipeCreator.RecreateQueueRecipe(recipeModel.index, recipeModel.quantity);
+            }
+
+            // Deserialize QueueInputRecipes
+            for (int i = 0; i < gameData.QueueInputRecipes.Count; i++)
+            {
+                QueueRecipeModel recipeModel = gameData.QueueInputRecipes[i];
+                recipeCreator.RecreateQueueInputRecipe(recipeModel.index, recipeModel.quantity, recipeModel.output);
+            }
 
             // Deserialize Recipes
             for (int i = 0; i < gameData.basicRecipeObjects.Length; i++)
@@ -445,6 +459,7 @@ public class NewGameUI : MonoBehaviour
             equipmentManager.RefreshStats();
             equipmentManager.RefreshRecipeStats();
             planet.OnColourSettingsUpdated();
+            recipeCreator.RefreshQueueRecipes();
             _ = LoadMenus();
         }
     }
@@ -459,8 +474,6 @@ public class NewGameUI : MonoBehaviour
         float currentTime = 0f;
         float currentAlpha = 0f;
         float targetAlpha = 1f;
-
-
 
         while (currentTime < totalTime)
         {

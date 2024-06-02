@@ -13,9 +13,11 @@ public class PlanetControl : MonoBehaviour
     private float rotationDamping = 0.95f; // Adjust the damping factor
     public float dragThreshold = 2.0f;
     public float zoomSpeed = 1.0f;
-    private float minZoomSize = 3.0f;
+    private float minZoomSize = 0.4f;
     private float maxZoomSize = 8.0f;
     private float touchZoomSensitivity = 0.1f;
+
+    public static bool isPlayerInExplorationMenu;
 
     void Start()
     {
@@ -38,7 +40,7 @@ public class PlanetControl : MonoBehaviour
             Vector3 currentTouchPos = GetTouchPosition();
             Vector3 touchDelta = currentTouchPos - initialTouchPos;
 
-            if (!isDragging && touchDelta.magnitude >= dragThreshold)
+            if (!isDragging && touchDelta.magnitude >= dragThreshold && isPlayerInExplorationMenu)
             {
                 isDragging = true;
             }
@@ -67,7 +69,7 @@ public class PlanetControl : MonoBehaviour
         lastTouchPos = GetTouchPosition();
     }
 
-    Vector3 GetTouchPosition()
+    private Vector3 GetTouchPosition()
     {
         if (Input.touchCount > 0)
             return Input.GetTouch(0).position;
@@ -75,7 +77,7 @@ public class PlanetControl : MonoBehaviour
         return Input.mousePosition;
     }
 
-    float GetPinchZoomInput()
+    private float GetPinchZoomInput()
     {
         if (Input.touchCount >= 2)
         {

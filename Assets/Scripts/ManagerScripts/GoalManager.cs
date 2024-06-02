@@ -67,6 +67,7 @@ public class GoalManager : MonoBehaviour
         goalAnimation.Play("Idle");
         firstGoal = true;
         coroutineManager.InitializeResourceMap();
+        recipeCreator.RefreshQueueRecipes();
     }
 
     public async UniTask SetThirdGoal()
@@ -82,6 +83,7 @@ public class GoalManager : MonoBehaviour
         secondGoal = true;
         buttonManager.UnlockBaseButton();
         coroutineManager.InitializeResourceMap();
+        recipeCreator.RefreshQueueRecipes();
     }
 
     public async UniTask SetFourthGoal()
@@ -101,6 +103,7 @@ public class GoalManager : MonoBehaviour
         goalAnimation.Play("Idle");
         thirdGoal = true;
         coroutineManager.InitializeResourceMap();
+        recipeCreator.RefreshQueueRecipes();
     }
 
     public async UniTask SetFifthGoal()
@@ -115,5 +118,6 @@ public class GoalManager : MonoBehaviour
         goalAnimation.Play("Idle");
         fourthGoal = true;
         coroutineManager.InitializeResourceMap();
+        recipeCreator.RefreshQueueRecipes();
     }
 }
