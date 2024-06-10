@@ -4,6 +4,7 @@ function GAO_WebSocketCreate(GAOS_WS) {
     window.GAO_WEB_SOCKETS = [];
   }
   var ws = new WebSocket(UTF8ToString(GAOS_WS));
+  ws.binaryType = "arraybuffer";
   console.log('@@@@@@@@@@@@@@@@@@@@@ cp 3000: GAO_WebSocketCreate: ' + GAOS_WS);
   console.log('@@@@@@@@@@@@@@@@@@@@@ cp 3010: GAO_WebSocketCreate: ' + ws);
   window.GAO_WEB_SOCKETS.push(ws);
@@ -40,24 +41,35 @@ function GAO_WebSocketOnMessage(ws, fnName) {
   fnName = UTF8ToString(fnName);
   window.GAO_WEB_SOCKETS[ws].addEventListener('message', function (event) {
     if (typeof event.data === 'string') {
+      console.error('websocket - received text data, text data not supported');
       window.unityInstance.SendMessage('WebSocketClientJs', fnName, event.data);
-    } else if (event.data instanceof ArrayBuffer || event.data instanceof Blob) {
-      console.error('websocket - received binary data, binary data not supported');
+    } else if (event.data instanceof ArrayBuffer) {
+      var binaryData = new Uint8Array(event.data);
+
+      // Allocate memory on emcscripten heap (Emcscripten heap is just javascript ArrayBuffer allocated and passed to module on startup,
+      // Module.HEAPU32 is just Uint32Array view on that ArrayBuffer - 'Module.HEAPU32 = new Uint32Array(arrayBuffer)'). 
+      // We are allocating memory on emcscripten for the binary data and the length of the binary data.
+      // _malloc() always returns memory alligned to the biggest word for the architecture which should be 8 bytes word for int64 which
+      // guarantees that memory will be always properly alligned for any smaller words line int32, in16, int8).
+      // We are using the first 4 bystes for passing the length of the binary data which follows after.
+      var bufferPtr = Module._malloc(Uint32Array.BYTES_PER_ELEMENT +  binaryData.length * binaryData.BYTES_PER_ELEMENT);
+      // write the length of the binary data to the buffer
+      Module.HEAPU32.set([binaryData.length], bufferPtr);
+      // write the binary data to the buffer
+      Module.HEAPU8.set(binaryData, bufferPtr + Uint32Array.BYTES_PER_ELEMENT);
+
+      window.unityInstance.SendMessage('WebSocketClientJs', fnName, bufferPtr);
+
+      Module._free(bufferPtr);
     } else {
       console.error('websocket - received data of unknown format');
     }
   })
 }
 
-function GAO_WebSocketSend(ws, data) {
-  data = UTF8ToString(data);
-  if (typeof data !== 'string') {
-    console.error('GAO_WebSocketSend(): websocket - only string data supported');
-    throw new Error('only string data supported')
-  }
-  console.info('websocket send: ' + data);
-  var str = UTF8ToString(data)
-  window.GAO_WEB_SOCKETS[ws].send(str);
+function GAO_WebSocketSend(ws, data, length) {
+  var binaryData = new Uint8Array(Module.HEAPU8.buffer, data, length);
+  window.GAO_WEB_SOCKETS[ws].send(binaryData);
 }
 
 mergeInto(LibraryManager.library, {

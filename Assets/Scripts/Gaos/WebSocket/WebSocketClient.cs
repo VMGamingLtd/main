@@ -4,12 +4,23 @@ using System.Collections;
 
 namespace Gaos.WebSocket
 {
-    public class WebSocketClient: MonoBehaviour, Gaos.WebSocket.IWebSocketClient
+    public class WebSocketClient: MonoBehaviour, Gaos.WebSocket.IWebSocketClient, Gaos.WebSocket.IWebSocketClientHandler
     {
         public WebSocketClientSharp webSocketClientSharp;
         public WebSocketClientJs webSocketClientJs;
 
-        public Queue<string> GetOutboundQueue()
+        private IWebSocketClientHandler websocketHandler;
+        private Gaos.Messages.Dispatcher dispatcher;
+
+        public WebSocketClient()
+        {
+
+            this.dispatcher = new Gaos.Messages.Dispatcher(this);
+            websocketHandler = new WebsocketHandler(this.dispatcher);
+
+        }
+
+        public Queue<byte[]> GetOutboundQueue()
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -21,7 +32,7 @@ namespace Gaos.WebSocket
             }
         }
 
-        public Queue<string> GetInboundQueue()
+        public Queue<byte[]> GetInboundQueue()
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -45,7 +56,7 @@ namespace Gaos.WebSocket
             }
         }
 
-        public void Send(string data)
+        public void Send(byte[] data)
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -57,23 +68,40 @@ namespace Gaos.WebSocket
             }
         }
 
-        public IEnumerator StartProcessing()
+        public void Process(byte[] data)
+        {
+        }
+
+        public IEnumerator StartProcessingOutboundQueue()
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                return  webSocketClientJs.StartProcessing();
+                return  webSocketClientJs.StartProcessingOutboundQueue();
             }
             else
             {
-                return webSocketClientSharp.StartProcessing();
+                return webSocketClientSharp.StartProcessingOutboundQueue();
+            }
+        }
+
+        public IEnumerator StartProcessingInboundQueue(IWebSocketClientHandler handler)
+        {
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                return  webSocketClientJs.StartProcessingInboundQueue(handler);
+            }
+            else
+            {
+                return webSocketClientSharp.StartProcessingInboundQueue(handler);
             }
         }
 
         public void OnEnable()
         {
             Open();
-            StartCoroutine(StartProcessing());
-            Send("ping");
+            StartCoroutine(StartProcessingOutboundQueue());
+            StartCoroutine(StartProcessingInboundQueue(websocketHandler));
+            //Send("ping");
         }
 
     }

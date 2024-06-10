@@ -9,8 +9,8 @@ namespace Gaos.WebSocket
     {
         public readonly static string CLASS_NAME = typeof(WebSocketClientSharp).Name;
 
-        public Queue<string> MessagesOutbound = new Queue<string>();
-        public Queue<string> MessagesInbound = new Queue<string>();
+        public Queue<byte[]> MessagesOutbound = new Queue<byte[]>();
+        public Queue<byte[]> MessagesInbound = new Queue<byte[]>();
 
         public WebSocketSharp.WebSocket WebSocket;
         public bool IsConnected = false;
@@ -27,11 +27,11 @@ namespace Gaos.WebSocket
 
         }
 
-        public Queue<string> GetOutboundQueue()
+        public Queue<byte[]> GetOutboundQueue()
         {
             return MessagesOutbound;
         }
-        public Queue<string> GetInboundQueue()
+        public Queue<byte[]> GetInboundQueue()
         {
             return MessagesInbound;
         }
@@ -58,13 +58,11 @@ namespace Gaos.WebSocket
             {
                 if (e.IsText)
                 {
-                    Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket message: {e.Data}");
-                    MessagesInbound.Enqueue(e.Data);
+                    Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: ERROR: message format is not binary, message ignored");
                 }
                 else
                 {
-                    Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: ERROR: message format is not text, message ignored");
-
+                    MessagesInbound.Enqueue(e.RawData);
                 }
 
             };
@@ -85,17 +83,19 @@ namespace Gaos.WebSocket
 
         }
 
-        public void Send(string data)
+        public void Send(byte[] data)
         {
             MessagesOutbound.Enqueue(data);
         }
 
-        public IEnumerator StartProcessing()
+        public virtual void Process(byte[] data)
+        {
+        }
+
+        public IEnumerator StartProcessingOutboundQueue()
         {
             const string METHOD_NAME = "StartProcessing()";
             const int MAX_RETRY_COUNT = 5;
-
-            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket start processing");
 
             int retryCount = 0;
 
@@ -105,21 +105,20 @@ namespace Gaos.WebSocket
                 {
                     if (MessagesOutbound.Count > 0)
                     {
-                        string message = MessagesOutbound.Peek();
-                        Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket sending message: {message}");
+                        byte[] data = MessagesOutbound.Peek();
                         try
                         {
-                            WebSocket.Send(message);
+                            WebSocket.Send(data);
                             MessagesOutbound.Dequeue();
                             retryCount = 0;
                         }
                         catch (System.Exception e)
                         {
-                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {message}: {e.Message}");
+                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {data}: {e.Message}");
                             ++retryCount;
                             if (retryCount > MAX_RETRY_COUNT)
                             {
-                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: sending message: {message}: MAX_RETRY_COUNT reached, will not try again");
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: sending message: {data}: MAX_RETRY_COUNT reached, will not try again");
                                 MessagesOutbound.Dequeue();
                                 retryCount = 0;
                             }
@@ -139,6 +138,38 @@ namespace Gaos.WebSocket
             }
         }
 
+        public IEnumerator StartProcessingInboundQueue(IWebSocketClientHandler handler)
+        {
+            const string METHOD_NAME = "StartProcessingInboundQueue()";
+            while (true)
+            {
+                if (IsConnected)
+                {
+                    if (MessagesInbound.Count > 0)
+                    {
+                        byte[] data = MessagesInbound.Peek();
+                        try
+                        {
+                            handler.Process(data);
+                            MessagesOutbound.Dequeue();
+                        }
+                        catch (System.Exception e)
+                        {
+                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e.Message}");
+                        }
+                        yield return null;
+                    }
+                    else
+                    {
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
+        }
     }
 
 }
