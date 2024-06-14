@@ -138,7 +138,7 @@ namespace Gaos.WebSocket
             }
         }
 
-        public IEnumerator StartProcessingInboundQueue(IWebSocketClientHandler handler)
+        public IEnumerator StartProcessingInboundQueue(IWebSocketClient ws)
         {
             const string METHOD_NAME = "StartProcessingInboundQueue()";
             while (true)
@@ -150,7 +150,7 @@ namespace Gaos.WebSocket
                         byte[] data = MessagesInbound.Peek();
                         try
                         {
-                            handler.Process(data);
+                            ws.Process(data);
                             MessagesOutbound.Dequeue();
                         }
                         catch (System.Exception e)

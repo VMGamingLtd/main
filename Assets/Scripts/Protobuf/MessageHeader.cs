@@ -24,15 +24,15 @@ namespace GaoProtobuf {
     static MessageHeaderReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChNNZXNzYWdlSGVhZGVyLnByb3RvEgtHYW9Qcm90b2J1ZiJ5Cg1NZXNzYWdl",
-            "SGVhZGVyEgwKBGZyb20YASABKAMSCgoCdG8YAiABKAMSDQoFZ3JvdXAYAyAB",
-            "KAMSDAoEdHlwZRgEIAEoBRIRCgluYW1lc3BhY2UYBSABKAUSDgoGY2xhc3Nz",
-            "GAYgASgFEg4KBm1ldGhvZBgHIAEoBUIOqgILR2FvUHJvdG9idWZiBnByb3Rv",
-            "Mw=="));
+            "ChNNZXNzYWdlSGVhZGVyLnByb3RvEgtHYW9Qcm90b2J1ZiKGAQoNTWVzc2Fn",
+            "ZUhlYWRlchIOCgZmcm9tSWQYASABKAMSDAoEdG9JZBgCIAEoAxIPCgdncm91",
+            "cElkGAMgASgDEg4KBnR5cGVJZBgEIAEoBRITCgtuYW1lc3BhY2VJZBgFIAEo",
+            "BRIPCgdjbGFzc0lkGAYgASgFEhAKCG1ldGhvZElkGAcgASgFQg6qAgtHYW9Q",
+            "cm90b2J1ZmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::GaoProtobuf.MessageHeader), global::GaoProtobuf.MessageHeader.Parser, new[]{ "From", "To", "Group", "Type", "Namespace", "Classs", "Method" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::GaoProtobuf.MessageHeader), global::GaoProtobuf.MessageHeader.Parser, new[]{ "FromId", "ToId", "GroupId", "TypeId", "NamespaceId", "ClassId", "MethodId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -73,13 +73,13 @@ namespace GaoProtobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public MessageHeader(MessageHeader other) : this() {
-      from_ = other.from_;
-      to_ = other.to_;
-      group_ = other.group_;
-      type_ = other.type_;
-      namespace_ = other.namespace_;
-      classs_ = other.classs_;
-      method_ = other.method_;
+      fromId_ = other.fromId_;
+      toId_ = other.toId_;
+      groupId_ = other.groupId_;
+      typeId_ = other.typeId_;
+      namespaceId_ = other.namespaceId_;
+      classId_ = other.classId_;
+      methodId_ = other.methodId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -89,87 +89,87 @@ namespace GaoProtobuf {
       return new MessageHeader(this);
     }
 
-    /// <summary>Field number for the "from" field.</summary>
-    public const int FromFieldNumber = 1;
-    private long from_;
+    /// <summary>Field number for the "fromId" field.</summary>
+    public const int FromIdFieldNumber = 1;
+    private long fromId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public long From {
-      get { return from_; }
+    public long FromId {
+      get { return fromId_; }
       set {
-        from_ = value;
+        fromId_ = value;
       }
     }
 
-    /// <summary>Field number for the "to" field.</summary>
-    public const int ToFieldNumber = 2;
-    private long to_;
+    /// <summary>Field number for the "toId" field.</summary>
+    public const int ToIdFieldNumber = 2;
+    private long toId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public long To {
-      get { return to_; }
+    public long ToId {
+      get { return toId_; }
       set {
-        to_ = value;
+        toId_ = value;
       }
     }
 
-    /// <summary>Field number for the "group" field.</summary>
-    public const int GroupFieldNumber = 3;
-    private long group_;
+    /// <summary>Field number for the "groupId" field.</summary>
+    public const int GroupIdFieldNumber = 3;
+    private long groupId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public long Group {
-      get { return group_; }
+    public long GroupId {
+      get { return groupId_; }
       set {
-        group_ = value;
+        groupId_ = value;
       }
     }
 
-    /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 4;
-    private int type_;
+    /// <summary>Field number for the "typeId" field.</summary>
+    public const int TypeIdFieldNumber = 4;
+    private int typeId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int Type {
-      get { return type_; }
+    public int TypeId {
+      get { return typeId_; }
       set {
-        type_ = value;
+        typeId_ = value;
       }
     }
 
-    /// <summary>Field number for the "namespace" field.</summary>
-    public const int NamespaceFieldNumber = 5;
-    private int namespace_;
+    /// <summary>Field number for the "namespaceId" field.</summary>
+    public const int NamespaceIdFieldNumber = 5;
+    private int namespaceId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int Namespace {
-      get { return namespace_; }
+    public int NamespaceId {
+      get { return namespaceId_; }
       set {
-        namespace_ = value;
+        namespaceId_ = value;
       }
     }
 
-    /// <summary>Field number for the "classs" field.</summary>
-    public const int ClasssFieldNumber = 6;
-    private int classs_;
+    /// <summary>Field number for the "classId" field.</summary>
+    public const int ClassIdFieldNumber = 6;
+    private int classId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int Classs {
-      get { return classs_; }
+    public int ClassId {
+      get { return classId_; }
       set {
-        classs_ = value;
+        classId_ = value;
       }
     }
 
-    /// <summary>Field number for the "method" field.</summary>
-    public const int MethodFieldNumber = 7;
-    private int method_;
+    /// <summary>Field number for the "methodId" field.</summary>
+    public const int MethodIdFieldNumber = 7;
+    private int methodId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int Method {
-      get { return method_; }
+    public int MethodId {
+      get { return methodId_; }
       set {
-        method_ = value;
+        methodId_ = value;
       }
     }
 
@@ -188,13 +188,13 @@ namespace GaoProtobuf {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (From != other.From) return false;
-      if (To != other.To) return false;
-      if (Group != other.Group) return false;
-      if (Type != other.Type) return false;
-      if (Namespace != other.Namespace) return false;
-      if (Classs != other.Classs) return false;
-      if (Method != other.Method) return false;
+      if (FromId != other.FromId) return false;
+      if (ToId != other.ToId) return false;
+      if (GroupId != other.GroupId) return false;
+      if (TypeId != other.TypeId) return false;
+      if (NamespaceId != other.NamespaceId) return false;
+      if (ClassId != other.ClassId) return false;
+      if (MethodId != other.MethodId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -202,13 +202,13 @@ namespace GaoProtobuf {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (From != 0L) hash ^= From.GetHashCode();
-      if (To != 0L) hash ^= To.GetHashCode();
-      if (Group != 0L) hash ^= Group.GetHashCode();
-      if (Type != 0) hash ^= Type.GetHashCode();
-      if (Namespace != 0) hash ^= Namespace.GetHashCode();
-      if (Classs != 0) hash ^= Classs.GetHashCode();
-      if (Method != 0) hash ^= Method.GetHashCode();
+      if (FromId != 0L) hash ^= FromId.GetHashCode();
+      if (ToId != 0L) hash ^= ToId.GetHashCode();
+      if (GroupId != 0L) hash ^= GroupId.GetHashCode();
+      if (TypeId != 0) hash ^= TypeId.GetHashCode();
+      if (NamespaceId != 0) hash ^= NamespaceId.GetHashCode();
+      if (ClassId != 0) hash ^= ClassId.GetHashCode();
+      if (MethodId != 0) hash ^= MethodId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -227,33 +227,33 @@ namespace GaoProtobuf {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (From != 0L) {
+      if (FromId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt64(From);
+        output.WriteInt64(FromId);
       }
-      if (To != 0L) {
+      if (ToId != 0L) {
         output.WriteRawTag(16);
-        output.WriteInt64(To);
+        output.WriteInt64(ToId);
       }
-      if (Group != 0L) {
+      if (GroupId != 0L) {
         output.WriteRawTag(24);
-        output.WriteInt64(Group);
+        output.WriteInt64(GroupId);
       }
-      if (Type != 0) {
+      if (TypeId != 0) {
         output.WriteRawTag(32);
-        output.WriteInt32(Type);
+        output.WriteInt32(TypeId);
       }
-      if (Namespace != 0) {
+      if (NamespaceId != 0) {
         output.WriteRawTag(40);
-        output.WriteInt32(Namespace);
+        output.WriteInt32(NamespaceId);
       }
-      if (Classs != 0) {
+      if (ClassId != 0) {
         output.WriteRawTag(48);
-        output.WriteInt32(Classs);
+        output.WriteInt32(ClassId);
       }
-      if (Method != 0) {
+      if (MethodId != 0) {
         output.WriteRawTag(56);
-        output.WriteInt32(Method);
+        output.WriteInt32(MethodId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -265,33 +265,33 @@ namespace GaoProtobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (From != 0L) {
+      if (FromId != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt64(From);
+        output.WriteInt64(FromId);
       }
-      if (To != 0L) {
+      if (ToId != 0L) {
         output.WriteRawTag(16);
-        output.WriteInt64(To);
+        output.WriteInt64(ToId);
       }
-      if (Group != 0L) {
+      if (GroupId != 0L) {
         output.WriteRawTag(24);
-        output.WriteInt64(Group);
+        output.WriteInt64(GroupId);
       }
-      if (Type != 0) {
+      if (TypeId != 0) {
         output.WriteRawTag(32);
-        output.WriteInt32(Type);
+        output.WriteInt32(TypeId);
       }
-      if (Namespace != 0) {
+      if (NamespaceId != 0) {
         output.WriteRawTag(40);
-        output.WriteInt32(Namespace);
+        output.WriteInt32(NamespaceId);
       }
-      if (Classs != 0) {
+      if (ClassId != 0) {
         output.WriteRawTag(48);
-        output.WriteInt32(Classs);
+        output.WriteInt32(ClassId);
       }
-      if (Method != 0) {
+      if (MethodId != 0) {
         output.WriteRawTag(56);
-        output.WriteInt32(Method);
+        output.WriteInt32(MethodId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -303,26 +303,26 @@ namespace GaoProtobuf {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (From != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(From);
+      if (FromId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(FromId);
       }
-      if (To != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(To);
+      if (ToId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ToId);
       }
-      if (Group != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Group);
+      if (GroupId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(GroupId);
       }
-      if (Type != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Type);
+      if (TypeId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(TypeId);
       }
-      if (Namespace != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Namespace);
+      if (NamespaceId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(NamespaceId);
       }
-      if (Classs != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Classs);
+      if (ClassId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ClassId);
       }
-      if (Method != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Method);
+      if (MethodId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MethodId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -336,26 +336,26 @@ namespace GaoProtobuf {
       if (other == null) {
         return;
       }
-      if (other.From != 0L) {
-        From = other.From;
+      if (other.FromId != 0L) {
+        FromId = other.FromId;
       }
-      if (other.To != 0L) {
-        To = other.To;
+      if (other.ToId != 0L) {
+        ToId = other.ToId;
       }
-      if (other.Group != 0L) {
-        Group = other.Group;
+      if (other.GroupId != 0L) {
+        GroupId = other.GroupId;
       }
-      if (other.Type != 0) {
-        Type = other.Type;
+      if (other.TypeId != 0) {
+        TypeId = other.TypeId;
       }
-      if (other.Namespace != 0) {
-        Namespace = other.Namespace;
+      if (other.NamespaceId != 0) {
+        NamespaceId = other.NamespaceId;
       }
-      if (other.Classs != 0) {
-        Classs = other.Classs;
+      if (other.ClassId != 0) {
+        ClassId = other.ClassId;
       }
-      if (other.Method != 0) {
-        Method = other.Method;
+      if (other.MethodId != 0) {
+        MethodId = other.MethodId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -373,31 +373,31 @@ namespace GaoProtobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            From = input.ReadInt64();
+            FromId = input.ReadInt64();
             break;
           }
           case 16: {
-            To = input.ReadInt64();
+            ToId = input.ReadInt64();
             break;
           }
           case 24: {
-            Group = input.ReadInt64();
+            GroupId = input.ReadInt64();
             break;
           }
           case 32: {
-            Type = input.ReadInt32();
+            TypeId = input.ReadInt32();
             break;
           }
           case 40: {
-            Namespace = input.ReadInt32();
+            NamespaceId = input.ReadInt32();
             break;
           }
           case 48: {
-            Classs = input.ReadInt32();
+            ClassId = input.ReadInt32();
             break;
           }
           case 56: {
-            Method = input.ReadInt32();
+            MethodId = input.ReadInt32();
             break;
           }
         }
@@ -416,31 +416,31 @@ namespace GaoProtobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            From = input.ReadInt64();
+            FromId = input.ReadInt64();
             break;
           }
           case 16: {
-            To = input.ReadInt64();
+            ToId = input.ReadInt64();
             break;
           }
           case 24: {
-            Group = input.ReadInt64();
+            GroupId = input.ReadInt64();
             break;
           }
           case 32: {
-            Type = input.ReadInt32();
+            TypeId = input.ReadInt32();
             break;
           }
           case 40: {
-            Namespace = input.ReadInt32();
+            NamespaceId = input.ReadInt32();
             break;
           }
           case 48: {
-            Classs = input.ReadInt32();
+            ClassId = input.ReadInt32();
             break;
           }
           case 56: {
-            Method = input.ReadInt32();
+            MethodId = input.ReadInt32();
             break;
           }
         }

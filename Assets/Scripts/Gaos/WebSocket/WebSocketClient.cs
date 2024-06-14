@@ -1,24 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System;
+using Gaos.Websocket;
+using Google.Protobuf;
 
 namespace Gaos.WebSocket
 {
-    public class WebSocketClient: MonoBehaviour, Gaos.WebSocket.IWebSocketClient, Gaos.WebSocket.IWebSocketClientHandler
+    public class WebSocketClient: MonoBehaviour, Gaos.WebSocket.IWebSocketClient
     {
         public WebSocketClientSharp webSocketClientSharp;
         public WebSocketClientJs webSocketClientJs;
 
-        private IWebSocketClientHandler websocketHandler;
-        private Gaos.Messages.Dispatcher dispatcher;
-
-        public WebSocketClient()
-        {
-
-            this.dispatcher = new Gaos.Messages.Dispatcher(this);
-            websocketHandler = new WebsocketHandler(this.dispatcher);
-
-        }
 
         public Queue<byte[]> GetOutboundQueue()
         {
@@ -54,6 +47,7 @@ namespace Gaos.WebSocket
             {
                 webSocketClientSharp.Open();
             }
+            Gaos.Messages.Websocket.PingPong.SendPing(this, "Hello from unity!");
         }
 
         public void Send(byte[] data)
@@ -68,8 +62,19 @@ namespace Gaos.WebSocket
             }
         }
 
-        public void Process(byte[] data)
+        public void Process(byte[] buffer)
         {
+            uint bytesReadHeader = 0;
+            GaoProtobuf.MessageHeader header = ParseMessageHeader(buffer, ref bytesReadHeader);
+
+            uint bytesReadSize = 0;
+            uint messageObjectSize = DeserializeMessageSize(buffer, bytesReadHeader,  ref bytesReadSize);
+
+            byte[] data = new byte[messageObjectSize];
+            Array.Copy(buffer, bytesReadHeader + bytesReadSize, data, 0, messageObjectSize);
+
+
+            Dispatcher.Dispatch(this, header.NamespaceId, header.ClassId, header.MethodId, data);
         }
 
         public IEnumerator StartProcessingOutboundQueue()
@@ -84,15 +89,15 @@ namespace Gaos.WebSocket
             }
         }
 
-        public IEnumerator StartProcessingInboundQueue(IWebSocketClientHandler handler)
+        public IEnumerator StartProcessingInboundQueue(IWebSocketClient ws)
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                return  webSocketClientJs.StartProcessingInboundQueue(handler);
+                return  webSocketClientJs.StartProcessingInboundQueue(ws);
             }
             else
             {
-                return webSocketClientSharp.StartProcessingInboundQueue(handler);
+                return webSocketClientSharp.StartProcessingInboundQueue(ws);
             }
         }
 
@@ -100,10 +105,76 @@ namespace Gaos.WebSocket
         {
             Open();
             StartCoroutine(StartProcessingOutboundQueue());
-            StartCoroutine(StartProcessingInboundQueue(websocketHandler));
-            //Send("ping");
+            StartCoroutine(StartProcessingInboundQueue(this));
         }
 
+        public static uint ToNetworkByteOrder(uint value)
+        {
+            return ((value & 0x000000FF) << 24) |
+                   ((value & 0x0000FF00) << 8) |
+                   ((value & 0x00FF0000) >> 8) |
+                   ((value & 0xFF000000) >> 24);
+        }
+
+        public static uint FromNetworkByteOrder(uint value)
+        {
+            // Note that this function is the same as toNetworkByteOrder becasuse both operations
+            // are actually only reversing the byte order of the value.
+            return ToNetworkByteOrder(value);
+        }
+
+        public static byte[] SerializeMessageaSize(uint size)
+        {
+            byte[] sizeBytes = BitConverter.GetBytes(ToNetworkByteOrder(size));
+            return sizeBytes;
+        }
+
+
+        public static uint DeserializeMessageSize(byte[] message, uint bufferOffset, ref uint bytesRead)
+        {
+            byte[] data = new byte[4];
+            Array.Copy(message, bufferOffset, data, 0, 4);
+            bytesRead = 4;
+            return FromNetworkByteOrder(BitConverter.ToUInt32(data, 0));
+        }
+
+        public static byte[] SerializeMessageHeader(GaoProtobuf.MessageHeader messageHeader)
+        {
+            byte[] message = messageHeader.ToByteString().ToByteArray();
+            byte[] size = BitConverter.GetBytes(ToNetworkByteOrder((uint)message.Length));
+            byte[] buffer = new byte[message.Length + size.Length];
+            size.CopyTo(buffer, 0);
+            message.CopyTo(buffer, size.Length);
+            return buffer;
+        }
+
+        public static GaoProtobuf.MessageHeader  ParseMessageHeader(byte[] message, ref uint bytesRead)
+        {
+            uint bytesReadSize = 0;
+            uint messageSize = DeserializeMessageSize(message, 0,  ref bytesReadSize);
+
+            byte[] data = new byte[messageSize];
+            Array.Copy(message, bytesReadSize, data, 0, messageSize);
+            var messageHeader =  GaoProtobuf.MessageHeader.Parser.ParseFrom(data);
+
+            bytesRead = bytesReadSize + messageSize;
+            return messageHeader;
+        }
+
+        public static byte[] SerializeMessage(GaoProtobuf.MessageHeader messageHeader, byte [] message)
+        {
+            byte[] header = SerializeMessageHeader(messageHeader);
+
+            byte[] size = BitConverter.GetBytes(ToNetworkByteOrder((uint)message.Length));
+
+            // concatente header, size, and message
+            byte[] buffer = new byte[header.Length + size.Length + message.Length];
+            header.CopyTo(buffer, 0);
+            size.CopyTo(buffer, header.Length);
+            message.CopyTo(buffer, header.Length + size.Length);
+
+            return buffer;
+        }
     }
 }
 

@@ -4,20 +4,15 @@ using Gaos.WebSocket;
 using Google.Protobuf;
 
 
-namespace Messages.WebSocket
+namespace Gaos.Messages.Websocket
 {
 
     public class PingPong 
     {
         public static string CLASS_NAME = typeof(PingPong).Name;
-        IWebSocketClient webSocketClient;
 
-        public PingPong(IWebSocketClient _webSocketClient)
-        {
-            webSocketClient = _webSocketClient;
-        }
 
-        public void OnPing(byte[] message)
+        static public void OnPing(Gaos.WebSocket.IWebSocketClient ws, byte[] message)
         {
             const string METHOD_NAME = "OnPing()";
             GaoProtobuf.Ping ping;
@@ -27,13 +22,13 @@ namespace Messages.WebSocket
             }
             catch (System.Exception e)
             {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: could not parse message,  {e}");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: could not parse message, {e}");
                 return;
             }
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: received ping: {ping.Message}");
         }
 
-        public void OnPong(byte[] message)
+        public static void OnPong(Gaos.WebSocket.IWebSocketClient ws, byte[] message)
         {
             const string METHOD_NAME = "OnPong()";
             GaoProtobuf.Pong pong;
@@ -49,31 +44,37 @@ namespace Messages.WebSocket
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: received pong: {pong.Message}");
         }
 
-        public void SendPing()
+        public static void SendPing(Gaos.WebSocket.IWebSocketClient ws, string message)
         {
-            //const string METHOD_NAME = "SendPing()";
-            GaoProtobuf.Ping ping = new GaoProtobuf.Ping();
-            ping.Header.Namespace = (int)Gaos.Messages.NamespaceIds.WebbSocket;
-            ping.Header.Classs = (int)Gaos.Messages.WebSocketClassIds.PingPong;
-            ping.Header.Method = (int)Gaos.Messages.WebSocketPingPongMethodIds.Ping;
-            ping.Message = "ping from unity!";
+            const string METHOD_NAME = "SendPing()";
+            try
+            {
+                GaoProtobuf.Ping ping = new GaoProtobuf.Ping();
+                ping.Message = message;
+                byte[] data = ping.ToByteArray();
 
-            byte[] data = ping.ToByteArray();
-            webSocketClient.Send(data);
+                Gaos.Websocket.Dispatcher.Send(ws, (int)Gaos.Websocket.NamespaceIds.WebbSocket, (int)Gaos.Websocket.WebSocketClassIds.PingPong, (int)Gaos.Websocket.WebSocketPingPongMethodIds.Ping, data);
+            } 
+            catch (System.Exception e) {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error sending message, {e}");
+            }
 
         }
 
-        public void SendPong()
+        public static void SendPong(Gaos.WebSocket.IWebSocketClient ws, string message)
         {
-            //const string METHOD_NAME = "SendPong()";
-            GaoProtobuf.Pong pong = new GaoProtobuf.Pong();
-            pong.Header.Namespace = (int)Gaos.Messages.NamespaceIds.WebbSocket;
-            pong.Header.Classs = (int)Gaos.Messages.WebSocketClassIds.PingPong;
-            pong.Header.Method = (int)Gaos.Messages.WebSocketPingPongMethodIds.Pong;
-            pong.Message = "pong from unity!";
+            const string METHOD_NAME = "SendPong()";
+            try
+            {
+                GaoProtobuf.Pong pong = new GaoProtobuf.Pong();
+                pong.Message = message;
+                byte[] data = pong.ToByteArray();
 
-            byte[] data = pong.ToByteArray();
-            webSocketClient.Send(data);
+                Gaos.Websocket.Dispatcher.Send(ws, (int)Gaos.Websocket.NamespaceIds.WebbSocket, (int)Gaos.Websocket.WebSocketClassIds.PingPong, (int)Gaos.Websocket.WebSocketPingPongMethodIds.Pong, data);
+            } 
+            catch (System.Exception e) {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error sending message, {e}");
+            }
         }
     }
 }

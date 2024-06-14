@@ -24,16 +24,14 @@ namespace GaoProtobuf {
     static PingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgpQaW5nLnByb3RvEgtHYW9Qcm90b2J1ZhoTTWVzc2FnZUhlYWRlci5wcm90",
-            "byJDCgRQaW5nEioKBmhlYWRlchgBIAEoCzIaLkdhb1Byb3RvYnVmLk1lc3Nh",
-            "Z2VIZWFkZXISDwoHbWVzc2FnZRgCIAEoCSJDCgRQb25nEioKBmhlYWRlchgB",
-            "IAEoCzIaLkdhb1Byb3RvYnVmLk1lc3NhZ2VIZWFkZXISDwoHbWVzc2FnZRgC",
-            "IAEoCUIOqgILR2FvUHJvdG9idWZiBnByb3RvMw=="));
+            "CgpQaW5nLnByb3RvEgtHYW9Qcm90b2J1ZiIXCgRQaW5nEg8KB21lc3NhZ2UY",
+            "ASABKAkiFwoEUG9uZxIPCgdtZXNzYWdlGAEgASgJQg6qAgtHYW9Qcm90b2J1",
+            "ZmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::GaoProtobuf.MessageHeaderReflection.Descriptor, },
+          new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::GaoProtobuf.Ping), global::GaoProtobuf.Ping.Parser, new[]{ "Header", "Message" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GaoProtobuf.Pong), global::GaoProtobuf.Pong.Parser, new[]{ "Header", "Message" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::GaoProtobuf.Ping), global::GaoProtobuf.Ping.Parser, new[]{ "Message" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GaoProtobuf.Pong), global::GaoProtobuf.Pong.Parser, new[]{ "Message" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,7 +72,6 @@ namespace GaoProtobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Ping(Ping other) : this() {
-      header_ = other.header_ != null ? other.header_.Clone() : null;
       message_ = other.message_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -85,20 +82,8 @@ namespace GaoProtobuf {
       return new Ping(this);
     }
 
-    /// <summary>Field number for the "header" field.</summary>
-    public const int HeaderFieldNumber = 1;
-    private global::GaoProtobuf.MessageHeader header_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::GaoProtobuf.MessageHeader Header {
-      get { return header_; }
-      set {
-        header_ = value;
-      }
-    }
-
     /// <summary>Field number for the "message" field.</summary>
-    public const int MessageFieldNumber = 2;
+    public const int MessageFieldNumber = 1;
     private string message_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -124,7 +109,6 @@ namespace GaoProtobuf {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Header, other.Header)) return false;
       if (Message != other.Message) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -133,7 +117,6 @@ namespace GaoProtobuf {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (header_ != null) hash ^= Header.GetHashCode();
       if (Message.Length != 0) hash ^= Message.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -153,12 +136,8 @@ namespace GaoProtobuf {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (header_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Header);
-      }
       if (Message.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(Message);
       }
       if (_unknownFields != null) {
@@ -171,12 +150,8 @@ namespace GaoProtobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (header_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Header);
-      }
       if (Message.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(Message);
       }
       if (_unknownFields != null) {
@@ -189,9 +164,6 @@ namespace GaoProtobuf {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (header_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Header);
-      }
       if (Message.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Message);
       }
@@ -206,12 +178,6 @@ namespace GaoProtobuf {
     public void MergeFrom(Ping other) {
       if (other == null) {
         return;
-      }
-      if (other.header_ != null) {
-        if (header_ == null) {
-          Header = new global::GaoProtobuf.MessageHeader();
-        }
-        Header.MergeFrom(other.Header);
       }
       if (other.Message.Length != 0) {
         Message = other.Message;
@@ -232,13 +198,6 @@ namespace GaoProtobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (header_ == null) {
-              Header = new global::GaoProtobuf.MessageHeader();
-            }
-            input.ReadMessage(Header);
-            break;
-          }
-          case 18: {
             Message = input.ReadString();
             break;
           }
@@ -258,13 +217,6 @@ namespace GaoProtobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            if (header_ == null) {
-              Header = new global::GaoProtobuf.MessageHeader();
-            }
-            input.ReadMessage(Header);
-            break;
-          }
-          case 18: {
             Message = input.ReadString();
             break;
           }
@@ -309,7 +261,6 @@ namespace GaoProtobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Pong(Pong other) : this() {
-      header_ = other.header_ != null ? other.header_.Clone() : null;
       message_ = other.message_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -320,20 +271,8 @@ namespace GaoProtobuf {
       return new Pong(this);
     }
 
-    /// <summary>Field number for the "header" field.</summary>
-    public const int HeaderFieldNumber = 1;
-    private global::GaoProtobuf.MessageHeader header_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::GaoProtobuf.MessageHeader Header {
-      get { return header_; }
-      set {
-        header_ = value;
-      }
-    }
-
     /// <summary>Field number for the "message" field.</summary>
-    public const int MessageFieldNumber = 2;
+    public const int MessageFieldNumber = 1;
     private string message_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -359,7 +298,6 @@ namespace GaoProtobuf {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Header, other.Header)) return false;
       if (Message != other.Message) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -368,7 +306,6 @@ namespace GaoProtobuf {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (header_ != null) hash ^= Header.GetHashCode();
       if (Message.Length != 0) hash ^= Message.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -388,12 +325,8 @@ namespace GaoProtobuf {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (header_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Header);
-      }
       if (Message.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(Message);
       }
       if (_unknownFields != null) {
@@ -406,12 +339,8 @@ namespace GaoProtobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (header_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Header);
-      }
       if (Message.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(Message);
       }
       if (_unknownFields != null) {
@@ -424,9 +353,6 @@ namespace GaoProtobuf {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (header_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Header);
-      }
       if (Message.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Message);
       }
@@ -441,12 +367,6 @@ namespace GaoProtobuf {
     public void MergeFrom(Pong other) {
       if (other == null) {
         return;
-      }
-      if (other.header_ != null) {
-        if (header_ == null) {
-          Header = new global::GaoProtobuf.MessageHeader();
-        }
-        Header.MergeFrom(other.Header);
       }
       if (other.Message.Length != 0) {
         Message = other.Message;
@@ -467,13 +387,6 @@ namespace GaoProtobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (header_ == null) {
-              Header = new global::GaoProtobuf.MessageHeader();
-            }
-            input.ReadMessage(Header);
-            break;
-          }
-          case 18: {
             Message = input.ReadString();
             break;
           }
@@ -493,13 +406,6 @@ namespace GaoProtobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            if (header_ == null) {
-              Header = new global::GaoProtobuf.MessageHeader();
-            }
-            input.ReadMessage(Header);
-            break;
-          }
-          case 18: {
             Message = input.ReadString();
             break;
           }
