@@ -20,12 +20,10 @@ function GAO_WebSocketCreate(GAOS_WS, fnNameOnOpen, fnNameOnClose, fnNameOnError
 
   websocket.addEventListener('open', function (event) {
     console.info('websocket opened');
-    console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2000: ${ws}, readyState ${websocket.readyState}`);
     window.unityInstance.SendMessage('WebSocketClientJs', fnNameOnOpenStr);
   })
 
   websocket.addEventListener('close', function (event) {
-    console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2100: ${ws} readyState ${websocket.readyState}`);
     console.info('websocket closed');
     window.unityInstance.SendMessage('WebSocketClientJs', fnNameOnCloseStr);
     delete window.GAO_WEB_SOCKETS.websockets[ws];
@@ -33,18 +31,17 @@ function GAO_WebSocketCreate(GAOS_WS, fnNameOnOpen, fnNameOnClose, fnNameOnError
 
 
   websocket.addEventListener('error', function (event) {
-    console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2110: ${ws} readyState ${websocket.readyState}`);
     console.error('websocket error:', err);
     window.unityInstance.SendMessage('WebSocketClientJs', fnNameOnErrorStr, "error");
   })
 
   websocket.addEventListener('message', function (event) {
-    console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2115: ${ws} readyState ${websocket.readyState}`);
     if (typeof event.data === 'string') {
       console.error('websocket - received text data, text data not supported');
       window.unityInstance.SendMessage('WebSocketClientJs', fnNameOnMessageStr, event.data);
     } else if (event.data instanceof ArrayBuffer) {
       var binaryData = new Uint8Array(event.data);
+      console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 100: received binary data: ${binaryData}`);
 
       // Allocate memory on emcscripten heap (Emcscripten heap is just javascript ArrayBuffer allocated and passed to module on startup,
       // Module.HEAPU32 is just Uint32Array view on that ArrayBuffer - 'Module.HEAPU32 = new Uint32Array(arrayBuffer)'). 
@@ -53,11 +50,12 @@ function GAO_WebSocketCreate(GAOS_WS, fnNameOnOpen, fnNameOnClose, fnNameOnError
       // guarantees that memory will be always properly alligned for any smaller words like int32, in16, int8).
       // We are using the first 4 bystes for passing the length of the binary data which follows after.
       var bufferPtr = Module._malloc(Uint32Array.BYTES_PER_ELEMENT + binaryData.length * binaryData.BYTES_PER_ELEMENT);
-      // write the length of the binary data to the buffer
-      Module.HEAPU32.set([binaryData.length], bufferPtr);
+      // write the length of the binary data to the buffer, 'bufferPtr >> 4' is divsion by 4 to get the number of 32-bit words (aka. Uint32Array elements)
+      Module.HEAPU32.set([binaryData.length], bufferPtr >> 4);
       // write the binary data to the buffer
       Module.HEAPU8.set(binaryData, bufferPtr + Uint32Array.BYTES_PER_ELEMENT);
 
+      console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 150: ${fnNameOnMessageStr}`);
       window.unityInstance.SendMessage('WebSocketClientJs', fnNameOnMessageStr, bufferPtr);
 
       Module._free(bufferPtr);
@@ -66,15 +64,12 @@ function GAO_WebSocketCreate(GAOS_WS, fnNameOnOpen, fnNameOnClose, fnNameOnError
     }
   })
 
-  console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3000: opened ws ${ws}`);
   return ws;
 }
 
 function GAO_WebSocketSend(ws, data, length) {
   var websocket = window.GAO_WEB_SOCKETS.websockets[ws];
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2250: send");
   if (websocket) {
-    console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2120: ${ws} readyState ${websocket.readyState}`);
     var binaryData = new Uint8Array(Module.HEAPU8.buffer, data, length);
     websocket.send(binaryData);
   }

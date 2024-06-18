@@ -73,6 +73,8 @@ namespace Gaos.WebSocket
                 uint bytesReadHeader = 0;
                 GaoProtobuf.MessageHeader header = ParseMessageHeader(buffer, ref bytesReadHeader);
 
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: header: {header}"); //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
                 uint bytesReadSize = 0;
                 uint messageObjectSize = DeserializeMessageSize(buffer, bytesReadHeader, ref bytesReadSize);
 

@@ -44,21 +44,26 @@ namespace Gaos.WebSocket
 
         public void OnOpen()
         {
-            Debug.Log($"{CLASS_NAME}: OnOpen(): webcocket connected"); //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            Debug.Log($"{CLASS_NAME}: OnOpen()"); //@@@@@@@@@@@@@@@@
         }
 
         public void OnClose()
         {
+            Debug.Log($"{CLASS_NAME}: OnClose()"); //@@@@@@@@@@@@@@@@
         }
 
         public void OnError(string errorStr)
         {
+            Debug.Log($"{CLASS_NAME}: OnError(): {errorStr}"); //@@@@@@@@@@@@@@@@
             const string METHOD_NAME = "OnError()";
             Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {errorStr}");
         }
 
-        public void OnMessage(IntPtr data)
+        public void OnMessage(int _data)
         {
+            var data = new IntPtr(_data);
+
+            Debug.Log($"{CLASS_NAME}: OnMessage()"); //@@@@@@@@@@@@@@@@
             int length =  Marshal.ReadInt32(data);
             byte[] buffer = new byte[length];
 
