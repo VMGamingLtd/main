@@ -9,6 +9,7 @@ namespace Gaos.WebSocket
 {
     public class WebSocketClient: MonoBehaviour, Gaos.WebSocket.IWebSocketClient
     {
+        static public string CLASS_NAME = typeof(WebSocketClient).Name;
         public WebSocketClientSharp webSocketClientSharp;
         public WebSocketClientJs webSocketClientJs;
 
@@ -48,6 +49,7 @@ namespace Gaos.WebSocket
                 webSocketClientSharp.Open();
             }
             Gaos.Messages.Websocket.PingPong.SendPing(this, "Hello from unity!");
+
         }
 
         public void Send(byte[] data)
@@ -64,17 +66,26 @@ namespace Gaos.WebSocket
 
         public void Process(byte[] buffer)
         {
-            uint bytesReadHeader = 0;
-            GaoProtobuf.MessageHeader header = ParseMessageHeader(buffer, ref bytesReadHeader);
+             string METHOD_NAME = "Process()";
 
-            uint bytesReadSize = 0;
-            uint messageObjectSize = DeserializeMessageSize(buffer, bytesReadHeader,  ref bytesReadSize);
+            try
+            {
+                uint bytesReadHeader = 0;
+                GaoProtobuf.MessageHeader header = ParseMessageHeader(buffer, ref bytesReadHeader);
 
-            byte[] data = new byte[messageObjectSize];
-            Array.Copy(buffer, bytesReadHeader + bytesReadSize, data, 0, messageObjectSize);
+                uint bytesReadSize = 0;
+                uint messageObjectSize = DeserializeMessageSize(buffer, bytesReadHeader, ref bytesReadSize);
+
+                byte[] data = new byte[messageObjectSize];
+                Array.Copy(buffer, bytesReadHeader + bytesReadSize, data, 0, messageObjectSize);
 
 
-            Dispatcher.Dispatch(this, header.NamespaceId, header.ClassId, header.MethodId, data);
+                Dispatcher.Dispatch(this, header.NamespaceId, header.ClassId, header.MethodId, data);
+            } 
+            catch (System.Exception e)
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message: {e}");
+            }
         }
 
         public IEnumerator StartProcessingOutboundQueue()
@@ -89,7 +100,7 @@ namespace Gaos.WebSocket
             }
         }
 
-        public IEnumerator StartProcessingInboundQueue(IWebSocketClient ws)
+        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws)
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -106,6 +117,11 @@ namespace Gaos.WebSocket
             Open();
             StartCoroutine(StartProcessingOutboundQueue());
             StartCoroutine(StartProcessingInboundQueue(this));
+        }
+
+        public static string ToHexString(byte[] bytes)
+        {
+            return BitConverter.ToString(bytes).Replace("-", string.Empty);
         }
 
         public static uint ToNetworkByteOrder(uint value)
@@ -142,7 +158,7 @@ namespace Gaos.WebSocket
         {
             byte[] message = messageHeader.ToByteString().ToByteArray();
             byte[] size = BitConverter.GetBytes(ToNetworkByteOrder((uint)message.Length));
-            byte[] buffer = new byte[message.Length + size.Length];
+            byte[] buffer = new byte[size.Length + message.Length];
             size.CopyTo(buffer, 0);
             message.CopyTo(buffer, size.Length);
             return buffer;
@@ -167,11 +183,13 @@ namespace Gaos.WebSocket
 
             byte[] size = BitConverter.GetBytes(ToNetworkByteOrder((uint)message.Length));
 
+
             // concatente header, size, and message
             byte[] buffer = new byte[header.Length + size.Length + message.Length];
             header.CopyTo(buffer, 0);
             size.CopyTo(buffer, header.Length);
             message.CopyTo(buffer, header.Length + size.Length);
+
 
             return buffer;
         }

@@ -41,7 +41,6 @@ namespace Gaos.WebSocket
             const string METHOD_NAME = "Open()"; 
             Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: webcocket - openning: {WsUrl}");
 
-
             WebSocket = new WebSocketSharp.WebSocket(WsUrl);
 
             var sslProtocolHack = (System.Security.Authentication.SslProtocols)(SslProtocolsHack.Tls13 | SslProtocolsHack.Tls12 | SslProtocolsHack.Tls11 | SslProtocolsHack.Tls);
@@ -138,7 +137,7 @@ namespace Gaos.WebSocket
             }
         }
 
-        public IEnumerator StartProcessingInboundQueue(IWebSocketClient ws)
+        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws)
         {
             const string METHOD_NAME = "StartProcessingInboundQueue()";
             while (true)
@@ -150,12 +149,13 @@ namespace Gaos.WebSocket
                         byte[] data = MessagesInbound.Peek();
                         try
                         {
+                            // print data in hex
                             ws.Process(data);
-                            MessagesOutbound.Dequeue();
+                            MessagesInbound.Dequeue();
                         }
                         catch (System.Exception e)
                         {
-                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e.Message}");
+                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e}");
                         }
                         yield return null;
                     }

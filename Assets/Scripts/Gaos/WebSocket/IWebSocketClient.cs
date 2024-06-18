@@ -12,7 +12,7 @@ namespace Gaos.WebSocket
         public void Send(byte[] message);
         public void Process(byte[] message);
         public IEnumerator StartProcessingOutboundQueue();
-        public IEnumerator StartProcessingInboundQueue(IWebSocketClient ws);
+        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws);
     }
 }
 
