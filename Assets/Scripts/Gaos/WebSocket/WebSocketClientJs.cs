@@ -204,6 +204,20 @@ namespace Gaos.WebSocket
                 }
             }
         }
+
+        // --------------------------   UnityBrowserMessaging --------------------------
+
+        [DllImport("__Internal")]
+        public static extern void UnityBrowserMessaging_BaseMessages_sendString(string str);
+
+        public void UnityBrowserMessaging_BaseMessages_receiveString(string str)
+        {
+            const string METHOD_NAME = "UnityBrowserMessaging_BaseMessages_receiveString()";
+            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: str: {str}");
+        }
+
     }
+
+
 
 }

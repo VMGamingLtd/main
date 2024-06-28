@@ -10,6 +10,7 @@ namespace Gaos.Websocket
     public enum NamespaceIds
     {
         WebbSocket = 1,
+        UnityBrowserChannel = 2,
     }
 
     public enum WebSocketClassIds
@@ -21,6 +22,16 @@ namespace Gaos.Websocket
     {
         Ping = 1,
         Pong = 2,
+    }
+
+    public enum UnityBrowserChannelClassIds
+    {
+        BaseMessages = 1,
+    }
+
+    public enum UnityBrowserChannelBaseMessagingMethodIds
+    {
+        ReceiveString = 1,
     }
 
     public class Dispatcher 
@@ -80,23 +91,44 @@ namespace Gaos.Websocket
             const string METHOD_NAME = "DispatchWebsocket()";
             switch (classId)
             {
-            case (int)WebSocketPingPongMethodIds.Ping:
-                    switch (methodId)
-                    {
-                        case (int)WebSocketPingPongMethodIds.Ping:
-                            PingPong.OnPing(ws, message);
-                            return;
-                        case (int)WebSocketPingPongMethodIds.Pong:
-                            PingPong.OnPong(ws, message);
-                            return;
-                        default:
-                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
-                            return;
-                    }
-            default:
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
-                return;
-            }
+                case (int)WebSocketPingPongMethodIds.Ping:
+                        switch (methodId)
+                        {
+                            case (int)WebSocketPingPongMethodIds.Ping:
+                                PingPong.OnPing(ws, message);
+                                return;
+                            case (int)WebSocketPingPongMethodIds.Pong:
+                                PingPong.OnPong(ws, message);
+                                return;
+                            default:
+                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                                return;
+                        }
+                default:
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                    return;
+                }
+        }
+
+        public static void DispatchUnityBrowserChannel(Gaos.WebSocket.IWebSocketClient ws, int namespaceId, int classId, int methodId, byte[] message)
+        {
+            const string METHOD_NAME = "DispatchUnityBrowserChannel()";
+            switch (classId)
+            {
+                case (int)UnityBrowserChannelClassIds.BaseMessages:
+                        switch (methodId)
+                        {
+                            case (int)UnityBrowserChannelBaseMessagingMethodIds.ReceiveString:
+                                UnityBrowserChannel.BaseMessages.receiveStringWs(ws, message);
+                                return;
+                            default:
+                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                                return;
+                        }
+                default:
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                    return;
+                }
         }
     }
 }

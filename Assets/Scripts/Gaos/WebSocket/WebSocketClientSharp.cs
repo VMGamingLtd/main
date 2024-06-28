@@ -13,7 +13,6 @@ namespace Gaos.WebSocket
         public Queue<byte[]> MessagesInbound = new Queue<byte[]>();
 
         public WebSocketSharp.WebSocket WebSocket;
-        public bool IsConnected = false;
 
         public string WsUrl = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
 
@@ -50,20 +49,11 @@ namespace Gaos.WebSocket
             WebSocket.OnOpen += (sender, e) =>
             {
                 Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: webcocket connected");
-                IsConnected = true;
             };
 
             WebSocket.OnMessage += (sender, e) =>
             {
-                if (e.IsText)
-                {
-                    Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: ERROR: message format is not binary, message ignored");
-                }
-                else
-                {
-                    MessagesInbound.Enqueue(e.RawData);
-                }
-
+                MessagesInbound.Enqueue(e.RawData);
             };
 
             WebSocket.OnError += (sender, e) =>
@@ -74,8 +64,6 @@ namespace Gaos.WebSocket
             WebSocket.OnClose += (sender, e) =>
             {
                 Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket closed");
-                IsConnected = false;
-
             };
 
             WebSocket.Connect();
@@ -100,7 +88,9 @@ namespace Gaos.WebSocket
 
             while (true)
             {
-                if (IsConnected)
+                var state = WebSocket.ReadyState;
+
+                if (state == WebSocketSharp.WebSocketState.Open)
                 {
                     if (MessagesOutbound.Count > 0)
                     {
@@ -126,13 +116,34 @@ namespace Gaos.WebSocket
                     }
                     else
                     {
-                        yield return new WaitForSeconds(0.1f);
+                        yield return new WaitForSeconds(0.2f);
                     }
                 }
                 else
                 {
-                    yield return new WaitForSeconds(2);
-                    Open();
+                    if (state == WebSocketSharp.WebSocketState.Closed)
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket is closed, will try to open it again");
+                        yield return new WaitForSeconds(2);
+                        Open();
+                    }
+                    else if (state == WebSocketSharp.WebSocketState.Connecting)
+                    {
+                        yield return new WaitForSeconds(0.5f);
+                    } 
+                    if (state == WebSocketSharp.WebSocketState.Closing)
+                    {
+                        yield return new WaitForSeconds(0.5f);
+                    }
+                    if (state == WebSocketSharp.WebSocketState.New)
+                    {
+                        yield return new WaitForSeconds(0.5f);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket state is unknown: {state}");
+                        yield return new WaitForSeconds(0.5f);
+                    }
                 }
             }
         }
@@ -142,31 +153,32 @@ namespace Gaos.WebSocket
             const string METHOD_NAME = "StartProcessingInboundQueue()";
             while (true)
             {
-                if (IsConnected)
+                var state = WebSocket.ReadyState;
+                if (state == WebSocketSharp.WebSocketState.Open)
                 {
                     if (MessagesInbound.Count > 0)
                     {
                         byte[] data = MessagesInbound.Peek();
                         try
                         {
-                            // print data in hex
                             ws.Process(data);
                             MessagesInbound.Dequeue();
                         }
                         catch (System.Exception e)
                         {
                             Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e}");
+                            MessagesInbound.Dequeue();
                         }
                         yield return null;
                     }
                     else
                     {
-                        yield return new WaitForSeconds(0.1f);
+                        yield return new WaitForSeconds(0.2f);
                     }
                 }
                 else
                 {
-                    yield return new WaitForSeconds(0.1f);
+                    yield return new WaitForSeconds(0.5f);
                 }
             }
         }

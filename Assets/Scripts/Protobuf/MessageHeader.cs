@@ -24,15 +24,15 @@ namespace GaoProtobuf {
     static MessageHeaderReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChNNZXNzYWdlSGVhZGVyLnByb3RvEgtHYW9Qcm90b2J1ZiKTAQoNTWVzc2Fn",
+            "ChNNZXNzYWdlSGVhZGVyLnByb3RvEgtHYW9Qcm90b2J1ZiKGAQoNTWVzc2Fn",
             "ZUhlYWRlchIOCgZmcm9tSWQYASABKAMSDAoEdG9JZBgCIAEoAxIPCgdncm91",
             "cElkGAMgASgDEg4KBnR5cGVJZBgEIAEoBRITCgtuYW1lc3BhY2VJZBgFIAEo",
-            "BRIPCgdjbGFzc0lkGAYgASgFEhAKCG1ldGhvZElkGAcgASgFEgsKA21zZxgI",
-            "IAEoCUIOqgILR2FvUHJvdG9idWZiBnByb3RvMw=="));
+            "BRIPCgdjbGFzc0lkGAYgASgFEhAKCG1ldGhvZElkGAcgASgFQg6qAgtHYW9Q",
+            "cm90b2J1ZmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::GaoProtobuf.MessageHeader), global::GaoProtobuf.MessageHeader.Parser, new[]{ "FromId", "ToId", "GroupId", "TypeId", "NamespaceId", "ClassId", "MethodId", "Msg" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::GaoProtobuf.MessageHeader), global::GaoProtobuf.MessageHeader.Parser, new[]{ "FromId", "ToId", "GroupId", "TypeId", "NamespaceId", "ClassId", "MethodId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -80,7 +80,6 @@ namespace GaoProtobuf {
       namespaceId_ = other.namespaceId_;
       classId_ = other.classId_;
       methodId_ = other.methodId_;
-      msg_ = other.msg_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -174,18 +173,6 @@ namespace GaoProtobuf {
       }
     }
 
-    /// <summary>Field number for the "msg" field.</summary>
-    public const int MsgFieldNumber = 8;
-    private string msg_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Msg {
-      get { return msg_; }
-      set {
-        msg_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -208,7 +195,6 @@ namespace GaoProtobuf {
       if (NamespaceId != other.NamespaceId) return false;
       if (ClassId != other.ClassId) return false;
       if (MethodId != other.MethodId) return false;
-      if (Msg != other.Msg) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -223,7 +209,6 @@ namespace GaoProtobuf {
       if (NamespaceId != 0) hash ^= NamespaceId.GetHashCode();
       if (ClassId != 0) hash ^= ClassId.GetHashCode();
       if (MethodId != 0) hash ^= MethodId.GetHashCode();
-      if (Msg.Length != 0) hash ^= Msg.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -270,10 +255,6 @@ namespace GaoProtobuf {
         output.WriteRawTag(56);
         output.WriteInt32(MethodId);
       }
-      if (Msg.Length != 0) {
-        output.WriteRawTag(66);
-        output.WriteString(Msg);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -312,10 +293,6 @@ namespace GaoProtobuf {
         output.WriteRawTag(56);
         output.WriteInt32(MethodId);
       }
-      if (Msg.Length != 0) {
-        output.WriteRawTag(66);
-        output.WriteString(Msg);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -346,9 +323,6 @@ namespace GaoProtobuf {
       }
       if (MethodId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(MethodId);
-      }
-      if (Msg.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Msg);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -382,9 +356,6 @@ namespace GaoProtobuf {
       }
       if (other.MethodId != 0) {
         MethodId = other.MethodId;
-      }
-      if (other.Msg.Length != 0) {
-        Msg = other.Msg;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -429,10 +400,6 @@ namespace GaoProtobuf {
             MethodId = input.ReadInt32();
             break;
           }
-          case 66: {
-            Msg = input.ReadString();
-            break;
-          }
         }
       }
     #endif
@@ -474,10 +441,6 @@ namespace GaoProtobuf {
           }
           case 56: {
             MethodId = input.ReadInt32();
-            break;
-          }
-          case 66: {
-            Msg = input.ReadString();
             break;
           }
         }

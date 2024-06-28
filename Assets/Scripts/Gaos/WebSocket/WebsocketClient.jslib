@@ -86,12 +86,37 @@ function GAO_WebSocketReadyState(ws) {
   }
 }
 
+if (!window.GAO_UnityBrowserChannel) {
+  window.GAO_UnityBrowserChannel = {};
+}
+if (!window.GAO_UnityBrowserChannel.BaseMessages) {
+  window.GAO_UnityBrowserChannel.BaseMessages = {}
+}
+window.GAO_UnityBrowserChannel.BaseMessages.sendString = GAO_UnityBrowserChannel_BaseMessages_receiveString; 
+
+
+function GAO_UnityBrowserChannel_BaseMessages_sendString(str) {
+  console.log(`@@@@@@@@@@@@@@@@@@ GAO_UnityBrowserChannel_BaseMessages_sendString(): ${str}`);
+  if (window.GAO_UnityBrowserChannel) {
+    if (window.GAO_UnityBrowserChannel.BaseMessages) {
+      window.GAO_UnityBrowserChannel.BaseMessages.receiveString(str);
+    } else {
+      console.error('WebsocketClientJs:GAO_UnityBrowserChannel_BaseMessages_sendString():  GAO_UnityBrowserChannel.BaseMessages not found');
+    }
+  } else {
+    console.error('WebsocketClientJs:GAO_UnityBrowserChannel_BaseMessages_sendString():  GAO_UnityBrowserChannel not found');
+  }
+}
+
+function GAO_UnityBrowserChannel_BaseMessages_receiveString(str) {
+    window.unityInstance.SendMessage('WebSocketClientJs', 'UnityBrowserChannel_BaseMessages_receiveString', str);
+}
+
 mergeInto(LibraryManager.library, {
 
   WebSocketCreate: GAO_WebSocketCreate,
-
   WebSocketSend: GAO_WebSocketSend,
-
   WebSocketReadyState: GAO_WebSocketReadyState,
 
+  UnityBrowserChannel_BaseMessages_sendString: GAO_UnityBrowserChannel_BaseMessages_sendString,
 });
