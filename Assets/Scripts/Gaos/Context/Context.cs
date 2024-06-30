@@ -19,6 +19,10 @@ namespace Gaos.Context
         public static void SetJWT(string jwt)
         { 
             JWT = jwt;
+            if (Gaos.WebSocket.WebSocketClient.CurrentWesocketClient != null)
+            {
+                Gaos.Messages.WsAuthentication.authenticate(Gaos.WebSocket.WebSocketClient.CurrentWesocketClient, jwt);
+            }
         }
         public static string GetJWT()
         {

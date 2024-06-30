@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-
 namespace Gaos.WebSocket
 {
     public class WebSocketClientJs: MonoBehaviour, Gaos.WebSocket.IWebSocketClient
@@ -16,6 +15,7 @@ namespace Gaos.WebSocket
         private Queue<byte[]> MessagesInbound = new Queue<byte[]>();
 
         private int Ws;
+        private bool IsAuthenticated = false;
 
         [DllImport("__Internal")]
         private static extern int WebSocketCreate(string url, string fnNameOnOpen, string fnNameOnClose, string fnNameOnError, string fnNameOnMessage);
@@ -45,6 +45,7 @@ namespace Gaos.WebSocket
         public void OnOpen()
         {
             Debug.Log($"{CLASS_NAME}: OnOpen()"); //@@@@@@@@@@@@@@@@
+            Gaos.Messages.WsAuthentication.authenticate(this, Gaos.Environment.Environment.GetEnvironment()["GAOS_WS_TOKEN"]);
         }
 
         public void OnClose()
@@ -93,6 +94,7 @@ namespace Gaos.WebSocket
         {
             string url = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
             Ws = WebSocketCreate(url, "OnOpen", "OnClose", "OnError", "OnMessage");
+            IsAuthenticated = false;
         }
 
         public void Send(byte[] data)
@@ -205,6 +207,16 @@ namespace Gaos.WebSocket
             }
         }
 
+        public bool GetIsAuthenticated()
+        {
+            return IsAuthenticated;
+        }
+
+        public void SetAuthenticated()
+        {
+            IsAuthenticated = true;
+        }
+
         // --------------------------   UnityBrowserMessaging --------------------------
 
         [DllImport("__Internal")]
@@ -214,6 +226,7 @@ namespace Gaos.WebSocket
         {
             const string METHOD_NAME = "UnityBrowserMessaging_BaseMessages_receiveString()";
             Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: str: {str}");
+            UnityBrowserChannel.BaseMessages.receiveString(str);
         }
 
     }

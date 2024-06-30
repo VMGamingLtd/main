@@ -13,6 +13,8 @@ namespace Gaos.WebSocket
         public WebSocketClientSharp webSocketClientSharp;
         public WebSocketClientJs webSocketClientJs;
 
+        public static WebSocketClient CurrentWesocketClient = null;
+
 
         public Queue<byte[]> GetOutboundQueue()
         {
@@ -49,6 +51,7 @@ namespace Gaos.WebSocket
                 webSocketClientSharp.Open();
             }
             Gaos.Messages.Websocket.PingPong.SendPing(this, "Hello from unity!");
+
 
         }
 
@@ -116,6 +119,7 @@ namespace Gaos.WebSocket
 
         public void OnEnable()
         {
+            CurrentWesocketClient = this;
             Open();
             StartCoroutine(StartProcessingOutboundQueue());
             StartCoroutine(StartProcessingInboundQueue(this));
@@ -194,6 +198,30 @@ namespace Gaos.WebSocket
 
 
             return buffer;
+        }
+
+        public bool GetIsAuthenticated()
+        {
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                return  webSocketClientJs.GetIsAuthenticated();
+            }
+            else
+            {
+                return webSocketClientSharp.GetIsAuthenticated();
+            }
+        }
+
+        public void SetAuthenticated()
+        {
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                webSocketClientJs.SetAuthenticated();
+            }
+            else
+            {
+                webSocketClientSharp.SetAuthenticated();
+            }
         }
     }
 }

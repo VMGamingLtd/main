@@ -96,7 +96,6 @@ window.GAO_UnityBrowserChannel.BaseMessages.sendString = GAO_UnityBrowserChannel
 
 
 function GAO_UnityBrowserChannel_BaseMessages_sendString(str) {
-  console.log(`@@@@@@@@@@@@@@@@@@ GAO_UnityBrowserChannel_BaseMessages_sendString(): ${str}`);
   if (window.GAO_UnityBrowserChannel) {
     if (window.GAO_UnityBrowserChannel.BaseMessages) {
       window.GAO_UnityBrowserChannel.BaseMessages.receiveString(str);

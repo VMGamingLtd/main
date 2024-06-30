@@ -54,7 +54,7 @@ namespace UnityBrowserChannel
 
         public static void receiveString(string str)
         {
-            const string METHOD_NAME = "sendString()";
+            const string METHOD_NAME = "receiveString()";
             Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: str: {str}");
         }
 

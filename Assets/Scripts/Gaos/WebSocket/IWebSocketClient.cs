@@ -13,6 +13,9 @@ namespace Gaos.WebSocket
         public void Process(byte[] message);
         public IEnumerator StartProcessingOutboundQueue();
         public IEnumerator StartProcessingInboundQueue(WebSocketClient ws);
+
+        public bool GetIsAuthenticated();
+        public void SetAuthenticated();
     }
 }
 

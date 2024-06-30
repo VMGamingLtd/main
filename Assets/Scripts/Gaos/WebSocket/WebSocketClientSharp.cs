@@ -16,6 +16,8 @@ namespace Gaos.WebSocket
 
         public string WsUrl = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
 
+        private bool IsAuthenticated = false;
+
 
         private enum SslProtocolsHack
         {
@@ -46,9 +48,14 @@ namespace Gaos.WebSocket
             WebSocket.SslConfiguration.EnabledSslProtocols = sslProtocolHack;
 
 
+            IsAuthenticated = false;
             WebSocket.OnOpen += (sender, e) =>
             {
                 Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: webcocket connected");
+                if (Gaos.Context.Authentication.GetJWT() != null)
+                {
+                    Gaos.Messages.WsAuthentication.authenticate(this, Gaos.Context.Authentication.GetJWT());
+                }
             };
 
             WebSocket.OnMessage += (sender, e) =>
@@ -182,6 +189,17 @@ namespace Gaos.WebSocket
                 }
             }
         }
+
+        public bool GetIsAuthenticated()
+        {
+            return IsAuthenticated;
+        }
+
+        public void SetAuthenticated()
+        {
+            IsAuthenticated = true;
+        }
     }
+
 
 }
