@@ -15,7 +15,7 @@ namespace Gaos.WebSocket
         public IEnumerator StartProcessingInboundQueue(WebSocketClient ws);
 
         public bool GetIsAuthenticated();
-        public void SetAuthenticated();
+        public void SetIsAuthenticated(bool isAuthenticated);
     }
 }
 

@@ -60,6 +60,7 @@ namespace Gaos.Websocket
 
                 byte[] data = Gaos.WebSocket.WebSocketClient.SerializeMessage(messageHeader, message);
 
+
                 ws.Send(data);
             }
             catch (System.Exception e)
@@ -82,6 +83,9 @@ namespace Gaos.Websocket
                 {
                     case (int)NamespaceIds.WebbSocket:
                         DispatchWebsocket(ws, namespaceId,   classId, methodId, message);
+                        return;
+                    case (int)NamespaceIds.UnityBrowserChannel:
+                        DispatchUnityBrowserChannel(ws, namespaceId, classId, methodId, message);
                         return;
                     default:
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such namespaceId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");

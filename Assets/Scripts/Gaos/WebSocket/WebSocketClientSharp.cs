@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 
 namespace Gaos.WebSocket
 {
@@ -195,9 +196,9 @@ namespace Gaos.WebSocket
             return IsAuthenticated;
         }
 
-        public void SetAuthenticated()
+        public void SetIsAuthenticated(bool isAuthenticated)
         {
-            IsAuthenticated = true;
+            IsAuthenticated = isAuthenticated;
         }
     }
 

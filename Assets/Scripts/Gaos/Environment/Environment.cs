@@ -18,6 +18,7 @@ namespace Gaos.Environment
                     Debug.Log("Environment: Development");
                     wasEnvironmentNamePrinted = true;
                 }
+                env.Add("ENV_NAME", "Development");
                 env.Add("GAOS_URL", "https://local.galacticodyssey.space/gaos");
                 env.Add("GAOS_WS", "wss://local.galacticodyssey.space/gaos/ws");
                 env.Add("IS_PROFILE_HTTP_CALLS", "true");
@@ -25,7 +26,7 @@ namespace Gaos.Environment
 
                 env.Add("IS_SEND_GAME_DATA_DIFF", "false");
 
-                env.Add("IS_DEBUG", "false");
+                env.Add("IS_DEBUG", "true");
                 env.Add("IS_DEBUG_GAME_DATA", "false");
                 env.Add("IS_DEBUG_SEND_GAMEDATA_BASE", "false");
             }
@@ -36,6 +37,7 @@ namespace Gaos.Environment
                     Debug.Log("Environment: Test");
                     wasEnvironmentNamePrinted = true;
                 }
+                env.Add("ENV_NAME", "Test");
                 env.Add("GAOS_URL", "https://test.galacticodyssey.space/gaos");
                 env.Add("GAOS_WS", "wss://test.galacticodyssey.space/gaos/ws");
                 env.Add("IS_PROFILE_HTTP_CALLS", "false");

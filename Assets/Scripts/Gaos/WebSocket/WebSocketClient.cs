@@ -50,9 +50,12 @@ namespace Gaos.WebSocket
             {
                 webSocketClientSharp.Open();
             }
-            Gaos.Messages.Websocket.PingPong.SendPing(this, "Hello from unity!");
-
-
+            Gaos.Messages.Websocket.PingPong.SendPing(this, "message: Hello from unity!");
+            if (Gaos.Context.Authentication.GetJWT() != null)
+            {
+                Gaos.Messages.WsAuthentication.authenticate(this, Gaos.Context.Authentication.GetJWT());
+            }
+            StartCoroutine(KeepSendingHelloMessageToBrowser());
         }
 
         public void Send(byte[] data)
@@ -76,7 +79,12 @@ namespace Gaos.WebSocket
                 uint bytesReadHeader = 0;
                 GaoProtobuf.MessageHeader header = ParseMessageHeader(buffer, ref bytesReadHeader);
 
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: header: {header}"); //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                /*
+                if (Gaos.Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true")
+                {
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: header: {header}");
+                }
+                */
 
                 uint bytesReadSize = 0;
                 uint messageObjectSize = DeserializeMessageSize(buffer, bytesReadHeader, ref bytesReadSize);
@@ -132,6 +140,7 @@ namespace Gaos.WebSocket
 
         public static uint ToNetworkByteOrder(uint value)
         {
+            // to big endian
             return ((value & 0x000000FF) << 24) |
                    ((value & 0x0000FF00) << 8) |
                    ((value & 0x00FF0000) >> 8) |
@@ -212,17 +221,27 @@ namespace Gaos.WebSocket
             }
         }
 
-        public void SetAuthenticated()
+        public void SetIsAuthenticated(bool isAuthenticated)
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                webSocketClientJs.SetAuthenticated();
+                webSocketClientJs.SetIsAuthenticated(isAuthenticated);
             }
             else
             {
-                webSocketClientSharp.SetAuthenticated();
+                webSocketClientSharp.SetIsAuthenticated(isAuthenticated);
             }
         }
+
+        public IEnumerator KeepSendingHelloMessageToBrowser()
+        {
+            while (true)
+            {
+                UnityBrowserChannel.BaseMessages.sendString(this, "{\"message\": \"Hello from unity!\"}");
+                yield return new WaitForSeconds(5);
+            }
+        }
+
     }
 }
 

@@ -37,7 +37,7 @@ namespace UnityBrowserChannel
 
         public static void receiveStringWs(Gaos.WebSocket.IWebSocketClient ws, byte[] message)
         {
-            const string METHOD_NAME = "receiveString()";
+            const string METHOD_NAME = "receiveStringWs()";
             GaoProtobuf.StringMessage stringMessage;
             try
             {
@@ -55,7 +55,10 @@ namespace UnityBrowserChannel
         public static void receiveString(string str)
         {
             const string METHOD_NAME = "receiveString()";
-            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: str: {str}");
+            if (Gaos.Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true")
+            {
+                Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: str: {str}");
+            }
         }
 
     }

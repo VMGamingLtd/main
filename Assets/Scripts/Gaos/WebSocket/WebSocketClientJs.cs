@@ -212,9 +212,9 @@ namespace Gaos.WebSocket
             return IsAuthenticated;
         }
 
-        public void SetAuthenticated()
+        public void SetIsAuthenticated(bool isAuthenticated)
         {
-            IsAuthenticated = true;
+            IsAuthenticated = isAuthenticated;
         }
 
         // --------------------------   UnityBrowserMessaging --------------------------

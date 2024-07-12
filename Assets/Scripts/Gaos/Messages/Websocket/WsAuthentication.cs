@@ -35,6 +35,10 @@ namespace Gaos.Messages
         public static void authenticate(WebSocket.IWebSocketClient wsClient, string token)
         {
             const string METHOD_NAME = "authenticate()";
+            if (Gaos.Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true")
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:authenticating...");
+            }
             WsAuthentication wsAuthentication = new WsAuthentication(wsClient);
             try
             {
@@ -71,35 +75,39 @@ namespace Gaos.Messages
 
             if (!WsAuthentication.requests.ContainsKey(authenticateResponse.RequestId))
             {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: request id not found, {authenticateResponse.RequestId}");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: request id not found: {authenticateResponse.RequestId}");
                 return;
             }
             WsAuthentication wsAuthentication;
             if (WsAuthentication.requests.TryGetValue(authenticateResponse.RequestId, out wsAuthentication))
             {
+                WsAuthentication.requests.Remove(authenticateResponse.RequestId);
 
                 if (authenticateResponse.Result == GaoProtobuf.AuthenticationResult.Success)
                 {
                     wsAuthentication.status = WsAuthenticationStatus.AUTHENTICATED;
-                    WsAuthentication.requests.Remove(authenticateResponse.RequestId);
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: authenticated");
+                    wsAuthentication.wsClient.SetIsAuthenticated(true);
+                    if (Gaos.Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true")
+                    {
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: authenticated");
+                    }
                 }
                 else if (authenticateResponse.Result == GaoProtobuf.AuthenticationResult.Unauthorized)
                 {
                     wsAuthentication.status = WsAuthenticationStatus.UNAUTHENTICATED;
-                    WsAuthentication.requests.Remove(authenticateResponse.RequestId);
+                    wsAuthentication.wsClient.SetIsAuthenticated(false);
                     Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: unauthenticated");
                 }
                 else if (authenticateResponse.Result == GaoProtobuf.AuthenticationResult.Error)
                 {
                     wsAuthentication.status = WsAuthenticationStatus.ERROR;
-                    WsAuthentication.requests.Remove(authenticateResponse.RequestId);
+                    wsAuthentication.wsClient.SetIsAuthenticated(false);
                     Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error while authenticating");
                 }
                 else
                 {
                     wsAuthentication.status = WsAuthenticationStatus.ERROR;
-                    WsAuthentication.requests.Remove(authenticateResponse.RequestId);
+                    wsAuthentication.wsClient.SetIsAuthenticated(false);
                     Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: warn: unknown authentication result: {authenticateResponse.Result}");
                 }
             }
@@ -123,6 +131,7 @@ namespace Gaos.Messages
                     {
                             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: warn: request timed out");
                     }
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: removing request: {key}");
                     WsAuthentication.requests.Remove(key);
                 } 
             }
