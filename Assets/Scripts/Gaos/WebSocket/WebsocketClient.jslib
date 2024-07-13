@@ -1,5 +1,6 @@
-
 function GAO_WebSocketCreate(GAOS_WS, fnNameOnOpen, fnNameOnClose, fnNameOnError, fnNameOnMessage) {
+  UnityBrowserChannel_init();
+
   var fnNameOnOpenStr = UTF8ToString(fnNameOnOpen); 
   var fnNameOnCloseStr = UTF8ToString(fnNameOnClose);
   var fnNameOnErrorStr = UTF8ToString(fnNameOnError);
@@ -86,29 +87,21 @@ function GAO_WebSocketReadyState(ws) {
   }
 }
 
-if (!window.GAO_UnityBrowserChannel) {
-  window.GAO_UnityBrowserChannel = {};
-}
-if (!window.GAO_UnityBrowserChannel.BaseMessages) {
-  window.GAO_UnityBrowserChannel.BaseMessages = {}
-}
-window.GAO_UnityBrowserChannel.BaseMessages.sendString = GAO_UnityBrowserChannel_BaseMessages_receiveString; 
-
-
-function GAO_UnityBrowserChannel_BaseMessages_sendString(str) {
+function GAO_UnityBrowserChannel_BaseMessages_sendString(_str) {
+  var str = UTF8ToString(_str); 
   if (window.GAO_UnityBrowserChannel) {
     if (window.GAO_UnityBrowserChannel.BaseMessages) {
-      window.GAO_UnityBrowserChannel.BaseMessages.receiveString(str);
+      if (window.GAO_UnityBrowserChannel.BaseMessages.receiveString) {
+        window.GAO_UnityBrowserChannel.BaseMessages.receiveString(str);
+      } else {
+        console.error('WebsocketClientJs:GAO_UnityBrowserChannel_BaseMessages_sendString():  GAO_UnityBrowserChannel.BaseMessages.receiveString not found');
+      }
     } else {
       console.error('WebsocketClientJs:GAO_UnityBrowserChannel_BaseMessages_sendString():  GAO_UnityBrowserChannel.BaseMessages not found');
     }
   } else {
     console.error('WebsocketClientJs:GAO_UnityBrowserChannel_BaseMessages_sendString():  GAO_UnityBrowserChannel not found');
   }
-}
-
-function GAO_UnityBrowserChannel_BaseMessages_receiveString(str) {
-    window.unityInstance.SendMessage('WebSocketClientJs', 'UnityBrowserChannel_BaseMessages_receiveString', str);
 }
 
 mergeInto(LibraryManager.library, {

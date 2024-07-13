@@ -237,6 +237,7 @@ namespace Gaos.WebSocket
         {
             while (true)
             {
+                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 500: KeepSendingHelloMessageToBrowser(): Hello from unity!");
                 UnityBrowserChannel.BaseMessages.sendString(this, "{\"message\": \"Hello from unity!\"}");
                 yield return new WaitForSeconds(5);
             }

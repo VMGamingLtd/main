@@ -31,7 +31,8 @@ namespace UnityBrowserChannel
             else
             {
                 // Direct call 
-                Gaos.WebSocket.WebSocketClientJs.UnityBrowserMessaging_BaseMessages_sendString(str);
+                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 600:BaseMessages.sendString(): direct call: Hello from unity!");
+                Gaos.WebSocket.WebSocketClientJs.UnityBrowserChannel_BaseMessages_sendString(str);
             }
         }
 
@@ -57,7 +58,7 @@ namespace UnityBrowserChannel
             const string METHOD_NAME = "receiveString()";
             if (Gaos.Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true")
             {
-                Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: str: {str}");
+                Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: in unity: str: {str}");
             }
         }
 

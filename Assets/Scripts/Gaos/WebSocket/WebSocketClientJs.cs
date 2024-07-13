@@ -45,7 +45,11 @@ namespace Gaos.WebSocket
         public void OnOpen()
         {
             Debug.Log($"{CLASS_NAME}: OnOpen()"); //@@@@@@@@@@@@@@@@
-            Gaos.Messages.WsAuthentication.authenticate(this, Gaos.Environment.Environment.GetEnvironment()["GAOS_WS_TOKEN"]);
+            if (Gaos.Context.Authentication.GetJWT() != null)
+            {
+                Debug.Log($"{CLASS_NAME}: OnOpen()");
+                Gaos.Messages.WsAuthentication.authenticate(this, Gaos.Context.Authentication.GetJWT());
+            }
         }
 
         public void OnClose()
@@ -220,11 +224,11 @@ namespace Gaos.WebSocket
         // --------------------------   UnityBrowserMessaging --------------------------
 
         [DllImport("__Internal")]
-        public static extern void UnityBrowserMessaging_BaseMessages_sendString(string str);
+        public static extern void UnityBrowserChannel_BaseMessages_sendString(string str);
 
-        public void UnityBrowserMessaging_BaseMessages_receiveString(string str)
+        public void UnityBrowserChannel_BaseMessages_receiveString(string str)
         {
-            const string METHOD_NAME = "UnityBrowserMessaging_BaseMessages_receiveString()";
+            const string METHOD_NAME = "UnityBrowserChannel_BaseMessages_receiveString()";
             Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: str: {str}");
             UnityBrowserChannel.BaseMessages.receiveString(str);
         }
