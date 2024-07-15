@@ -42,7 +42,6 @@ function GAO_WebSocketCreate(GAOS_WS, fnNameOnOpen, fnNameOnClose, fnNameOnError
       window.unityInstance.SendMessage('WebSocketClientJs', fnNameOnMessageStr, event.data);
     } else if (event.data instanceof ArrayBuffer) {
       var binaryData = new Uint8Array(event.data);
-      console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 100: received binary data: ${binaryData}`);
 
       // Allocate memory on emcscripten heap (Emcscripten heap is just javascript ArrayBuffer allocated and passed to module on startup,
       // Module.HEAPU32 is just Uint32Array view on that ArrayBuffer - 'Module.HEAPU32 = new Uint32Array(arrayBuffer)'). 
@@ -56,7 +55,6 @@ function GAO_WebSocketCreate(GAOS_WS, fnNameOnOpen, fnNameOnClose, fnNameOnError
       // write the binary data to the buffer
       Module.HEAPU8.set(binaryData, bufferPtr + Uint32Array.BYTES_PER_ELEMENT);
 
-      console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 150: ${fnNameOnMessageStr}`);
       window.unityInstance.SendMessage('WebSocketClientJs', fnNameOnMessageStr, bufferPtr);
 
       Module._free(bufferPtr);

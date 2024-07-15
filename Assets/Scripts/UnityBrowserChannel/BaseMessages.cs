@@ -31,7 +31,6 @@ namespace UnityBrowserChannel
             else
             {
                 // Direct call 
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 600:BaseMessages.sendString(): direct call: Hello from unity!");
                 Gaos.WebSocket.WebSocketClientJs.UnityBrowserChannel_BaseMessages_sendString(str);
             }
         }

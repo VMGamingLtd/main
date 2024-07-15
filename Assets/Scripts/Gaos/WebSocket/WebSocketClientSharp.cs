@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using System;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace Gaos.WebSocket
 {
@@ -10,14 +11,17 @@ namespace Gaos.WebSocket
     {
         public readonly static string CLASS_NAME = typeof(WebSocketClientSharp).Name;
 
-        public Queue<byte[]> MessagesOutbound = new Queue<byte[]>();
-        public Queue<byte[]> MessagesInbound = new Queue<byte[]>();
+        public ConcurrentQueue<byte[]> MessagesOutbound = new ConcurrentQueue<byte[]>();
+        public ConcurrentQueue<byte[]> MessagesInbound = new ConcurrentQueue<byte[]>();
 
         public WebSocketSharp.WebSocket WebSocket;
 
         public string WsUrl = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
 
         private bool IsAuthenticated = false;
+
+        CancellationTokenSource threadCancelationToken;
+        Thread thread;
 
 
         private enum SslProtocolsHack
@@ -29,16 +33,16 @@ namespace Gaos.WebSocket
 
         }
 
-        public Queue<byte[]> GetOutboundQueue()
+        public ConcurrentQueue<byte[]> GetOutboundQueue()
         {
             return MessagesOutbound;
         }
-        public Queue<byte[]> GetInboundQueue()
+        public ConcurrentQueue<byte[]> GetInboundQueue()
         {
             return MessagesInbound;
         }
 
-        public void Open()
+        public void OpenWs()
         {
             const string METHOD_NAME = "Open()"; 
             Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: webcocket - openning: {WsUrl}");
@@ -76,7 +80,26 @@ namespace Gaos.WebSocket
 
             WebSocket.Connect();
 
+
         }
+
+        public void Open()
+        {
+            threadCancelationToken = new CancellationTokenSource();
+            thread = new Thread(() => {
+                OpenWs();
+                Thread.Sleep(2000);
+                StartProcessingOutboundQueue_inThread(threadCancelationToken.Token);
+            });
+
+            thread.Start();
+        }
+        
+        void OnDisable()
+        {
+            threadCancelationToken.Cancel();
+        }
+
 
         public void Send(byte[] data)
         {
@@ -87,14 +110,11 @@ namespace Gaos.WebSocket
         {
         }
 
-        public IEnumerator StartProcessingOutboundQueue()
+        public void StartProcessingOutboundQueue_inThread(CancellationToken token)
         {
-            const string METHOD_NAME = "StartProcessing()";
-            const int MAX_RETRY_COUNT = 5;
+            const string METHOD_NAME = "StartProcessingOutboundQueue()";
 
-            int retryCount = 0;
-
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 var state = WebSocket.ReadyState;
 
@@ -102,58 +122,65 @@ namespace Gaos.WebSocket
                 {
                     if (MessagesOutbound.Count > 0)
                     {
-                        byte[] data = MessagesOutbound.Peek();
-                        try
+                        byte[] data; 
+                        bool dataReturned = MessagesOutbound.TryDequeue(out data);
+                        if (dataReturned)
                         {
-                            WebSocket.Send(data);
-                            MessagesOutbound.Dequeue();
-                            retryCount = 0;
-                        }
-                        catch (System.Exception e)
-                        {
-                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {data}: {e.Message}");
-                            ++retryCount;
-                            if (retryCount > MAX_RETRY_COUNT)
+                            try
                             {
-                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: sending message: {data}: MAX_RETRY_COUNT reached, will not try again");
-                                MessagesOutbound.Dequeue();
-                                retryCount = 0;
+                                WebSocket.Send(data);
+                            }
+                            catch (System.Exception e)
+                            {
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {data}: {e.Message}");
                             }
                         }
-                        yield return null;
+                        else
+                        {
+                            Thread.Sleep(200);
+                        }
                     }
                     else
                     {
-                        yield return new WaitForSeconds(0.2f);
+                        Thread.Sleep(200);
                     }
                 }
                 else
                 {
                     if (state == WebSocketSharp.WebSocketState.Closed)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket is closed, will try to open it again");
-                        yield return new WaitForSeconds(2);
-                        Open();
+                        if (!token.IsCancellationRequested)
+                        {
+                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket is closed, will try to open it again");
+                            Thread.Sleep(2000);
+                            OpenWs();
+                        }
                     }
                     else if (state == WebSocketSharp.WebSocketState.Connecting)
                     {
-                        yield return new WaitForSeconds(0.5f);
+                        Thread.Sleep(500);
                     } 
                     if (state == WebSocketSharp.WebSocketState.Closing)
                     {
-                        yield return new WaitForSeconds(0.5f);
+                        Thread.Sleep(500);
                     }
                     if (state == WebSocketSharp.WebSocketState.New)
                     {
-                        yield return new WaitForSeconds(0.5f);
+                        Thread.Sleep(500);
                     }
                     else
                     {
                         Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket state is unknown: {state}");
-                        yield return new WaitForSeconds(0.5f);
+                        Thread.Sleep(500);
                     }
                 }
             }
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: thread finished");
+        }
+
+        public IEnumerator StartProcessingOutboundQueue()
+        {
+            yield return null;
         }
 
         public IEnumerator StartProcessingInboundQueue(WebSocketClient ws)
@@ -166,18 +193,25 @@ namespace Gaos.WebSocket
                 {
                     if (MessagesInbound.Count > 0)
                     {
-                        byte[] data = MessagesInbound.Peek();
-                        try
+                        byte[] data;
+                        bool dataReturned = MessagesInbound.TryDequeue(out data);
+
+                        if (dataReturned)
                         {
-                            ws.Process(data);
-                            MessagesInbound.Dequeue();
+                            try
+                            {
+                                ws.Process(data);
+                            }
+                            catch (System.Exception e)
+                            {
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e}");
+                            }
+                            yield return null;
                         }
-                        catch (System.Exception e)
+                        else
                         {
-                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e}");
-                            MessagesInbound.Dequeue();
+                            yield return new WaitForSeconds(0.2f);
                         }
-                        yield return null;
                     }
                     else
                     {

@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Collections.Concurrent;
 
 namespace Gaos.WebSocket
 {
@@ -11,8 +12,8 @@ namespace Gaos.WebSocket
     {
         public readonly static string CLASS_NAME = typeof(WebSocketClientJs).Name;
 
-        private Queue<byte[]> MessagesOutbound = new Queue<byte[]>();
-        private Queue<byte[]> MessagesInbound = new Queue<byte[]>();
+        private ConcurrentQueue<byte[]> MessagesOutbound = new ConcurrentQueue<byte[]>();
+        private ConcurrentQueue<byte[]> MessagesInbound = new ConcurrentQueue<byte[]>();
 
         private int Ws;
         private bool IsAuthenticated = false;
@@ -44,7 +45,6 @@ namespace Gaos.WebSocket
 
         public void OnOpen()
         {
-            Debug.Log($"{CLASS_NAME}: OnOpen()"); //@@@@@@@@@@@@@@@@
             if (Gaos.Context.Authentication.GetJWT() != null)
             {
                 Debug.Log($"{CLASS_NAME}: OnOpen()");
@@ -54,12 +54,10 @@ namespace Gaos.WebSocket
 
         public void OnClose()
         {
-            Debug.Log($"{CLASS_NAME}: OnClose()"); //@@@@@@@@@@@@@@@@
         }
 
         public void OnError(string errorStr)
         {
-            Debug.Log($"{CLASS_NAME}: OnError(): {errorStr}"); //@@@@@@@@@@@@@@@@
             const string METHOD_NAME = "OnError()";
             Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {errorStr}");
         }
@@ -68,7 +66,6 @@ namespace Gaos.WebSocket
         {
             var data = new IntPtr(_data);
 
-            Debug.Log($"{CLASS_NAME}: OnMessage()"); //@@@@@@@@@@@@@@@@
             int length =  Marshal.ReadInt32(data);
             byte[] buffer = new byte[length];
 
@@ -84,11 +81,11 @@ namespace Gaos.WebSocket
 
         }
 
-        public Queue<byte[]> GetOutboundQueue()
+        public ConcurrentQueue<byte[]> GetOutboundQueue()
         {
             return MessagesOutbound;
         }
-        public Queue<byte[]> GetInboundQueue()
+        public ConcurrentQueue<byte[]> GetInboundQueue()
         {
             return MessagesInbound;
         }
@@ -114,9 +111,6 @@ namespace Gaos.WebSocket
         public IEnumerator StartProcessingOutboundQueue()
         {
             const string METHOD_NAME = "StartProcessingOutboundQueue()";
-            const int MAX_RETRY_COUNT = 5;
-
-            int retryCount = 0;
 
             while (true)
             {
@@ -125,25 +119,20 @@ namespace Gaos.WebSocket
                 {
                     if (MessagesOutbound.Count > 0)
                     {
-                        byte[] data = MessagesOutbound.Peek();
-                        try
+                        byte[] data;
+                        bool dataReturned = MessagesOutbound.TryDequeue(out data);
+                        if (dataReturned)
                         {
-                            WebSocketSendBytes(Ws, data);
-                            MessagesOutbound.Dequeue();
-                            retryCount = 0;
-                        }
-                        catch (System.Exception e)
-                        {
-                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {e.Message}");
-                            ++retryCount;
-                            if (retryCount > MAX_RETRY_COUNT)
+                            try
                             {
-                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: MAX_RETRY_COUNT reached therefore message shall be thrown away");
-                                MessagesOutbound.Dequeue();
-                                retryCount = 0;
+                                WebSocketSendBytes(Ws, data);
                             }
+                            catch (System.Exception e)
+                            {
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {e.Message}");
+                            }
+                            yield return null;
                         }
-                        yield return null;
                     }
                     else
                     {
@@ -186,18 +175,23 @@ namespace Gaos.WebSocket
                 {
                     if (MessagesInbound.Count > 0)
                     {
-                        byte[] data = MessagesInbound.Peek();
-                        try
+                        byte[] data;
+                        bool dataReturned = MessagesInbound.TryDequeue(out data);
+                        if (dataReturned)
                         {
-                            ws.Process(data);
-                            MessagesInbound.Dequeue();
+                            try
+                            {
+                                ws.Process(data);
+                            }
+                            catch (System.Exception e)
+                            {
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e.Message}");
+                            }
                         }
-                        catch (System.Exception e)
+                        else
                         {
-                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e.Message}");
-                            MessagesInbound.Dequeue();
+                            yield return new WaitForSeconds(0.1f);
                         }
-                        yield return null;
                     }
                     else
                     {
@@ -228,8 +222,6 @@ namespace Gaos.WebSocket
 
         public void UnityBrowserChannel_BaseMessages_receiveString(string str)
         {
-            const string METHOD_NAME = "UnityBrowserChannel_BaseMessages_receiveString()";
-            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: str: {str}");
             UnityBrowserChannel.BaseMessages.receiveString(str);
         }
 

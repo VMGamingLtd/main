@@ -4,6 +4,7 @@ using System.Collections;
 using System;
 using Gaos.Websocket;
 using Google.Protobuf;
+using System.Collections.Concurrent;
 
 namespace Gaos.WebSocket
 {
@@ -16,7 +17,7 @@ namespace Gaos.WebSocket
         public static WebSocketClient CurrentWesocketClient = null;
 
 
-        public Queue<byte[]> GetOutboundQueue()
+        public ConcurrentQueue<byte[]> GetOutboundQueue()
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -28,7 +29,7 @@ namespace Gaos.WebSocket
             }
         }
 
-        public Queue<byte[]> GetInboundQueue()
+        public ConcurrentQueue<byte[]> GetInboundQueue()
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -55,7 +56,10 @@ namespace Gaos.WebSocket
             {
                 Gaos.Messages.WsAuthentication.authenticate(this, Gaos.Context.Authentication.GetJWT());
             }
-            StartCoroutine(KeepSendingHelloMessageToBrowser());
+            if (false)
+            {
+                StartCoroutine(KeepSendingHelloMessageToBrowser());
+            }
         }
 
         public void Send(byte[] data)
@@ -237,7 +241,6 @@ namespace Gaos.WebSocket
         {
             while (true)
             {
-                Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 500: KeepSendingHelloMessageToBrowser(): Hello from unity!");
                 UnityBrowserChannel.BaseMessages.sendString(this, "{\"message\": \"Hello from unity!\"}");
                 yield return new WaitForSeconds(5);
             }
