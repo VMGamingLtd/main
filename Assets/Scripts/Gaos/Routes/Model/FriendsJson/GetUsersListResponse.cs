@@ -8,6 +8,7 @@ namespace Gaos.Routes.Model.FriendsJson
     {
         public int Id;
         public string? Name;
+        public bool? IsFriend;
     }
 
     [System.Serializable]

@@ -298,7 +298,8 @@ public class CoroutineManager : MonoBehaviour
                 break;
         }
 
-        saveSlotTitle.text = slotData.UserName;
+        //saveSlotTitle.text = slotData.UserName;
+        saveSlotTitle.text = Gaos.Context.Authentication.GetUserName();
         saveSlotDesc.text = description;
         UserName.userName = slotData.UserName;
 

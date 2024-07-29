@@ -9,6 +9,7 @@ namespace Gaos.Friends.Friends
     {
         public readonly static string CLASS_NAME = typeof(GetUsersList).Name;
 
+        /*
         public delegate void OnComplete(Gaos.Routes.Model.FriendsJson.GetUsersListResponse response);
 
         public static IEnumerator Call(OnComplete onComplete)
@@ -40,14 +41,17 @@ namespace Gaos.Friends.Friends
                 onComplete(response);
             }
         }
+        */
 
-        public static async UniTask<Gaos.Routes.Model.FriendsJson.GetUsersListResponse> CallAsync()
+        public static async UniTask<Gaos.Routes.Model.FriendsJson.GetUsersListResponse> CallAsync(string filterUserName, int maxCount)
         {
             const string METHOD_NAME = "CallAsync()";
             try
             {
 
                 Gaos.Routes.Model.FriendsJson.GetUsersListRequest request = new Gaos.Routes.Model.FriendsJson.GetUsersListRequest();
+                request.FilterUserName = filterUserName;
+                request.MaxCount = maxCount;
                 string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getUsersList", requestJsonStr);
                 await apiCall.CallAsync();

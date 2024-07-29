@@ -16,7 +16,7 @@ namespace Friends
     public class FriendsManager : MonoBehaviour
     {
         //private static int MAX_SCROLL_LIST_LINES_CPUNT = 100;
-        private static int MAX_SCROLL_LIST_LINES_CPUNT = 10;
+        private static int MAX_SCROLL_LIST_LINES_COUNT = 10;
 
         public GameObject FriendsButton;
         public Transform List; // scroll list containing friends buttons
@@ -24,13 +24,13 @@ namespace Friends
         //public GameObject SearchTextBox;
         public TMP_InputField SearchTextBox;
 
-        private FriendModel[] AllUsers = new FriendModel[MAX_SCROLL_LIST_LINES_CPUNT]; 
+        private FriendModel[] AllUsers = new FriendModel[MAX_SCROLL_LIST_LINES_COUNT]; 
         private int LastIndexAllUsers = -1;
 
-        private int[] FilteredUsers = new int[MAX_SCROLL_LIST_LINES_CPUNT];
+        private int[] FilteredUsers = new int[MAX_SCROLL_LIST_LINES_COUNT];
         private int LastIndexFilteredUsers = -1;
 
-        private GameObject[] AllFriendsButtons = new GameObject[MAX_SCROLL_LIST_LINES_CPUNT]; // all friends buttons in the scroll list
+        private GameObject[] AllFriendsButtons = new GameObject[MAX_SCROLL_LIST_LINES_COUNT]; // all friends buttons in the scroll list
         private int LastIndexAllFriendsButtons = -1;
 
         FriendsManager()
@@ -39,19 +39,25 @@ namespace Friends
 
         private async UniTaskVoid Init()
         {
+            bool isOnSearchTextBoxChange = false;
+
             RemoveAllFriendsButtons();
             await ReadAllUsers();
             AllocateFriendsButtons();
             FilterUsers("");
             DisplayFilteredUsers();
 
-            SearchTextBox.onValueChanged.AddListener(OnSearchTextBoxChange);
+            if (!isOnSearchTextBoxChange)
+            {
+                SearchTextBox.onValueChanged.AddListener(OnSearchTextBoxChange);
+            }
 
         }
 
-        private async UniTask ReadAllUsers()
+        private async UniTask ReadAllUsers(string frienNameSubstring = null)
         {
-            Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync();
+            Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp200 ReadAllUsers()");
+            Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(frienNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
             LastIndexAllUsers = -1;
             if (response == null)
             {
@@ -69,7 +75,7 @@ namespace Friends
                 };
 
                 // linit maximal number of users to be desplayed
-                if (i + 1 == MAX_SCROLL_LIST_LINES_CPUNT)
+                if (i + 1 == MAX_SCROLL_LIST_LINES_COUNT)
                 {
                     // TODO: maake backend return no more than MAX_SCROLL_LIST_LINES_CPUNT users
                     break;
@@ -153,6 +159,23 @@ namespace Friends
         {
             SearchTextBox.onValueChanged.RemoveListener(OnSearchTextBoxChange);
 
+        }
+
+        private async UniTaskVoid OnSearchIconClickAsync(string userNamePattern)
+        {
+            RemoveAllFriendsButtons();
+            await ReadAllUsers(userNamePattern);
+            AllocateFriendsButtons();
+            FilterUsers("");
+            DisplayFilteredUsers();
+
+
+        }
+
+        public void OnSearchIconClick()
+        {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 400: OnSearchIconClick(): {SearchTextBox.text}");
+            OnSearchIconClickAsync(SearchTextBox.text).Forget();
         }
 
 
