@@ -4,6 +4,7 @@ public class InteractionManager : MonoBehaviour
 {
     public static bool IsMoveEnabled = false;
     public Texture2D cursorTexture;
+    public GameObject DungeonUI;
 
     public void MoveCommand()
     {

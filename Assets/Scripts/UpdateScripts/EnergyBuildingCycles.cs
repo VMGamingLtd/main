@@ -84,7 +84,7 @@ public class EnergyBuildingCycles : MonoBehaviour
     {
         InitializeBuildingData();
         await UniTask.DelayFrame(10);
-        if (itemData.isPaused)
+        if (itemData.isPaused || Player.InCombat)
         {
             PauseMode();
         }
@@ -132,7 +132,7 @@ public class EnergyBuildingCycles : MonoBehaviour
         enlistedProduction = true;
 
         // if the building is paused, then do not continue in production cycle
-        if (itemData.isPaused)
+        if (itemData.isPaused || Player.InCombat)
         {
             PauseMode();
         }
@@ -188,7 +188,7 @@ public class EnergyBuildingCycles : MonoBehaviour
         while (itemData.timer < itemData.totalTime && itemData.efficiencySetting > 0)
         {
             // If the building process is paused, end the cycle
-            if (itemData.isPaused)
+            if (itemData.isPaused || Player.InCombat)
             {
                 itemData.efficiency = 0;
                 itemData.actualPowerOutput = 0;

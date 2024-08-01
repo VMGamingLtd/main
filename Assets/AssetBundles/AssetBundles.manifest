@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3099882196
+CRC: 2599928377
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -13,4 +13,10 @@ AssetBundleManifest:
       Dependencies: {}
     Info_3:
       Name: equipmenticons
+      Dependencies: {}
+    Info_4:
+      Name: combaticons
+      Dependencies: {}
+    Info_5:
+      Name: miscicons
       Dependencies: {}

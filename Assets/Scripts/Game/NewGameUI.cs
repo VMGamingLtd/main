@@ -99,7 +99,9 @@ public class NewGameUI : MonoBehaviour
             RecipeCreator.recipeOrderAdded = gameData.RecipeOrderAdded;
             EquipmentManager.autoConsumption = gameData.autoConsumption;
             LoadStaticVariablesFromModel(gameData);
+            equipmentManager.ResetPlayerStats();
 
+            // event icons
             for (int i = 0; i < gameData.EventObjects.Count; i++)
             {
                 EventIconModel iconModel = gameData.EventObjects[i];
@@ -167,173 +169,267 @@ public class NewGameUI : MonoBehaviour
             // Deserialize Items
             for (int i = 0; i < gameData.basicInventoryObjects.Length; i++)
             {
-                ItemDataModel itemData = gameData.basicInventoryObjects[i];
+                ItemDataJson itemData = gameData.basicInventoryObjects[i];
                 if (itemData.isEquipped)
                 {
                     if (itemData.itemType == Constants.Energy)
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
                     }
                     if (itemData.itemType == Constants.Liquid)
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
                     }
                     if (itemData.itemType == Constants.Plants || itemData.itemType == Constants.Meat)
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
                     }
                 }
                 else
                 {
-                    itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                    itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                     itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped);
                 }
             }
             for (int i = 0; i < gameData.processedInventoryObjects.Length; i++)
             {
-                ItemDataModel itemData = gameData.processedInventoryObjects[i];
+                ItemDataJson itemData = gameData.processedInventoryObjects[i];
                 if (itemData.isEquipped)
                 {
                     if (itemData.itemType == Constants.Energy)
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
                     }
                     if (itemData.itemType == Constants.Liquid)
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
                     }
                     if (itemData.itemType == Constants.Plants || itemData.itemType == Constants.Meat)
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
                     }
                 }
                 else
                 {
-                    itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                    itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                     itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped);
                 }
             }
             for (int i = 0; i < gameData.enhancedInventoryObjects.Length; i++)
             {
-                ItemDataModel itemData = gameData.enhancedInventoryObjects[i];
+                ItemDataJson itemData = gameData.enhancedInventoryObjects[i];
                 if (itemData.isEquipped)
                 {
                     if (itemData.itemType == Constants.Energy)
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
                     }
                     if (itemData.itemType == Constants.Liquid)
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
                     }
                     if (itemData.itemType == Constants.Plants || itemData.itemType == Constants.Meat)
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
                     }
                 }
                 else
                 {
-                    itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                    itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                     itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped);
                 }
             }
             for (int i = 0; i < gameData.assembledInventoryObjects.Length; i++)
             {
-                ItemDataModel itemData = gameData.assembledInventoryObjects[i];
+                ItemDataJson itemData = gameData.assembledInventoryObjects[i];
                 if (itemData != null)
                 {
                     if (itemData.isEquipped)
                     {
                         if (itemData.itemType == Constants.Energy)
                         {
-                            itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                            itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                             itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[5]);
                         }
                         if (itemData.itemType == Constants.Liquid)
                         {
-                            itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                            itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                             itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[7]);
                         }
                         if (itemData.itemType == Constants.Plants || itemData.itemType == Constants.Meat)
                         {
-                            itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                            itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                             itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped, equipButtons[8]);
                         }
                     }
                     else
                     {
-                        itemCreator.Recreateitem(itemData.itemQuantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
+                        itemCreator.Recreateitem(itemData.quantity, itemData.itemProduct, itemData.itemType, itemData.itemClass,
                         itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable, itemData.ID, itemData.isEquipped);
                     }
                 }
             }
             for (int i = 0; i < gameData.suitInventoryObjects.Length; i++)
             {
-                SuitDataModel suitData = gameData.suitInventoryObjects[i];
+                SuitDataJson suitData = gameData.suitInventoryObjects[i];
                 if (suitData != null)
                 {
                     if (suitData.isEquipped)
                     {
-                        itemCreator.RecreateSuit(suitData.itemQuantity, suitData.itemProduct, suitData.itemType, suitData.itemClass, suitData.itemName, suitData.index, suitData.stackLimit,
-                            suitData.equipable, suitData.ID, suitData.isEquipped, suitData.physicalProtection, suitData.fireProtection, suitData.coldProtection, suitData.gasProtection,
-                            suitData.explosionProtection, suitData.shieldPoints, suitData.hitPoints, suitData.energyCapacity, suitData.durability, suitData.maxDurability, suitData.inventorySlots,
+                        itemCreator.RecreateSuit(suitData.quantity, suitData.itemProduct, suitData.itemType, suitData.itemClass, suitData.itemName, suitData.index, suitData.stackLimit,
+                            suitData.equipable, suitData.ID, suitData.isEquipped, suitData.physicalProtection, suitData.fireProtection, suitData.coldProtection, suitData.poisonProtection,
+                            suitData.energyProtection, suitData.psiProtection, suitData.shieldPoints, suitData.armor, suitData.hitPoints, suitData.energyCapacity, suitData.durability, suitData.maxDurability, suitData.inventorySlots,
                             suitData.strength, suitData.perception, suitData.intelligence, suitData.agility, suitData.charisma, suitData.willpower, equipButtons[1]);
                     }
                     else
                     {
-                        itemCreator.RecreateSuit(suitData.itemQuantity, suitData.itemProduct, suitData.itemType, suitData.itemClass, suitData.itemName, suitData.index, suitData.stackLimit,
-                            suitData.equipable, suitData.ID, suitData.isEquipped, suitData.physicalProtection, suitData.fireProtection, suitData.coldProtection, suitData.gasProtection,
-                            suitData.explosionProtection, suitData.shieldPoints, suitData.hitPoints, suitData.energyCapacity, suitData.durability, suitData.maxDurability,
+                        itemCreator.RecreateSuit(suitData.quantity, suitData.itemProduct, suitData.itemType, suitData.itemClass, suitData.itemName, suitData.index, suitData.stackLimit,
+                            suitData.equipable, suitData.ID, suitData.isEquipped, suitData.physicalProtection, suitData.fireProtection, suitData.coldProtection, suitData.poisonProtection,
+                            suitData.energyProtection, suitData.psiProtection, suitData.shieldPoints, suitData.armor, suitData.hitPoints, suitData.energyCapacity, suitData.durability, suitData.maxDurability,
                             suitData.inventorySlots, suitData.strength, suitData.perception, suitData.intelligence, suitData.agility, suitData.charisma, suitData.willpower);
                     }
                 }
             }
             for (int i = 0; i < gameData.helmetInventoryObjects.Length; i++)
             {
-                HelmetDataModel helmetData = gameData.helmetInventoryObjects[i];
+                HelmetDataJson helmetData = gameData.helmetInventoryObjects[i];
                 if (helmetData != null)
                 {
                     if (helmetData.isEquipped)
                     {
-                        itemCreator.RecreateHelmet(helmetData.itemQuantity, helmetData.itemProduct, helmetData.itemType, helmetData.itemClass, helmetData.itemName, helmetData.index, helmetData.stackLimit,
-                            helmetData.equipable, helmetData.ID, helmetData.isEquipped, helmetData.physicalProtection, helmetData.fireProtection, helmetData.coldProtection, helmetData.gasProtection,
-                            helmetData.explosionProtection, helmetData.shieldPoints, helmetData.hitPoints, helmetData.durability, helmetData.maxDurability, helmetData.strength, helmetData.perception,
+                        itemCreator.RecreateHelmet(helmetData.quantity, helmetData.itemProduct, helmetData.itemType, helmetData.itemClass, helmetData.itemName, helmetData.index, helmetData.stackLimit,
+                            helmetData.equipable, helmetData.ID, helmetData.isEquipped, helmetData.physicalProtection, helmetData.fireProtection, helmetData.coldProtection, helmetData.poisonProtection,
+                            helmetData.energyProtection, helmetData.psiProtection, helmetData.shieldPoints, helmetData.armor, helmetData.hitPoints, helmetData.durability, helmetData.maxDurability, helmetData.strength, helmetData.perception,
                             helmetData.intelligence, helmetData.agility, helmetData.charisma, helmetData.willpower, helmetData.visibilityRadius, helmetData.explorationRadius, helmetData.pickupRadius, equipButtons[0]);
                     }
                     else
                     {
-                        itemCreator.RecreateHelmet(helmetData.itemQuantity, helmetData.itemProduct, helmetData.itemType, helmetData.itemClass, helmetData.itemName, helmetData.index, helmetData.stackLimit,
-                            helmetData.equipable, helmetData.ID, helmetData.isEquipped, helmetData.physicalProtection, helmetData.fireProtection, helmetData.coldProtection, helmetData.gasProtection,
-                            helmetData.explosionProtection, helmetData.shieldPoints, helmetData.hitPoints, helmetData.durability, helmetData.maxDurability, helmetData.strength, helmetData.perception,
+                        itemCreator.RecreateHelmet(helmetData.quantity, helmetData.itemProduct, helmetData.itemType, helmetData.itemClass, helmetData.itemName, helmetData.index, helmetData.stackLimit,
+                            helmetData.equipable, helmetData.ID, helmetData.isEquipped, helmetData.physicalProtection, helmetData.fireProtection, helmetData.coldProtection, helmetData.poisonProtection,
+                            helmetData.energyProtection, helmetData.psiProtection, helmetData.shieldPoints, helmetData.armor, helmetData.hitPoints, helmetData.durability, helmetData.maxDurability, helmetData.strength, helmetData.perception,
                             helmetData.intelligence, helmetData.agility, helmetData.charisma, helmetData.willpower, helmetData.visibilityRadius, helmetData.explorationRadius, helmetData.pickupRadius);
                     }
                 }
             }
             for (int i = 0; i < gameData.toolInventoryObjects.Length; i++)
             {
-                ToolDataModel toolData = gameData.toolInventoryObjects[i];
+                ToolDataJson toolData = gameData.toolInventoryObjects[i];
                 if (toolData != null)
                 {
                     if (toolData.isEquipped)
                     {
-                        itemCreator.RecreateTool(toolData.itemQuantity, toolData.itemProduct, toolData.itemType, toolData.itemClass, toolData.itemName, toolData.index, toolData.stackLimit,
+                        itemCreator.RecreateTool(toolData.quantity, toolData.itemProduct, toolData.itemType, toolData.itemClass, toolData.itemName, toolData.index, toolData.stackLimit,
                             toolData.equipable, toolData.ID, toolData.isEquipped, toolData.durability, toolData.maxDurability, toolData.strength, toolData.perception,
                             toolData.intelligence, toolData.agility, toolData.charisma, toolData.willpower, toolData.productionSpeed, toolData.materialCost, toolData.outcomeRate, equipButtons[2]);
                     }
                     else
                     {
-                        itemCreator.RecreateTool(toolData.itemQuantity, toolData.itemProduct, toolData.itemType, toolData.itemClass, toolData.itemName, toolData.index, toolData.stackLimit,
+                        itemCreator.RecreateTool(toolData.quantity, toolData.itemProduct, toolData.itemType, toolData.itemClass, toolData.itemName, toolData.index, toolData.stackLimit,
                             toolData.equipable, toolData.ID, toolData.isEquipped, toolData.durability, toolData.maxDurability, toolData.strength, toolData.perception,
                             toolData.intelligence, toolData.agility, toolData.charisma, toolData.willpower, toolData.productionSpeed, toolData.materialCost, toolData.outcomeRate);
+                    }
+                }
+            }
+
+            for (int i = 0; i < gameData.meleeWeaponInventoryObjects.Length; i++)
+            {
+                MeleeWeaponDataJson data = gameData.meleeWeaponInventoryObjects[i];
+                if (data != null)
+                {
+                    if (data.isEquipped)
+                    {
+                        itemCreator.RecreateMeleeWeapon(data.quantity, data.itemProduct, data.itemType, data.itemClass, data.itemName, data.index, data.stackLimit, data.equipable,
+                             data.ID, data.isEquipped, data.attackSpeed, data.hitChance, data.dodge, data.resistance, data.counterChance, data.penetration, data.psiDamage, data.meleePhysicalDamage,
+                             data.meleeFireDamage, data.meleeColdDamage, data.meleePoisonDamage, data.meleeEnergyDamage, data.durability, data.maxDurability, data.strength, data.perception,
+                             data.intelligence, data.agility, data.charisma, data.willpower, data.weaponType, equipButtons[4]);
+                    }
+                    else
+                    {
+                        itemCreator.RecreateMeleeWeapon(data.quantity, data.itemProduct, data.itemType, data.itemClass, data.itemName, data.index, data.stackLimit, data.equipable,
+                             data.ID, data.isEquipped, data.attackSpeed, data.hitChance, data.dodge, data.resistance, data.counterChance, data.penetration, data.psiDamage, data.meleePhysicalDamage,
+                             data.meleeFireDamage, data.meleeColdDamage, data.meleePoisonDamage, data.meleeEnergyDamage, data.durability, data.maxDurability, data.strength, data.perception,
+                             data.intelligence, data.agility, data.charisma, data.willpower, data.weaponType);
+                    }
+                }
+            }
+
+            for (int i = 0; i < gameData.rangedWeaponInventoryObjects.Length; i++)
+            {
+                RangedWeaponDataJson data = gameData.rangedWeaponInventoryObjects[i];
+                if (data != null)
+                {
+                    if (data.isEquipped)
+                    {
+                        itemCreator.RecreateRangedWeapon(data.quantity, data.itemProduct, data.itemType, data.itemClass, data.itemName, data.index, data.stackLimit, data.equipable,
+                             data.ID, data.isEquipped, data.attackSpeed, data.hitChance, data.dodge, data.resistance, data.counterChance, data.penetration, data.psiDamage, data.rangedPhysicalDamage,
+                             data.rangedFireDamage, data.rangedColdDamage, data.rangedPoisonDamage, data.rangedEnergyDamage, data.durability, data.maxDurability, data.strength, data.perception,
+                             data.intelligence, data.agility, data.charisma, data.willpower, data.weaponType, equipButtons[4]);
+                    }
+                    else
+                    {
+                        itemCreator.RecreateRangedWeapon(data.quantity, data.itemProduct, data.itemType, data.itemClass, data.itemName, data.index, data.stackLimit, data.equipable,
+                             data.ID, data.isEquipped, data.attackSpeed, data.hitChance, data.dodge, data.resistance, data.counterChance, data.penetration, data.psiDamage, data.rangedPhysicalDamage,
+                             data.rangedFireDamage, data.rangedColdDamage, data.rangedPoisonDamage, data.rangedEnergyDamage, data.durability, data.maxDurability, data.strength, data.perception,
+                             data.intelligence, data.agility, data.charisma, data.willpower, data.weaponType);
+                    }
+                }
+            }
+
+            for (int i = 0; i < gameData.shieldInventoryObjects.Length; i++)
+            {
+                ShieldDataJson data = gameData.shieldInventoryObjects[i];
+                if (data != null)
+                {
+                    if (data.isEquipped)
+                    {
+                        itemCreator.RecreateShield(data.quantity, data.itemProduct, data.itemType, data.itemClass, data.itemName, data.index, data.stackLimit, data.equipable,
+                             data.ID, data.isEquipped, data.attackSpeed, data.hitChance, data.dodge, data.resistance, data.counterChance, data.penetration, data.psiDamage, data.meleePhysicalDamage,
+                             data.meleeFireDamage, data.meleeColdDamage, data.meleePoisonDamage, data.meleeEnergyDamage, data.physicalProtection, data.fireProtection, data.coldProtection,
+                             data.poisonProtection, data.energyProtection, data.psiProtection, data.shieldPoints, data.armor, data.hitPoints, data.durability, data.maxDurability, data.strength,
+                             data.perception, data.intelligence, data.agility, data.charisma, data.willpower, data.weaponType, equipButtons[2]);
+                    }
+                    else
+                    {
+                        itemCreator.RecreateShield(data.quantity, data.itemProduct, data.itemType, data.itemClass, data.itemName, data.index, data.stackLimit, data.equipable,
+                             data.ID, data.isEquipped, data.attackSpeed, data.hitChance, data.dodge, data.resistance, data.counterChance, data.penetration, data.psiDamage, data.meleePhysicalDamage,
+                             data.meleeFireDamage, data.meleeColdDamage, data.meleePoisonDamage, data.meleeEnergyDamage, data.physicalProtection, data.fireProtection, data.coldProtection,
+                             data.poisonProtection, data.energyProtection, data.psiProtection, data.shieldPoints, data.armor, data.hitPoints, data.durability, data.maxDurability, data.strength,
+                             data.perception, data.intelligence, data.agility, data.charisma, data.willpower, data.weaponType);
+                    }
+                }
+            }
+
+            for (int i = 0; i < gameData.offHandInventoryObjects.Length; i++)
+            {
+                OffHandDataJson data = gameData.offHandInventoryObjects[i];
+                if (data != null)
+                {
+                    if (data.isEquipped)
+                    {
+                        itemCreator.RecreateOffhand(data.quantity, data.itemProduct, data.itemType, data.itemClass, data.itemName, data.index, data.stackLimit, data.equipable,
+                             data.ID, data.isEquipped, data.attackSpeed, data.hitChance, data.dodge, data.resistance, data.counterChance, data.penetration, data.psiDamage, data.meleePhysicalDamage,
+                             data.meleeFireDamage, data.meleeColdDamage, data.meleePoisonDamage, data.meleeEnergyDamage, data.rangedPhysicalDamage, data.rangedFireDamage, data.rangedColdDamage,
+                             data.rangedPoisonDamage, data.rangedEnergyDamage, data.physicalProtection, data.fireProtection, data.coldProtection, data.poisonProtection, data.energyProtection,
+                             data.psiProtection, data.shieldPoints, data.armor, data.hitPoints, data.durability, data.maxDurability, data.strength, data.perception, data.intelligence, data.agility,
+                             data.charisma, data.willpower, data.weaponType, equipButtons[2]);
+                    }
+                    else
+                    {
+                        itemCreator.RecreateOffhand(data.quantity, data.itemProduct, data.itemType, data.itemClass, data.itemName, data.index, data.stackLimit, data.equipable,
+                             data.ID, data.isEquipped, data.attackSpeed, data.hitChance, data.dodge, data.resistance, data.counterChance, data.penetration, data.psiDamage, data.meleePhysicalDamage,
+                             data.meleeFireDamage, data.meleeColdDamage, data.meleePoisonDamage, data.meleeEnergyDamage, data.rangedPhysicalDamage, data.rangedFireDamage, data.rangedColdDamage,
+                             data.rangedPoisonDamage, data.rangedEnergyDamage, data.physicalProtection, data.fireProtection, data.coldProtection, data.poisonProtection, data.energyProtection,
+                             data.psiProtection, data.shieldPoints, data.armor, data.hitPoints, data.durability, data.maxDurability, data.strength, data.perception, data.intelligence, data.agility,
+                             data.charisma, data.willpower, data.weaponType);
                     }
                 }
             }

@@ -8,8 +8,8 @@ public class RefreshEXPbar : MonoBehaviour
     void Start()
     {
         ExpBar = GetComponent<Image>();
-        int playerCurrentExp = Player.GetCurrentResource(ref Player.PlayerCurrentExp);
-        int playerMaxExp = Player.GetCurrentResource(ref Player.PlayerMaxExp);
+        int playerCurrentExp = Player.GetCurrentResource(ref Player.CurrentExp);
+        int playerMaxExp = Player.GetCurrentResource(ref Player.MaxExp);
         float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
         ExpBar.fillAmount = fillAmount;
     }

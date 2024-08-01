@@ -35,7 +35,7 @@ public class DiscoveryManager
             eventType = EventIconType.CyberHideout;
         }
 
-        var dungeonLevel = Player.PlayerLevel;
+        var dungeonLevel = Player.Level;
         var difficultyChance = Random.Range(0f, 100f);
 
         if (difficultyChance < 10)

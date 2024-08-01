@@ -1,12 +1,21 @@
+using System.Collections.Generic;
+using static Enumerations;
+
 public static class Player
 {
     // BASE STATS
-    public static int PlayerLevel = 1;
-    public static int PlayerCurrentExp;
-    public static int PlayerMaxExp = 40;
+    public static int Id = 0; // player/host starts always on 0 Id. Visitors starts from 1.
+    public static string Name;
+    public static int Level = 1;
+    public static int CurrentExp;
+    public static int MaxExp = 40;
     public static int SkillPoints;
     public static int StatPoints;
     public static float ResearchPoints;
+
+    // BATTLE GROUP STATS
+    public static BattleFormation BattleFormation = BattleFormation.Front;
+    public static int BattlePosition = 1;
 
     // SKILLS
     public static int Biology;
@@ -17,20 +26,36 @@ public static class Player
     public static int Psychology;
 
     // ATTACK STATS
-    public static int PhysicalDamage;
-    public static int FireDamage;
-    public static int ColdDamage;
-    public static int GasDamage;
-    public static int ExplosionDamage;
+    public static float AttackSpeed = 1;
+    public static int Penetration;
+    public static int CounterChance;
+    public static int HitChance;
+    public static int MeleeAttack;
+    public static int RangedAttack;
+    public static int PsiDamage;
+    public static int MeleePhysicalDamage;
+    public static int MeleeFireDamage;
+    public static int MeleeColdDamage;
+    public static int MeleePoisonDamage;
+    public static int MeleeEnergyDamage;
+    public static int RangedPhysicalDamage;
+    public static int RangedFireDamage;
+    public static int RangedColdDamage;
+    public static int RangedPoisonDamage;
+    public static int RangedEnergyDamage;
 
-    // PROTECTION STATS
+    // DEFENSE STATS
     public static int ShieldPoints;
-    public static int HitPoints;
+    public static int Armor;
+    public static int HitPoints = 10;
     public static int PhysicalProtection;
     public static int FireProtection;
     public static int ColdProtection;
-    public static int GasProtection;
-    public static int ExplosionProtection;
+    public static int PoisonProtection;
+    public static int EnergyProtection;
+    public static int PsiProtection;
+    public static int Resistance;
+    public static int Dodge;
 
     // GENERAL STATS
     public static int Strength;
@@ -54,12 +79,16 @@ public static class Player
     public static int VisibilityRadius;
     public static int PickupRadius;
     public static int UsedInventorySlots;
+    public static int BattleGroupSize = 3;
+    public static int ActiveCombatants = 0; // combatants that are already assigned in battle
+    public static int PassiveCombatants = 0; // combatants not picked for battle, assigned in the available section
     public static float ProductionSpeed; // players start with 1 from the first item equipped.
     public static float MaterialCost; // players start with 1 from the first item equipped.
     public static float OutcomeRate; // players start with 1 from the first item equipped.
 
     // MODE VARIABLES
     public static bool CanProduce; // represents if player has Fabricator tool equipped
+    public static bool InCombat; // represents if player is currently in battle (will pause all BuildingCycles)
 
     // DISCOVERY FILTER
     public static bool CavesSwitch;
@@ -102,6 +131,10 @@ public static class Player
     public static bool PoweredEngineeringResearch;
     public static bool PharmaceuticalsResearch;
     public static bool ExplosivesResearch;
+
+    // Player abilities and status effects
+    public static IList<CombatAbility> CombatAbilities = new List<CombatAbility>();
+    public static IList<StatusEffect> CombatStatusEffects = new List<StatusEffect>();
 
     public static int AddCurrentResource(ref int currentResourceSet, int amount)
     {

@@ -152,7 +152,7 @@ public class BuildingCycles : MonoBehaviour
         enlistedProduction = true;
 
         // this step is important during unpause, as it helps the process to continue from where it ended without restart
-        if (itemData.isPaused)
+        if (itemData.isPaused || Player.InCombat)
         {
             PauseMode();
         }
@@ -175,7 +175,7 @@ public class BuildingCycles : MonoBehaviour
         while (itemData.timer < itemData.totalTime && itemData.efficiencySetting > 0)
         {
             // If the building process is paused this whole cycle ends here, keeping all values as they are
-            if (itemData.isPaused)
+            if (itemData.isPaused || Player.InCombat)
             {
                 PauseMode();
             }
@@ -228,7 +228,7 @@ public class BuildingCycles : MonoBehaviour
         enlistedProduction = true;
 
         // this step is important during unpause, as it helps the process to continue from where it ended without restart
-        if (itemData.isPaused)
+        if (itemData.isPaused || Player.InCombat)
         {
             PauseMode();
         }
@@ -286,7 +286,7 @@ public class BuildingCycles : MonoBehaviour
         while (itemData.timer < itemData.totalTime && itemData.efficiencySetting > 0)
         {
             // If the building process is paused this whole cycle ends here, keeping all values as they are
-            if (itemData.isPaused)
+            if (itemData.isPaused || Player.InCombat)
             {
                 PauseMode();
             }

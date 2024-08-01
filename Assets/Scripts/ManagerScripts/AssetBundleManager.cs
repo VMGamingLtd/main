@@ -75,4 +75,41 @@ public static class AssetBundleManager
         }
 
     }
+
+    // Searches a specific asset bundle and retrieves a Sprite Image for a game object based on its name.
+    public static Sprite AssignEquipmentSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.EquipmentIcons, spriteName);
+        return sprite;
+    }
+
+    public static Sprite AssignCombatSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.CombatIcons, spriteName);
+        return sprite;
+    }
+
+    public static Sprite AssignResourceSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.ResourceIcons, spriteName);
+        return sprite;
+    }
+
+    public static Sprite AssignBuildingSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.BuildingIcons, spriteName);
+        return sprite;
+    }
+
+    public static Sprite AssignSkillSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.SkillsIcons, spriteName);
+        return sprite;
+    }
+
+    public static Sprite AssignMiscSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.MiscIcons, spriteName);
+        return sprite;
+    }
 }

@@ -36,10 +36,6 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {
                 StartCoroutine(DisplayTooltip("ToolTooltip", null, null, toolData));
             }
-            else if (eventData.pointerEnter.transform.parent.TryGetComponent<ItemData>(out var itemData))
-            {
-                StartCoroutine(DisplayTooltip("ItemTooltip", null, null, null, itemData));
-            }
             else if (eventData.pointerEnter.transform.parent.TryGetComponent<BuildingItemData>(out var buildingItemData))
             {
                 StartCoroutine(DisplayTooltip("BuildingTooltip", null, null, null, null, buildingItemData));
@@ -51,6 +47,26 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             else if (eventData.pointerEnter.transform.parent.TryGetComponent<EventIconData>(out var eventIconData))
             {
                 StartCoroutine(DisplayTooltip("EventIconTooltip", null, null, null, null, null, null, eventIconData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<MeleeWeaponData>(out var meleeWeaponData))
+            {
+                StartCoroutine(DisplayTooltip("MeleeWeaponTooltip", null, null, null, null, null, null, null, meleeWeaponData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<RangedWeaponData>(out var rangedWeaponData))
+            {
+                StartCoroutine(DisplayTooltip("RangedWeaponTooltip", null, null, null, null, null, null, null, null, rangedWeaponData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<ShieldData>(out var shieldData))
+            {
+                StartCoroutine(DisplayTooltip("ShieldTooltip", null, null, null, null, null, null, null, null, null, shieldData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<OffHandData>(out var offHandData))
+            {
+                StartCoroutine(DisplayTooltip("OffHandTooltip", null, null, null, null, null, null, null, null, null, null, offHandData));
+            }
+            else if (eventData.pointerEnter.transform.parent.TryGetComponent<ItemData>(out var itemData))
+            {
+                StartCoroutine(DisplayTooltip("ItemTooltip", null, null, null, itemData));
             }
             else
             {
@@ -118,7 +134,8 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public IEnumerator DisplayTooltip(string objectName, SuitData suitData = null, HelmetData helmetData = null,
         ToolData toolData = null, ItemData itemData = null, BuildingItemData buildingItemData = null, RecipeItemData recipeItemData = null,
-        EventIconData eventIconData = null)
+        EventIconData eventIconData = null, MeleeWeaponData meleeWeaponData = null, RangedWeaponData rangedWeaponData = null,
+        ShieldData shieldData = null, OffHandData offHandData = null)
     {
         HideAllTooltips();
         GameObject tooltipObject = FindTooltipObject(objectName);
@@ -174,6 +191,26 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {
                 EventIconDataInjector eventIconDataInjector = tooltipObject.GetComponent<EventIconDataInjector>();
                 eventIconDataInjector.InjectData(eventIconData);
+            }
+            else if (meleeWeaponData != null)
+            {
+                MeleeWeaponDataInjector meleeWeaponDataInjector = tooltipObject.GetComponent<MeleeWeaponDataInjector>();
+                meleeWeaponDataInjector.InjectData(meleeWeaponData);
+            }
+            else if (rangedWeaponData != null)
+            {
+                RangedWeaponDataInjector rangedWeaponDataInjector = tooltipObject.GetComponent<RangedWeaponDataInjector>();
+                rangedWeaponDataInjector.InjectData(rangedWeaponData);
+            }
+            else if (shieldData != null)
+            {
+                ShieldDataInjector shieldDataInjector = tooltipObject.GetComponent<ShieldDataInjector>();
+                shieldDataInjector.InjectData(shieldData);
+            }
+            else if (offHandData != null)
+            {
+                OffHandDataInjector offHandDataInjector = tooltipObject.GetComponent<OffHandDataInjector>();
+                offHandDataInjector.InjectData(offHandData);
             }
 
             yield return new WaitForSeconds(delay);
