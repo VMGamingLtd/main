@@ -504,7 +504,7 @@ public class FightManager : MonoBehaviour
         newItem.transform.localScale = Vector3.one;
 
         if (newItem.TryGetComponent<BattleCharacter>(out var battleCharacter) &&
-            int.TryParse(slotID, out int position) && int.TryParse(EventLevel.text, out int level))
+            int.TryParse(slotID, out int position) && int.TryParse(EventLevel.text.Substring(1, 1), out int level))
         {
             battleCharacter.CreateCombatant(battleFormation, Faction.Enemy, race, position, "FireBeetle", level);
             AddCombatant(newItem);

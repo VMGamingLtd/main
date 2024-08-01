@@ -122,46 +122,53 @@ public class TargetService
                         _fightManager.ActiveAbility = ability;
                         _fightManager.PlayerGroupTargets.Clear();
 
-                        if (ability.IsFrontlineAoe && ability.IsBacklineAoe)
-                        {
-                            foreach (var combatant in _fightManager.Combatants)
-                            {
-                                if (combatant.TryGetComponent<BattleCharacter>(out var battleComponent) && battleComponent != null &&
-                                    battleComponent.IsEnemy())
-                                {
-                                    _fightManager.PlayerGroupTargets.Add(combatant);
-                                }
-                            }
-                        }
-                        else if (ability.IsFrontlineAoe)
-                        {
-                            foreach (var combatant in _fightManager.Combatants)
-                            {
-                                if (combatant.TryGetComponent<BattleCharacter>(out var battleComponent) && battleComponent != null &&
-                                    battleComponent.IsEnemy() && battleComponent.GetBattleFormation() == Enumerations.BattleFormation.Front)
-                                {
-                                    _fightManager.PlayerGroupTargets.Add(combatant);
-                                }
-                            }
-                        }
-                        else if (ability.IsBacklineAoe)
-                        {
-                            foreach (var combatant in _fightManager.Combatants)
-                            {
-                                if (combatant.TryGetComponent<BattleCharacter>(out var battleComponent) && battleComponent != null &&
-                                    battleComponent.IsEnemy() && battleComponent.GetBattleFormation() == Enumerations.BattleFormation.Back)
-                                {
-                                    _fightManager.PlayerGroupTargets.Add(combatant);
-                                }
-                            }
-                        }
-
                         if (_fightManager.ActiveCombatant.TryGetComponent<CombatantFunctions>(out var combatantFunction))
                         {
-                            combatantFunction.AttackEnemyTarget(true);
+                            if (ability.IsFrontlineAoe && ability.IsBacklineAoe)
+                            {
+                                foreach (var combatant in _fightManager.Combatants)
+                                {
+                                    if (combatant.TryGetComponent<BattleCharacter>(out var battleComponent) && battleComponent != null &&
+                                        battleComponent.IsEnemy())
+                                    {
+                                        _fightManager.PlayerGroupTargets.Add(combatant);
+                                    }
+                                }
+
+                                combatantFunction.AttackEnemyTarget(true);
+                            }
+                            else if (ability.IsFrontlineAoe)
+                            {
+                                foreach (var combatant in _fightManager.Combatants)
+                                {
+                                    if (combatant.TryGetComponent<BattleCharacter>(out var battleComponent) && battleComponent != null &&
+                                        battleComponent.IsEnemy() && battleComponent.GetBattleFormation() == Enumerations.BattleFormation.Front)
+                                    {
+                                        _fightManager.PlayerGroupTargets.Add(combatant);
+                                    }
+                                }
+
+                                combatantFunction.AttackEnemyTarget(true);
+                            }
+                            else if (ability.IsBacklineAoe)
+                            {
+                                foreach (var combatant in _fightManager.Combatants)
+                                {
+                                    if (combatant.TryGetComponent<BattleCharacter>(out var battleComponent) && battleComponent != null &&
+                                        battleComponent.IsEnemy() && battleComponent.GetBattleFormation() == Enumerations.BattleFormation.Back)
+                                    {
+                                        _fightManager.PlayerGroupTargets.Add(combatant);
+                                    }
+                                }
+
+                                combatantFunction.AttackEnemyTarget(true);
+                            }
+                            else
+                            {
+                                combatantFunction.AttackEnemyTarget(false);
+                            }
                         }
                     }
-
                 }
             }
             else
