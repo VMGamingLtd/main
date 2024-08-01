@@ -251,7 +251,15 @@ namespace Gaos.Api
             catch (Exception ex)
             {
                 Debug.LogError($"{CLASS_NAME}:{METHOD}: ERROR: {ex.Message}, url: {this.Url}");
-                throw ex;
+                this.ResponseJsonStr = null;
+                this.IsResponseError = true;
+                this.IsResponseTimeout = false;
+                return new PostResponse()
+                {
+                    ResponseJsonStr = this.ResponseJsonStr,
+                    IsResponseError = this.IsResponseError,
+                    IsResponseTimeout = this.IsResponseTimeout
+                };
             }
 
         }

@@ -1,7 +1,10 @@
+using AOT;
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Collections.Concurrent;
 
 namespace Gaos.WebSocket
 {
@@ -9,38 +12,48 @@ namespace Gaos.WebSocket
     {
         public readonly static string CLASS_NAME = typeof(WebSocketClientJs).Name;
 
-        private Queue<string> MessagesOutbound = new Queue<string>();
-        private Queue<string> MessagesInbound = new Queue<string>();
+        private ConcurrentQueue<byte[]> MessagesOutbound = new ConcurrentQueue<byte[]>();
+        private ConcurrentQueue<byte[]> MessagesInbound = new ConcurrentQueue<byte[]>();
 
         private int Ws;
-        private bool IsConnected = false;
+        private bool IsAuthenticated = false;
 
         [DllImport("__Internal")]
-        private static extern int WebSocketCreate(string url);
+        private static extern int WebSocketCreate(string url, string fnNameOnOpen, string fnNameOnClose, string fnNameOnError, string fnNameOnMessage);
 
         [DllImport("__Internal")]
-        private static extern void WebSocketOnOpen(int ws, string fnName);
+        private static extern void WebSocketSend(int ws, IntPtr data, int length);
 
         [DllImport("__Internal")]
-        private static extern void WebSocketOnClose(int ws, string fnName);
+        private static extern int WebSocketReadyState(int ws);
 
-        [DllImport("__Internal")]
-        private static extern void WebSocketOnError(int ws, string fnName);
+        private static void WebSocketSendBytes(int ws, byte[] buffer)
+        {
+            if (buffer.Length < 1)
+            {
+                return;
+            }
+            unsafe
+            {
+                fixed (byte* p = buffer)
+                {
+                    WebSocketSend(ws, (IntPtr)p, buffer.Length);
+                }
+            }
+        }
 
-        [DllImport("__Internal")]
-        private static extern void WebSocketOnMessage(int ws, string fnName);
-
-        [DllImport("__Internal")]
-        private static extern void WebSocketSend(int ws, string data);
 
         public void OnOpen()
         {
-            IsConnected = true;
+            if (Gaos.Context.Authentication.GetJWT() != null)
+            {
+                Debug.Log($"{CLASS_NAME}: OnOpen()");
+                Gaos.Messages.WsAuthentication.authenticate(this, Gaos.Context.Authentication.GetJWT());
+            }
         }
 
         public void OnClose()
         {
-            IsConnected = false;
         }
 
         public void OnError(string errorStr)
@@ -49,18 +62,30 @@ namespace Gaos.WebSocket
             Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {errorStr}");
         }
 
-        public void OnMessage(string data)
+        public void OnMessage(int _data)
         {
-            const string METHOD_NAME = "StartProcessing()";
-            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2000: received data: {data}");
-            MessagesInbound.Enqueue(data);
+            var data = new IntPtr(_data);
+
+            int length =  Marshal.ReadInt32(data);
+            byte[] buffer = new byte[length];
+
+            unsafe
+            {
+                byte* p = (byte*)data + 4; // skip the length
+                for (int i = 0; i < length; i++)
+                {
+                    buffer[i] = *p++;
+                }
+            }
+            MessagesInbound.Enqueue(buffer);
+
         }
 
-        public Queue<string> GetOutboundQueue()
+        public ConcurrentQueue<byte[]> GetOutboundQueue()
         {
             return MessagesOutbound;
         }
-        public Queue<string> GetInboundQueue()
+        public ConcurrentQueue<byte[]> GetInboundQueue()
         {
             return MessagesInbound;
         }
@@ -69,53 +94,104 @@ namespace Gaos.WebSocket
         public void Open()
         {
             string url = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
-            Ws = WebSocketCreate(url);
-
-            WebSocketOnOpen(Ws, "OnOpen");
-            WebSocketOnClose(Ws, "OnClose");
-            WebSocketOnError(Ws, "OnError");
-            WebSocketOnMessage(Ws, "OnMessage");
+            Ws = WebSocketCreate(url, "OnOpen", "OnClose", "OnError", "OnMessage");
+            IsAuthenticated = false;
         }
 
-        public void Send(string data)
+        public void Send(byte[] data)
         {
             MessagesOutbound.Enqueue(data);
         }
 
-
-        public IEnumerator StartProcessing()
+        public void Process(byte[] data)
         {
-            const string METHOD_NAME = "StartProcessing()";
-            const int MAX_RETRY_COUNT = 5;
+        }
 
-            int retryCount = 0;
+
+        public IEnumerator StartProcessingOutboundQueue()
+        {
+            const string METHOD_NAME = "StartProcessingOutboundQueue()";
 
             while (true)
             {
-                if (IsConnected)
+                int state = WebSocketReadyState(Ws);
+                if (state == 1) // 1 is OPEN
                 {
                     if (MessagesOutbound.Count > 0)
                     {
-                        string message = MessagesOutbound.Peek();
-                        try
+                        byte[] data;
+                        bool dataReturned = MessagesOutbound.TryDequeue(out data);
+                        if (dataReturned)
                         {
-                            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 1000: sen data: {message}");
-                            WebSocketSend(Ws, message);
-                            MessagesOutbound.Dequeue();
-                            retryCount = 0;
-                        }
-                        catch (System.Exception e)
-                        {
-                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {e.Message}");
-                            ++retryCount;
-                            if (retryCount > MAX_RETRY_COUNT)
+                            try
                             {
-                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: MAX_RETRY_COUNT reached, will not try again");
-                                MessagesOutbound.Dequeue();
-                                retryCount = 0;
+                                WebSocketSendBytes(Ws, data);
+                            }
+                            catch (System.Exception e)
+                            {
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {e.Message}");
+                            }
+                            yield return null;
+                        }
+                    }
+                    else
+                    {
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                }
+                else
+                {
+                    if (state == 3) // 3 is CLOSED
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket is closed, will try to open it again");
+                        yield return new WaitForSeconds(2);
+                        Open();
+                    }
+                    else if (state == 0) // 0 is CONNECTING
+                    {
+                        yield return new WaitForSeconds(0.5f);
+                    }
+                    else if (state == 2) // 2 is CLOSING
+                    {
+                        yield return new WaitForSeconds(0.5f);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket is in unknown state: {state}");
+                        yield return new WaitForSeconds(5);
+                        Open();
+                    }
+                }
+            }
+        }
+
+        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws)
+        {
+            const string METHOD_NAME = "StartProcessingInboundQueue()";
+            while (true)
+            {
+                int state = WebSocketReadyState(Ws);
+                if (state == 1) // 1 is OPEN
+                {
+                    if (MessagesInbound.Count > 0)
+                    {
+                        byte[] data;
+                        bool dataReturned = MessagesInbound.TryDequeue(out data);
+                        if (dataReturned)
+                        {
+                            try
+                            {
+                                ws.Process(data);
+                            }
+                            catch (System.Exception e)
+                            {
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e.Message}");
                             }
                         }
-                        yield return null;
+                        else
+                        {
+                            yield return new WaitForSeconds(0.1f);
+                        }
                     }
                     else
                     {
@@ -129,6 +205,28 @@ namespace Gaos.WebSocket
             }
         }
 
+        public bool GetIsAuthenticated()
+        {
+            return IsAuthenticated;
+        }
+
+        public void SetIsAuthenticated(bool isAuthenticated)
+        {
+            IsAuthenticated = isAuthenticated;
+        }
+
+        // --------------------------   UnityBrowserMessaging --------------------------
+
+        [DllImport("__Internal")]
+        public static extern void UnityBrowserChannel_BaseMessages_sendString(string str);
+
+        public void UnityBrowserChannel_BaseMessages_receiveString(string str)
+        {
+            UnityBrowserChannel.BaseMessages.receiveString(str);
+        }
+
     }
+
+
 
 }

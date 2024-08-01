@@ -22,8 +22,9 @@ public class EventIconDataInjector : MonoBehaviour
         }
         else if (eventIconData.EventLevel > -1)
         {
-            equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = UserName.userName;
-            equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignBuildingSpriteToSlot(eventIconData.name);
+            equipment.transform.Find("Header/Image").gameObject.SetActive(true);
+            equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(eventIconData.Name);
+            equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignBuildingSpriteToSlot(eventIconData.name);
             equipment.transform.Find("Stats/Quantity").gameObject.SetActive(false);
             equipment.transform.Find("Stats/Level").gameObject.SetActive(true);
             equipment.transform.Find("Stats/Size").gameObject.SetActive(true);
@@ -35,11 +36,12 @@ public class EventIconDataInjector : MonoBehaviour
         }
 
         NumberFormater numberFormater = new();
+        equipment.transform.Find("Header/Image").gameObject.SetActive(true);
         equipment.transform.Find("Stats/Quantity").gameObject.SetActive(true);
         equipment.transform.Find("Stats/Level").gameObject.SetActive(false);
         equipment.transform.Find("Stats/Size").gameObject.SetActive(false);
         equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(eventIconData.Name);
-        equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(eventIconData.name);
+        equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignResourceSpriteToSlot(eventIconData.name);
         equipment.transform.Find("Stats/Quantity/Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate("Quantity");
         equipment.transform.Find("Stats/Quantity/CurrentQuantity").GetComponent<TextMeshProUGUI>().text = numberFormater.FormatNumberInThousands(eventIconData.CurrentQuantity).ToString();
         equipment.transform.Find("Stats/Quantity/MaxQuantity").GetComponent<TextMeshProUGUI>().text = numberFormater.FormatNumberInThousands(eventIconData.MaxQuantityRange).ToString();
@@ -47,17 +49,17 @@ public class EventIconDataInjector : MonoBehaviour
 
         if (eventIconData.Type == EventIconType.Fish)
         {
-            CreateStat("FishMeat");
+            CreateStat(Constants.FishMeat);
         }
         else if (eventIconData.Type == EventIconType.FurAnimal)
         {
-            CreateStat("AnimalMeat");
-            CreateStat("AnimalSkin");
+            CreateStat(Constants.AnimalMeat);
+            CreateStat(Constants.AnimalSkin);
         }
         else if (eventIconData.Type == EventIconType.MilkAnimal)
         {
-            CreateStat("AnimalMeat");
-            CreateStat("Milk");
+            CreateStat(Constants.AnimalMeat);
+            CreateStat(Constants.Milk);
         }
     }
 
@@ -73,19 +75,9 @@ public class EventIconDataInjector : MonoBehaviour
     {
         GameObject newStat = Instantiate(stat, statList);
         newStat.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(Name);
-        newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(Name);
+        newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignResourceSpriteToSlot(Name);
         newStat.transform.Find("Value").gameObject.SetActive(false);
         newStat.transform.localPosition = Vector3.one;
         newStat.transform.localScale = Vector3.one;
-    }
-
-    private Sprite AssignSpriteToSlot(string spriteName)
-    {
-        return AssetBundleManager.LoadAssetFromBundle<Sprite>("resourceicons", spriteName);
-    }
-
-    private Sprite AssignBuildingSpriteToSlot(string spriteName)
-    {
-        return AssetBundleManager.LoadAssetFromBundle<Sprite>("buildingicons", spriteName);
     }
 }

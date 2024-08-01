@@ -6,6 +6,20 @@
 {
     ""header"": ""Core Translations"",
     ""words"": [
+      { 
+        ""identifier"": ""Yes"",
+        ""english"": ""Yes"",
+        ""russian"": ""Да"",
+        ""chinese"": ""是"",
+        ""slovak"": ""Áno""
+      },
+      {
+        ""identifier"": ""No"",
+        ""english"": ""No"",
+        ""russian"": ""Нет"",
+        ""chinese"": ""没有"",
+        ""slovak"": ""Nie""
+      },
       {
         ""identifier"": ""ERROR"",
         ""english"": ""ERROR"",
@@ -552,15 +566,14 @@
         ""russian"": ""Восстановить"",
         ""chinese"": ""恢复"",
         ""slovak"": ""Obnoviť""
-        },
-        {
+      },
+      {
         ""identifier"": ""Send"",
         ""english"": ""Send"",
         ""russian"": ""Отправить"",
         ""chinese"": ""发送"",
         ""slovak"": ""Odoslať""
-        },
-
+      },
       {
         ""identifier"": ""Strength"",
         ""english"": ""Strength:"",
@@ -714,6 +727,13 @@
         ""russian"": ""Начать новую игру"",
         ""chinese"": ""开始新游戏"",
         ""slovak"": ""Začať novú hru""
+      },
+      {
+        ""identifier"": ""StartBattle"",
+        ""english"": ""Start battle"",
+        ""russian"": ""Начать бойу"",
+        ""chinese"": ""开始战斗"",
+        ""slovak"": ""Začať boj""
       },
       {
         ""identifier"": ""EmptySlot1"",
@@ -888,7 +908,7 @@
         ""english"": ""Armor"",
         ""russian"": ""Броня"",
         ""chinese"": ""盔甲"",
-        ""slovak"": ""Zbroje""
+        ""slovak"": ""Zbroj""
       },
       {
         ""identifier"": ""HELMET"",
@@ -910,6 +930,34 @@
         ""russian"": ""Фабрикатор"",
         ""chinese"": ""制造装置"",
         ""slovak"": ""Výrobník""
+      },
+      {
+        ""identifier"": ""MELEEWEAPON"",
+        ""english"": ""Melee weapon"",
+        ""russian"": ""Оружие ближнего боя"",
+        ""chinese"": ""近战武器"",
+        ""slovak"": ""Zbraň na blízko""
+      },
+      {
+        ""identifier"": ""RANGEDWEAPON"",
+        ""english"": ""Ranged weapon"",
+        ""russian"": ""Оружие дальнего боя"",
+        ""chinese"": ""远程武器"",
+        ""slovak"": ""Zbraň na diaľku""
+      },
+      {
+        ""identifier"": ""SHIELD"",
+        ""english"": ""Shield"",
+        ""russian"": ""Щит"",
+        ""chinese"": ""盾"",
+        ""slovak"": ""Štít""
+      },
+      {
+        ""identifier"": ""OFFHAND"",
+        ""english"": ""Accessory"",
+        ""russian"": ""Аксессуар"",
+        ""chinese"": ""配饰"",
+        ""slovak"": ""Doplnok""
       },
       {
         ""identifier"": ""ENERGY"",
@@ -1392,28 +1440,28 @@
         ""english"": ""Fire protection:"",
         ""russian"": ""Огнестойкость:"",
         ""chinese"": ""防火性能:"",
-        ""slovak"": ""Požiarna odolnosť:""
+        ""slovak"": ""Ochrana proti ohňu:""
       },
       {
         ""identifier"": ""ColdProtection"",
         ""english"": ""Cold protection:"",
         ""russian"": ""Холодостойкость:"",
         ""chinese"": ""耐寒性:"",
-        ""slovak"": ""Odolnosť proti chladu:""
+        ""slovak"": ""Ochrana proti chladu:""
       },
       {
-        ""identifier"": ""GasProtection"",
-        ""english"": ""Gas protection:"",
-        ""russian"": ""Газостойкость:"",
-        ""chinese"": ""耐气体性:"",
-        ""slovak"": ""Odolnosť proti plynom:""
+        ""identifier"": ""PoisonProtection"",
+        ""english"": ""Poison protection:"",
+        ""russian"": ""Защита от яда:"",
+        ""chinese"": ""毒抗性:"",
+        ""slovak"": ""Ochrana pred jedmi:""
       },
       {
-        ""identifier"": ""ExplosionProtection"",
-        ""english"": ""Explosion protection:"",
-        ""russian"": ""Взрывостойкость:"",
-        ""chinese"": ""防爆性能:"",
-        ""slovak"": ""Odolnosť proti explózií:""
+        ""identifier"": ""EnergyProtection"",
+        ""english"": ""Energy protection:"",
+        ""russian"": ""Защита от энергии:"",
+        ""chinese"": ""能量防护:"",
+        ""slovak"": ""Ochrana proti energií:""
       },
       {
         ""identifier"": ""ShieldPoints"",
@@ -1423,6 +1471,13 @@
         ""slovak"": ""Body štítu:""
       },
       {
+        ""identifier"": ""Armor"",
+        ""english"": ""Armor"",
+        ""russian"": ""Броня"",
+        ""chinese"": ""盔甲"",
+        ""slovak"": ""Brnenie""
+      },
+      {
         ""identifier"": ""HitPoints"",
         ""english"": ""Hit points:"",
         ""russian"": ""Очки жизни:"",
@@ -1430,8 +1485,148 @@
         ""slovak"": ""Body zdravia:""
       },
       {
-        ""identifier"": ""EnergyCapacity:"",
-        ""english"": ""Hit points:"",
+        ""identifier"": ""AttackSpeed"",
+        ""english"": ""Attack speed:"",
+        ""russian"": ""Скорость атаки:"",
+        ""chinese"": ""攻击速度:"",
+        ""slovak"": ""Rýchlosť útoku:""
+      },
+      {
+        ""identifier"": ""MeleeDamage"",
+        ""english"": ""Melee damage:"",
+        ""russian"": ""Урон в ближнем бою:"",
+        ""chinese"": ""近战伤害:"",
+        ""slovak"": ""Poškodenie zblízka:""
+      },
+      {
+        ""identifier"": ""RangedDamage"",
+        ""english"": ""Ranged damage:"",
+        ""russian"": ""Урон дальнего боя:"",
+        ""chinese"": ""远程伤害:"",
+        ""slovak"": ""Poškodenie na diaľku:""
+      },
+      {
+        ""identifier"": ""MeleePhysicalDamage"",
+        ""english"": ""Melee physical damage:"",
+        ""russian"": ""Физический урон в ближнем бою:"",
+        ""chinese"": ""近战物理伤害:"",
+        ""slovak"": ""Fyzické poškodenie na blízko:""
+      },
+      {
+        ""identifier"": ""MeleeFireDamage"",
+        ""english"": ""Melee fire damage:"",
+        ""russian"": ""Урон огнем в ближнем бою:"",
+        ""chinese"": ""近战火焰伤害:"",
+        ""slovak"": ""Ohnivé poškodenie na blízko:""
+      },
+      {
+        ""identifier"": ""MeleeColdDamage"",
+        ""english"": ""Melee cold damage:"",
+        ""russian"": ""Холодный урон в ближнем бою:"",
+        ""chinese"": ""近战冰冷伤害:"",
+        ""slovak"": ""Ľadové poškodenie na blízko:""
+      },
+      {
+        ""identifier"": ""MeleePoisonDamage"",
+        ""english"": ""Melee poison damage:"",
+        ""russian"": ""Урон ядом в ближнем бою:"",
+        ""chinese"": ""近战毒伤害:"",
+        ""slovak"": ""Jedovaté poškodenie na blízko:""
+      },
+      {
+        ""identifier"": ""MeleeEnergyDamage"",
+        ""english"": ""Melee energy damage:"",
+        ""russian"": ""Энергетический урон в ближнем бою:"",
+        ""chinese"": ""近战毒伤害:"",
+        ""slovak"": ""Energetické poškodenie na blízko:""
+      },
+      {
+        ""identifier"": ""RangedPhysicalDamage"",
+        ""english"": ""Ranged physical damage:"",
+        ""russian"": ""Физический урон дальнего боя:"",
+        ""chinese"": ""远程物理伤害:"",
+        ""slovak"": ""Fyzické poškodenie na diaľku:""
+      },
+      {
+        ""identifier"": ""RangedFireDamage"",
+        ""english"": ""Ranged fire damage:"",
+        ""russian"": ""Урон огнем дальнего боя:"",
+        ""chinese"": ""远程火焰伤害:"",
+        ""slovak"": ""Ohnivé poškodenie na diaľku:""
+      },
+      {
+        ""identifier"": ""RangedColdDamage"",
+        ""english"": ""Ranged cold damage:"",
+        ""russian"": ""Дальний урон холодом:"",
+        ""chinese"": ""远程寒冷伤害:"",
+        ""slovak"": ""Ľadové poškodenie na diaľku:""
+      },
+      {
+        ""identifier"": ""RangedPoisonDamage"",
+        ""english"": ""Ranged poison damage:"",
+        ""russian"": ""Урон ядом дальнего боя:"",
+        ""chinese"": ""远程毒药伤害:"",
+        ""slovak"": ""Jedovaté poškodenie na diaľku:""
+      },
+      {
+        ""identifier"": ""RangedEnergyDamage"",
+        ""english"": ""Ranged energy damage:"",
+        ""russian"": ""Энергетический урон дальнего боя:"",
+        ""chinese"": ""远程能量伤害:"",
+        ""slovak"": ""Energetické poškodenie na diaľku:""
+      },
+      {
+        ""identifier"": ""PsiDamage"",
+        ""english"": ""Psychic damage:"",
+        ""russian"": ""Психический урон:"",
+        ""chinese"": ""精神伤害:"",
+        ""slovak"": ""Psychické poškodenie:""
+      },
+      {
+        ""identifier"": ""PsiProtection"",
+        ""english"": ""Psychic protection:"",
+        ""russian"": ""Психическая защита:"",
+        ""chinese"": ""心灵保护:"",
+        ""slovak"": ""Psychická ochrana:""
+      },
+      {
+        ""identifier"": ""HitChance"",
+        ""english"": ""Attack speed:"",
+        ""russian"": ""Шанс попадания:"",
+        ""chinese"": ""命中机会:"",
+        ""slovak"": ""Šanca na zásah:""
+      },
+      {
+        ""identifier"": ""Dodge"",
+        ""english"": ""Dodge:"",
+        ""russian"": ""Уклонение:"",
+        ""chinese"": ""闪避:"",
+        ""slovak"": ""Uhýbanie:""
+      },
+      {
+        ""identifier"": ""CounterChance"",
+        ""english"": ""Chance to counter attack:"",
+        ""russian"": ""Шанс контратаки:"",
+        ""chinese"": ""反击的机会:"",
+        ""slovak"": ""Šanca na protiútok:""
+      },
+      {
+        ""identifier"": ""Resistance"",
+        ""english"": ""Resistance:"",
+        ""russian"": ""Устойчивость:"",
+        ""chinese"": ""弹力:"",
+        ""slovak"": ""Odolnosť:""
+      },
+      {
+        ""identifier"": ""Penetration"",
+        ""english"": ""Penetration:"",
+        ""russian"": ""Проникновение:"",
+        ""chinese"": ""渗透:"",
+        ""slovak"": ""Penetrácia:""
+      },
+      {
+        ""identifier"": ""EnergyCapacity"",
+        ""english"": ""Energy capacity:"",
         ""russian"": ""Энергетическая мощность:"",
         ""chinese"": ""能量容量:"",
         ""slovak"": ""Energetická kapacita:""
@@ -1990,8 +2185,8 @@
         ""slovak"": ""Veľká/ý""
       },
       {
-        ""identifier"": ""Large"",
-        ""english"": ""Large"",
+        ""identifier"": ""Medium"",
+        ""english"": ""Medium"",
         ""russian"": ""Средний"",
         ""chinese"": ""普通大小"",
         ""slovak"": ""Priemerná/ý""
@@ -2002,6 +2197,125 @@
         ""russian"": ""Средний"",
         ""chinese"": ""小型"",
         ""slovak"": ""Malá/ý""
+      },
+      {
+        ""identifier"": ""Combat"",
+        ""english"": ""Combat"",
+        ""russian"": ""Бой"",
+        ""chinese"": ""战斗"",
+        ""slovak"": ""Boj""
+      },
+      {
+        ""identifier"": ""Enter"",
+        ""english"": ""Enter"",
+        ""russian"": ""Войти"",
+        ""chinese"": ""进入"",
+        ""slovak"": ""Vstúpiť""
+      },
+      {
+        ""identifier"": ""Cancel"",
+        ""english"": ""Cancel"",
+        ""russian"": ""Отмена"",
+        ""chinese"": ""取消"",
+        ""slovak"": ""Zrušiť""
+      },
+      {
+        ""identifier"": ""Continue"",
+        ""english"": ""Continue"",
+        ""russian"": ""Продолжать"",
+        ""chinese"": ""继续"",
+        ""slovak"": ""Pokračovať""
+      },
+      {
+        ""identifier"": ""Leave"",
+        ""english"": ""Leave"",
+        ""russian"": ""Покинуть"",
+        ""chinese"": ""离开"",
+        ""slovak"": ""Odísť""
+      },
+      {
+        ""identifier"": ""Melee"",
+        ""english"": ""Melee"",
+        ""russian"": ""Ближний бой"",
+        ""chinese"": ""近战能力"",
+        ""slovak"": ""Schopnosť zblízka""
+      },
+      {
+        ""identifier"": ""Ranged"",
+        ""english"": ""Ranged"",
+        ""russian"": ""Дальний бой"",
+        ""chinese"": ""远程能力"",
+        ""slovak"": ""Schopnosť na diaľku""
+      },
+      {
+        ""identifier"": ""Psi"",
+        ""english"": ""Psionic"",
+        ""russian"": ""Псионический бой"",
+        ""chinese"": ""灵能能力"",
+        ""slovak"": ""Psionická schopnosť""
+      },
+      {
+        ""identifier"": ""Slash"",
+        ""english"": ""Slash"",
+        ""russian"": ""Режущий удар"",
+        ""chinese"": ""斩击"",
+        ""slovak"": ""Sečná rana""
+      },
+      {
+        ""identifier"": ""Stab"",
+        ""english"": ""Stab"",
+        ""russian"": ""Колотый удар"",
+        ""chinese"": ""刺击"",
+        ""slovak"": ""Bodnutie""
+      },
+      {
+        ""identifier"": ""AimedShot"",
+        ""english"": ""Aimed shot"",
+        ""russian"": ""Прицельный выстрел"",
+        ""chinese"": ""精准射击"",
+        ""slovak"": ""Mierený výstrel""
+      },
+      {
+        ""identifier"": ""BurstShotPistol"",
+        ""english"": ""Burst shot"",
+        ""russian"": ""Cтрельба очередями"",
+        ""chinese"": ""点射"",
+        ""slovak"": ""Salva""
+      },
+      {
+        ""identifier"": ""Choke"",
+        ""english"": ""Choke"",
+        ""russian"": ""Удушение"",
+        ""chinese"": ""绞杀"",
+        ""slovak"": ""Škrtenie""
+      },
+      {
+        ""identifier"": ""Terrify"",
+        ""english"": ""Terrify"",
+        ""russian"": ""Бояться"",
+        ""chinese"": ""恐惧"",
+        ""slovak"": ""Vystrašiť""
+      },
+      {
+        ""identifier"": ""MindControl"",
+        ""english"": ""Mind control"",
+        ""russian"": ""Контроль над разумом"",
+        ""chinese"": ""精神控制"",
+        ""slovak"": ""Ovládnutie mysle""
+      },
+      {
+        ""identifier"": ""Swing"",
+        ""english"": ""Swing"",
+        ""russian"": ""Взмах"",
+        ""chinese"": ""摆动"",
+        ""slovak"": ""Zahnanie""
+      },
+      {
+        ""identifier"": ""Smash"",
+        ""english"": ""Smash"",
+        ""russian"": ""Сокрушительный удар"",
+        ""chinese"": ""毁灭性的打击"",
+        ""slovak"": ""Drvivá rana""
       }
     ]
   }

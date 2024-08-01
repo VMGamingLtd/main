@@ -298,7 +298,8 @@ public class CoroutineManager : MonoBehaviour
                 break;
         }
 
-        saveSlotTitle.text = slotData.UserName;
+        //saveSlotTitle.text = slotData.UserName;
+        saveSlotTitle.text = Gaos.Context.Authentication.GetUserName();
         saveSlotDesc.text = description;
         UserName.userName = slotData.UserName;
 
@@ -531,12 +532,12 @@ public class CoroutineManager : MonoBehaviour
         levelUpObject.SetActive(true);
         ExpBar.fillAmount = 0f;
         currentExpText.text = "0";
-        Player.ResetCurrentResource(ref Player.PlayerCurrentExp);
+        Player.ResetCurrentResource(ref Player.CurrentExp);
         int result = playerMaxExp * 2;
-        Player.AddCurrentResource(ref Player.PlayerMaxExp, result);
+        Player.AddCurrentResource(ref Player.MaxExp, result);
         maxExpText.text = result.ToString();
-        Player.AddCurrentResource(ref Player.PlayerLevel, 1);
-        levelText.text = Player.GetCurrentResource(ref Player.PlayerLevel).ToString();
+        Player.AddCurrentResource(ref Player.Level, 1);
+        levelText.text = Player.GetCurrentResource(ref Player.Level).ToString();
         Player.AddCurrentResource(ref Player.StatPoints, 1);
         Player.AddCurrentResource(ref Player.SkillPoints, 1);
         statPointsText.text = Player.GetCurrentResource(ref Player.StatPoints).ToString();
@@ -604,10 +605,10 @@ public class CoroutineManager : MonoBehaviour
             imageToFill.fillAmount = 0f;
 
 
-            Player.AddCurrentResource(ref Player.PlayerCurrentExp, recipeData.experience);
-            currentExpText.text = Player.GetCurrentResource(ref Player.PlayerCurrentExp).ToString();
-            int playerCurrentExp = Player.GetCurrentResource(ref Player.PlayerCurrentExp);
-            int playerMaxExp = Player.GetCurrentResource(ref Player.PlayerMaxExp);
+            Player.AddCurrentResource(ref Player.CurrentExp, recipeData.experience);
+            currentExpText.text = Player.GetCurrentResource(ref Player.CurrentExp).ToString();
+            int playerCurrentExp = Player.GetCurrentResource(ref Player.CurrentExp);
+            int playerMaxExp = Player.GetCurrentResource(ref Player.MaxExp);
             float fillAmount = (float)playerCurrentExp / (float)playerMaxExp;
             ExpBar.fillAmount = fillAmount;
 

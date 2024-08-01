@@ -117,6 +117,47 @@ namespace Gaos.ChatRoom.ChatRoom
 
 
     }
+
+    public class AddMember
+    {
+        public readonly static string CLASS_NAME = typeof(AddMember).Name;
+        public static async UniTask<Gaos.Routes.Model.ChatRoomJson.AddMemberResponse> CallAsync(int chatRoomId, int userId)
+        {
+            const string METHOD_NAME = "CallAsync()";
+            try
+            {
+
+                Gaos.Routes.Model.ChatRoomJson.AddMemberRequest request = new Gaos.Routes.Model.ChatRoomJson.AddMemberRequest();
+                request.ChatRoomId = chatRoomId;
+                request.UserId = userId;
+                string requestJsonStr = JsonConvert.SerializeObject(request);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/chatRoom/addMember", requestJsonStr);
+                await apiCall.CallAsync();
+                if (apiCall.IsResponseError)
+                {
+                    Debug.LogError($"ERROR: error calling addMember");
+                    throw new System.Exception("error calling addMember");
+                }
+                else
+                {
+                    Gaos.Routes.Model.ChatRoomJson.AddMemberResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.ChatRoomJson.AddMemberResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error calling addMember: {response.ErrorMessage}");
+                        throw new System.Exception($"error calling addMember: {response.ErrorMessage}");
+                    }
+                    return response;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {ex.Message}");
+                throw ex;
+            }
+        }
+
+    }
+
     public class ReadMessages
     {
         public readonly static string CLASS_NAME = typeof(ReadMessages).Name;

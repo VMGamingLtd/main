@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace Gaos.WebSocket
 {
@@ -9,13 +11,17 @@ namespace Gaos.WebSocket
     {
         public readonly static string CLASS_NAME = typeof(WebSocketClientSharp).Name;
 
-        public Queue<string> MessagesOutbound = new Queue<string>();
-        public Queue<string> MessagesInbound = new Queue<string>();
+        public ConcurrentQueue<byte[]> MessagesOutbound = new ConcurrentQueue<byte[]>();
+        public ConcurrentQueue<byte[]> MessagesInbound = new ConcurrentQueue<byte[]>();
 
         public WebSocketSharp.WebSocket WebSocket;
-        public bool IsConnected = false;
 
         public string WsUrl = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
+
+        private bool IsAuthenticated = false;
+
+        CancellationTokenSource threadCancelationToken;
+        Thread thread;
 
 
         private enum SslProtocolsHack
@@ -27,20 +33,19 @@ namespace Gaos.WebSocket
 
         }
 
-        public Queue<string> GetOutboundQueue()
+        public ConcurrentQueue<byte[]> GetOutboundQueue()
         {
             return MessagesOutbound;
         }
-        public Queue<string> GetInboundQueue()
+        public ConcurrentQueue<byte[]> GetInboundQueue()
         {
             return MessagesInbound;
         }
 
-        public void Open()
+        public void OpenWs()
         {
             const string METHOD_NAME = "Open()"; 
             Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: webcocket - openning: {WsUrl}");
-
 
             WebSocket = new WebSocketSharp.WebSocket(WsUrl);
 
@@ -48,25 +53,19 @@ namespace Gaos.WebSocket
             WebSocket.SslConfiguration.EnabledSslProtocols = sslProtocolHack;
 
 
+            IsAuthenticated = false;
             WebSocket.OnOpen += (sender, e) =>
             {
                 Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: webcocket connected");
-                IsConnected = true;
+                if (Gaos.Context.Authentication.GetJWT() != null)
+                {
+                    Gaos.Messages.WsAuthentication.authenticate(this, Gaos.Context.Authentication.GetJWT());
+                }
             };
 
             WebSocket.OnMessage += (sender, e) =>
             {
-                if (e.IsText)
-                {
-                    Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket message: {e.Data}");
-                    MessagesInbound.Enqueue(e.Data);
-                }
-                else
-                {
-                    Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: ERROR: message format is not text, message ignored");
-
-                }
-
+                MessagesInbound.Enqueue(e.RawData);
             };
 
             WebSocket.OnError += (sender, e) =>
@@ -77,68 +76,165 @@ namespace Gaos.WebSocket
             WebSocket.OnClose += (sender, e) =>
             {
                 Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket closed");
-                IsConnected = false;
-
             };
 
             WebSocket.Connect();
 
+
         }
 
-        public void Send(string data)
+        public void Open()
+        {
+            threadCancelationToken = new CancellationTokenSource();
+            thread = new Thread(() => {
+                OpenWs();
+                Thread.Sleep(2000);
+                StartProcessingOutboundQueue_inThread(threadCancelationToken.Token);
+            });
+
+            thread.Start();
+        }
+        
+        void OnDisable()
+        {
+            threadCancelationToken.Cancel();
+        }
+
+
+        public void Send(byte[] data)
         {
             MessagesOutbound.Enqueue(data);
         }
 
-        public IEnumerator StartProcessing()
+        public virtual void Process(byte[] data)
         {
-            const string METHOD_NAME = "StartProcessing()";
-            const int MAX_RETRY_COUNT = 5;
+        }
 
-            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket start processing");
+        public void StartProcessingOutboundQueue_inThread(CancellationToken token)
+        {
+            const string METHOD_NAME = "StartProcessingOutboundQueue()";
 
-            int retryCount = 0;
-
-            while (true)
+            while (!token.IsCancellationRequested)
             {
-                if (IsConnected)
+                var state = WebSocket.ReadyState;
+
+                if (state == WebSocketSharp.WebSocketState.Open)
                 {
                     if (MessagesOutbound.Count > 0)
                     {
-                        string message = MessagesOutbound.Peek();
-                        Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: websocket sending message: {message}");
-                        try
+                        byte[] data; 
+                        bool dataReturned = MessagesOutbound.TryDequeue(out data);
+                        if (dataReturned)
                         {
-                            WebSocket.Send(message);
-                            MessagesOutbound.Dequeue();
-                            retryCount = 0;
-                        }
-                        catch (System.Exception e)
-                        {
-                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {message}: {e.Message}");
-                            ++retryCount;
-                            if (retryCount > MAX_RETRY_COUNT)
+                            try
                             {
-                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: sending message: {message}: MAX_RETRY_COUNT reached, will not try again");
-                                MessagesOutbound.Dequeue();
-                                retryCount = 0;
+                                WebSocket.Send(data);
+                            }
+                            catch (System.Exception e)
+                            {
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error sending message: {data}: {e.Message}");
                             }
                         }
-                        yield return null;
+                        else
+                        {
+                            Thread.Sleep(200);
+                        }
                     }
                     else
                     {
-                        yield return new WaitForSeconds(0.1f);
+                        Thread.Sleep(200);
                     }
                 }
                 else
                 {
-                    yield return new WaitForSeconds(2);
-                    Open();
+                    if (state == WebSocketSharp.WebSocketState.Closed)
+                    {
+                        if (!token.IsCancellationRequested)
+                        {
+                            Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket is closed, will try to open it again");
+                            Thread.Sleep(2000);
+                            OpenWs();
+                        }
+                    }
+                    else if (state == WebSocketSharp.WebSocketState.Connecting)
+                    {
+                        Thread.Sleep(500);
+                    } 
+                    if (state == WebSocketSharp.WebSocketState.Closing)
+                    {
+                        Thread.Sleep(500);
+                    }
+                    if (state == WebSocketSharp.WebSocketState.New)
+                    {
+                        Thread.Sleep(500);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket state is unknown: {state}");
+                        Thread.Sleep(500);
+                    }
+                }
+            }
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: thread finished");
+        }
+
+        public IEnumerator StartProcessingOutboundQueue()
+        {
+            yield return null;
+        }
+
+        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws)
+        {
+            const string METHOD_NAME = "StartProcessingInboundQueue()";
+            while (true)
+            {
+                var state = WebSocket.ReadyState;
+                if (state == WebSocketSharp.WebSocketState.Open)
+                {
+                    if (MessagesInbound.Count > 0)
+                    {
+                        byte[] data;
+                        bool dataReturned = MessagesInbound.TryDequeue(out data);
+
+                        if (dataReturned)
+                        {
+                            try
+                            {
+                                ws.Process(data);
+                            }
+                            catch (System.Exception e)
+                            {
+                                Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: error processing message: {e}");
+                            }
+                            yield return null;
+                        }
+                        else
+                        {
+                            yield return new WaitForSeconds(0.2f);
+                        }
+                    }
+                    else
+                    {
+                        yield return new WaitForSeconds(0.2f);
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(0.5f);
                 }
             }
         }
 
+        public bool GetIsAuthenticated()
+        {
+            return IsAuthenticated;
+        }
+
+        public void SetIsAuthenticated(bool isAuthenticated)
+        {
+            IsAuthenticated = isAuthenticated;
+        }
     }
+
 
 }

@@ -82,13 +82,10 @@ public class StartGameInputChecker : MonoBehaviour
             await UniTask.Yield();
         }
 
-        var suitRectTransform = equipmentManager.SuitSlot.GetComponent<RectTransform>();
-        var helmetRectTransfrom = equipmentManager.HelmetSlot.GetComponent<RectTransform>();
-        var toolRectTransfrom = equipmentManager.LeftHandSlot.GetComponent<RectTransform>();
-
-        itemCreator.CreateSuit(0, null, suitRectTransform);
-        itemCreator.CreateHelmet(0, null, helmetRectTransfrom);
-        itemCreator.CreateTool(0, null, toolRectTransfrom);
+        itemCreator.CreateSuit(0, null, equipmentManager.SuitSlot.GetComponent<RectTransform>());
+        itemCreator.CreateHelmet(0, null, equipmentManager.HelmetSlot.GetComponent<RectTransform>());
+        itemCreator.CreateTool(0, null, equipmentManager.LeftHandSlot.GetComponent<RectTransform>());
+        itemCreator.CreateMeleeWeapon(0, null, equipmentManager.RightHandSlot.GetComponent<RectTransform>());
 
         recipeCreator.CreateRecipe(1, Guid.NewGuid());
         recipeCreator.CreateRecipe(3, Guid.NewGuid());
@@ -97,6 +94,7 @@ public class StartGameInputChecker : MonoBehaviour
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
+        Player.Name = UserName.userName;
         messageManager.CreateEventMessage(translationManager.Translate("FirstEventMessage"));
     }
 

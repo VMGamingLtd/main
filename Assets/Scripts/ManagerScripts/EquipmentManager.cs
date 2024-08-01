@@ -88,12 +88,15 @@ public class EquipmentManager : MonoBehaviour
     {
         if (itemData != null)
         {
+            itemData.isEquipped = true;
             Player.PhysicalProtection += itemData.physicalProtection;
             Player.FireProtection += itemData.fireProtection;
             Player.ColdProtection += itemData.coldProtection;
-            Player.GasProtection += itemData.gasProtection;
-            Player.ExplosionProtection += itemData.explosionProtection;
+            Player.PoisonProtection += itemData.poisonProtection;
+            Player.EnergyProtection += itemData.energyProtection;
+            Player.PsiProtection += itemData.psiProtection;
             Player.ShieldPoints += itemData.shieldPoints;
+            Player.Armor += itemData.armor;
             Player.HitPoints += itemData.hitPoints;
             Player.Strength += itemData.strength;
             Player.Perception += itemData.perception;
@@ -112,12 +115,15 @@ public class EquipmentManager : MonoBehaviour
     {
         if (itemData != null)
         {
+            itemData.isEquipped = true;
             Player.PhysicalProtection += itemData.physicalProtection;
             Player.FireProtection += itemData.fireProtection;
             Player.ColdProtection += itemData.coldProtection;
-            Player.GasProtection += itemData.gasProtection;
-            Player.ExplosionProtection += itemData.explosionProtection;
+            Player.PoisonProtection += itemData.poisonProtection;
+            Player.EnergyProtection += itemData.energyProtection;
+            Player.PsiProtection += itemData.psiProtection;
             Player.ShieldPoints += itemData.shieldPoints;
+            Player.Armor += itemData.armor;
             Player.HitPoints += itemData.hitPoints;
             Player.EnergyCapacity += itemData.energyCapacity;
             Player.InventorySlots += itemData.inventorySlots;
@@ -134,6 +140,7 @@ public class EquipmentManager : MonoBehaviour
     {
         if (itemData != null)
         {
+            itemData.isEquipped = true;
             Player.Strength += itemData.strength;
             Player.Perception += itemData.perception;
             Player.Intelligence += itemData.intelligence;
@@ -152,6 +159,202 @@ public class EquipmentManager : MonoBehaviour
         RefreshRecipeStats();
     }
 
+    private CombatAbility CreateCombatAbility(CombatAbilityJson abilityData)
+    {
+        return new CombatAbility(abilityData.index, abilityData.abilityName, abilityData.abilityType, abilityData.abilityWeapon, abilityData.isFrontLineAoe, abilityData.isBackLineAoe,
+            abilityData.meleeDamageScale, abilityData.rangedDamageScale, abilityData.psiDamageScale, abilityData.scaleMultiplication, abilityData.cooldown, abilityData.isEnemyAbility,
+            abilityData.positiveEffectsList, abilityData.negativeEffectsList);
+    }
+
+    public void ResetPlayerStats()
+    {
+        Player.AttackSpeed = 1;
+        Player.HitChance = 0;
+        Player.Dodge = 0;
+        Player.Resistance = 0;
+        Player.CounterChance = 0;
+        Player.Penetration = 0;
+        Player.PsiDamage = 0;
+        Player.MeleePhysicalDamage = 0;
+        Player.MeleeFireDamage = 0;
+        Player.MeleeColdDamage = 0;
+        Player.MeleePoisonDamage = 0;
+        Player.MeleeEnergyDamage = 0;
+        Player.RangedPhysicalDamage = 0;
+        Player.RangedFireDamage = 0;
+        Player.RangedColdDamage = 0;
+        Player.RangedPoisonDamage = 0;
+        Player.RangedEnergyDamage = 0;
+        Player.PhysicalProtection = 0;
+        Player.FireProtection = 0;
+        Player.ColdProtection = 0;
+        Player.PoisonProtection = 0;
+        Player.EnergyProtection = 0;
+        Player.PsiProtection = 0;
+        Player.ShieldPoints = 0;
+        Player.Armor = 0;
+        Player.HitPoints = 10;
+        Player.Strength = 0;
+        Player.Perception = 0;
+        Player.Intelligence = 0;
+        Player.Agility = 0;
+        Player.Charisma = 0;
+        Player.Willpower = 0;
+        Player.ExplorationRadius = 0;
+        Player.VisibilityRadius = 0;
+        Player.PickupRadius = 0;
+        Player.EnergyCapacity = 0;
+        Player.InventorySlots = 0;
+        Player.ProductionSpeed = 0;
+        Player.MaterialCost = 0;
+        Player.OutcomeRate = 0;
+    }
+
+    public void EquipMeleeWeapon(MeleeWeaponData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = true;
+            Player.AttackSpeed += itemData.attackSpeed;
+            Player.HitChance += itemData.hitChance;
+            Player.Dodge += itemData.dodge;
+            Player.Resistance += itemData.resistance;
+            Player.CounterChance += itemData.counterChance;
+            Player.Penetration += itemData.penetration;
+            Player.PsiDamage += itemData.psiDamage;
+            Player.MeleePhysicalDamage += itemData.meleePhysicalDamage;
+            Player.MeleeFireDamage += itemData.meleeFireDamage;
+            Player.MeleeColdDamage += itemData.meleeColdDamage;
+            Player.MeleePoisonDamage += itemData.meleePoisonDamage;
+            Player.MeleeEnergyDamage += itemData.meleeEnergyDamage;
+            Player.Strength += itemData.strength;
+            Player.Perception += itemData.perception;
+            Player.Intelligence += itemData.intelligence;
+            Player.Agility += itemData.agility;
+            Player.Charisma += itemData.charisma;
+            Player.Willpower += itemData.willpower;
+
+            Player.MeleeAttack = Player.MeleePhysicalDamage + Player.MeleeFireDamage + Player.MeleeColdDamage
+                + Player.MeleePoisonDamage + Player.MeleeEnergyDamage;
+
+            ItemCreator itemCreator = GameObject.Find(Constants.ItemCreatorList).GetComponent<ItemCreator>();
+
+            foreach (var ability in itemCreator.abilitiesDataList)
+            {
+                if (ability.abilityWeapon == itemData.weaponType)
+                {
+                    Player.CombatAbilities.Add(CreateCombatAbility(ability));
+                }
+            }
+        }
+
+        RefreshStats();
+    }
+
+    public void EquipRangedWeapon(RangedWeaponData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = true;
+            Player.AttackSpeed += itemData.attackSpeed;
+            Player.HitChance += itemData.hitChance;
+            Player.Dodge += itemData.dodge;
+            Player.Resistance += itemData.resistance;
+            Player.CounterChance += itemData.counterChance;
+            Player.Penetration += itemData.penetration;
+            Player.PsiDamage += itemData.psiDamage;
+            Player.RangedPhysicalDamage += itemData.rangedPhysicalDamage;
+            Player.RangedFireDamage += itemData.rangedFireDamage;
+            Player.RangedColdDamage += itemData.rangedColdDamage;
+            Player.RangedPoisonDamage += itemData.rangedPoisonDamage;
+            Player.RangedEnergyDamage += itemData.rangedEnergyDamage;
+            Player.Strength += itemData.strength;
+            Player.Perception += itemData.perception;
+            Player.Intelligence += itemData.intelligence;
+            Player.Agility += itemData.agility;
+            Player.Charisma += itemData.charisma;
+            Player.Willpower += itemData.willpower;
+        }
+        RefreshStats();
+    }
+
+    public void EquipShield(ShieldData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = true;
+            Player.AttackSpeed += itemData.attackSpeed;
+            Player.HitChance += itemData.hitChance;
+            Player.Dodge += itemData.dodge;
+            Player.Resistance += itemData.resistance;
+            Player.CounterChance += itemData.counterChance;
+            Player.Penetration += itemData.penetration;
+            Player.PsiDamage += itemData.psiDamage;
+            Player.MeleePhysicalDamage += itemData.meleePhysicalDamage;
+            Player.MeleeFireDamage += itemData.meleeFireDamage;
+            Player.MeleeColdDamage += itemData.meleeColdDamage;
+            Player.MeleePoisonDamage += itemData.meleePoisonDamage;
+            Player.MeleeEnergyDamage += itemData.meleeEnergyDamage;
+            Player.PhysicalProtection += itemData.physicalProtection;
+            Player.FireProtection += itemData.fireProtection;
+            Player.ColdProtection += itemData.coldProtection;
+            Player.PoisonProtection += itemData.poisonProtection;
+            Player.EnergyProtection += itemData.energyProtection;
+            Player.PsiProtection += itemData.psiProtection;
+            Player.ShieldPoints += itemData.shieldPoints;
+            Player.Armor += itemData.armor;
+            Player.HitPoints += itemData.hitPoints;
+            Player.Strength += itemData.strength;
+            Player.Perception += itemData.perception;
+            Player.Intelligence += itemData.intelligence;
+            Player.Agility += itemData.agility;
+            Player.Charisma += itemData.charisma;
+            Player.Willpower += itemData.willpower;
+        }
+        RefreshStats();
+    }
+
+    public void EquipOffhand(OffHandData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = true;
+            Player.AttackSpeed += itemData.attackSpeed;
+            Player.HitChance += itemData.hitChance;
+            Player.Dodge += itemData.dodge;
+            Player.Resistance += itemData.resistance;
+            Player.CounterChance += itemData.counterChance;
+            Player.Penetration += itemData.penetration;
+            Player.PsiDamage += itemData.psiDamage;
+            Player.MeleePhysicalDamage += itemData.meleePhysicalDamage;
+            Player.MeleeFireDamage += itemData.meleeFireDamage;
+            Player.MeleeColdDamage += itemData.meleeColdDamage;
+            Player.MeleePoisonDamage += itemData.meleePoisonDamage;
+            Player.MeleeEnergyDamage += itemData.meleeEnergyDamage;
+            Player.RangedPhysicalDamage += itemData.rangedPhysicalDamage;
+            Player.RangedFireDamage += itemData.rangedFireDamage;
+            Player.RangedColdDamage += itemData.rangedColdDamage;
+            Player.RangedPoisonDamage += itemData.rangedPoisonDamage;
+            Player.RangedEnergyDamage += itemData.rangedEnergyDamage;
+            Player.PhysicalProtection += itemData.physicalProtection;
+            Player.FireProtection += itemData.fireProtection;
+            Player.ColdProtection += itemData.coldProtection;
+            Player.PoisonProtection += itemData.poisonProtection;
+            Player.EnergyProtection += itemData.energyProtection;
+            Player.PsiProtection += itemData.psiProtection;
+            Player.ShieldPoints += itemData.shieldPoints;
+            Player.Armor += itemData.armor;
+            Player.HitPoints += itemData.hitPoints;
+            Player.Strength += itemData.strength;
+            Player.Perception += itemData.perception;
+            Player.Intelligence += itemData.intelligence;
+            Player.Agility += itemData.agility;
+            Player.Charisma += itemData.charisma;
+            Player.Willpower += itemData.willpower;
+        }
+        RefreshStats();
+    }
+
     public void UnequipHelmet(HelmetData itemData)
     {
         if (itemData != null)
@@ -160,9 +363,11 @@ public class EquipmentManager : MonoBehaviour
             Player.PhysicalProtection -= itemData.physicalProtection;
             Player.FireProtection -= itemData.fireProtection;
             Player.ColdProtection -= itemData.coldProtection;
-            Player.GasProtection -= itemData.gasProtection;
-            Player.ExplosionProtection -= itemData.explosionProtection;
+            Player.PoisonProtection -= itemData.poisonProtection;
+            Player.EnergyProtection -= itemData.energyProtection;
+            Player.PsiProtection -= itemData.psiProtection;
             Player.ShieldPoints -= itemData.shieldPoints;
+            Player.Armor -= itemData.armor;
             Player.HitPoints -= itemData.hitPoints;
             Player.Strength -= itemData.strength;
             Player.Perception -= itemData.perception;
@@ -185,9 +390,11 @@ public class EquipmentManager : MonoBehaviour
             Player.PhysicalProtection -= itemData.physicalProtection;
             Player.FireProtection -= itemData.fireProtection;
             Player.ColdProtection -= itemData.coldProtection;
-            Player.GasProtection -= itemData.gasProtection;
-            Player.ExplosionProtection -= itemData.explosionProtection;
+            Player.PoisonProtection -= itemData.poisonProtection;
+            Player.EnergyProtection -= itemData.energyProtection;
+            Player.PsiProtection -= itemData.psiProtection;
             Player.ShieldPoints -= itemData.shieldPoints;
+            Player.Armor -= itemData.armor;
             Player.HitPoints -= itemData.hitPoints;
             Player.EnergyCapacity -= itemData.energyCapacity;
             Player.InventorySlots -= itemData.inventorySlots;
@@ -222,6 +429,137 @@ public class EquipmentManager : MonoBehaviour
         }
         RefreshStats();
         RefreshRecipeStats();
+    }
+
+    public void UnequipMeleeWeapon(MeleeWeaponData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = false;
+            Player.AttackSpeed -= itemData.attackSpeed;
+            Player.HitChance -= itemData.hitChance;
+            Player.Dodge -= itemData.dodge;
+            Player.Resistance -= itemData.resistance;
+            Player.CounterChance -= itemData.counterChance;
+            Player.Penetration -= itemData.penetration;
+            Player.PsiDamage -= itemData.psiDamage;
+            Player.MeleePhysicalDamage -= itemData.meleePhysicalDamage;
+            Player.MeleeFireDamage -= itemData.meleeFireDamage;
+            Player.MeleeColdDamage -= itemData.meleeColdDamage;
+            Player.MeleePoisonDamage -= itemData.meleePoisonDamage;
+            Player.MeleeEnergyDamage -= itemData.meleeEnergyDamage;
+            Player.Strength -= itemData.strength;
+            Player.Perception -= itemData.perception;
+            Player.Intelligence -= itemData.intelligence;
+            Player.Agility -= itemData.agility;
+            Player.Charisma -= itemData.charisma;
+            Player.Willpower -= itemData.willpower;
+        }
+        RefreshStats();
+    }
+
+    public void UnequipRangedWeapon(RangedWeaponData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = false;
+            Player.AttackSpeed -= itemData.attackSpeed;
+            Player.HitChance -= itemData.hitChance;
+            Player.Dodge -= itemData.dodge;
+            Player.Resistance -= itemData.resistance;
+            Player.CounterChance -= itemData.counterChance;
+            Player.Penetration -= itemData.penetration;
+            Player.PsiDamage -= itemData.psiDamage;
+            Player.RangedPhysicalDamage -= itemData.rangedPhysicalDamage;
+            Player.RangedFireDamage -= itemData.rangedFireDamage;
+            Player.RangedColdDamage -= itemData.rangedColdDamage;
+            Player.RangedPoisonDamage -= itemData.rangedPoisonDamage;
+            Player.RangedEnergyDamage -= itemData.rangedEnergyDamage;
+            Player.Strength -= itemData.strength;
+            Player.Perception -= itemData.perception;
+            Player.Intelligence -= itemData.intelligence;
+            Player.Agility -= itemData.agility;
+            Player.Charisma -= itemData.charisma;
+            Player.Willpower -= itemData.willpower;
+        }
+        RefreshStats();
+    }
+
+    public void UnequipShield(ShieldData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = false;
+            Player.AttackSpeed -= itemData.attackSpeed;
+            Player.HitChance -= itemData.hitChance;
+            Player.Dodge -= itemData.dodge;
+            Player.Resistance -= itemData.resistance;
+            Player.CounterChance -= itemData.counterChance;
+            Player.Penetration -= itemData.penetration;
+            Player.PsiDamage -= itemData.psiDamage;
+            Player.MeleePhysicalDamage -= itemData.meleePhysicalDamage;
+            Player.MeleeFireDamage -= itemData.meleeFireDamage;
+            Player.MeleeColdDamage -= itemData.meleeColdDamage;
+            Player.MeleePoisonDamage -= itemData.meleePoisonDamage;
+            Player.MeleeEnergyDamage -= itemData.meleeEnergyDamage;
+            Player.PhysicalProtection -= itemData.physicalProtection;
+            Player.FireProtection -= itemData.fireProtection;
+            Player.ColdProtection -= itemData.coldProtection;
+            Player.PoisonProtection -= itemData.poisonProtection;
+            Player.EnergyProtection -= itemData.energyProtection;
+            Player.PsiProtection -= itemData.psiProtection;
+            Player.ShieldPoints -= itemData.shieldPoints;
+            Player.Armor -= itemData.armor;
+            Player.HitPoints -= itemData.hitPoints;
+            Player.Strength -= itemData.strength;
+            Player.Perception -= itemData.perception;
+            Player.Intelligence -= itemData.intelligence;
+            Player.Agility -= itemData.agility;
+            Player.Charisma -= itemData.charisma;
+            Player.Willpower -= itemData.willpower;
+        }
+        RefreshStats();
+    }
+
+    public void UnequipOffhand(OffHandData itemData)
+    {
+        if (itemData != null)
+        {
+            itemData.isEquipped = false;
+            Player.AttackSpeed -= itemData.attackSpeed;
+            Player.HitChance -= itemData.hitChance;
+            Player.Dodge -= itemData.dodge;
+            Player.Resistance -= itemData.resistance;
+            Player.CounterChance -= itemData.counterChance;
+            Player.Penetration -= itemData.penetration;
+            Player.PsiDamage -= itemData.psiDamage;
+            Player.MeleePhysicalDamage -= itemData.meleePhysicalDamage;
+            Player.MeleeFireDamage -= itemData.meleeFireDamage;
+            Player.MeleeColdDamage -= itemData.meleeColdDamage;
+            Player.MeleePoisonDamage -= itemData.meleePoisonDamage;
+            Player.MeleeEnergyDamage -= itemData.meleeEnergyDamage;
+            Player.RangedPhysicalDamage -= itemData.rangedPhysicalDamage;
+            Player.RangedFireDamage -= itemData.rangedFireDamage;
+            Player.RangedColdDamage -= itemData.rangedColdDamage;
+            Player.RangedPoisonDamage -= itemData.rangedPoisonDamage;
+            Player.RangedEnergyDamage -= itemData.rangedEnergyDamage;
+            Player.PhysicalProtection -= itemData.physicalProtection;
+            Player.FireProtection -= itemData.fireProtection;
+            Player.ColdProtection -= itemData.coldProtection;
+            Player.PoisonProtection -= itemData.poisonProtection;
+            Player.EnergyProtection -= itemData.energyProtection;
+            Player.PsiProtection -= itemData.psiProtection;
+            Player.ShieldPoints -= itemData.shieldPoints;
+            Player.Armor -= itemData.armor;
+            Player.HitPoints -= itemData.hitPoints;
+            Player.Strength -= itemData.strength;
+            Player.Perception -= itemData.perception;
+            Player.Intelligence -= itemData.intelligence;
+            Player.Agility -= itemData.agility;
+            Player.Charisma -= itemData.charisma;
+            Player.Willpower -= itemData.willpower;
+        }
+        RefreshStats();
     }
 
     public void DeductFromEquip()

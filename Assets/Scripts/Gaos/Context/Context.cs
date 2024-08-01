@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Gaos.Context
 {
@@ -19,6 +20,14 @@ namespace Gaos.Context
         public static void SetJWT(string jwt)
         { 
             JWT = jwt;
+            if (Gaos.Environment.Environment.GetEnvironment()["ENV_NAME"] == "Development")
+            {
+                Debug.Log($"JWT: {jwt}");
+            }
+            if (Gaos.WebSocket.WebSocketClient.CurrentWesocketClient != null)
+            {
+                Gaos.Messages.WsAuthentication.authenticate(Gaos.WebSocket.WebSocketClient.CurrentWesocketClient, jwt);
+            }
         }
         public static string GetJWT()
         {

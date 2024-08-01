@@ -8,6 +8,7 @@ namespace ItemManagement
     [Serializable]
     public class ItemDataJson // 1st layer
     {
+        public int ID;
         public int index;
         public float quantity;
         public float stackLimit;
@@ -16,6 +17,7 @@ namespace ItemManagement
         public string itemClass;
         public string itemName;
         public bool equipable;
+        public bool isEquipped;
     }
 
     [Serializable]
@@ -32,6 +34,20 @@ namespace ItemManagement
     }
 
     [Serializable]
+    public class ArmorDataJson : EquipmentDataJson // 3rd layer mono behaviour
+    {
+        public int physicalProtection;
+        public int fireProtection;
+        public int coldProtection;
+        public int poisonProtection;
+        public int energyProtection;
+        public int psiProtection;
+        public int shieldPoints;
+        public int armor;
+        public int hitPoints;
+    }
+
+    [Serializable]
     public class ToolDataJson : EquipmentDataJson // 3rd layer
     {
         public float productionSpeed;
@@ -40,15 +56,21 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class HelmetDataJson : EquipmentDataJson // 3rd layer
+    public class WeaponDataJson : EquipmentDataJson // 3rd layer mono behaviour
     {
-        public int physicalProtection;
-        public int fireProtection;
-        public int coldProtection;
-        public int gasProtection;
-        public int explosionProtection;
-        public int shieldPoints;
-        public int hitPoints;
+        public string weaponType;
+        public float attackSpeed;
+        public int hitChance;
+        public int dodge;
+        public int resistance;
+        public int counterChance;
+        public int penetration;
+        public int psiDamage;
+    }
+
+    [Serializable]
+    public class HelmetDataJson : ArmorDataJson // 4th layer
+    {
         public int visibilityRadius;
         public int explorationRadius;
         public int pickupRadius;
@@ -56,17 +78,54 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class SuitDataJson : EquipmentDataJson // 3rd layer
+    public class SuitDataJson : ArmorDataJson // 4th layer
+    {
+        public int energyCapacity;
+        public int inventorySlots;
+    }
+
+    [Serializable]
+    public class MeleeWeaponDataJson : WeaponDataJson // 4th layer mono behaviour
+    {
+        public int meleePhysicalDamage;
+        public int meleeFireDamage;
+        public int meleeColdDamage;
+        public int meleePoisonDamage;
+        public int meleeEnergyDamage;
+    }
+
+    [Serializable]
+    public class RangedWeaponDataJson : WeaponDataJson // 4th layer mono behaviour
+    {
+        public int rangedPhysicalDamage;
+        public int rangedFireDamage;
+        public int rangedColdDamage;
+        public int rangedPoisonDamage;
+        public int rangedEnergyDamage;
+    }
+
+    [Serializable]
+    public class ShieldDataJson : MeleeWeaponDataJson // 4th layer mono behaviour
     {
         public int physicalProtection;
         public int fireProtection;
         public int coldProtection;
-        public int gasProtection;
-        public int explosionProtection;
+        public int poisonProtection;
+        public int energyProtection;
+        public int psiProtection;
         public int shieldPoints;
+        public int armor;
         public int hitPoints;
-        public int energyCapacity;
-        public int inventorySlots;
+    }
+
+    [Serializable]
+    public class OffHandDataJson : ShieldDataJson // 5th layer mono behaviour
+    {
+        public int rangedPhysicalDamage;
+        public int rangedFireDamage;
+        public int rangedColdDamage;
+        public int rangedPoisonDamage;
+        public int rangedEnergyDamage;
     }
 
     [Serializable]
@@ -98,7 +157,34 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class ToolData : EquipmentData
+    public class ArmorData : EquipmentData // 3rd layer mono behaviour
+    {
+        public int physicalProtection;
+        public int fireProtection;
+        public int coldProtection;
+        public int poisonProtection;
+        public int energyProtection;
+        public int psiProtection;
+        public int shieldPoints;
+        public int armor;
+        public int hitPoints;
+    }
+
+    [Serializable]
+    public class WeaponData : EquipmentData // 3rd layer mono behaviour
+    {
+        public string weaponType;
+        public float attackSpeed;
+        public int hitChance;
+        public int dodge;
+        public int resistance;
+        public int counterChance;
+        public int penetration;
+        public int psiDamage;
+    }
+
+    [Serializable]
+    public class ToolData : EquipmentData // 3rd layer mono behaviour
     {
         public float productionSpeed;
         public float materialCost;
@@ -106,32 +192,81 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class HelmetData : EquipmentData // 3rd layer mono behaviour
+    public class HelmetData : ArmorData // 4th layer mono behaviour
     {
-        public int physicalProtection;
-        public int fireProtection;
-        public int coldProtection;
-        public int gasProtection;
-        public int explosionProtection;
-        public int shieldPoints;
-        public int hitPoints;
         public int visibilityRadius;
         public int explorationRadius;
         public int pickupRadius;
     }
 
     [Serializable]
-    public class SuitData : EquipmentData // 3rd layer mono behaviour
+    public class SuitData : ArmorData // 4th layer mono behaviour
+    {
+        public int energyCapacity;
+        public int inventorySlots;
+    }
+
+    [Serializable]
+    public class MeleeWeaponData : WeaponData // 4th layer mono behaviour
+    {
+        public int meleePhysicalDamage;
+        public int meleeFireDamage;
+        public int meleeColdDamage;
+        public int meleePoisonDamage;
+        public int meleeEnergyDamage;
+    }
+
+    [Serializable]
+    public class RangedWeaponData : WeaponData // 4th layer mono behaviour
+    {
+        public int rangedPhysicalDamage;
+        public int rangedFireDamage;
+        public int rangedColdDamage;
+        public int rangedPoisonDamage;
+        public int rangedEnergyDamage;
+    }
+
+    [Serializable]
+    public class ShieldData : MeleeWeaponData // 4th layer mono behaviour
     {
         public int physicalProtection;
         public int fireProtection;
         public int coldProtection;
-        public int gasProtection;
-        public int explosionProtection;
+        public int poisonProtection;
+        public int energyProtection;
+        public int psiProtection;
         public int shieldPoints;
+        public int armor;
         public int hitPoints;
-        public int energyCapacity;
-        public int inventorySlots;
+    }
+
+    [Serializable]
+    public class OffHandData : ShieldData // 5th layer mono behaviour
+    {
+        public int rangedPhysicalDamage;
+        public int rangedFireDamage;
+        public int rangedColdDamage;
+        public int rangedPoisonDamage;
+        public int rangedEnergyDamage;
+    }
+
+    [Serializable]
+    public class CombatAbilityJson
+    {
+        public int index;
+        public string abilityName;
+        public string abilityType;
+        public string abilityWeapon;
+        public bool isEnemyAbility;
+        public bool isFrontLineAoe;
+        public bool isBackLineAoe;
+        public float meleeDamageScale;
+        public float rangedDamageScale;
+        public float psiDamageScale;
+        public float scaleMultiplication;
+        public int cooldown;
+        public List<StatusEffect> negativeEffectsList;
+        public List<StatusEffect> positiveEffectsList;
     }
 
     public class ItemCreator : MonoBehaviour
@@ -163,10 +298,45 @@ namespace ItemManagement
             public List<ToolDataJson> items;
         }
 
+        [Serializable]
+        private class MeleeWeaponDataJsonArray
+        {
+            public List<MeleeWeaponDataJson> items;
+        }
+
+        [Serializable]
+        private class RangedWeaponDataJsonArray
+        {
+            public List<RangedWeaponDataJson> items;
+        }
+
+        [Serializable]
+        private class ShieldDataJsonArray
+        {
+            public List<ShieldDataJson> items;
+        }
+
+        [Serializable]
+        private class OffHandDataJsonArray
+        {
+            public List<OffHandDataJson> items;
+        }
+
+        [Serializable]
+        private class CombatAbilitiesJsonArray
+        {
+            public List<CombatAbilityJson> abilities;
+        }
+
         private List<ItemDataJson> itemDataList;
         private List<SuitDataJson> suitDataList;
         private List<HelmetDataJson> helmetDataList;
         private List<ToolDataJson> toolDataList;
+        private List<MeleeWeaponDataJson> meleeWeaponDataList;
+        private List<RangedWeaponDataJson> rangedWeaponDataList;
+        private List<ShieldDataJson> shieldDataList;
+        private List<OffHandDataJson> offHandDataList;
+        public List<CombatAbilityJson> abilitiesDataList;
 
         private void Awake()
         {
@@ -197,6 +367,41 @@ namespace ItemManagement
             {
                 toolDataList = toolDataArray.items;
             }
+
+            string meleeWeaponJsonText = Assets.Scripts.Models.MeleeWeaponsListJson.json;
+            MeleeWeaponDataJsonArray meleeWeaponDataArray = JsonUtility.FromJson<MeleeWeaponDataJsonArray>(meleeWeaponJsonText);
+            if (meleeWeaponDataArray != null)
+            {
+                meleeWeaponDataList = meleeWeaponDataArray.items;
+            }
+
+            string rangedWeaponJsonText = Assets.Scripts.Models.RangedWeaponsListJson.json;
+            RangedWeaponDataJsonArray rangedWeaponDataArray = JsonUtility.FromJson<RangedWeaponDataJsonArray>(rangedWeaponJsonText);
+            if (rangedWeaponDataArray != null)
+            {
+                rangedWeaponDataList = rangedWeaponDataArray.items;
+            }
+
+            string shieldJsonText = Assets.Scripts.Models.ShieldsListJson.json;
+            ShieldDataJsonArray shieldDataArray = JsonUtility.FromJson<ShieldDataJsonArray>(shieldJsonText);
+            if (shieldDataArray != null)
+            {
+                shieldDataList = shieldDataArray.items;
+            }
+
+            string offHandJsonText = Assets.Scripts.Models.OffHandsListJson.json;
+            OffHandDataJsonArray offHandDataArray = JsonUtility.FromJson<OffHandDataJsonArray>(offHandJsonText);
+            if (offHandDataArray != null)
+            {
+                offHandDataList = offHandDataArray.items;
+            }
+
+            string abilitiesDataJsonText = Assets.Scripts.Models.AbilitiesListJson.json;
+            CombatAbilitiesJsonArray combatAbilitiesDataArray = JsonUtility.FromJson<CombatAbilitiesJsonArray>(abilitiesDataJsonText);
+            if (combatAbilitiesDataArray != null)
+            {
+                abilitiesDataList = combatAbilitiesDataArray.abilities;
+            }
         }
         public void Recreateitem(float quantity, string itemProduct, string itemType, string itemClass, string itemName,
             int index, float stackLimit, bool equipable, int ID, bool isEquipped, RectTransform rectTransform = null)
@@ -205,23 +410,64 @@ namespace ItemManagement
         }
 
         public void RecreateSuit(float quantity, string itemProduct, string itemType, string itemClass, string itemName, int index, float stackLimit,
-            bool equipable, int ID, bool isEquipped, int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection,
-            int shieldPoints, int hitPoints, int energyCapacity, int durability, int maxDurability, int inventorySlots, int strength, int perception, int intelligence,
+            bool equipable, int ID, bool isEquipped, int physicalProtection, int fireProtection, int coldProtection, int poisonProtection, int explosionProtection, int psiProtection,
+            int shieldPoints, int armor, int hitPoints, int energyCapacity, int durability, int maxDurability, int inventorySlots, int strength, int perception, int intelligence,
             int agility, int charisma, int willpower, RectTransform rectTransform = null)
         {
             itemFactory.RecreateSuit(quantity, itemTemplate, itemProduct, itemType, itemClass, itemName, index, stackLimit, equipable, ID, isEquipped, physicalProtection,
-                fireProtection, coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, energyCapacity, durability, maxDurability, inventorySlots,
+                fireProtection, coldProtection, poisonProtection, explosionProtection, psiProtection, shieldPoints, armor, hitPoints, energyCapacity, durability, maxDurability, inventorySlots,
                 strength, perception, intelligence, agility, charisma, willpower, rectTransform);
         }
 
         public void RecreateHelmet(float quantity, string itemProduct, string itemType, string itemClass, string itemName, int index, float stackLimit,
-            bool equipable, int ID, bool isEquipped, int physicalProtection, int fireProtection, int coldProtection, int gasProtection, int explosionProtection,
-            int shieldPoints, int hitPoints, int durability, int maxDurability, int strength, int perception, int intelligence, int agility, int charisma,
+            bool equipable, int ID, bool isEquipped, int physicalProtection, int fireProtection, int coldProtection, int poisonProtection, int explosionProtection, int psiProtection,
+            int shieldPoints, int armor, int hitPoints, int durability, int maxDurability, int strength, int perception, int intelligence, int agility, int charisma,
             int willpower, int visibilityRadius, int explorationRadius, int pickupRadius, RectTransform rectTransform = null)
         {
             itemFactory.RecreateHelmet(quantity, itemTemplate, itemProduct, itemType, itemClass, itemName, index, stackLimit, equipable, ID, isEquipped, physicalProtection,
-                fireProtection, coldProtection, gasProtection, explosionProtection, shieldPoints, hitPoints, durability, maxDurability,
+                fireProtection, coldProtection, poisonProtection, explosionProtection, psiProtection, shieldPoints, armor, hitPoints, durability, maxDurability,
                 strength, perception, intelligence, agility, charisma, willpower, visibilityRadius, explorationRadius, pickupRadius, rectTransform);
+        }
+
+        public void RecreateMeleeWeapon(float quantity, string itemProduct, string itemType, string itemClass, string itemName, int index, float stackLimit, bool equipable, int ID, bool isEquipped,
+            float attackSpeed, int hitChance, int dodge, int resistance, int counterChance, int penetration, int psiDamage, int meleePhysicalDamage, int meleeFireDamage, int meleeColdDamage, int meleePoisonDamage,
+            int meleeEnergyDamage, int durability, int maxDurability, int strength, int perception, int intelligence, int agility, int charisma, int willpower, string weaponType, RectTransform rectTransform = null)
+        {
+            itemFactory.RecreateMeleeWeapon(quantity, itemTemplate, itemProduct, itemType, itemClass, itemName, index, stackLimit, equipable, ID, isEquipped, attackSpeed, hitChance, dodge,
+                resistance, counterChance, penetration, psiDamage, meleePhysicalDamage, meleeFireDamage, meleeColdDamage, meleePoisonDamage, meleeEnergyDamage, durability, maxDurability, strength,
+                perception, intelligence, agility, charisma, willpower, weaponType, rectTransform);
+        }
+
+        public void RecreateRangedWeapon(float quantity, string itemProduct, string itemType, string itemClass, string itemName, int index, float stackLimit, bool equipable, int ID, bool isEquipped,
+            float attackSpeed, int hitChance, int dodge, int resistance, int counterChance, int penetration, int psiDamage, int rangedPhysicalDamage, int rangedFireDamage, int rangedColdDamage, int rangedPoisonDamage,
+            int rangedEnergyDamage, int durability, int maxDurability, int strength, int perception, int intelligence, int agility, int charisma, int willpower, string weaponType, RectTransform rectTransform = null)
+        {
+            itemFactory.RecreateRangedWeapon(quantity, itemTemplate, itemProduct, itemType, itemClass, itemName, index, stackLimit, equipable, ID, isEquipped, attackSpeed, hitChance, dodge,
+                resistance, counterChance, penetration, psiDamage, rangedPhysicalDamage, rangedFireDamage, rangedColdDamage, rangedPoisonDamage, rangedEnergyDamage, durability, maxDurability, strength,
+                perception, intelligence, agility, charisma, willpower, weaponType, rectTransform);
+        }
+
+        public void RecreateShield(float quantity, string itemProduct, string itemType, string itemClass, string itemName, int index, float stackLimit, bool equipable, int ID, bool isEquipped,
+            float attackSpeed, int hitChance, int dodge, int resistance, int counterChance, int penetration, int psiDamage, int meleePhysicalDamage, int meleeFireDamage, int meleeColdDamage, int meleePoisonDamage,
+            int meleeEnergyDamage, int physicalProtection, int fireProtection, int coldProtection, int poisonProtection, int energyProtection, int psiProtection, int shieldPoints, int armor, int hitPoints,
+            int durability, int maxDurability, int strength, int perception, int intelligence, int agility, int charisma, int willpower, string weaponType, RectTransform rectTransform = null)
+        {
+            itemFactory.RecreateShield(quantity, itemTemplate, itemProduct, itemType, itemClass, itemName, index, stackLimit, equipable, ID, isEquipped, attackSpeed, hitChance, dodge, resistance,
+                counterChance, penetration, psiDamage, meleePhysicalDamage, meleeFireDamage, meleeColdDamage, meleePoisonDamage, meleeEnergyDamage, physicalProtection, fireProtection, coldProtection,
+                poisonProtection, energyProtection, psiProtection, shieldPoints, armor, hitPoints, durability, maxDurability, strength, perception, intelligence, agility, charisma, willpower, weaponType,
+                rectTransform);
+        }
+
+        public void RecreateOffhand(float quantity, string itemProduct, string itemType, string itemClass, string itemName, int index, float stackLimit, bool equipable, int ID, bool isEquipped,
+            float attackSpeed, int hitChance, int dodge, int resistance, int counterChance, int penetration, int psiDamage, int meleePhysicalDamage, int meleeFireDamage, int meleeColdDamage, int meleePoisonDamage,
+            int meleeEnergyDamage, int rangedPhysicalDamage, int rangedFireDamage, int rangedColdDamage, int rangedPoisonDamage, int rangedEnergyDamage, int physicalProtection, int fireProtection, int coldProtection,
+            int poisonProtection, int energyProtection, int psiProtection, int shieldPoints, int armor, int hitPoints, int durability, int maxDurability, int strength, int perception, int intelligence, int agility,
+            int charisma, int willpower, string weaponType, RectTransform rectTransform = null)
+        {
+            itemFactory.RecreateOffhand(quantity, itemTemplate, itemProduct, itemType, itemClass, itemName, index, stackLimit, equipable, ID, isEquipped, attackSpeed, hitChance, dodge, resistance,
+                counterChance, penetration, psiDamage, meleePhysicalDamage, meleeFireDamage, meleeColdDamage, meleePoisonDamage, meleeEnergyDamage, rangedPhysicalDamage, rangedFireDamage, rangedColdDamage,
+                rangedPoisonDamage, rangedEnergyDamage, physicalProtection, fireProtection, coldProtection, poisonProtection, energyProtection, psiProtection, shieldPoints, armor, hitPoints, durability,
+                maxDurability, strength, perception, intelligence, agility, charisma, willpower, weaponType, rectTransform);
         }
 
         public void RecreateTool(float quantity, string itemProduct, string itemType, string itemClass, string itemName, int index, float stackLimit,
@@ -237,8 +483,8 @@ namespace ItemManagement
             var itemData = helmetDataList[itemIndex];
             float finalQuantity = quantity ?? itemData.quantity;
             itemFactory.CreateHelmet(finalQuantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index,
-                itemData.stackLimit, itemData.equipable, itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.gasProtection, itemData.explosionProtection,
-                itemData.shieldPoints, itemData.hitPoints, itemData.durability, itemData.maxDurability, itemData.strength, itemData.perception, itemData.intelligence, itemData.agility,
+                itemData.stackLimit, itemData.equipable, itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.poisonProtection, itemData.energyProtection, itemData.psiProtection,
+                itemData.shieldPoints, itemData.armor, itemData.hitPoints, itemData.durability, itemData.maxDurability, itemData.strength, itemData.perception, itemData.intelligence, itemData.agility,
                 itemData.charisma, itemData.willpower, itemData.visibilityRadius, itemData.explorationRadius, itemData.pickupRadius, rectTransform);
         }
 
@@ -247,9 +493,52 @@ namespace ItemManagement
             var itemData = suitDataList[itemIndex];
             float finalQuantity = quantity ?? itemData.quantity;
             itemFactory.CreateSuit(finalQuantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index,
-                itemData.stackLimit, itemData.equipable, itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.gasProtection, itemData.explosionProtection,
-                itemData.shieldPoints, itemData.hitPoints, itemData.energyCapacity, itemData.durability, itemData.maxDurability, itemData.inventorySlots, itemData.strength,
+                itemData.stackLimit, itemData.equipable, itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.poisonProtection, itemData.energyProtection, itemData.psiProtection,
+                itemData.shieldPoints, itemData.armor, itemData.hitPoints, itemData.energyCapacity, itemData.durability, itemData.maxDurability, itemData.inventorySlots, itemData.strength,
                 itemData.perception, itemData.intelligence, itemData.agility, itemData.charisma, itemData.willpower, rectTransform);
+        }
+
+        public void CreateMeleeWeapon(int itemIndex, float? quantity = null, RectTransform rectTransform = null)
+        {
+            var itemData = meleeWeaponDataList[itemIndex];
+            float finalQuantity = quantity ?? itemData.quantity;
+            itemFactory.CreateMeleeWeapon(finalQuantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable,
+                itemData.attackSpeed, itemData.hitChance, itemData.dodge, itemData.resistance, itemData.counterChance, itemData.penetration, itemData.psiDamage, itemData.meleePhysicalDamage, itemData.meleeFireDamage,
+                itemData.meleeColdDamage, itemData.meleePoisonDamage, itemData.meleeEnergyDamage, itemData.durability, itemData.maxDurability, itemData.strength, itemData.perception, itemData.intelligence,
+                itemData.agility, itemData.charisma, itemData.willpower, itemData.weaponType, rectTransform);
+        }
+
+        public void CreateRangedWeapon(int itemIndex, float? quantity = null, RectTransform rectTransform = null)
+        {
+            var itemData = rangedWeaponDataList[itemIndex];
+            float finalQuantity = quantity ?? itemData.quantity;
+            itemFactory.CreateRangedWeapon(finalQuantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable,
+                itemData.attackSpeed, itemData.hitChance, itemData.dodge, itemData.resistance, itemData.counterChance, itemData.penetration, itemData.psiDamage, itemData.rangedPhysicalDamage, itemData.rangedFireDamage,
+                itemData.rangedColdDamage, itemData.rangedPoisonDamage, itemData.rangedEnergyDamage, itemData.durability, itemData.maxDurability, itemData.strength, itemData.perception, itemData.intelligence,
+                itemData.agility, itemData.charisma, itemData.willpower, itemData.weaponType, rectTransform);
+        }
+
+        public void CreateShield(int itemIndex, float? quantity = null, RectTransform rectTransform = null)
+        {
+            var itemData = shieldDataList[itemIndex];
+            float finalQuantity = quantity ?? itemData.quantity;
+            itemFactory.CreateShield(finalQuantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable,
+                itemData.attackSpeed, itemData.hitChance, itemData.dodge, itemData.resistance, itemData.counterChance, itemData.penetration, itemData.psiDamage, itemData.meleePhysicalDamage, itemData.meleeFireDamage,
+                itemData.meleeColdDamage, itemData.meleePoisonDamage, itemData.meleeEnergyDamage, itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.poisonProtection, itemData.energyProtection,
+                itemData.psiProtection, itemData.shieldPoints, itemData.armor, itemData.hitPoints, itemData.durability, itemData.maxDurability, itemData.strength, itemData.perception, itemData.intelligence,
+                itemData.agility, itemData.charisma, itemData.willpower, itemData.weaponType, rectTransform);
+        }
+
+        public void CreateOffhand(int itemIndex, float? quantity = null, RectTransform rectTransform = null)
+        {
+            var itemData = offHandDataList[itemIndex];
+            float finalQuantity = quantity ?? itemData.quantity;
+            itemFactory.CreateOffhand(finalQuantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable,
+                itemData.attackSpeed, itemData.hitChance, itemData.dodge, itemData.resistance, itemData.counterChance, itemData.penetration, itemData.psiDamage, itemData.meleePhysicalDamage, itemData.meleeFireDamage,
+                itemData.meleeColdDamage, itemData.meleePoisonDamage, itemData.meleeEnergyDamage, itemData.rangedPhysicalDamage, itemData.rangedFireDamage, itemData.rangedColdDamage, itemData.rangedPoisonDamage,
+                itemData.rangedEnergyDamage, itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.poisonProtection, itemData.energyProtection, itemData.psiProtection,
+                itemData.shieldPoints, itemData.armor, itemData.hitPoints, itemData.durability, itemData.maxDurability, itemData.strength, itemData.perception, itemData.intelligence, itemData.agility, itemData.charisma,
+                itemData.willpower, itemData.weaponType, rectTransform);
         }
 
         public void CreateTool(int itemIndex, float? quantity = null, RectTransform rectTransform = null)
@@ -277,7 +566,7 @@ namespace ItemManagement
         {
             var itemData = helmetDataList[itemIndex];
             itemFactory.SplitHelmet(quantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable,
-                itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.gasProtection, itemData.explosionProtection, itemData.shieldPoints, itemData.hitPoints,
+                itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.poisonProtection, itemData.energyProtection, itemData.psiProtection, itemData.shieldPoints, itemData.armor, itemData.hitPoints,
                 itemData.durability, itemData.maxDurability, itemData.strength, itemData.perception, itemData.intelligence, itemData.agility, itemData.charisma, itemData.willpower, itemData.visibilityRadius,
                 itemData.explorationRadius, itemData.pickupRadius);
         }
@@ -285,8 +574,8 @@ namespace ItemManagement
         {
             var itemData = suitDataList[itemIndex];
             itemFactory.SplitSuit(quantity, itemTemplate, itemData.itemProduct, itemData.itemType, itemData.itemClass, itemData.itemName, itemData.index, itemData.stackLimit, itemData.equipable,
-                itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.gasProtection, itemData.explosionProtection, itemData.shieldPoints, itemData.hitPoints,
-                itemData.energyCapacity, itemData.durability, itemData.maxDurability, itemData.inventorySlots, itemData.strength, itemData.perception, itemData.intelligence, itemData.agility,
+                itemData.physicalProtection, itemData.fireProtection, itemData.coldProtection, itemData.poisonProtection, itemData.energyProtection, itemData.psiProtection, itemData.shieldPoints, itemData.armor,
+                itemData.hitPoints, itemData.energyCapacity, itemData.durability, itemData.maxDurability, itemData.inventorySlots, itemData.strength, itemData.perception, itemData.intelligence, itemData.agility,
                 itemData.charisma, itemData.willpower);
         }
         public void SplitItem(int itemIndex, float quantity)
