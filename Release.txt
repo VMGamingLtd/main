@@ -22,3 +22,34 @@ Bug fixes:
 - fixed a bug that caused planet to be rotated even when player was outside of Exploration menu
 - fixed a bug where clicking to move on the planet was blocked by the player discovery collider
 - fixed crashing websocket js
+
+
+202240801
+=================
+Battle feature and dungeons added for the planet:
+
+- player can  now enter any of the discovered dungeons and enter a combat via a new creater dungeon UI
+- battles are done by filling time bar of each combatant, that when full, will grant the combatant a turn
+- added json for creation and display of abilities
+- equipping a weapon will now grant the combatant specific abilities based on weapon type or special abilities
+- each dungeon can now posses mutliple levels based on its size (from 1 to 6)
+- entering a battle will start with battle preparation where player can chose what combatants to place from his group onto the battlefield
+- added single target and AoE abilities
+- targeting combatant will now highlight and select him for further abilities in future, but player can retarget an enemy combatant any time
+- damaging via ability is calculated based on player 'Attack power' from weapon or other parts of gear
+- when damaging enemy, first the shield, then the armor and lastly the health is reduced...target is considered dead when their health drops to zero
+- added Victory and Defeat animations and combat states
+- Victory will now grant a random loot items, that can vary in quantity
+- melee weapons, ranged weapons, shields, off hands are now added into the game along with their json files
+
+Websocket server
+
+- added websocket backend server
+- added protocol buffer messages for async communication via websockets
+- added react.js with  typescript support via webpack build, game can now exachanges messages with browser javascript (when game running in browser unity communicates 
+  with browser js  using standard unity support for emscripten / js interaction supported by unity, when game is running in editor communication with
+  browser js is proxied via websocket server for development)
+- added support for friends group message brodcasting in prepararion for multiplayer 
+- when in game raunning in editor websocket server client was moved to naitive thread to prevent game interruptions
+ 
+
