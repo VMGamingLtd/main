@@ -1,9 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Events;
 using Cysharp.Threading.Tasks;
+using System;
 
 namespace Friends
 {
@@ -11,6 +12,8 @@ namespace Friends
     {
         public string UserName { get; set; }
         public string Status { get; set; }
+        public int UserId { get; set; }
+        public bool? IsFriend { get; set; }
     }
 
     public class FriendsManager : MonoBehaviour
@@ -20,6 +23,14 @@ namespace Friends
 
         public GameObject FriendsButton;
         public Transform List; // scroll list containing friends buttons
+
+        public GameObject Title;
+        public GameObject Message;
+        public TMP_Text MessageText;
+
+        public GameObject AddFriendDialog;
+        public TMP_Text AddFriendDialogText;
+
 
         //public GameObject SearchTextBox;
         public TMP_InputField SearchTextBox;
@@ -46,6 +57,7 @@ namespace Friends
             AllocateFriendsButtons();
             FilterUsers("");
             DisplayFilteredUsers();
+            DisplayTitle();
 
             if (!isOnSearchTextBoxChange)
             {
@@ -58,6 +70,11 @@ namespace Friends
         {
             Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp200 ReadAllUsers()");
             Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(frienNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
+            if (response == null)
+            {
+                // error occured
+                return; 
+            }
             LastIndexAllUsers = -1;
             if (response == null)
             {
@@ -69,7 +86,9 @@ namespace Friends
 
                 // fill in friends array
                 AllUsers[++LastIndexAllUsers] = new FriendModel {
+                    UserId = response.Users[i].Id,
                     UserName = response.Users[i].Name,
+                    IsFriend = response.Users[i].IsFriend,
                     // TODO: get status
                     Status = "online",
                 };
@@ -111,21 +130,51 @@ namespace Friends
             }
         }
 
+
         private void DisplayFilteredUsers()
         {
+            string friendIndicator;
+            // translate word "friend" to the current language
+            switch (Application.systemLanguage)
+            {
+                case SystemLanguage.English:
+                    friendIndicator = "friend";
+                    break;
+                case SystemLanguage.Russian:
+                    friendIndicator = "друг";
+                    break;
+                case SystemLanguage.Chinese:
+                    friendIndicator = "朋友";
+                    break;
+                case SystemLanguage.Slovak:
+                    friendIndicator = "priateľ";
+                    break;
+                default:
+                    friendIndicator = "friend";
+                    break;
+            }
+            
             for (int i = 0; i <= LastIndexFilteredUsers; i++)
             {
                 int index = FilteredUsers[i];
+                FriendModel user = AllUsers[index];
 
                 AllFriendsButtons[i].SetActive(true);
 
                 Transform childObject_friendUsername = AllFriendsButtons[i].transform.Find("Info/FriendUsername");
                 TextMeshProUGUI friendUsername = childObject_friendUsername.GetComponent<TextMeshProUGUI>();
-                friendUsername.text = AllUsers[index].UserName;
+                if (user.IsFriend == true)
+                {
+                    friendUsername.text = $"{user.UserName} ({friendIndicator})";
+                }
+                else
+                {
+                    friendUsername.text = user.UserName;
+                }
 
                 Transform childObject_friendStatus = AllFriendsButtons[i].transform.Find("Info/Status");
                 TextMeshProUGUI friendStatus = childObject_friendStatus.GetComponent<TextMeshProUGUI>();
-                friendStatus.text = AllUsers[index].Status;
+                friendStatus.text = user.Status;
             }
 
             for (int i = LastIndexFilteredUsers + 1; i <= LastIndexAllFriendsButtons; i++)
@@ -144,10 +193,32 @@ namespace Friends
             LastIndexAllFriendsButtons = -1;
         }
 
+        public void SetTitlePaneDisplay()
+        {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 300: SetTitlePaneDisplay(): {LastIndexFilteredUsers + 1}");
+            if (LastIndexFilteredUsers == 0)
+            {
+                FriendModel user = AllUsers[FilteredUsers[0]];   
+                if (user.IsFriend == false)
+                {
+                    DisplayAddFriendDialog(user);
+                }
+                else
+                {
+                    DisplayTitle();
+                }
+            }
+            else
+            {
+                DisplayTitle();
+            }
+        }
+
         public void OnSearchTextBoxChange(string text)
         {
             FilterUsers(text);
             DisplayFilteredUsers();
+            SetTitlePaneDisplay();
         }
 
         public void OnEnable()
@@ -169,13 +240,103 @@ namespace Friends
             FilterUsers("");
             DisplayFilteredUsers();
 
+            SetTitlePaneDisplay();
 
         }
+
+        public void DisplayAddFriendDialog(FriendModel user)
+        {
+            string message;
+            switch (Application.systemLanguage)
+            {
+                case SystemLanguage.English:
+                    message = $"Add {user.UserName} to friends?";
+                    break;
+                case SystemLanguage.Russian:
+                    message = $"Добавить {user.UserName} в друзья?";
+                    break;
+                case SystemLanguage.Chinese:
+                    message = $"将 {user.UserName} 添加到好友?";
+                    break;
+                case SystemLanguage.Slovak:
+                    message = $"Pridať {user.UserName} do priateľov?";
+                    break;
+                default:
+                    message = $"Add {user.UserName} to friends?";
+                    break;
+            }
+            AddFriendDialogText.text = message;
+
+            Title.SetActive(false);
+            Message.SetActive(false);
+            AddFriendDialog.SetActive(true);
+        }
+
+        public void DisplayTitle()
+        {
+            Title.SetActive(true);
+            Message.SetActive(false);
+            AddFriendDialog.SetActive(false);
+        }
+
+        public void DisplayMessage()
+        {
+            Title.SetActive(false);
+            Message.SetActive(true);
+            AddFriendDialog.SetActive(false);
+        }
+
+        public void OnAddFriendDialogButtonNo()
+        {
+            DisplayTitle();
+        }
+
+        public async UniTaskVoid OnAddFriendDialogButtonYesAsync()
+        {
+            var response = await Gaos.Friends.Friends.AddFriend.CallAsync(AllUsers[FilteredUsers[0]].UserId);
+            if (response == null)
+            {
+                ShowMessage("Error adding friend");
+            }
+            else
+            {
+                ShowMessage("Friend added");
+            }
+        }
+        public void OnAddFriendDialogButtonYes()
+        {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 900: OnAddFriendDialogButtonYes()");
+            OnAddFriendDialogButtonYesAsync().Forget();
+        }
+
 
         public void OnSearchIconClick()
         {
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 400: OnSearchIconClick(): {SearchTextBox.text}");
             OnSearchIconClickAsync(SearchTextBox.text).Forget();
+        }
+
+        public void OnAddFriendButtonClick()
+        {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 500: OnAddFriendButtonClick()");
+            ShowMessage("Hello world!");
+        }
+
+        public void ShowMessage(string message)
+        {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 600: ShowMessage(): {message}");
+
+            // hide title
+            Title.SetActive(false);
+            // show message
+            Message.SetActive(true);
+            // set message text
+            MessageText.text = message;
+        }
+
+        public void OnMessageExitButtonClick()
+        {
+            DisplayTitle();
         }
 
 

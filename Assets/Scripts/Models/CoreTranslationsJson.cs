@@ -6,6 +6,20 @@
 {
     ""header"": ""Core Translations"",
     ""words"": [
+      { 
+        ""identifier"": ""Yes"",
+        ""english"": ""Yes"",
+        ""russian"": ""Да"",
+        ""chinese"": ""是"",
+        ""slovak"": ""Áno""
+      },
+      {
+        ""identifier"": ""No"",
+        ""english"": ""No"",
+        ""russian"": ""Нет"",
+        ""chinese"": ""没有"",
+        ""slovak"": ""Nie""
+      },
       {
         ""identifier"": ""ERROR"",
         ""english"": ""ERROR"",
