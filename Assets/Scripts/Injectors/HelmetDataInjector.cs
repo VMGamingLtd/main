@@ -6,15 +6,15 @@ using UnityEngine.UI;
 public class HelmetDataInjector : MonoBehaviour
 {
     private GameObject equipment;
-    public Transform statList;
-    public TranslationManager translationManager;
-    public GameObject stat;
+    [SerializeField] Transform statList;
+    [SerializeField] TranslationManager translationManager;
+    [SerializeField] GameObject stat;
 
     public void InjectData(HelmetData helmetData)
     {
         equipment = transform.gameObject;
         equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = helmetData.name;
-        equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(helmetData.name);
+        equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignEquipmentSpriteToSlot(helmetData.name);
         equipment.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(helmetData.itemProduct);
         equipment.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(helmetData.itemType);
         equipment.transform.Find("Class").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(helmetData.itemClass);
@@ -24,82 +24,92 @@ public class HelmetDataInjector : MonoBehaviour
 
         if (helmetData.physicalProtection > 0)
         {
-            CreateStat("PhysicalProtection", helmetData.physicalProtection.ToString());
+            CreateStat(Constants.PhysicalProtection, helmetData.physicalProtection.ToString());
         }
 
         if (helmetData.fireProtection > 0)
         {
-            CreateStat("FireProtection", helmetData.fireProtection.ToString());
+            CreateStat(Constants.FireProtection, helmetData.fireProtection.ToString());
         }
 
         if (helmetData.coldProtection > 0)
         {
-            CreateStat("ColdProtection", helmetData.coldProtection.ToString());
+            CreateStat(Constants.ColdProtection, helmetData.coldProtection.ToString());
         }
 
-        if (helmetData.gasProtection > 0)
+        if (helmetData.poisonProtection > 0)
         {
-            CreateStat("GasProtection", helmetData.gasProtection.ToString());
+            CreateStat(Constants.PoisonProtection, helmetData.poisonProtection.ToString());
         }
 
-        if (helmetData.explosionProtection > 0)
+        if (helmetData.energyProtection > 0)
         {
-            CreateStat("ExplosionProtection", helmetData.explosionProtection.ToString());
+            CreateStat(Constants.EnergyProtection, helmetData.energyProtection.ToString());
+        }
+
+        if (helmetData.psiProtection > 0)
+        {
+            CreateStat(Constants.PsiProtection, helmetData.psiProtection.ToString());
         }
 
         if (helmetData.shieldPoints > 0)
         {
-            CreateStat("ShieldPoints", helmetData.shieldPoints.ToString());
+            CreateStat(Constants.ShieldPoints, helmetData.shieldPoints.ToString());
+        }
+
+        if (helmetData.armor > 0)
+        {
+            CreateStat(Constants.Armor, helmetData.armor.ToString());
         }
 
         if (helmetData.hitPoints > 0)
         {
-            CreateStat("HitPoints", helmetData.hitPoints.ToString());
+            CreateStat(Constants.HitPoints, helmetData.hitPoints.ToString());
         }
 
         if (helmetData.visibilityRadius > 0)
         {
-            CreateStat("VisibilityRadius", helmetData.visibilityRadius.ToString());
+            CreateStat(Constants.VisibilityRadius, helmetData.visibilityRadius.ToString());
         }
 
         if (helmetData.explorationRadius > 0)
         {
-            CreateStat("ExplorationRadius", helmetData.explorationRadius.ToString());
+            CreateStat(Constants.ExplorationRadius, helmetData.explorationRadius.ToString());
         }
 
         if (helmetData.pickupRadius > 0)
         {
-            CreateStat("PickupRadius", helmetData.pickupRadius.ToString());
+            CreateStat(Constants.PickupRadius, helmetData.pickupRadius.ToString());
         }
 
         if (helmetData.strength > 0)
         {
-            CreateStat("Strength", helmetData.strength.ToString());
+            CreateStat(Constants.Strength, helmetData.strength.ToString());
         }
 
         if (helmetData.perception > 0)
         {
-            CreateStat("Perception", helmetData.perception.ToString());
+            CreateStat(Constants.Perception, helmetData.perception.ToString());
         }
 
         if (helmetData.intelligence > 0)
         {
-            CreateStat("Intelligence", helmetData.intelligence.ToString());
+            CreateStat(Constants.Intelligence, helmetData.intelligence.ToString());
         }
 
         if (helmetData.agility > 0)
         {
-            CreateStat("Agility", helmetData.agility.ToString());
+            CreateStat(Constants.Agility, helmetData.agility.ToString());
         }
 
         if (helmetData.charisma > 0)
         {
-            CreateStat("Charisma", helmetData.charisma.ToString());
+            CreateStat(Constants.Charisma, helmetData.charisma.ToString());
         }
 
         if (helmetData.willpower > 0)
         {
-            CreateStat("Willpower", helmetData.willpower.ToString());
+            CreateStat(Constants.Willpower, helmetData.willpower.ToString());
         }
     }
 
@@ -119,10 +129,5 @@ public class HelmetDataInjector : MonoBehaviour
         newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Value;
         newStat.transform.localPosition = Vector3.one;
         newStat.transform.localScale = Vector3.one;
-    }
-    private Sprite AssignSpriteToSlot(string spriteName)
-    {
-        Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("equipmenticons", spriteName);
-        return sprite;
     }
 }

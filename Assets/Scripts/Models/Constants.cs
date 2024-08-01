@@ -1,10 +1,26 @@
 public static class Constants
 {
+    // Animation state names
+    public const string Damage = "Damage";
+    public const string Death = "Death";
+
+    // Dungeon names
+    public const string VolcanicCave = "VolcanicCave";
+    public const string IceCave = "IceCave";
+    public const string HiveNest = "HiveNest";
+    public const string CyberHideout = "CyberHideout";
+    public const string AlienBase = "AlienBase";
+    public const string WormTunnels = "WormTunnels";
+    public const string Shipwreck = "Shipwreck";
+    public const string MysticTunnels = "MysticTunnels";
+
     // Asset bungle names
     public const string ResourceIcons = "resourceicons";
     public const string EquipmentIcons = "equipmenticons";
     public const string BuildingIcons = "buildingicons";
     public const string SkillsIcons = "skillsicons";
+    public const string CombatIcons = "combaticons";
+    public const string MiscIcons = "miscicons";
 
     // Equipment slot buttons
     public const string EmptyButton = "EmptyButton";
@@ -33,6 +49,7 @@ public static class Constants
     public const string EmptyFoodSlot = "EmptyFoodSlot";
 
     // building types
+    public const string Buildings = "BUILDINGS";
     public const string Laboratory = "LABORATORY";
     public const string Powerplant = "POWERPLANT";
 
@@ -51,8 +68,13 @@ public static class Constants
     public const string Liquid = "LIQUID";
     public const string Oxygen = "OXYGEN";
     public const string Meat = "MEAT";
+    public const string MeleeWeapon = "MELEEWEAPON";
+    public const string RangedWeapon = "RANGEDWEAPON";
+    public const string Shield = "SHIELD";
+    public const string Offhand = "OFFHAND";
 
     // Item grade names
+    public const string Level = "Level";
     public const string Basic = "BASIC";
     public const string Processed = "PROCESSED";
     public const string Enhanced = "ENHANCED";
@@ -63,6 +85,49 @@ public static class Constants
     public const string PlayerEnergy = "PlayerEnergy";
     public const string PlayerWater = "PlayerWater";
     public const string PlayerHunger = "PlayerHunger";
+
+    // Player stats
+    public const string MeleeDamage = "MeleeDamage";
+    public const string MeleePhysicalDamage = "MeleePhysicalDamage";
+    public const string MeleeFireDamage = "MeleeFireDamage";
+    public const string MeleeColdDamage = "MeleeColdDamage";
+    public const string MeleePoisonDamage = "MeleePoisonDamage";
+    public const string MeleeEnergyDamage = "MeleeEnergyDamage";
+    public const string RangedDamage = "RangedDamage";
+    public const string RangedPhysicalDamage = "RangedPhysicalDamage";
+    public const string RangedFireDamage = "RangedFireDamage";
+    public const string RangedColdDamage = "RangedFireDamage";
+    public const string RangedPoisonDamage = "RangedPoisonDamage";
+    public const string RangedEnergyDamage = "RangedEnergyDamage";
+    public const string PsiDamage = "PsiDamage";
+    public const string PhysicalProtection = "PhysicalProtection";
+    public const string FireProtection = "FireProtection";
+    public const string ColdProtection = "ColdProtection";
+    public const string PoisonProtection = "PoisonProtection";
+    public const string EnergyProtection = "EnergyProtection";
+    public const string PsiProtection = "PsiProtection";
+    public const string ShieldPoints = "ShieldPoints";
+    public const string Armor = "Armor";
+    public const string HitPoints = "HitPoints";
+    public const string EnergyCapacity = "EnergyCapacity";
+    public const string InventorySlots = "InventorySlots";
+    public const string Strength = "Strength";
+    public const string Perception = "Perception";
+    public const string Intelligence = "Intelligence";
+    public const string Agility = "Agility";
+    public const string Charisma = "Charisma";
+    public const string Willpower = "Willpower";
+    public const string VisibilityRadius = "VisibilityRadius";
+    public const string ExplorationRadius = "ExplorationRadius";
+    public const string PickupRadius = "PickupRadius";
+    public const string ProductionSpeed = "ProductionSpeed";
+    public const string MaterialCost = "MaterialCost";
+    public const string OutcomeRate = "OutcomeRate";
+    public const string HitChance = "HitChance";
+    public const string Dodge = "Dodge";
+    public const string Resistance = "Resistance";
+    public const string CounterChance = "CounterChance";
+    public const string Penetration = "Penetration";
 
     // UI Object addresses in Hierarchy
     public const string MessageObjects = "MessageCanvas/MESSAGEOBJECTS";
@@ -81,6 +146,8 @@ public static class Constants
     public const string InventoryContent = "InventoryContent";
     public const string HighlightImage = "HighlightImage";
     public const string NoEnergyObjects = "NoEnergyObjects";
+    public const string ItemCreatorList = "ItemCreatorList";
+    public const string LevelMark = "LevelMark";
 
     // Science projects
     public const string ResearchPoint = "ResearchPoint";

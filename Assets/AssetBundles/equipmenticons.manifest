@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 779318724
+CRC: 3738859041
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 079e3f23243e931209a1037477941236
+    Hash: 9238562dd6fe136d847a446431f0fc73
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -25,6 +25,7 @@ Assets:
 - Assets/AssetBundlesRepo/EquipmentIcons/EmptyWaterSlot.png
 - Assets/AssetBundlesRepo/EquipmentIcons/CAS-901.png
 - Assets/AssetBundlesRepo/EquipmentIcons/EmptyRightHandSlot.png
+- Assets/AssetBundlesRepo/EquipmentIcons/StunBaton.png
 - Assets/AssetBundlesRepo/EquipmentIcons/EmptyFoodSlot.png
 - Assets/AssetBundlesRepo/EquipmentIcons/EmptyBackpackSlot.png
 - Assets/AssetBundlesRepo/EquipmentIcons/EF-10.png

@@ -6,16 +6,16 @@ using UnityEngine.UI;
 public class BuildingDataInjector : MonoBehaviour
 {
     private GameObject tooltip;
-    public Transform consumeStatList;
-    public Transform outputStatList;
-    public TranslationManager translationManager;
-    public GameObject stat;
+    [SerializeField] Transform consumeStatList;
+    [SerializeField] Transform outputStatList;
+    [SerializeField] TranslationManager translationManager;
+    [SerializeField] GameObject stat;
 
     public void InjectData(BuildingItemData buildingData)
     {
         tooltip = transform.gameObject;
         tooltip.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = buildingData.buildingName;
-        tooltip.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(buildingData.name);
+        tooltip.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignBuildingSpriteToSlot(buildingData.name);
         tooltip.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingData.buildingType);
         tooltip.transform.Find("Class").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingData.buildingClass);
         tooltip.transform.Find("Desc").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(buildingData.buildingName + "Desc");
@@ -36,7 +36,7 @@ public class BuildingDataInjector : MonoBehaviour
         GameObject newStat = Instantiate(stat, consumeStatList);
         newStat.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(Name);
         newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Value;
-        newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(SpriteName);
+        newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignBuildingSpriteToSlot(SpriteName);
         newStat.transform.localPosition = Vector3.one;
         newStat.transform.localScale = Vector3.one;
     }
@@ -46,14 +46,9 @@ public class BuildingDataInjector : MonoBehaviour
         GameObject newStat = Instantiate(stat, outputStatList);
         newStat.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(Name);
         newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Value;
-        newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(SpriteName);
+        newStat.transform.Find("Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignBuildingSpriteToSlot(SpriteName);
         newStat.transform.localPosition = Vector3.one;
         newStat.transform.localScale = Vector3.one;
-    }
-    private Sprite AssignSpriteToSlot(string spriteName)
-    {
-        Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("buildingicons", spriteName);
-        return sprite;
     }
 
     void OnDisable()

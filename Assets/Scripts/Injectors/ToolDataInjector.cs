@@ -14,7 +14,7 @@ public class ToolDataInjector : MonoBehaviour
     {
         equipment = transform.gameObject;
         equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = toolData.name;
-        equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssignSpriteToSlot(toolData.name);
+        equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignEquipmentSpriteToSlot(toolData.name);
         equipment.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.itemProduct);
         equipment.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.itemType);
         equipment.transform.Find("Class").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.itemClass);
@@ -25,47 +25,47 @@ public class ToolDataInjector : MonoBehaviour
 
         if (toolData.strength > 0)
         {
-            CreateStat("Strength", toolData.strength.ToString());
+            CreateStat(Constants.Strength, toolData.strength.ToString());
         }
 
         if (toolData.perception > 0)
         {
-            CreateStat("Perception", toolData.perception.ToString());
+            CreateStat(Constants.Perception, toolData.perception.ToString());
         }
 
         if (toolData.intelligence > 0)
         {
-            CreateStat("Intelligence", toolData.intelligence.ToString());
+            CreateStat(Constants.Intelligence, toolData.intelligence.ToString());
         }
 
         if (toolData.agility > 0)
         {
-            CreateStat("Agility", toolData.agility.ToString());
+            CreateStat(Constants.Agility, toolData.agility.ToString());
         }
 
         if (toolData.charisma > 0)
         {
-            CreateStat("Charisma", toolData.charisma.ToString());
+            CreateStat(Constants.Charisma, toolData.charisma.ToString());
         }
 
         if (toolData.willpower > 0)
         {
-            CreateStat("Willpower", toolData.willpower.ToString());
+            CreateStat(Constants.Willpower, toolData.willpower.ToString());
         }
 
         if (toolData.productionSpeed > 0)
         {
-            CreateStat("ProductionSpeed", toolData.productionSpeed.ToString("F1") + "x");
+            CreateStat(Constants.ProductionSpeed, toolData.productionSpeed.ToString("F1") + "x");
         }
 
         if (toolData.materialCost > 0)
         {
-            CreateStat("MaterialCost", toolData.materialCost.ToString("F1") + "x");
+            CreateStat(Constants.MaterialCost, toolData.materialCost.ToString("F1") + "x");
         }
 
         if (toolData.outcomeRate > 0)
         {
-            CreateStat("OutcomeRate", toolData.outcomeRate.ToString("F1") + "x");
+            CreateStat(Constants.OutcomeRate, toolData.outcomeRate.ToString("F1") + "x");
         }
     }
 
@@ -85,10 +85,5 @@ public class ToolDataInjector : MonoBehaviour
         newStat.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Value;
         newStat.transform.localPosition = Vector3.one;
         newStat.transform.localScale = Vector3.one;
-    }
-    private Sprite AssignSpriteToSlot(string spriteName)
-    {
-        Sprite sprite = AssetBundleManager.LoadAssetFromBundle<Sprite>("equipmenticons", spriteName);
-        return sprite;
     }
 }

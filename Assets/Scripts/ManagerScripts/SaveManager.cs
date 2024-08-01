@@ -36,12 +36,21 @@ public class SaveManager : MonoBehaviour
         public string showRecipeClass;
         public string planet0Name;
         public string planet0Weather;
-        public int planet0UV;
         public string planet0WindStatus;
         public string MenuButtonTypeOn;
+        public string inventoryTitle;
+        public string recipeTitle;
+        public string BuildingStatisticProcess;
+        public string BuildingStatisticType;
+        public string BuildingStatisticInterval;
+        public string[] slotEquippedName;
+        public int planet0UV;
         public int hours;
         public int minutes;
         public int seconds;
+        public int ItemCreationID;
+        public int BuildingUniqueID;
+        public int RecipeOrderAdded;
         public bool registeredUser;
         public bool firstGoal;
         public bool secondGoal;
@@ -52,33 +61,28 @@ public class SaveManager : MonoBehaviour
         public bool autoConsumption;
         public bool fibrousPlantFieldUnlocked;
         public bool waterPumpUnlocked;
+        public bool BuildingStatisticTypeChanged;
+        public bool BuildingIntervalTypeChanged;
+        public bool[] slotEquipped;
         public float credits;
         public float playerMovementSpeed;
         public float AchievementPoints;
-        public string inventoryTitle;
-        public ItemDataModel[] basicInventoryObjects;
-        public ItemDataModel[] processedInventoryObjects;
-        public ItemDataModel[] enhancedInventoryObjects;
-        public ItemDataModel[] assembledInventoryObjects;
-        public SuitDataModel[] suitInventoryObjects;
-        public HelmetDataModel[] helmetInventoryObjects;
-        public ToolDataModel[] toolInventoryObjects;
-        public string recipeTitle;
+        public ItemDataJson[] basicInventoryObjects;
+        public ItemDataJson[] processedInventoryObjects;
+        public ItemDataJson[] enhancedInventoryObjects;
+        public ItemDataJson[] assembledInventoryObjects;
+        public SuitDataJson[] suitInventoryObjects;
+        public HelmetDataJson[] helmetInventoryObjects;
+        public ToolDataJson[] toolInventoryObjects;
+        public MeleeWeaponDataJson[] meleeWeaponInventoryObjects;
+        public RangedWeaponDataJson[] rangedWeaponInventoryObjects;
+        public ShieldDataJson[] shieldInventoryObjects;
+        public OffHandDataJson[] offHandInventoryObjects;
         public RecipeItemDataModel[] basicRecipeObjects;
         public RecipeItemDataModel[] processedRecipeObjects;
         public RecipeItemDataModel[] enhancedRecipeObjects;
         public RecipeItemDataModel[] assembledRecipeObjects;
         public RecipeItemDataModel[] buildingRecipeObjects;
-        public string BuildingStatisticProcess;
-        public string BuildingStatisticType;
-        public string BuildingStatisticInterval;
-        public string[] slotEquippedName;
-        public bool BuildingStatisticTypeChanged;
-        public bool BuildingIntervalTypeChanged;
-        public bool[] slotEquipped;
-        public int ItemCreationID;
-        public int BuildingUniqueID;
-        public int RecipeOrderAdded;
         public BuildingItemDataModel[] agriculture;
         public BuildingItemDataModel[] pumpingFacility;
         public BuildingItemDataModel[] factory;
@@ -127,111 +131,6 @@ public class SaveManager : MonoBehaviour
         public string recipeProduct4;
     }
 
-    [Serializable]
-    public class SuitDataModel
-    {
-        public int ID;
-        public int index;
-        public float stackLimit;
-        public float itemQuantity;
-        public string itemProduct;
-        public string itemType;
-        public string itemClass;
-        public string itemName;
-        public bool equipable;
-        public bool isEquipped;
-        public int physicalProtection;
-        public int fireProtection;
-        public int coldProtection;
-        public int gasProtection;
-        public int explosionProtection;
-        public int shieldPoints;
-        public int hitPoints;
-        public int energyCapacity;
-        public int durability;
-        public int maxDurability;
-        public int inventorySlots;
-        public int strength;
-        public int perception;
-        public int intelligence;
-        public int agility;
-        public int charisma;
-        public int willpower;
-    }
-
-    [Serializable]
-    public class HelmetDataModel
-    {
-        public int ID;
-        public int index;
-        public float stackLimit;
-        public float itemQuantity;
-        public string itemProduct;
-        public string itemType;
-        public string itemClass;
-        public string itemName;
-        public bool equipable;
-        public bool isEquipped;
-        public int physicalProtection;
-        public int fireProtection;
-        public int coldProtection;
-        public int gasProtection;
-        public int explosionProtection;
-        public int shieldPoints;
-        public int hitPoints;
-        public int durability;
-        public int maxDurability;
-        public int strength;
-        public int perception;
-        public int intelligence;
-        public int agility;
-        public int charisma;
-        public int willpower;
-        public int visibilityRadius;
-        public int explorationRadius;
-        public int pickupRadius;
-    }
-
-    [Serializable]
-    public class ToolDataModel
-    {
-        public int ID;
-        public int index;
-        public float stackLimit;
-        public float itemQuantity;
-        public string itemProduct;
-        public string itemType;
-        public string itemClass;
-        public string itemName;
-        public bool equipable;
-        public bool isEquipped;
-        public int durability;
-        public int maxDurability;
-        public int strength;
-        public int perception;
-        public int intelligence;
-        public int agility;
-        public int charisma;
-        public int willpower;
-        public float productionSpeed;
-        public float materialCost;
-        public float outcomeRate;
-    }
-
-    [Serializable]
-    public class ItemDataModel
-    {
-        public int ID;
-        public int index;
-        public float stackLimit;
-        public float itemQuantity;
-        public string itemProduct;
-        public string itemType;
-        public string itemClass;
-        public string itemName;
-        public bool equipable;
-        public bool isEquipped;
-    }
     [Serializable]
     public class RecipeItemDataModel
     {
@@ -587,19 +486,19 @@ public class SaveManager : MonoBehaviour
         // Access the itemArrays dictionary through the inventoryManager reference
         Dictionary<string, GameObject[]> itemArrays = inventoryManager.itemArrays;
 
-        currentSaveData.basicInventoryObjects = new ItemDataModel[itemArrays["BASIC"].Length];
+        currentSaveData.basicInventoryObjects = new ItemDataJson[itemArrays["BASIC"].Length];
 
         for (int i = 0; i < itemArrays["BASIC"].Length; i++)
         {
             GameObject itemGameObject = itemArrays["BASIC"][i];
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemDataComponent.itemName = itemDataComponent.itemName.Replace("(Clone)", "");
-            ItemDataModel itemData = new()
+            ItemDataJson itemData = new()
             {
                 ID = itemDataComponent.ID,
                 index = itemDataComponent.index,
                 stackLimit = itemDataComponent.stackLimit,
-                itemQuantity = itemDataComponent.quantity,
+                quantity = itemDataComponent.quantity,
                 itemProduct = itemDataComponent.itemProduct,
                 itemType = itemDataComponent.itemType,
                 itemClass = itemDataComponent.itemClass,
@@ -611,19 +510,19 @@ public class SaveManager : MonoBehaviour
             currentSaveData.basicInventoryObjects[i] = itemData;
         }
 
-        currentSaveData.processedInventoryObjects = new ItemDataModel[itemArrays["PROCESSED"].Length];
+        currentSaveData.processedInventoryObjects = new ItemDataJson[itemArrays["PROCESSED"].Length];
 
         for (int i = 0; i < itemArrays["PROCESSED"].Length; i++)
         {
             GameObject itemGameObject = itemArrays["PROCESSED"][i];
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemDataComponent.itemName = itemDataComponent.itemName.Replace("(Clone)", "");
-            ItemDataModel itemData = new()
+            ItemDataJson itemData = new()
             {
                 ID = itemDataComponent.ID,
                 index = itemDataComponent.index,
                 stackLimit = itemDataComponent.stackLimit,
-                itemQuantity = itemDataComponent.quantity,
+                quantity = itemDataComponent.quantity,
                 itemProduct = itemDataComponent.itemProduct,
                 itemType = itemDataComponent.itemType,
                 itemClass = itemDataComponent.itemClass,
@@ -634,19 +533,19 @@ public class SaveManager : MonoBehaviour
 
             currentSaveData.processedInventoryObjects[i] = itemData;
         }
-        currentSaveData.enhancedInventoryObjects = new ItemDataModel[itemArrays["ENHANCED"].Length];
+        currentSaveData.enhancedInventoryObjects = new ItemDataJson[itemArrays["ENHANCED"].Length];
 
         for (int i = 0; i < itemArrays["ENHANCED"].Length; i++)
         {
             GameObject itemGameObject = itemArrays["ENHANCED"][i];
             ItemData itemDataComponent = itemGameObject.GetComponent<ItemData>();
             itemDataComponent.itemName = itemDataComponent.itemName.Replace("(Clone)", "");
-            ItemDataModel itemData = new()
+            ItemDataJson itemData = new()
             {
                 ID = itemDataComponent.ID,
                 index = itemDataComponent.index,
                 stackLimit = itemDataComponent.stackLimit,
-                itemQuantity = itemDataComponent.quantity,
+                quantity = itemDataComponent.quantity,
                 itemProduct = itemDataComponent.itemProduct,
                 itemType = itemDataComponent.itemType,
                 itemClass = itemDataComponent.itemClass,
@@ -659,10 +558,14 @@ public class SaveManager : MonoBehaviour
         }
 
         // assembled general inventory objects
-        currentSaveData.assembledInventoryObjects = new ItemDataModel[itemArrays["ASSEMBLED"].Length];
-        currentSaveData.suitInventoryObjects = new SuitDataModel[itemArrays["ASSEMBLED"].Length];
-        currentSaveData.helmetInventoryObjects = new HelmetDataModel[itemArrays["ASSEMBLED"].Length];
-        currentSaveData.toolInventoryObjects = new ToolDataModel[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.assembledInventoryObjects = new ItemDataJson[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.suitInventoryObjects = new SuitDataJson[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.helmetInventoryObjects = new HelmetDataJson[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.toolInventoryObjects = new ToolDataJson[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.meleeWeaponInventoryObjects = new MeleeWeaponDataJson[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.rangedWeaponInventoryObjects = new RangedWeaponDataJson[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.shieldInventoryObjects = new ShieldDataJson[itemArrays["ASSEMBLED"].Length];
+        currentSaveData.offHandInventoryObjects = new OffHandDataJson[itemArrays["ASSEMBLED"].Length];
 
         for (int i = 0; i < itemArrays["ASSEMBLED"].Length; i++)
         {
@@ -673,12 +576,12 @@ public class SaveManager : MonoBehaviour
                 if (itemDataComponent.itemType == "SUIT")
                 {
                     SuitData suitDataComponent = itemGameObject.GetComponent<SuitData>();
-                    SuitDataModel suitData = new()
+                    SuitDataJson suitData = new()
                     {
                         ID = suitDataComponent.ID,
                         index = suitDataComponent.index,
                         stackLimit = suitDataComponent.stackLimit,
-                        itemQuantity = suitDataComponent.quantity,
+                        quantity = suitDataComponent.quantity,
                         itemProduct = suitDataComponent.itemProduct,
                         itemType = suitDataComponent.itemType,
                         itemClass = suitDataComponent.itemClass,
@@ -688,9 +591,11 @@ public class SaveManager : MonoBehaviour
                         physicalProtection = suitDataComponent.physicalProtection,
                         fireProtection = suitDataComponent.fireProtection,
                         coldProtection = suitDataComponent.coldProtection,
-                        gasProtection = suitDataComponent.gasProtection,
-                        explosionProtection = suitDataComponent.explosionProtection,
+                        poisonProtection = suitDataComponent.poisonProtection,
+                        energyProtection = suitDataComponent.energyProtection,
+                        psiProtection = suitDataComponent.psiProtection,
                         shieldPoints = suitDataComponent.shieldPoints,
+                        armor = suitDataComponent.armor,
                         hitPoints = suitDataComponent.hitPoints,
                         energyCapacity = suitDataComponent.energyCapacity,
                         durability = suitDataComponent.durability,
@@ -708,12 +613,12 @@ public class SaveManager : MonoBehaviour
                 else if (itemDataComponent.itemType == "HELMET")
                 {
                     HelmetData helmetDataComponent = itemGameObject.GetComponent<HelmetData>();
-                    HelmetDataModel helmetData = new()
+                    HelmetDataJson helmetData = new()
                     {
                         ID = helmetDataComponent.ID,
                         index = helmetDataComponent.index,
                         stackLimit = helmetDataComponent.stackLimit,
-                        itemQuantity = helmetDataComponent.quantity,
+                        quantity = helmetDataComponent.quantity,
                         itemProduct = helmetDataComponent.itemProduct,
                         itemType = helmetDataComponent.itemType,
                         itemClass = helmetDataComponent.itemClass,
@@ -723,9 +628,11 @@ public class SaveManager : MonoBehaviour
                         physicalProtection = helmetDataComponent.physicalProtection,
                         fireProtection = helmetDataComponent.fireProtection,
                         coldProtection = helmetDataComponent.coldProtection,
-                        gasProtection = helmetDataComponent.gasProtection,
-                        explosionProtection = helmetDataComponent.explosionProtection,
+                        poisonProtection = helmetDataComponent.poisonProtection,
+                        energyProtection = helmetDataComponent.energyProtection,
+                        psiProtection = helmetDataComponent.psiProtection,
                         shieldPoints = helmetDataComponent.shieldPoints,
+                        armor = helmetDataComponent.armor,
                         hitPoints = helmetDataComponent.hitPoints,
                         durability = helmetDataComponent.durability,
                         maxDurability = helmetDataComponent.maxDurability,
@@ -744,12 +651,12 @@ public class SaveManager : MonoBehaviour
                 else if (itemDataComponent.itemType == "FABRICATOR")
                 {
                     ToolData toolDataComponent = itemGameObject.GetComponent<ToolData>();
-                    ToolDataModel toolData = new()
+                    ToolDataJson toolData = new()
                     {
                         ID = toolDataComponent.ID,
                         index = toolDataComponent.index,
                         stackLimit = toolDataComponent.stackLimit,
-                        itemQuantity = toolDataComponent.quantity,
+                        quantity = toolDataComponent.quantity,
                         itemProduct = toolDataComponent.itemProduct,
                         itemType = toolDataComponent.itemType,
                         itemClass = toolDataComponent.itemClass,
@@ -770,14 +677,193 @@ public class SaveManager : MonoBehaviour
                     };
                     currentSaveData.toolInventoryObjects[i] = toolData;
                 }
+                else if (itemDataComponent.itemType == "MELEEWEAPON")
+                {
+                    MeleeWeaponData meleeWeaponDataComponent = itemGameObject.GetComponent<MeleeWeaponData>();
+                    MeleeWeaponDataJson meleeWeaponData = new()
+                    {
+                        ID = meleeWeaponDataComponent.ID,
+                        index = meleeWeaponDataComponent.index,
+                        stackLimit = meleeWeaponDataComponent.stackLimit,
+                        quantity = meleeWeaponDataComponent.quantity,
+                        itemProduct = meleeWeaponDataComponent.itemProduct,
+                        itemType = meleeWeaponDataComponent.itemType,
+                        itemClass = meleeWeaponDataComponent.itemClass,
+                        itemName = meleeWeaponDataComponent.itemName,
+                        equipable = meleeWeaponDataComponent.equipable,
+                        isEquipped = meleeWeaponDataComponent.isEquipped,
+                        durability = meleeWeaponDataComponent.durability,
+                        maxDurability = meleeWeaponDataComponent.maxDurability,
+                        strength = meleeWeaponDataComponent.strength,
+                        perception = meleeWeaponDataComponent.perception,
+                        intelligence = meleeWeaponDataComponent.intelligence,
+                        agility = meleeWeaponDataComponent.agility,
+                        charisma = meleeWeaponDataComponent.charisma,
+                        willpower = meleeWeaponDataComponent.willpower,
+                        meleePhysicalDamage = meleeWeaponDataComponent.meleePhysicalDamage,
+                        meleeFireDamage = meleeWeaponDataComponent.meleeFireDamage,
+                        meleeColdDamage = meleeWeaponDataComponent.meleeColdDamage,
+                        meleePoisonDamage = meleeWeaponDataComponent.meleePoisonDamage,
+                        meleeEnergyDamage = meleeWeaponDataComponent.meleeEnergyDamage,
+                        psiDamage = meleeWeaponDataComponent.psiDamage,
+                        attackSpeed = meleeWeaponDataComponent.attackSpeed,
+                        hitChance = meleeWeaponDataComponent.hitChance,
+                        dodge = meleeWeaponDataComponent.dodge,
+                        resistance = meleeWeaponDataComponent.resistance,
+                        counterChance = meleeWeaponDataComponent.counterChance,
+                        penetration = meleeWeaponDataComponent.penetration,
+                        weaponType = meleeWeaponDataComponent.weaponType,
+                    };
+                    currentSaveData.meleeWeaponInventoryObjects[i] = meleeWeaponData;
+                }
+                else if (itemDataComponent.itemType == "RANGEDWEAPON")
+                {
+                    RangedWeaponData rangedWeaponDataComponent = itemGameObject.GetComponent<RangedWeaponData>();
+                    RangedWeaponDataJson rangedWeaponData = new()
+                    {
+                        ID = rangedWeaponDataComponent.ID,
+                        index = rangedWeaponDataComponent.index,
+                        stackLimit = rangedWeaponDataComponent.stackLimit,
+                        quantity = rangedWeaponDataComponent.quantity,
+                        itemProduct = rangedWeaponDataComponent.itemProduct,
+                        itemType = rangedWeaponDataComponent.itemType,
+                        itemClass = rangedWeaponDataComponent.itemClass,
+                        itemName = rangedWeaponDataComponent.itemName,
+                        equipable = rangedWeaponDataComponent.equipable,
+                        isEquipped = rangedWeaponDataComponent.isEquipped,
+                        durability = rangedWeaponDataComponent.durability,
+                        maxDurability = rangedWeaponDataComponent.maxDurability,
+                        strength = rangedWeaponDataComponent.strength,
+                        perception = rangedWeaponDataComponent.perception,
+                        intelligence = rangedWeaponDataComponent.intelligence,
+                        agility = rangedWeaponDataComponent.agility,
+                        charisma = rangedWeaponDataComponent.charisma,
+                        willpower = rangedWeaponDataComponent.willpower,
+                        rangedPhysicalDamage = rangedWeaponDataComponent.rangedPhysicalDamage,
+                        rangedFireDamage = rangedWeaponDataComponent.rangedFireDamage,
+                        rangedColdDamage = rangedWeaponDataComponent.rangedColdDamage,
+                        rangedPoisonDamage = rangedWeaponDataComponent.rangedPoisonDamage,
+                        rangedEnergyDamage = rangedWeaponDataComponent.rangedEnergyDamage,
+                        psiDamage = rangedWeaponDataComponent.psiDamage,
+                        attackSpeed = rangedWeaponDataComponent.attackSpeed,
+                        hitChance = rangedWeaponDataComponent.hitChance,
+                        dodge = rangedWeaponDataComponent.dodge,
+                        resistance = rangedWeaponDataComponent.resistance,
+                        counterChance = rangedWeaponDataComponent.counterChance,
+                        penetration = rangedWeaponDataComponent.penetration,
+                        weaponType = rangedWeaponDataComponent.weaponType,
+                    };
+                    currentSaveData.rangedWeaponInventoryObjects[i] = rangedWeaponData;
+                }
+                else if (itemDataComponent.itemType == "SHIELD")
+                {
+                    ShieldData shieldDataComponent = itemGameObject.GetComponent<ShieldData>();
+                    ShieldDataJson shieldData = new()
+                    {
+                        ID = shieldDataComponent.ID,
+                        index = shieldDataComponent.index,
+                        stackLimit = shieldDataComponent.stackLimit,
+                        quantity = shieldDataComponent.quantity,
+                        itemProduct = shieldDataComponent.itemProduct,
+                        itemType = shieldDataComponent.itemType,
+                        itemClass = shieldDataComponent.itemClass,
+                        itemName = shieldDataComponent.itemName,
+                        equipable = shieldDataComponent.equipable,
+                        isEquipped = shieldDataComponent.isEquipped,
+                        durability = shieldDataComponent.durability,
+                        maxDurability = shieldDataComponent.maxDurability,
+                        strength = shieldDataComponent.strength,
+                        perception = shieldDataComponent.perception,
+                        intelligence = shieldDataComponent.intelligence,
+                        agility = shieldDataComponent.agility,
+                        charisma = shieldDataComponent.charisma,
+                        willpower = shieldDataComponent.willpower,
+                        shieldPoints = shieldDataComponent.shieldPoints,
+                        armor = shieldDataComponent.armor,
+                        hitPoints = shieldDataComponent.hitPoints,
+                        meleePhysicalDamage = shieldDataComponent.meleePhysicalDamage,
+                        meleeFireDamage = shieldDataComponent.meleeFireDamage,
+                        meleeColdDamage = shieldDataComponent.meleeColdDamage,
+                        meleePoisonDamage = shieldDataComponent.meleePoisonDamage,
+                        meleeEnergyDamage = shieldDataComponent.meleeEnergyDamage,
+                        psiDamage = shieldDataComponent.psiDamage,
+                        physicalProtection = shieldDataComponent.physicalProtection,
+                        fireProtection = shieldDataComponent.fireProtection,
+                        coldProtection = shieldDataComponent.coldProtection,
+                        poisonProtection = shieldDataComponent.poisonProtection,
+                        energyProtection = shieldDataComponent.energyProtection,
+                        psiProtection = shieldDataComponent.psiProtection,
+                        attackSpeed = shieldDataComponent.attackSpeed,
+                        hitChance = shieldDataComponent.hitChance,
+                        dodge = shieldDataComponent.dodge,
+                        resistance = shieldDataComponent.resistance,
+                        counterChance = shieldDataComponent.counterChance,
+                        penetration = shieldDataComponent.penetration,
+                        weaponType = shieldDataComponent.weaponType,
+                    };
+                    currentSaveData.shieldInventoryObjects[i] = shieldData;
+                }
+                else if (itemDataComponent.itemType == "OFFHAND")
+                {
+                    OffHandData offHandDataComponent = itemGameObject.GetComponent<OffHandData>();
+                    OffHandDataJson offHandData = new()
+                    {
+                        ID = offHandDataComponent.ID,
+                        index = offHandDataComponent.index,
+                        stackLimit = offHandDataComponent.stackLimit,
+                        quantity = offHandDataComponent.quantity,
+                        itemProduct = offHandDataComponent.itemProduct,
+                        itemType = offHandDataComponent.itemType,
+                        itemClass = offHandDataComponent.itemClass,
+                        itemName = offHandDataComponent.itemName,
+                        equipable = offHandDataComponent.equipable,
+                        isEquipped = offHandDataComponent.isEquipped,
+                        durability = offHandDataComponent.durability,
+                        maxDurability = offHandDataComponent.maxDurability,
+                        strength = offHandDataComponent.strength,
+                        perception = offHandDataComponent.perception,
+                        intelligence = offHandDataComponent.intelligence,
+                        agility = offHandDataComponent.agility,
+                        charisma = offHandDataComponent.charisma,
+                        willpower = offHandDataComponent.willpower,
+                        shieldPoints = offHandDataComponent.shieldPoints,
+                        armor = offHandDataComponent.armor,
+                        hitPoints = offHandDataComponent.hitPoints,
+                        meleePhysicalDamage = offHandDataComponent.meleePhysicalDamage,
+                        meleeFireDamage = offHandDataComponent.meleeFireDamage,
+                        meleeColdDamage = offHandDataComponent.meleeColdDamage,
+                        meleePoisonDamage = offHandDataComponent.meleePoisonDamage,
+                        meleeEnergyDamage = offHandDataComponent.meleeEnergyDamage,
+                        rangedPhysicalDamage = offHandDataComponent.rangedPhysicalDamage,
+                        rangedFireDamage = offHandDataComponent.rangedFireDamage,
+                        rangedColdDamage = offHandDataComponent.rangedColdDamage,
+                        rangedPoisonDamage = offHandDataComponent.rangedPoisonDamage,
+                        rangedEnergyDamage = offHandDataComponent.rangedEnergyDamage,
+                        psiDamage = offHandDataComponent.psiDamage,
+                        physicalProtection = offHandDataComponent.physicalProtection,
+                        fireProtection = offHandDataComponent.fireProtection,
+                        coldProtection = offHandDataComponent.coldProtection,
+                        poisonProtection = offHandDataComponent.poisonProtection,
+                        energyProtection = offHandDataComponent.energyProtection,
+                        psiProtection = offHandDataComponent.psiProtection,
+                        attackSpeed = offHandDataComponent.attackSpeed,
+                        hitChance = offHandDataComponent.hitChance,
+                        dodge = offHandDataComponent.dodge,
+                        resistance = offHandDataComponent.resistance,
+                        counterChance = offHandDataComponent.counterChance,
+                        penetration = offHandDataComponent.penetration,
+                        weaponType = offHandDataComponent.weaponType,
+                    };
+                    currentSaveData.meleeWeaponInventoryObjects[i] = offHandData;
+                }
                 else
                 {
-                    ItemDataModel itemData = new()
+                    ItemDataJson itemData = new()
                     {
                         ID = itemDataComponent.ID,
                         index = itemDataComponent.index,
                         stackLimit = itemDataComponent.stackLimit,
-                        itemQuantity = itemDataComponent.quantity,
+                        quantity = itemDataComponent.quantity,
                         itemProduct = itemDataComponent.itemProduct,
                         itemType = itemDataComponent.itemType,
                         itemClass = itemDataComponent.itemClass,
