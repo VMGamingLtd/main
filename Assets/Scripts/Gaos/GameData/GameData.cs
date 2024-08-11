@@ -332,6 +332,17 @@ namespace Gaos.GameData
                 if (response.IsError == true)
                 {
                     Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error saving game data: {response.ErrorMessage}");
+                    if (response.ErrorKind == UserGameDataSaveErrorKind.VersionMismatchError)
+                    {
+                        // There are 2 cases when this error can happen:
+                        // 1) there was server communication interruption causing the game to miss the server reply with the updated version
+                        // 2) concurrency problem - same game is being played in more then one browser 
+                        // We could have recovered from 1) (by forcing save) but there's no way to detrmine with 100% certainty if it was 1) or 2),
+                        // therefore we rather report fatal error and terminate the game to prevent game data being overwritten by old version
+                        // from other browser.
+                        Debug.LogError($"Fatal Error: game data out of sync, quitting the game...");
+                        Application.Quit();
+                    }
                     onUserGameDataSaveComplete(null);
                     yield break;
                 }

@@ -75,16 +75,23 @@ public class StatsManager : MonoBehaviour
         PlayerSkills[5].transform.Find("Content/Value").GetComponent<TextMeshProUGUI>().text = Player.Computing.ToString();
         PlayerSkills[6].transform.Find("Content/Value").GetComponent<TextMeshProUGUI>().text = Player.Psychology.ToString();
 
-        CombatStats[0].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.HitPoints.ToString();
-        CombatStats[1].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.Armor.ToString();
-        CombatStats[2].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.ShieldPoints.ToString();
-        CombatStats[3].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.AttackSpeed.ToString();
-        CombatStats[4].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.MeleeAttack.ToString();
-        CombatStats[5].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.RangedAttack.ToString();
-        CombatStats[6].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.HitChance.ToString();
-        CombatStats[7].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.Penetration.ToString();
-        CombatStats[8].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.Dodge.ToString();
-        CombatStats[9].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.Resistance.ToString();
-        CombatStats[10].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.CounterChance.ToString();
+        if (false)
+        {
+            CombatStats[0].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.HitPoints.ToString();
+            CombatStats[1].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.Armor.ToString();
+            CombatStats[2].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.ShieldPoints.ToString();
+            CombatStats[3].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.AttackSpeed.ToString();
+            CombatStats[4].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.MeleeAttack.ToString();
+            CombatStats[5].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.RangedAttack.ToString();
+            CombatStats[6].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.HitChance.ToString();
+            CombatStats[7].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.Penetration.ToString();
+            CombatStats[8].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.Dodge.ToString();
+            CombatStats[9].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.Resistance.ToString();
+            CombatStats[10].transform.Find("Value").GetComponent<TextMeshProUGUI>().text = Player.CounterChance.ToString();
+        }
+        else
+        {
+            Debug.LogWarning("MILAN: Combat stats are temporarily supressed to avoid exception.");
+        }
     }
 }
