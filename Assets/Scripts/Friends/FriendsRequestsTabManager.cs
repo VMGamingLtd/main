@@ -10,10 +10,9 @@ namespace Friends
 {
     public class FriendRequestModel
     {
-        public string UserName { get; set; }
-        public string Status { get; set; }
-        public int UserId { get; set; }
-        public bool? IsFriend { get; set; }
+        public int GroupId { get; set; }
+        public int GroupOwnerId { get; set; }
+        public string GroupOwnerName { get; set; }
     }
 
     public class FriendsRequestsTabManager : MonoBehaviour
@@ -63,8 +62,7 @@ namespace Friends
 
         private async UniTask ReadAllRequests(string frienNameSubstring = null)
         {
-            Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp200 ReadAllUsers()");
-            Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(frienNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
+            Gaos.Routes.Model.FriendsJson.GetFriendRequestsResponse response = await Gaos.Friends.Friends.GetFriendRequests.CallAsync(MAX_SCROLL_LIST_LINES_COUNT, frienNameSubstring);
             if (response == null)
             {
                 // error occured
@@ -76,16 +74,14 @@ namespace Friends
                 return; 
             }
 
-            for (int i = 0; i < response.Users.Length; i++)
+            for (int i = 0; i < response.FriendRequests.Count; i++)
             {
 
                 // fill in friends array
                 AllRequests[++LastIndexAllRequests] = new FriendRequestModel {
-                    UserId = response.Users[i].Id,
-                    UserName = response.Users[i].Name,
-                    IsFriend = response.Users[i].IsFriend,
-                    // TODO: get status
-                    Status = "online",
+                    GroupId = response.FriendRequests[i].GroupId,
+                    GroupOwnerId = response.FriendRequests[i].GroupOwnerId,
+                    GroupOwnerName = response.FriendRequests[i].GroupOwnerName,
                 };
 
                 // linit maximal number of users to be desplayed
@@ -107,6 +103,7 @@ namespace Friends
                 friendsButton.transform.position = Vector3.zero;
                 friendsButton.SetActive(false);
                 AllRequestsButtons[++LastIndexAllRequestsButtons] = friendsButton;
+                friendsButton.GetComponent<FriendRequestButton>().SetIndex(LastIndexAllRequestsButtons);
                 --n;
 
             }
@@ -118,7 +115,7 @@ namespace Friends
 
             for (int i = 0; i <= LastIndexAllRequests; i++)
             {
-                if (substring == "" || substring == null || AllRequests[i].UserName.Contains(substring))
+                if (substring == "" || substring == null || AllRequests[i].GroupOwnerName.Contains(substring))
                 {
                     FilteredRequessts[++LastIndexFilteredUsers] = i;
                 }
@@ -128,48 +125,21 @@ namespace Friends
 
         private void DisplayFilteredRequests()
         {
-            string friendIndicator;
-            // translate word "friend" to the current language
-            switch (Application.systemLanguage)
-            {
-                case SystemLanguage.English:
-                    friendIndicator = "friend";
-                    break;
-                case SystemLanguage.Russian:
-                    friendIndicator = "друг";
-                    break;
-                case SystemLanguage.Chinese:
-                    friendIndicator = "朋友";
-                    break;
-                case SystemLanguage.Slovak:
-                    friendIndicator = "priateľ";
-                    break;
-                default:
-                    friendIndicator = "friend";
-                    break;
-            }
             
             for (int i = 0; i <= LastIndexFilteredUsers; i++)
             {
                 int index = FilteredRequessts[i];
-                FriendRequestModel user = AllRequests[index];
+                FriendRequestModel friendRequest = AllRequests[index];
 
                 AllRequestsButtons[i].SetActive(true);
 
                 Transform childObject_friendUsername = AllRequestsButtons[i].transform.Find("Info/FriendUsername");
                 TextMeshProUGUI friendUsername = childObject_friendUsername.GetComponent<TextMeshProUGUI>();
-                if (user.IsFriend == true)
-                {
-                    friendUsername.text = $"{user.UserName} ({friendIndicator})";
-                }
-                else
-                {
-                    friendUsername.text = user.UserName;
-                }
+                friendUsername.text = friendRequest.GroupOwnerName;
 
                 Transform childObject_friendStatus = AllRequestsButtons[i].transform.Find("Info/Status");
                 TextMeshProUGUI friendStatus = childObject_friendStatus.GetComponent<TextMeshProUGUI>();
-                friendStatus.text = user.Status;
+                friendStatus.text = "status_foo";
             }
 
             for (int i = LastIndexFilteredUsers + 1; i <= LastIndexAllRequestsButtons; i++)
@@ -188,37 +158,12 @@ namespace Friends
             LastIndexAllRequestsButtons = -1;
         }
 
-        public void SetTitlePaneDisplay()
-        {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 300: SetTitlePaneDisplay(): {LastIndexFilteredUsers + 1}");
-            if (LastIndexFilteredUsers == 0)
-            {
-                FriendRequestModel user = AllRequests[FilteredRequessts[0]];   
-                if (user.IsFriend == false)
-                {
-                    if (user.UserId != Gaos.Context.Authentication.GetUserId())
-                    {
-                    }
-                    else
-                    {
-                        // logged in user cannt add himself as a friend
-                    }
-                }
-                else
-                {
-                }
-            }
-            else
-            {
-            }
-        }
 
         public void OnSearchTextBoxChange(string text)
         {
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 455: OnSearchTextBoxChange(): {text}");
             FilterRequests(text);
             DisplayFilteredRequests();
-            SetTitlePaneDisplay();
         }
 
         public void OnEnable()
@@ -243,67 +188,7 @@ namespace Friends
 
         private async UniTaskVoid OnSearchIconClickAsync(string userNamePattern)
         {
-            /*
-            RemoveAllFriendsButtons();
-            await ReadAllUsers(userNamePattern);
-            AllocateFriendsButtons();
-            FilterUsers("");
-            DisplayFilteredUsers();
-            */
-
             await GuiReadAllUsersList(userNamePattern);
-
-            SetTitlePaneDisplay();
-
-        }
-
-
-        public async UniTaskVoid OnAddFriendDialogButtonYesAsync()
-        {
-            var response = await Gaos.Friends.Friends.AddFriend.CallAsync(AllRequests[FilteredRequessts[0]].UserId);
-            SearchTextBox.text = "";
-            await GuiReadAllUsersList("");
-        }
-
-        public void OnAddFriendDialogButtonYes()
-        {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 900: OnAddFriendDialogButtonYes()");
-            OnAddFriendDialogButtonYesAsync().Forget();
-        }
-
-        public async UniTaskVoid OnAddFriendDialogButtonNoAsync()
-        {
-            SearchTextBox.text = "";
-            await GuiReadAllUsersList("");
-        }
-
-        public void OnAddFriendDialogButtonNo()
-        {
-            OnAddFriendDialogButtonNoAsync().Forget();
-        }
-
-        public async UniTaskVoid OnRemoveFriendDialogButtonYesAsync()
-        {
-            var response = await Gaos.Friends.Friends.RemoveFriend.CallAsync(AllRequests[FilteredRequessts[0]].UserId);
-            SearchTextBox.text = "";
-            await GuiReadAllUsersList("");
-        }
-
-        public void OnRemoveFriendDialogButtonYes()
-        {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 910: OnRemoveFriendDialogButtonYes()");
-            OnRemoveFriendDialogButtonYesAsync().Forget();
-        }
-
-        public async UniTaskVoid OnRemoveFriendDialogButtonNoAsync()
-        {
-            SearchTextBox.text = "";
-            await GuiReadAllUsersList("");
-        }
-
-        public void OnRemoveFriendDialogButtonNo()
-        {
-            OnRemoveFriendDialogButtonNoAsync().Forget(); 
         }
 
 
@@ -312,19 +197,6 @@ namespace Friends
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 400: OnSearchIconClick(): {SearchTextBox.text}");
             OnSearchIconClickAsync(SearchTextBox.text).Forget();
         }
-
-        public void OnAddFriendButtonClick()
-        {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 500: OnAddFriendButtonClick()");
-        }
-
-
-        public void OnMessageExitButtonClick()
-        {
-        }
-
-
-
 
 
     }
