@@ -124,6 +124,43 @@ namespace Gaos.Friends.Friends
 
     }
 
+    public class RevokeFriendRequest
+    {
+        public readonly static string CLASS_NAME = typeof(RevokeFriendRequest).Name;
+        public static async UniTask<Gaos.Routes.Model.FriendsJson.RevokeFriendRequestResponse> CallAsync(int userIdOfFriend)
+        {
+            const string METHOD_NAME = "api/friends/revokeFriendRequest";
+            try
+            {
+                Gaos.Routes.Model.FriendsJson.RevokeFriendRequestRequest request = new Gaos.Routes.Model.FriendsJson.RevokeFriendRequestRequest();
+                request.UserId = userIdOfFriend;
+                string requestJsonStr = JsonConvert.SerializeObject(request);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/revokeFriendRequest", requestJsonStr);
+                await apiCall.CallAsync();
+                if (apiCall.IsResponseError)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error revoking friend request");
+                    return null;
+                }
+                else
+                {
+                    Gaos.Routes.Model.FriendsJson.RevokeFriendRequestResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.RevokeFriendRequestResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting users list: {response.ErrorMessage}");
+                        return null;
+                    }
+                    return response;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {ex.Message}");
+                throw ex;
+            }
+        }
+    }
+
     public class RemoveFriend
     {
         public readonly static string CLASS_NAME = typeof(RemoveFriend).Name;
