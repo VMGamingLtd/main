@@ -408,7 +408,7 @@ namespace Friends
             OnSearchIconClickAsync(SearchTextBox.text).Forget();
         }
 
-        public void OnAddFriendButtonClick()
+        public void OnAddFriendButtonClick(GameObject button)
         {
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 500: OnAddFriendButtonClick()");
             DisplayMessage("Hello world!");
@@ -419,9 +419,6 @@ namespace Friends
         {
             DisplayTitle();
         }
-
-
-
 
 
     }

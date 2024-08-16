@@ -21,6 +21,13 @@
         ""slovak"": ""Nie""
       },
       {
+        ""identifier"": ""Add"",
+        ""english"": ""Add"",
+        ""russian"": ""Добавить"",
+        ""chinese"": ""加"",
+        ""slovak"": ""Pridať""
+      },
+      {
         ""identifier"": ""ERROR"",
         ""english"": ""ERROR"",
         ""russian"": ""Ошибка"",
@@ -2316,7 +2323,28 @@
         ""russian"": ""Сокрушительный удар"",
         ""chinese"": ""毁灭性的打击"",
         ""slovak"": ""Drvivá rana""
-      }
+      },
+      {
+        ""identifier"": ""Add Friend"",
+        ""english"": ""Add friend"",
+        ""russian"": ""Добавить друга"",
+        ""chinese"": ""添加朋友"",
+        ""slovak"": ""Pridať priateľa""
+      },
+      {
+        ""identifier"": ""Friend"",
+        ""english"": ""Friend"",
+        ""russian"": ""Друг"",
+        ""chinese"": ""朋友"",
+        ""slovak"": ""Priateľ""
+       },
+       {
+         ""identifier"": ""Friend Request"",
+         ""english"": ""Friend request"",
+         ""russian"": ""Запрос на дружбу"",
+         ""chinese"": ""好友请求"",
+         ""slovak"": ""Žiadosť o priateľstvo""
+       }
     ]
   }
 ";
