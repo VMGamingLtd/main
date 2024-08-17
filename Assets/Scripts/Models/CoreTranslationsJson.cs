@@ -28,6 +28,13 @@
         ""slovak"": ""Pridať""
       },
       {
+        ""identifier"": ""Revoke"",
+        ""english"": ""Revoke"",
+        ""russian"": ""Отозвать"",
+        ""chinese"": ""撤回"",
+        ""slovak"": ""Odvolanie""
+      },
+      {
         ""identifier"": ""ERROR"",
         ""english"": ""ERROR"",
         ""russian"": ""Ошибка"",

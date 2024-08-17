@@ -100,25 +100,41 @@ namespace Friends
 
         }
 
-        private void OnAddFriendButtonClicked(int index)
+        private void OnButtonAddClicked(int index)
         {
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 300: OnAddFriendButtonClicked({index})");
             FriendAddModel user = AllUsers[index];
 
             Gaos.Friends.Friends.AddFriend.CallAsync(user.UserId).Forget();
-            user.IsFriend = false;
             user.IsFriendRequest = true;
             DisplayFriendButton(index);
         }
 
-        private UnityAction  MakeOnAddFriendButtonClicked(int index)
+        private UnityAction  MakeOnButtonAddClicked(int index)
         {
             return () =>
             {
-                OnAddFriendButtonClicked(index);
+                OnButtonAddClicked(index);
             };
         }
 
+        private void OnButtonRevokeClicked(int index)
+        {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 310: OnRevokeFriendButtonClicked({index})");
+            FriendAddModel user = AllUsers[index];
+
+            Gaos.Friends.Friends.RevokeFriendRequest.CallAsync(user.UserId).Forget();
+            user.IsFriendRequest = false;
+            DisplayFriendButton(index);
+        }
+
+        private UnityAction  MakeOnButtonRevokeClicked(int index)
+        {
+            return () =>
+            {
+                OnButtonRevokeClicked(index);
+            };
+        }
 
         private void AllocateFriendsButtons()
         {
@@ -146,7 +162,26 @@ namespace Friends
                     }
                     else
                     {
-                        buttonYes.onClick.AddListener(MakeOnAddFriendButtonClicked(LastIndexAllFriendsButtons));
+                        buttonYes.onClick.AddListener(MakeOnButtonAddClicked(LastIndexAllFriendsButtons));
+                    }
+                }
+
+                // Add onClick handler to `ButtonRevoke`
+                Transform transformButtonRevoke = friendsButton.transform.Find("ButtonRevoke");
+                if (transformButtonRevoke == null)
+                {
+                    Debug.LogWarning($"ButtonRevoke not found");
+                }
+                else
+                {
+                    Button buttonRevoke = transformButtonRevoke.GetComponent<Button>();
+                    if (buttonRevoke == null)
+                    {
+                        Debug.LogWarning($"ButtonRevoke not found");
+                    }
+                    else
+                    {
+                        buttonRevoke.onClick.AddListener(MakeOnButtonRevokeClicked(LastIndexAllFriendsButtons));
                     }
                 }
 
@@ -227,10 +262,29 @@ namespace Friends
                 friendStatus.text = message;
             }
 
-            // disable ButtonAdd
-            if (user.IsFriend == true || user.IsFriendRequest == true )
+            // disable / enable buttons
+            if (user.IsFriend == true)
             {
                 AllFriendsButtons[index].transform.Find("ButtonAdd").gameObject.SetActive(false);
+                AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(false);
+            }
+            else
+            {
+                if (user.IsFriendRequest == true)
+                {
+                    AllFriendsButtons[index].transform.Find("ButtonAdd").gameObject.SetActive(false);
+                    AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(true);
+                }
+                else if (user.IsFriend == false)
+                {
+                    AllFriendsButtons[index].transform.Find("ButtonAdd").gameObject.SetActive(true);
+                    AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(false);
+                }
+                else
+                {
+                    AllFriendsButtons[index].transform.Find("ButtonAdd").gameObject.SetActive(false);
+                    AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(false);
+                }
             }
         }
 
