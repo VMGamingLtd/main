@@ -242,6 +242,80 @@ namespace Gaos.Friends.Friends
             }
         }
     }
+
+    public class AcceptFriendRequest
+    {
+        public readonly static string CLASS_NAME = typeof(AcceptFriendRequest).Name;
+        public static async UniTask<Gaos.Routes.Model.FriendsJson.AcceptFriendRequestResponse> CallAsync(int groupId)
+        {
+            const string METHOD_NAME = "api/friends/acceptFriendRequest";
+            try
+            {
+                Gaos.Routes.Model.FriendsJson.AcceptFriendRequestRequest request = new Gaos.Routes.Model.FriendsJson.AcceptFriendRequestRequest();
+                request.GroupId = groupId;
+                string requestJsonStr = JsonConvert.SerializeObject(request);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/acceptFriendRequest", requestJsonStr);
+                await apiCall.CallAsync();
+                if (apiCall.IsResponseError)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error accepting friend request");
+                    return null;
+                }
+                else
+                {
+                    Gaos.Routes.Model.FriendsJson.AcceptFriendRequestResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.AcceptFriendRequestResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error accepting friend request: {response.ErrorMessage}");
+                        return null;
+                    }
+                    return response;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {ex.Message}");
+                throw ex;
+            }
+        }
+    }
+
+    public class RejectFriendRequest
+    {
+        public readonly static string CLASS_NAME = typeof(RejectFriendRequest).Name;
+        public static async UniTask<Gaos.Routes.Model.FriendsJson.RejectFriendRequestResponse> CallAsync(int groupId)
+        {
+            const string METHOD_NAME = "api/friends/rejectFriendRequest";
+            try
+            {
+                Gaos.Routes.Model.FriendsJson.RejectFriendRequestRequest request = new Gaos.Routes.Model.FriendsJson.RejectFriendRequestRequest();
+                request.GroupId = groupId;
+                string requestJsonStr = JsonConvert.SerializeObject(request);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/rejectFriendRequest", requestJsonStr);
+                await apiCall.CallAsync();
+                if (apiCall.IsResponseError)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error rejecting friend request");
+                    return null;
+                }
+                else
+                {
+                    Gaos.Routes.Model.FriendsJson.RejectFriendRequestResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.RejectFriendRequestResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error rejecting friend request: {response.ErrorMessage}");
+                        return null;
+                    }
+                    return response;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {ex.Message}");
+                throw ex;
+            }
+        }
+    }
         
 
 }

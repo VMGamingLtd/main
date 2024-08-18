@@ -35,6 +35,20 @@
         ""slovak"": ""Odvolanie""
       },
       {
+        ""identifier"": ""Accept"",
+        ""english"": ""Accept"",
+        ""russian"": ""Принять"",
+        ""chinese"": ""接受"",
+        ""slovak"": ""Prijať""
+      },
+      {
+        ""identifier"": ""Reject"",
+        ""english"": ""Reject"",
+        ""russian"": ""Отклонить"",
+        ""chinese"": ""拒绝"",
+        ""slovak"": ""Odmietnuť""
+      },
+      {
         ""identifier"": ""ERROR"",
         ""english"": ""ERROR"",
         ""russian"": ""Ошибка"",

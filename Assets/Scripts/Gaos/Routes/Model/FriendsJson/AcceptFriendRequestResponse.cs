@@ -2,7 +2,7 @@
 namespace Gaos.Routes.Model.FriendsJson
 {
     [System.Serializable]
-    public class AcceptFriendResponse
+    public class AcceptFriendRequestResponse
     {
         public bool? IsError;
         public string? ErrorMessage;

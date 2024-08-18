@@ -155,14 +155,14 @@ namespace Friends
                 }
                 else
                 {
-                    Button buttonYes = transformButtonAdd.GetComponent<Button>();
-                    if (buttonYes == null)
+                    Button buttonAdd = transformButtonAdd.GetComponent<Button>();
+                    if (buttonAdd == null)
                     {
                         Debug.LogWarning($"ButtonAdd not found");
                     }
                     else
                     {
-                        buttonYes.onClick.AddListener(MakeOnButtonAddClicked(LastIndexAllFriendsButtons));
+                        buttonAdd.onClick.AddListener(MakeOnButtonAddClicked(LastIndexAllFriendsButtons));
                     }
                 }
 

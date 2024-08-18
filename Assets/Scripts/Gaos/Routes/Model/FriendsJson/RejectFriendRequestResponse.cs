@@ -2,11 +2,9 @@
 namespace Gaos.Routes.Model.FriendsJson
 {
     [System.Serializable]
-    public class AddFriendRequestExistsResponse
+    public class RejectFriendRequestResponse
     {
         public bool? IsError;
         public string? ErrorMessage;
-
-        public bool? Exists;
     }
 }

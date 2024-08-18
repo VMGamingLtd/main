@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 using Cysharp.Threading.Tasks;
 using System;
+using Cysharp.Threading.Tasks.CompilerServices;
 
 namespace Friends
 {
@@ -13,6 +15,9 @@ namespace Friends
         public int GroupId { get; set; }
         public int GroupOwnerId { get; set; }
         public string GroupOwnerName { get; set; }
+
+        public bool IsAccepted { get; set; }
+        public bool IsRejected { get; set; }
     }
 
     public class FriendsTabFriendsRequestsManager : MonoBehaviour
@@ -22,7 +27,7 @@ namespace Friends
         //private static int MAX_SCROLL_LIST_LINES_CPUNT = 100;
         private static int MAX_SCROLL_LIST_LINES_COUNT = 10;
 
-        public GameObject FriendRequestButton;
+        public GameObject FriendsButton;
         public Transform List; // scroll list containing friend reuest buttons
 
 
@@ -82,16 +87,79 @@ namespace Friends
                     GroupId = response.FriendRequests[i].GroupId,
                     GroupOwnerId = response.FriendRequests[i].GroupOwnerId,
                     GroupOwnerName = response.FriendRequests[i].GroupOwnerName,
+
+                    IsAccepted = false,
+                    IsRejected = false  
                 };
 
                 // linit maximal number of users to be desplayed
                 if (i + 1 == MAX_SCROLL_LIST_LINES_COUNT)
                 {
-                    // TODO: maake backend return no more than MAX_SCROLL_LIST_LINES_CPUNT users
                     break;
                 }
             }
 
+        }
+
+        private async UniTaskVoid AcceptFriendRequestAsync(int groupId)
+        {
+            Gaos.Routes.Model.FriendsJson.AcceptFriendRequestResponse response = await Gaos.Friends.Friends.AcceptFriendRequest.CallAsync(groupId);
+            if (response == null)
+            {
+                // error occured
+                return; 
+            }
+        }
+
+        private void OnButtonAcceptClicked(int index)
+        {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 300: OnButtonAcceptClicked({index})");
+
+            int index_all = FilteredRequessts[index];
+            FriendRequestModel friendRequest = AllRequests[index_all];
+            friendRequest.IsAccepted = true;
+
+            AcceptFriendRequestAsync(friendRequest.GroupId).Forget();
+            DisplayRequestButton(index);
+
+        }
+
+        private UnityAction  MakeOnButtonAcceptClicked(int index)
+        {
+            return () =>
+            {
+                OnButtonAcceptClicked(index);
+            };
+        }
+
+        private async UniTaskVoid RejectFriendRequestAsync(int groupId)
+        {
+            Gaos.Routes.Model.FriendsJson.RejectFriendRequestResponse response = await Gaos.Friends.Friends.RejectFriendRequest.CallAsync(groupId);
+            if (response == null)
+            {
+                // error occured
+                return; 
+            }
+        }
+
+        private void OnButtonRejectClicked(int index)
+        {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 300: OnButtonRejectClicked({index})");
+
+            int index_all = FilteredRequessts[index];
+            FriendRequestModel friendRequest = AllRequests[index_all];
+            friendRequest.IsRejected = true;
+
+            RejectFriendRequestAsync(friendRequest.GroupId).Forget();
+            DisplayRequestButton(index);
+        }
+
+        private UnityAction  MakeOnButtonRejectClicked(int index)
+        {
+            return () =>
+            {
+                OnButtonRejectClicked(index);
+            };
         }
 
         private void AllocateFriendRequestButtons()
@@ -99,11 +167,49 @@ namespace Friends
             int n = (LastIndexAllRequests + 1) - (LastIndexAllRequestsButtons + 1);
             while (n > 0)
             {
-                GameObject friendsButton = Instantiate(FriendRequestButton, List);
+                GameObject friendsButton = Instantiate(FriendsButton, List);
                 friendsButton.transform.position = Vector3.zero;
                 friendsButton.SetActive(false);
                 AllRequestsButtons[++LastIndexAllRequestsButtons] = friendsButton;
                 --n;
+
+                // Add onClick handler to `ButtonAccept`
+                Transform transformButtonAdd = friendsButton.transform.Find("ButtonAccept");
+                if (transformButtonAdd == null)
+                {
+                    Debug.LogWarning($"ButtonAccept not found");
+                }
+                else
+                {
+                    Button buttonAccept = transformButtonAdd.GetComponent<Button>();
+                    if (buttonAccept == null)
+                    {
+                        Debug.LogWarning($"ButtonAccept not found");
+                    }
+                    else
+                    {
+                        buttonAccept.onClick.AddListener(MakeOnButtonAcceptClicked(LastIndexAllRequestsButtons));
+                    }
+                }
+
+                // Add onClick handler to `ButtonReject`
+                Transform transformButtonReject = friendsButton.transform.Find("ButtonReject");
+                if (transformButtonReject == null)
+                {
+                    Debug.LogWarning($"ButtonReject not found");
+                }
+                else
+                {
+                    Button buttonReject = transformButtonReject.GetComponent<Button>();
+                    if (buttonReject == null)
+                    {
+                        Debug.LogWarning($"ButtonReject not found");
+                    }
+                    else
+                    {
+                        buttonReject.onClick.AddListener(MakeOnButtonRejectClicked(LastIndexAllRequestsButtons));
+                    }
+                }
 
             }
         }
@@ -121,6 +227,96 @@ namespace Friends
             }
         }
 
+        private void DisplayRequestButton(int index_filtered)
+        { 
+            int index_all = FilteredRequessts[index_filtered];
+            FriendRequestModel friendRequest = AllRequests[index_all];
+
+            Transform childObject_friendUsername = AllRequestsButtons[index_all].transform.Find("Info/FriendUsername");
+            TextMeshProUGUI friendUsername = childObject_friendUsername.GetComponent<TextMeshProUGUI>();
+            friendUsername.text = friendRequest.GroupOwnerName;
+
+            Transform childObject_InfoStatus = AllRequestsButtons[index_all].transform.Find("InfoStatus");
+            GameObject gameObject_InfoStatus = childObject_InfoStatus.gameObject;
+
+            Transform childObject_InfoStatus_Text = AllRequestsButtons[index_all].transform.Find("InfoStatus/Text");
+            GameObject gameObject_InfoStatus_Text = childObject_InfoStatus_Text.gameObject;
+
+            Transform childObject_ButtonAccept = AllRequestsButtons[index_all].transform.Find("ButtonAccept");
+            GameObject gameObject_ButtonAccept = childObject_ButtonAccept.gameObject;
+
+            Transform childObject_ButtonReject = AllRequestsButtons[index_all].transform.Find("ButtonReject");  
+            GameObject gameObject_ButtonReject = childObject_ButtonReject.gameObject;
+
+            gameObject_InfoStatus.SetActive(false);
+            gameObject_ButtonAccept.SetActive(false);
+            gameObject_ButtonReject.SetActive(false);
+
+            if (friendRequest.IsAccepted)
+            {
+                gameObject_InfoStatus.SetActive(true);
+                TextMeshProUGUI infoStatusText = gameObject_InfoStatus_Text.GetComponent<TextMeshProUGUI>();
+                {
+                    string message = "Accepted";
+                    // translate message
+                    switch (Application.systemLanguage)
+                    {
+                        case SystemLanguage.English:
+                            message = "Accepted";
+                            break;
+                        case SystemLanguage.Russian:
+                            message = "Принято";
+                            break;
+                        case SystemLanguage.Chinese:
+                            message = "已接受";
+                            break;
+                        case SystemLanguage.Slovak:
+                            message = "Prijaté";
+                            break;
+                        default:
+                            message = "Accepted";
+                            break;
+                    }
+                    infoStatusText.text = message;
+                }
+            }
+            else if (friendRequest.IsRejected)
+            {
+                gameObject_InfoStatus.SetActive(true);
+                TextMeshProUGUI infoStatusText = gameObject_InfoStatus_Text.GetComponent<TextMeshProUGUI>();
+                {
+                    string message = "Rejected";
+                    // translate message
+                    switch (Application.systemLanguage)
+                    {
+                        case SystemLanguage.English:
+                            message = "Rejected";
+                            break;
+                        case SystemLanguage.Russian:
+                            message = "Отклонено";
+                            break;
+                        case SystemLanguage.Chinese:
+                            message = "已拒绝";
+                            break;
+                        case SystemLanguage.Slovak:
+                            message = "Odmietnuté";
+                            break;
+                        default:
+                            message = "Rejected";
+                            break;
+                    }
+                    infoStatusText.text = message;
+                }
+            }
+            else
+            {
+                gameObject_ButtonAccept.SetActive(true);
+                gameObject_ButtonReject.SetActive(true);
+            }
+
+
+        }
+
 
         private void DisplayFilteredRequests()
         {
@@ -132,13 +328,14 @@ namespace Friends
 
                 AllRequestsButtons[i].SetActive(true);
 
+                /*
                 Transform childObject_friendUsername = AllRequestsButtons[i].transform.Find("Info/FriendUsername");
                 TextMeshProUGUI friendUsername = childObject_friendUsername.GetComponent<TextMeshProUGUI>();
                 friendUsername.text = friendRequest.GroupOwnerName;
+                */
 
-                Transform childObject_friendStatus = AllRequestsButtons[i].transform.Find("Info/Status");
-                TextMeshProUGUI friendStatus = childObject_friendStatus.GetComponent<TextMeshProUGUI>();
-                friendStatus.text = "status_foo";
+                DisplayRequestButton(i);
+
             }
 
             for (int i = LastIndexFilteredUsers + 1; i <= LastIndexAllRequestsButtons; i++)
