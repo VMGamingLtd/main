@@ -2365,7 +2365,22 @@
          ""russian"": ""Запрос на дружбу"",
          ""chinese"": ""好友请求"",
          ""slovak"": ""Žiadosť o priateľstvo""
-       }
+       },
+       {
+         ""identifier"": ""Leave Group"",
+         ""english"": ""Leave group"",
+         ""russian"": ""Покинуть группу"",
+         ""chinese"": ""离开组"",
+         ""slovak"": ""Opustiť skupinu""
+       },
+       {
+         ""identifier"": ""Remove From Group"",
+         ""english"": ""Remove from group"",
+         ""russian"": ""Удалить из группы"",
+         ""chinese"": ""从组中删除"",
+         ""slovak"": ""Odstrániť zo skupiny""
+        }
+        
     ]
   }
 ";
