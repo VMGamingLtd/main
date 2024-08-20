@@ -54,6 +54,7 @@ namespace Friends
 
             RemoveAllFriendsButtons();
             await ReadAllUsers();
+            
             AllocateFriendsButtons();
             FilterUsers("");
             DisplayFilteredUsers();
@@ -66,10 +67,15 @@ namespace Friends
 
         }
 
-        private async UniTask ReadAllUsers(string frienNameSubstring = null)
+        private void RemoveAllUsers()
+        {
+            LastIndexAllUsers = -1;
+        }
+
+        private async UniTask ReadAllUsers(string friendNameSubstring = null)
         {
             Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp200 ReadAllUsers()");
-            Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(frienNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
+            Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(friendNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
             if (response == null)
             {
                 // error occured
@@ -329,6 +335,8 @@ namespace Friends
 
         public void OnEnable()
         {
+            RemoveAllFriendsButtons();
+            SearchTextBox.text = "";
             Init().Forget();
         }
 

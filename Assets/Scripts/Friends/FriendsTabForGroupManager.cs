@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine.Events;
 using Cysharp.Threading.Tasks;
 using System;
+using UnityEngine.Rendering;
 
 namespace Friends
 {
@@ -13,6 +14,7 @@ namespace Friends
     {
         public string UserName { get; set; }
         public int UserId { get; set; }
+        public bool Gui_IsLineVisible { get; set; }
     }
 
     public class FriendsTabForGroupManager : MonoBehaviour
@@ -32,7 +34,6 @@ namespace Friends
         public TMP_Text LeaveGroupDialogText;
 
         private string State_LeaveGroupDialog_message; 
-        private int State_LeaveGroupDialog_index_filtered; 
 
         public GameObject RemoveFromGroupDialog;
         public TMP_Text RemoveFriomGroupDialogText;
@@ -69,17 +70,8 @@ namespace Friends
             DisplayTitle();
         }
 
-        private async UniTaskVoid Init()
+        private void SetTitleText()
         {
-            bool isOnSearchTextBoxChange = false;
-
-            // get my group
-
-            GetMyGroupResponse = await Gaos.Friends.Friends.GetMyGroup.CallAsync();
-            if (GetMyGroupResponse == null)
-            {
-                return;
-            }
             if (GetMyGroupResponse.IsGroupOwner)
             {
                 string message =  "My Group";
@@ -147,7 +139,22 @@ namespace Friends
                         message = "No Group";
                         break;
                 }
+                TitleText.text = message;
             }
+        }
+
+        private async UniTaskVoid Init()
+        {
+            bool isOnSearchTextBoxChange = false;
+
+            // get my group
+
+            GetMyGroupResponse = await Gaos.Friends.Friends.GetMyGroup.CallAsync();
+            if (GetMyGroupResponse == null)
+            {
+                return;
+            }
+            SetTitleText();
 
             await GuiReadAllUsersList();
 
@@ -187,6 +194,7 @@ namespace Friends
                 AllUsers[++LastIndexAllUsers] = new FriendModel {
                     UserId = response.Users[i].UserId,
                     UserName = response.Users[i].UserName,
+                    Gui_IsLineVisible = true
                 };
 
                 // linit maximal number of users to be desplayed
@@ -252,7 +260,6 @@ namespace Friends
                 }
                 State_LeaveGroupDialog_message = message;
             }
-            State_LeaveGroupDialog_index_filtered = index_filtered; 
             DisplayLeaveGroupDialog();
         }
 
@@ -351,9 +358,16 @@ namespace Friends
                 int index = FilteredUsers[i];
                 FriendModel user = AllUsers[index];
 
-                AllFriendsButtons[i].SetActive(true);
+                if (user.Gui_IsLineVisible)
+                {
+                    AllFriendsButtons[i].SetActive(true);
 
-                DisplayFriendButton(i);
+                    DisplayFriendButton(i);
+                }
+                else
+                {
+                    AllFriendsButtons[i].SetActive(false);
+                }
 
             }
 
@@ -385,6 +399,7 @@ namespace Friends
         public void OnEnable()
         {
             RemoveAllFriendsButtons();
+            SearchTextBox.text = ""; 
             Init().Forget();
         }
 
@@ -405,7 +420,12 @@ namespace Friends
 
         public async UniTaskVoid OnButtonLeaveFromGroupYesAsync()
         {
-            //var response = await Gaos.Friends.Friends.LeaveGroup.CallAsync();
+            var response = await Gaos.Friends.Friends.LeaveGroup.CallAsync();
+            if (response == null)
+            {
+                // error occured
+                return;
+            }
         }
 
         public void OnButtonLeaveFromGroupYes()
@@ -413,22 +433,14 @@ namespace Friends
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 910: OnButtonLeaveFromGroupYes()");
             OnButtonLeaveFromGroupYesAsync().Forget();
 
-            int index_all = FilteredUsers[State_LeaveGroupDialog_index_filtered];
-            // remove from filtered users State_LeaveGroupDialog_index_filtered
-            for (int i = State_LeaveGroupDialog_index_filtered; i < LastIndexFilteredUsers; i++)
-            {
-                FilteredUsers[i] = FilteredUsers[i + 1];
-            }
-            --LastIndexFilteredUsers;
-            // remove from all users
-            for (int i = index_all; i < LastIndexAllUsers; i++)
-            {
-                AllUsers[i] = AllUsers[i + 1];
-            }
 
+            GetMyGroupResponse.IsGroupMember = false;
+            SetTitleText();
             DisplayTitle();
 
+            LastIndexAllUsers = -1;
             AllocateFriendsButtons();
+            LastIndexFilteredUsers = -1;
             DisplayFilteredUsers();
         }
 
@@ -450,30 +462,26 @@ namespace Friends
         {
             int index_all = FilteredUsers[State_RemoveFromGroupDialog_index_filtered];
             FriendModel user = AllUsers[index_all];
-            //var response = await Gaos.Friends.Friends.RemoveFromGroup.CallAsync(user.UserId);
+            var response = await Gaos.Friends.Friends.RemoveFromGroup.CallAsync(user.UserId);
+            if (response == null)
+            {
+                // error occured
+                return;
+            }
         }
 
         public void OnButtonRemoveFromGroupYes()
         {
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 910: OnButtonRemoveFromGroupYes()");
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 920: {State_RemoveFromGroupDialog_index_filtered}");
             OnButtonRemoveFromGroupYesAsync().Forget();
 
             int index_all = FilteredUsers[State_RemoveFromGroupDialog_index_filtered];
-            // remove from filtered users State_RemoveFromGroupDialog_index_filtered
-            for (int i = State_RemoveFromGroupDialog_index_filtered; i < LastIndexFilteredUsers; i++)
-            {
-                FilteredUsers[i] = FilteredUsers[i + 1];
-            }
-            --LastIndexFilteredUsers;
-            // remove from all users
-            for (int i = index_all; i < LastIndexAllUsers; i++)
-            {
-                AllUsers[i] = AllUsers[i + 1];
-            }
 
             DisplayTitle();
 
-            AllocateFriendsButtons();
+            FriendModel user = AllUsers[index_all];
+            user.Gui_IsLineVisible = false;
             DisplayFilteredUsers();
         }
 
@@ -483,24 +491,24 @@ namespace Friends
 
         public void DisplayRemoveFromGroupDialog()
         {
-            RemoveFriomGroupDialogText.text = State_LeaveGroupDialog_message;
+            RemoveFriomGroupDialogText.text = State_RemoveFromGroupDialog_message;
 
             Title.SetActive(false);
             LeaveGroupDialog.SetActive(false);
             RemoveFromGroupDialog.SetActive(true);
         }
 
-        private async UniTaskVoid OnSearchIconClickAsync(string userNamePattern)
+        private async UniTaskVoid OnSearchButtonClickAsync(string userNamePattern)
         {
             await GuiReadAllUsersList();
         }
 
 
-        public void OnSearchIconClick()
+        public void OnSearchButtonClick()
         {
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 400: OnSearchIconClick(): {SearchTextBox.text}");
             SearchTextBox.text = "";
-            OnSearchIconClickAsync(SearchTextBox.text).Forget();
+            OnSearchButtonClickAsync(SearchTextBox.text).Forget();
             DisplayTitle();
         }
 
