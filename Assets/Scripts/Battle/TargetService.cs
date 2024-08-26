@@ -93,9 +93,14 @@ public class TargetService
             {
                 var ability = charComponent.GetCombatantAbility(objectName);
 
+                if (ability.IsAbilityOnCooldown())
+                {
+                    return;
+                }
+
                 if (ability != null && ability.Name == objectName)
                 {
-                    if (ability.IsEnemyAbility && !ability.IsFrontlineAoe && !ability.IsBacklineAoe && _fightManager.EnemyTarget == null)
+                    if (!ability.IsFrontlineAoe && !ability.IsBacklineAoe && _fightManager.EnemyTarget == null)
                     {
                         ClearAllHighlights();
                         _fightManager.ClearCombatAbilities();

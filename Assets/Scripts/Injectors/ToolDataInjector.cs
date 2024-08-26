@@ -13,7 +13,7 @@ public class ToolDataInjector : MonoBehaviour
     public void InjectData(ToolData toolData)
     {
         equipment = transform.gameObject;
-        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = toolData.name;
+        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.name);
         equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignEquipmentSpriteToSlot(toolData.name);
         equipment.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.itemProduct);
         equipment.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(toolData.itemType);

@@ -1,8 +1,11 @@
 public static class Constants
 {
     // Animation state names
-    public const string Damage = "Damage";
-    public const string Death = "Death";
+    public const string DamageAnim = "Damage";
+    public const string CritAnim = "Crit";
+    public const string DeathAnim = "Death";
+    public const string DodgeAnim = "Dodge";
+    public const string MissAnim = "Miss";
 
     // Dungeon names
     public const string VolcanicCave = "VolcanicCave";
@@ -21,6 +24,8 @@ public static class Constants
     public const string SkillsIcons = "skillsicons";
     public const string CombatIcons = "combaticons";
     public const string MiscIcons = "miscicons";
+    public const string FlagIcons = "flagicons";
+    public const string AbilityPrefabs = "abilityprefabs";
 
     // Equipment slot buttons
     public const string EmptyButton = "EmptyButton";
@@ -58,6 +63,11 @@ public static class Constants
     public const string ResearchTag = "Research";
     public const string ConsumeTag = "Consume";
     public const string NoConsumeTag = "NoConsume";
+
+    // Ability type names
+    public const string Buff = "Buff";
+    public const string Debuff = "Debuff";
+    public const string Damage = "Damage";
 
     // Item type names
     public const string Suit = "SUIT";
@@ -124,6 +134,8 @@ public static class Constants
     public const string MaterialCost = "MaterialCost";
     public const string OutcomeRate = "OutcomeRate";
     public const string HitChance = "HitChance";
+    public const string CriticalChance = "CriticalChance";
+    public const string CriticalDamage = "CriticalDamage";
     public const string Dodge = "Dodge";
     public const string Resistance = "Resistance";
     public const string CounterChance = "CounterChance";
@@ -137,6 +149,8 @@ public static class Constants
     public const string CoroutineManager = "CoroutineManager";
     public const string RecipeCreatorList = "RecipeCreatorList";
     public const string GoalManager = "GOALMANAGER";
+    public const string TranslationManager = "TranslationManager";
+    public const string FightManager = "FIGHTMANAGER";
     public const string GlobalCalculator = "GlobalCalculator";
     public const string AudioManager = "AudioManager";
     public const string EquipmentManager = "EquipmentManager";

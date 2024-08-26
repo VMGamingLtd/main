@@ -18,7 +18,7 @@
       ""physicalProtection"": 2,
       ""fireProtection"": 2,
       ""coldProtection"": 2,
-      ""gasProtection"": 2,
+      ""poisonProtection"": 2,
       ""energyProtection"": 2,
       ""psiProtection"": 0,
       ""shieldPoints"": 5,

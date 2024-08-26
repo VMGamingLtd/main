@@ -1,10 +1,10 @@
 #if UNITY_2019_3_11 || UNITY_2019_3_12 || UNITY_2019_3_13 || UNITY_2019_3_14 || UNITY_2019_3_15 || UNITY_2019_4_OR_NEWER
 #define SERIALIZE_FIELD_MASKABLE
 #endif
+using Coffee.UIParticleExtensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Coffee.UIParticleExtensions;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -365,6 +365,24 @@ namespace Coffee.UIExtensions
             }
 
             base.OnEnable();
+        }
+
+        public void SetMaterial(Material material)
+        {
+            if (material == null)
+            {
+                Debug.LogError("Material is null.");
+                return;
+            }
+
+            // Loop through all renderers and set the new material
+            foreach (var renderer in m_Renderers)
+            {
+                if (renderer != null)
+                {
+                    renderer.material = material;
+                }
+            }
         }
 
         internal void ResetGroupId()

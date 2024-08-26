@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static Enumerations;
 
 public class EventIconData : MonoBehaviour, IPointerClickHandler
 {
@@ -18,8 +19,12 @@ public class EventIconData : MonoBehaviour, IPointerClickHandler
         {
             FightManager fightManager = GameObject.Find("FIGHTMANAGER").GetComponent<FightManager>();
             fightManager.EventSize = Size;
+            fightManager.DungeonType = Type;
 
-            if (eventIconData.Type == EventIconType.VolcanicCave)
+            if (eventIconData.Type == EventIconType.VolcanicCave ||
+                eventIconData.Type == EventIconType.IceCave ||
+                eventIconData.Type == EventIconType.CyberHideout ||
+                eventIconData.Type == EventIconType.HiveNest)
             {
                 InteractionManager interactionManager = GameObject.Find("INTERACTIONMANAGER").GetComponent<InteractionManager>();
                 interactionManager.DungeonUI.SetActive(true);

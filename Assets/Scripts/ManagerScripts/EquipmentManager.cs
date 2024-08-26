@@ -159,13 +159,6 @@ public class EquipmentManager : MonoBehaviour
         RefreshRecipeStats();
     }
 
-    private CombatAbility CreateCombatAbility(CombatAbilityJson abilityData)
-    {
-        return new CombatAbility(abilityData.index, abilityData.abilityName, abilityData.abilityType, abilityData.abilityWeapon, abilityData.isFrontLineAoe, abilityData.isBackLineAoe,
-            abilityData.meleeDamageScale, abilityData.rangedDamageScale, abilityData.psiDamageScale, abilityData.scaleMultiplication, abilityData.cooldown, abilityData.isEnemyAbility,
-            abilityData.positiveEffectsList, abilityData.negativeEffectsList);
-    }
-
     public void ResetPlayerStats()
     {
         Player.AttackSpeed = 1;
@@ -243,7 +236,7 @@ public class EquipmentManager : MonoBehaviour
             {
                 if (ability.abilityWeapon == itemData.weaponType)
                 {
-                    Player.CombatAbilities.Add(CreateCombatAbility(ability));
+                    Player.CombatAbilities.Add(itemCreator.CreateCombatAbility(ability));
                 }
             }
         }

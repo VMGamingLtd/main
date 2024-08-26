@@ -13,7 +13,7 @@ public class OffHandDataInjector : MonoBehaviour
     public void InjectData(OffHandData offHandData)
     {
         equipment = transform.gameObject;
-        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = offHandData.name;
+        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(offHandData.name);
         equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignEquipmentSpriteToSlot(offHandData.name);
         equipment.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(offHandData.itemProduct);
         equipment.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(offHandData.itemType);

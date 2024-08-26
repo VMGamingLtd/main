@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2100281461
+CRC: 1619329322
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ed46bb38aa10581edcd4423b8c576e74
+    Hash: f0de94fe64ff5136b14afe9b62af0bb7
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -22,6 +22,7 @@ Assets:
 - Assets/AssetBundlesRepo/CombatIcons/HitPoints.png
 - Assets/AssetBundlesRepo/CombatIcons/Blade.png
 - Assets/AssetBundlesRepo/CombatIcons/Turn.png
+- Assets/AssetBundlesRepo/CombatIcons/AttackDebuff.png
 - Assets/AssetBundlesRepo/CombatIcons/Skull.png
 - Assets/AssetBundlesRepo/CombatIcons/Psi.png
 - Assets/AssetBundlesRepo/CombatIcons/ArmorIcon.png
@@ -30,7 +31,9 @@ Assets:
 - Assets/AssetBundlesRepo/CombatIcons/Resistance.png
 - Assets/AssetBundlesRepo/CombatIcons/Gun.png
 - Assets/AssetBundlesRepo/CombatIcons/AttackSpeed.png
+- Assets/AssetBundlesRepo/CombatIcons/ArmorBuff.png
+- Assets/AssetBundlesRepo/CombatIcons/Ignite.png
 - Assets/AssetBundlesRepo/CombatIcons/Penetration.png
-- Assets/AssetBundlesRepo/CombatIcons/AoE.png
 - Assets/AssetBundlesRepo/CombatIcons/ShieldPoints.png
+- Assets/AssetBundlesRepo/CombatIcons/AoE.png
 Dependencies: []
