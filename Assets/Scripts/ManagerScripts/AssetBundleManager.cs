@@ -53,6 +53,8 @@ public static class AssetBundleManager
         loadedAssetBundles.Add("skillicons", bundle);
         bundle = await loadAssetBundleWebgl("equipmenticons");
         loadedAssetBundles.Add("equipmenticons", bundle);
+        bundle = await loadAssetBundleWebgl("abilityprefabs");
+        loadedAssetBundles.Add("abilityprefabs", bundle);
     }
 
     public async static UniTask<AssetBundle> loadAssetBundleWebgl(string bundleName)
@@ -73,7 +75,30 @@ public static class AssetBundleManager
             AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(www);
             return bundle;
         }
+    }
 
+    public static Sprite AssignFlagSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.FlagIcons, spriteName);
+        return sprite;
+    }
+
+    public static Material AssignMaterial(string materialName)
+    {
+        Material material = LoadAssetFromBundle<Material>(Constants.AbilityPrefabs, materialName);
+        return material;
+    }
+
+    public static GameObject AssignAbilityPrefab(string prefabName)
+    {
+        GameObject prefab = LoadAssetFromBundle<GameObject>(Constants.AbilityPrefabs, prefabName);
+        return prefab;
+    }
+
+    public static Sprite AssignAbilityPrefabSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.AbilityPrefabs, spriteName);
+        return sprite;
     }
 
     // Searches a specific asset bundle and retrieves a Sprite Image for a game object based on its name.

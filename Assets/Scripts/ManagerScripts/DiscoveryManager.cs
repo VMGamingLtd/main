@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using static Enumerations;
 public class DiscoveryManager
 {
     private Planet Planet;

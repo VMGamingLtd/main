@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
+using static Enumerations;
 
 public class SaveManager : MonoBehaviour
 {

@@ -257,7 +257,7 @@ namespace ItemManagement
         public string abilityName;
         public string abilityType;
         public string abilityWeapon;
-        public bool isEnemyAbility;
+        public bool isMovingAbility;
         public bool isFrontLineAoe;
         public bool isBackLineAoe;
         public float meleeDamageScale;
@@ -267,6 +267,7 @@ namespace ItemManagement
         public int cooldown;
         public List<StatusEffect> negativeEffectsList;
         public List<StatusEffect> positiveEffectsList;
+        public List<AbilityPrefab> abilityPrefabsList;
     }
 
     public class ItemCreator : MonoBehaviour
@@ -403,6 +404,13 @@ namespace ItemManagement
                 abilitiesDataList = combatAbilitiesDataArray.abilities;
             }
         }
+        public CombatAbility CreateCombatAbility(CombatAbilityJson abilityData)
+        {
+            return new CombatAbility(abilityData.index, abilityData.abilityName, abilityData.abilityType, abilityData.abilityWeapon, abilityData.isFrontLineAoe, abilityData.isBackLineAoe,
+                abilityData.meleeDamageScale, abilityData.rangedDamageScale, abilityData.psiDamageScale, abilityData.scaleMultiplication, abilityData.cooldown, abilityData.isMovingAbility,
+                abilityData.positiveEffectsList, abilityData.negativeEffectsList, abilityData.abilityPrefabsList);
+        }
+
         public void Recreateitem(float quantity, string itemProduct, string itemType, string itemClass, string itemName,
             int index, float stackLimit, bool equipable, int ID, bool isEquipped, RectTransform rectTransform = null)
         {

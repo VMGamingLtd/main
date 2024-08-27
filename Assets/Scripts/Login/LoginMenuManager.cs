@@ -14,7 +14,7 @@ public class LoginMenuManager : MonoBehaviour
     public GameObject loginIntroScreenForUser;
 
     public GameObject AccountPanel;
-    public GameObject FriendsPanel;
+    //public GameObject FriendsPanel;
     public GameObject RegisterButton;
 
 
@@ -36,13 +36,13 @@ public class LoginMenuManager : MonoBehaviour
 
     public void ActivateFriendsTab()
     {
-        FriendsPanel.SetActive(true);
+        //FriendsPanel.SetActive(true);
         var button = RegisterButton.GetComponent<Button>();
         button.interactable = true;
     }
     public void DeactivateFriendsTab()
     {
-        FriendsPanel.SetActive(false);
+        //FriendsPanel.SetActive(false);
         var button = RegisterButton.GetComponent<Button>();
         button.interactable = false;
     }

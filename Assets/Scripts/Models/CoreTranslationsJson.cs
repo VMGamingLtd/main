@@ -1629,7 +1629,35 @@
         ""english"": ""Dodge:"",
         ""russian"": ""Уклонение:"",
         ""chinese"": ""闪避:"",
-        ""slovak"": ""Uhýbanie:""
+        ""slovak"": ""Uhnutie:""
+      },
+      {
+        ""identifier"": ""Dodged"",
+        ""english"": ""Dodge"",
+        ""russian"": ""Уклонение"",
+        ""chinese"": ""闪避"",
+        ""slovak"": ""Uhnutie""
+      },
+      {
+        ""identifier"": ""Missed"",
+        ""english"": ""Miss"",
+        ""russian"": ""пропущенная"",
+        ""chinese"": ""错过目标"",
+        ""slovak"": ""Netrafil""
+      },
+      {
+        ""identifier"": ""Resisted"",
+        ""english"": ""Resisted"",
+        ""russian"": ""Сопротивлялся"",
+        ""chinese"": ""抵抗了效果"",
+        ""slovak"": ""Odolané""
+      },
+      {
+        ""identifier"": ""CounterAttack"",
+        ""english"": ""Counter attack!"",
+        ""russian"": ""Контратака!"",
+        ""chinese"": ""反击！"",
+        ""slovak"": ""Protiútok!""
       },
       {
         ""identifier"": ""CounterChance"",
@@ -2283,6 +2311,55 @@
         ""slovak"": ""Psionická schopnosť""
       },
       {
+        ""identifier"": ""CAS-901"",
+        ""english"": ""CAS-901"",
+        ""russian"": ""КАС-901"",
+        ""chinese"": ""CAS-901"",
+        ""slovak"": ""CAS-901""
+      },
+      {
+        ""identifier"": ""CAS-101"",
+        ""english"": ""CAS-101"",
+        ""russian"": ""КАС-101"",
+        ""chinese"": ""CAS-101"",
+        ""slovak"": ""CAS-101""
+      },
+      {
+        ""identifier"": ""FAB-1"",
+        ""english"": ""FAB-1"",
+        ""russian"": ""ФAБ-1"",
+        ""chinese"": ""FAB-1"",
+        ""slovak"": ""FAB-1""
+      },
+      {
+        ""identifier"": ""EF-10"",
+        ""english"": ""EF-10"",
+        ""russian"": ""ЭФ-10"",
+        ""chinese"": ""EF-10"",
+        ""slovak"": ""EF-10""
+      },
+      {
+        ""identifier"": ""PSP-1"",
+        ""english"": ""PSP-1"",
+        ""russian"": ""ПСП-1"",
+        ""chinese"": ""PSP-1"",
+        ""slovak"": ""PSP-1""
+      },
+      {
+        ""identifier"": ""StunBaton"",
+        ""english"": ""Stun baton"",
+        ""russian"": ""Электрошоковая дубинка"",
+        ""chinese"": ""电击棒"",
+        ""slovak"": ""Elektro-šokový obušok""
+      },
+      {
+        ""identifier"": ""SpiritCrystal"",
+        ""english"": ""Spiritual crystal"",
+        ""russian"": ""Духовный кристалл"",
+        ""chinese"": ""灵性水晶"",
+        ""slovak"": ""Spirituálny kryštál""
+      },
+      {
         ""identifier"": ""Slash"",
         ""english"": ""Slash"",
         ""russian"": ""Режущий удар"",
@@ -2379,8 +2456,36 @@
          ""russian"": ""Удалить из группы"",
          ""chinese"": ""从组中删除"",
          ""slovak"": ""Odstrániť zo skupiny""
-        }
+        },
         
+      {
+        ""identifier"": ""Ignite"",
+        ""english"": ""Ignite"",
+        ""russian"": ""Вспышка"",
+        ""chinese"": ""烧伤"",
+        ""slovak"": ""Vzplanutie""
+      },
+      {
+        ""identifier"": ""MagmaTouch"",
+        ""english"": ""Magma touch"",
+        ""russian"": ""Прикосновение магмы"",
+        ""chinese"": ""岩浆触摸"",
+        ""slovak"": ""Dotyk magmy""
+      },
+      {
+        ""identifier"": ""CombatLogMessage"",
+        ""english"": ""<color=#63ECFF>{activeCharName}</color> uses <color=yellow>{abilityName}</color> and hits enemies for <color=yellow>{damage} damage</color>."",
+        ""russian"": ""<color=#63ECFF>{activeCharName}</color> использует <color=yellow>{abilityName}</color> и наносит врагам <color=yellow>{damage} единиц урона</color>."",
+        ""chinese"": ""<color=#63ECFF>{activeCharName}</color> 使用 <color=yellow>{abilityName}</color> 并对敌人造成 <color=yellow>{damage} 点伤害</color>."",
+        ""slovak"": ""<color=#63ECFF>{activeCharName}</color> použil/a <color=yellow>{abilityName}</color> a trafil/a nepriateľa za <color=yellow>{damage} rany</color>.""       
+      },
+      {
+        ""identifier"": ""DoTMessage"",
+        ""english"": ""<color=#63ECFF>{activeCharName}</color> received <color=yellow>{damage} damage</color> from <color=yellow>{statusEffectName}</color>."",
+        ""russian"": ""<color=#63ECFF>{activeCharName}</color> получает <color=yellow>{damage} урона от эффекта</color> from <color=yellow>{statusEffectName}</color>."",
+        ""chinese"": ""<color=#63ECFF>{activeCharName}</color> 因 <color=yellow>{statusEffectName}</color> 的效果而受到 <color=yellow>{damage} 点伤害</color>."",
+        ""slovak"": ""<color=#63ECFF>{activeCharName}</color> dostal/a <color=yellow>{damage} rany</color> z efektu <color=yellow>{statusEffectName}</color>.""       
+      }
     ]
   }
 ";

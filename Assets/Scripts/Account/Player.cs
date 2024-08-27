@@ -30,6 +30,8 @@ public static class Player
     public static int Penetration;
     public static int CounterChance;
     public static int HitChance;
+    public static int CriticalChance = 5;
+    public static int CriticalDamage = 50;
     public static int MeleeAttack;
     public static int RangedAttack;
     public static int PsiDamage;

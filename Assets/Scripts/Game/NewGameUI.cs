@@ -64,9 +64,6 @@ public class NewGameUI : MonoBehaviour
         {
             SaveDataModel gameData = JsonConvert.DeserializeObject<SaveDataModel>(response.GameDataJson);
             //Debug.Log(response.GameDataJson);
-            UserName.userName = gameData.username;
-            Password.password = gameData.password;
-            Email.email = gameData.email;
             InventoryManager.ShowItemProducts = gameData.showItemProducts;
             RecipeManager.ShowRecipeProducts = gameData.showRecipeProducts;
             InventoryManager.ShowItemTypes = gameData.showItemTypes;
@@ -621,12 +618,14 @@ public class NewGameUI : MonoBehaviour
                     {
                         // If there's a user slot with same slotNumber and game has never been saved on the slot then create a new game on the slot
                         StartNewGameUI();
+                        UserName.userName = slot.UserName;
                         return;
                     }
                     else
                     {
                         // If there's a user slot with same slotNumber and there was at least one game data save from the game on the slot then boot existing game
                         LoadSlotGame();
+                        UserName.userName = slot.UserName;
                         return;
                     }
                 }

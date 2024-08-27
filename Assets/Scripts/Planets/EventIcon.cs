@@ -3,39 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
-public enum EventIconType
-{
-    Player,
-    FriendlyPlayer,
-    EnemyPlayer,
-    Fish,
-    Plant,
-    Mineral,
-    FurAnimal,
-    MilkAnimal,
-    Animal,
-    VolcanicCave,
-    IceCave,
-    HiveNest,
-    CyberHideout,
-    AlienBase,
-    WormTunnels,
-    Shipwreck,
-    MysticTemple,
-    XenoSpider,
-    SporeBehemoth,
-    ElectroBeast,
-    VoidReaper
-}
-
-public enum EventSize
-{
-    Small,
-    Medium,
-    Large,
-}
-
+using static Enumerations;
 
 public class EventIcon : MonoBehaviour, IPointerClickHandler
 {
