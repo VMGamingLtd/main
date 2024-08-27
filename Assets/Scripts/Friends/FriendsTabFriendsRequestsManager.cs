@@ -364,7 +364,7 @@ namespace Friends
 
         public void OnEnable()
         {
-            RemoveAllFriendsButtons();
+            RemoveAllFriendRequestButtons();
             SearchTextBox.text = "";
             Init().Forget();
         }
