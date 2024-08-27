@@ -24,7 +24,7 @@ Bug fixes:
 - fixed crashing websocket js
 
 
-202240801
+20240801
 =================
 Battle feature and dungeons added for the planet:
 
@@ -52,4 +52,14 @@ Websocket server
 - added support for friends group message brodcasting in prepararion for multiplayer 
 - when in game raunning in editor websocket server client was moved to naitive thread to prevent game interruptions
  
+
+20240827
+==============
+
+- Added ability prefabs and some unity packages with particles.
+- Added more enemies into volcanic cave and more spells.
+- Critical chance and critical damage modifiers were added into combat stats.
+- Buffs and debuffs added into combat.
+- Group handling (add friend request, accept / reject friend request, leave group, display friend requests panel,  
+  display group members panel, websocket server group handling in preparation for multiplayer)
 
