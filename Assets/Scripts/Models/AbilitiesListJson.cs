@@ -458,7 +458,7 @@ namespace Assets.Scripts.Models
           ""prefabMovement"": 0
         }
       ]
-    },
+    }
   ]
 }
 ";
