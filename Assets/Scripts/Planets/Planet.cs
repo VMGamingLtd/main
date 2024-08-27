@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Enumerations;
 
 public class Planet : MonoBehaviour
 {

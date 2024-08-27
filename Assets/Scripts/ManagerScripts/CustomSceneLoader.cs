@@ -76,8 +76,7 @@ public class CustomSceneLoader : MonoBehaviour
         const string METOD_NAME = "OnGuestLoginComplete()";
         if (Gaos.User.User.GuestLogin.IsLoggedIn == true)
         {
-            var userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
-            UserName.userName = userName;
+            UserName.userName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;
             bool isGuest = (bool)Gaos.User.User.GuestLogin.GuestLoginResponse.IsGuest;
             Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventArgs { UserName = UserName.userName, IsGuest = isGuest });
             ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.GuestLogin.GuestLoginResponse.UserName;

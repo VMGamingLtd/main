@@ -2,20 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class TranslationDataArrayWrapper
-{
-    public TranslationData[] translations;
-}
-
-[System.Serializable]
-public class TranslationData
-{
-    public string EnglishText;
-    public string RussianText;
-    public string ChineseText;
-    public string SlovakText;
-}
 [Serializable]
 public class CoreTranslations
 {
@@ -28,7 +14,6 @@ public class CoreTranslations
 }
 public class TranslationManager : MonoBehaviour
 {
-    public GameObject[] translationTexts;
     private List<CoreTranslations> coreTranslationList;
 
     [Serializable]

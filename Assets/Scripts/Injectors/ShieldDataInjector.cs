@@ -13,7 +13,7 @@ public class ShieldDataInjector : MonoBehaviour
     public void InjectData(ShieldData shieldData)
     {
         equipment = transform.gameObject;
-        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = shieldData.name;
+        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(shieldData.name);
         equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignEquipmentSpriteToSlot(shieldData.name);
         equipment.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(shieldData.itemProduct);
         equipment.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(shieldData.itemType);

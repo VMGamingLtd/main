@@ -13,7 +13,7 @@ public class MeleeWeaponDataInjector : MonoBehaviour
     public void InjectData(MeleeWeaponData meleeWeaponData)
     {
         equipment = transform.gameObject;
-        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = meleeWeaponData.name;
+        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(meleeWeaponData.name);
         equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignEquipmentSpriteToSlot(meleeWeaponData.name);
         equipment.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(meleeWeaponData.itemProduct);
         equipment.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(meleeWeaponData.itemType);

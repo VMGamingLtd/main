@@ -16,9 +16,11 @@ public static class UIColors
     public static Color timebarColorYellow = new(0.9058824f, 0.8666667f, 0.1333333f, 0.3137255f);
 
     // STANDARD COLORS
+    public static Color White = new(1f, 1f, 1f, 1f);
     public static Color blackHalfTransparent = new(0f, 0f, 0f, 0.3764706f);
     public static Color NeonBlueOriginalFull = new(0.3882353f, 0.9254902f, 1f, 1f);
     public static Color NeonBlueOriginalHalf = new(0.3882353f, 0.9254902f, 1f, 0.5f);
+    public static Color NeonGreenFull = new(0.2549f, 0.9058f, 0.1333f, 1f);
     public static Color NeonRedFull = new(1f, 0f, 0f, 1f);
     public static Color NeonRedHalf = new(1f, 0f, 0f, 0.5f);
     public static Color NeonRedInvisible = new(1f, 0f, 0f, 0f);

@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
+using static Enumerations;
 
 public class SaveManager : MonoBehaviour
 {
@@ -341,9 +342,12 @@ public class SaveManager : MonoBehaviour
         };
 
         currentSaveData.AchievementPoints = Achievements.AchievementPoints;
-        currentSaveData.username = UserName.userName;
-        currentSaveData.password = Password.password;
-        currentSaveData.email = Email.email;
+        //currentSaveData.username = UserName.userName;
+        currentSaveData.username = Gaos.Context.Authentication.GetUserName();
+        //currentSaveData.password = Password.password;
+        currentSaveData.password = "xxxxxx";
+        //currentSaveData.email = Email.email;
+        currentSaveData.email = "xxxxx@xxxxx.xxxs";
         currentSaveData.showItemProducts = InventoryManager.ShowItemProducts;
         currentSaveData.showRecipeProducts = RecipeManager.ShowRecipeProducts;
         currentSaveData.showItemTypes = InventoryManager.ShowItemTypes;

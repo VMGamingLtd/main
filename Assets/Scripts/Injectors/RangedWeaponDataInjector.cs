@@ -13,7 +13,7 @@ public class RangedWeaponDataInjector : MonoBehaviour
     public void InjectData(RangedWeaponData rangedWeaponData)
     {
         equipment = transform.gameObject;
-        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = rangedWeaponData.name;
+        equipment.transform.Find("Header/Title").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(rangedWeaponData.name);
         equipment.transform.Find("Header/Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignEquipmentSpriteToSlot(rangedWeaponData.name);
         equipment.transform.Find("Product").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(rangedWeaponData.itemProduct);
         equipment.transform.Find("Type").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(rangedWeaponData.itemType);
