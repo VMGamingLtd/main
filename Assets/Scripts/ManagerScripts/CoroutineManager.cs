@@ -9,6 +9,7 @@ using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using WebSocketSharp;
 
 public class CoroutineManager : MonoBehaviour
 {
@@ -243,6 +244,8 @@ public class CoroutineManager : MonoBehaviour
     public TextMeshProUGUI[] GoldOreOutcomeTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] SulfurOutcomeTexts = new TextMeshProUGUI[0];
     public TextMeshProUGUI[] SaltpeterOutcomeTexts = new TextMeshProUGUI[0];
+
+    [SerializeField] GameObject CountryMenu;
 
     void Start()
     {
@@ -501,10 +504,25 @@ public class CoroutineManager : MonoBehaviour
 
     public IEnumerator LoadSaveSlots()
     {
-        CheckSlotData();
-        loadingBar.SetActive(false);
-        loginMenu.SetActive(false);
-        yield return null;
+        var country = Gaos.Context.Authentication.GetCountry();
+
+        if (country.IsNullOrEmpty())
+        {
+            CountryMenu.SetActive(true);
+        }
+        else
+        {
+            CheckSlotData();
+            loadingBar.SetActive(false);
+            loginMenu.SetActive(false);
+            yield return null;
+        }
+    }
+
+    public void CallCountryUpdate(string country)
+    {
+        StartCoroutine(Gaos.User.User.CountryUpdater.UpdateCountry(Gaos.Context.Authentication.GetUserId(), country));
+        StartCoroutine(LoadSaveSlots());
     }
 
     public static void ResetAllCoroutineBooleans()

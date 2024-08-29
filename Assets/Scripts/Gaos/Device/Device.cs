@@ -101,6 +101,7 @@ namespace Gaos.Device.Device
                 {
                     Context.Authentication.SetUserId(DeviceRegisterResponse.User.Id);
                     Context.Authentication.SetUserName(DeviceRegisterResponse.User.Name);
+                    Context.Authentication.SetCountry(DeviceRegisterResponse.User.Country);
                     if (DeviceRegisterResponse.User.IsGuest == true)
                     {
                         Context.Authentication.SetIsGuest(true);

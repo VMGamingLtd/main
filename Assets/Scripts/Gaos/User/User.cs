@@ -1,13 +1,13 @@
 #pragma warning disable 8632
 
-using UnityEngine;
-using System.Collections;
-using Newtonsoft.Json;
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Collections;
+using UnityEngine;
 
 namespace Gaos.User.User
 {
-    public class GuestLogin 
+    public class GuestLogin
     {
         private readonly static string CLASS_NAME = typeof(GuestLogin).Name;
         private static bool TryToLoginAgain = false;
@@ -105,6 +105,7 @@ namespace Gaos.User.User
                 Context.Authentication.SetJWT(GuestLoginResponse.Jwt);
                 Context.Authentication.SetUserId(GuestLoginResponse.UserId);
                 Context.Authentication.SetUserName(GuestLoginResponse.UserName);
+                Context.Authentication.SetCountry(GuestLoginResponse.Country);
                 Context.Authentication.SetIsGuest(true);
             }
             else
@@ -130,7 +131,7 @@ namespace Gaos.User.User
 
         public static bool IsRegistered = false;
         public static Gaos.Routes.Model.UserJson.RegisterResponseErrorKind? ResponseErrorKind = null;
-        public static Gaos.Routes.Model.UserJson.RegisterResponse  RegisterResponse = null;
+        public static Gaos.Routes.Model.UserJson.RegisterResponse RegisterResponse = null;
 
         private static bool TryToRegisterAgain = false;
 
@@ -233,6 +234,7 @@ namespace Gaos.User.User
 
                         Context.Authentication.SetUserId(RegisterResponse.User.Id);
                         Context.Authentication.SetUserName(RegisterResponse.User.Name);
+                        Context.Authentication.SetCountry(RegisterResponse.User.Country);
                         if (RegisterResponse.User.IsGuest == true)
                         {
                             Context.Authentication.SetIsGuest(true);
@@ -365,6 +367,7 @@ namespace Gaos.User.User
                         Gaos.Context.Authentication.SetJWT(LoginResponse.Jwt);
                         Gaos.Context.Authentication.SetUserId(LoginResponse.UserId);
                         Gaos.Context.Authentication.SetUserName(LoginResponse.UserName);
+                        Gaos.Context.Authentication.SetCountry(LoginResponse.Country);
                         Gaos.Context.Authentication.SetIsGuest(false);
                     }
                     else
@@ -394,7 +397,7 @@ namespace Gaos.User.User
                     {
                         break;
                     }
-                } 
+                }
                 else
                 {
                     Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  loggin failed: user not registered");
@@ -414,9 +417,9 @@ namespace Gaos.User.User
         public static async UniTask<Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeResponse> SendVerificationCode(string usernameOrEmail)
         {
             Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeResponse response;
-            Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeReuqest request = new Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeReuqest() 
-            { 
-                UserNameOrEmail = usernameOrEmail 
+            Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeReuqest request = new Gaos.Routes.Model.UserJson.RecoverPasswordSendVerificationCodeReuqest()
+            {
+                UserNameOrEmail = usernameOrEmail
             };
 
             string requestJsonStr = JsonConvert.SerializeObject(request);
@@ -502,6 +505,35 @@ namespace Gaos.User.User
                 {
                     return response;
                 }
+            }
+        }
+    }
+
+    public class CountryUpdater
+    {
+        private readonly static string CLASS_NAME = typeof(CountryUpdater).Name;
+
+        public static IEnumerator UpdateCountry(int userId, string country)
+        {
+            const string METHOD_NAME = "UpdateCountry()";
+
+            Gaos.Routes.Model.UserJson.UpdateCountryRequest request = new Routes.Model.UserJson.UpdateCountryRequest()
+            {
+                UserId = userId,
+                Country = country
+            };
+
+            string requestJsonStr = JsonConvert.SerializeObject(request);
+            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/updateCountry", requestJsonStr);
+            yield return apiCall.Call();
+
+            if (apiCall.IsResponseError == true)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Failed to update country. Error: {apiCall.ResponseJsonStr}");
+            }
+            else
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Country update successful. Response: {apiCall.ResponseJsonStr}");
             }
         }
     }

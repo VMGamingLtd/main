@@ -8,6 +8,7 @@ namespace Gaos.Routes.Model.UserJson
 
         public string? ErrorMessage;
         public string? UserName;
+        public string? Country;
 
         public int UserId;
 
