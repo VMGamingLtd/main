@@ -1,16 +1,16 @@
 ﻿#pragma warning disable 8632
 using System.Collections.Generic;
 
-namespace Gaos.Routes.Model.GameDataJson
+namespace Gaos.Routes.Model.GroupDataJson
 {
     [System.Serializable]
-    public class UserGameDataGetResponse
+    public class GetGroupDataResponse
     {
         public bool? IsError;
         public string? ErrorMessage;
 
         public string? Id;
-        public int Version;
-        public string? GameDataJson;
+        public string? Version;
+        public string? GroupDataJson;
     }
 }

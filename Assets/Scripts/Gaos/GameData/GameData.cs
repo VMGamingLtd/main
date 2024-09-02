@@ -12,7 +12,7 @@ namespace Gaos.GameData
     public class DocumentVersion
     {
         public string DocId;
-        public string DocVersion;
+        public int DocVersion;
         public string GameDataJson; // game data at version DocVersion
     }
 
@@ -30,7 +30,7 @@ namespace Gaos.GameData
             return slotToVersion[slotId];
         }
 
-        public static void setVersion(int slotId, string docVersion, string docId, string gameDataJson)
+        public static void setVersion(int slotId, int docVersion, string docId, string gameDataJson)
         {
             slotToVersion[slotId] = new DocumentVersion { DocId = docId, DocVersion = docVersion, GameDataJson = gameDataJson };
         }
@@ -186,7 +186,7 @@ namespace Gaos.GameData
                 else
                 {
                     // error saving game data
-                    LastGameDataVersion.setVersion(item.slotId, previousVersion.DocId, previousVersion.DocVersion, null);
+                    LastGameDataVersion.setVersion(item.slotId, previousVersion.DocVersion, previousVersion.DocId, null);
 
                 }
                 item.onUserGameDataSaveComplete(response);
@@ -392,7 +392,7 @@ namespace Gaos.GameData
                     onEnsureNewSlotComplete(null);
                     yield break;
                 }
-                Gaos.GameData.LastGameDataVersion.setVersion(slotId, response.MongoDocumentVersion, response.MongoDocumentVersion, null);
+                Gaos.GameData.LastGameDataVersion.setVersion(slotId, response.MongoDocumentVersion, response.MongoDocumentId, null);
                 onEnsureNewSlotComplete(response);
             }
 

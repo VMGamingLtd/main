@@ -1,6 +1,5 @@
 ﻿namespace Gaos.Routes.Model.UserJson
 {
-    [System.Serializable]
     public class UpdateCountryRequest
     {
         public int UserId;
