@@ -4,13 +4,11 @@ using System.Collections.Generic;
 namespace Gaos.Routes.Model.GroupDataJson
 {
     [System.Serializable]
-    public class GetGroupDataResponse
+    public class SaveGroupDataResponse
     {
         public bool? IsError;
         public string? ErrorMessage;
 
-        public string? Id;
         public int Version;
-        public string? GroupDataJson;
     }
 }
