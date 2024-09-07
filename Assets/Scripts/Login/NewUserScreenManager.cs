@@ -1,6 +1,8 @@
 using Gaos.Routes.Model.UserJson;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class NewUserScreen : MonoBehaviour
@@ -296,11 +298,12 @@ public class NewUserScreen : MonoBehaviour
             UserName.userName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;
             bool isGuest = (bool)Gaos.User.User.UserRegister.RegisterResponse.User.IsGuest;
             Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventArgs { UserName = UserName.userName, IsGuest = isGuest });
-            //mainUI.SetActive(true);
-            //this.gameObject.SetActive(false);
-            ModelsRx.ContextRx.UserRx.UserName =  Gaos.User.User.UserRegister.RegisterResponse.User.Name; 
-            ModelsRx.ContextRx.UserRx.IsGuest =  (bool)Gaos.User.User.UserRegister.RegisterResponse.User.IsGuest; 
-            buttonBack.onClick.Invoke();
+            ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;
+            ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.UserRegister.RegisterResponse.User.IsGuest;
+            //buttonBack.onClick.Invoke();
+
+            StartCoroutine(CustomSceneLoader.RestartGame());
+
         }
         else
         {
@@ -308,6 +311,7 @@ public class NewUserScreen : MonoBehaviour
             errorText.text = GetErrorMessage(Gaos.User.User.UserRegister.ResponseErrorKind);
         }
     }
+
 
     public void Display()
     {

@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -89,5 +90,15 @@ public class CustomSceneLoader : MonoBehaviour
             throw new System.Exception("guest login failed");
         }
 
+    }
+
+    public static IEnumerator RestartGame()
+    {
+
+        Gaos.WebSocket.WebSocketClient.CurrentWesocketClient.Suspend();
+        yield return new WaitForSeconds(0.5f);
+        Gaos.WebSocket.WebSocketClient.CurrentWesocketClient.CloseWebsocket();
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("First");
     }
 }

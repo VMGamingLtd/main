@@ -137,7 +137,9 @@ public class LoginScreenManager : MonoBehaviour
             //this.gameObject.SetActive(false);
             ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.UserLogin.LoginResponse.UserName;
             ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest; 
-            buttonBack.onClick.Invoke();
+            //buttonBack.onClick.Invoke();
+
+            StartCoroutine(CustomSceneLoader.RestartGame());
         }
         else
         {

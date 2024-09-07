@@ -33,6 +33,7 @@ namespace Gaos.WebSocket
 
         }
 
+
         public ConcurrentQueue<byte[]> GetOutboundQueue()
         {
             return MessagesOutbound;
@@ -40,6 +41,12 @@ namespace Gaos.WebSocket
         public ConcurrentQueue<byte[]> GetInboundQueue()
         {
             return MessagesInbound;
+        }
+
+        public void ClearQueues()
+        {
+            MessagesOutbound.Clear();
+            MessagesInbound.Clear();
         }
 
         public void OpenWs()
@@ -85,6 +92,7 @@ namespace Gaos.WebSocket
 
         public void Open()
         {
+            WebSocket = null;
             threadCancelationToken = new CancellationTokenSource();
             thread = new Thread(() => {
                 OpenWs();
@@ -94,7 +102,13 @@ namespace Gaos.WebSocket
 
             thread.Start();
         }
-        
+
+        public void CloseWebsocket()
+        {
+            threadCancelationToken.Cancel();
+        }
+
+
         void OnDisable()
         {
             threadCancelationToken.Cancel();
@@ -175,19 +189,26 @@ namespace Gaos.WebSocket
                     }
                 }
             }
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: processing outbound queue finished");
+            WebSocket.Close();
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: thread finished");
         }
 
-        public IEnumerator StartProcessingOutboundQueue()
+        public IEnumerator StartProcessingOutboundQueue(CancellationToken cancellationToken)
         {
             yield return null;
         }
 
-        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws)
+        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws, CancellationToken cancellationToken)
         {
             const string METHOD_NAME = "StartProcessingInboundQueue()";
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
+                if (WebSocket == null)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    continue;
+                }
                 var state = WebSocket.ReadyState;
                 if (state == WebSocketSharp.WebSocketState.Open)
                 {
@@ -223,6 +244,7 @@ namespace Gaos.WebSocket
                     yield return new WaitForSeconds(0.5f);
                 }
             }
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: processing inbound queue finished");
         }
 
         public bool GetIsAuthenticated()

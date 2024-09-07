@@ -5,6 +5,7 @@ using System;
 using Gaos.Websocket;
 using Google.Protobuf;
 using System.Collections.Concurrent;
+using System.Threading;
 
 namespace Gaos.WebSocket
 {
@@ -15,6 +16,9 @@ namespace Gaos.WebSocket
         public WebSocketClientJs webSocketClientJs;
 
         public static WebSocketClient CurrentWesocketClient = null;
+
+        CancellationTokenSource QueuesCancelationToken;
+
 
 
         public ConcurrentQueue<byte[]> GetOutboundQueue()
@@ -62,6 +66,24 @@ namespace Gaos.WebSocket
             }
         }
 
+        public void Suspend()
+        {
+            QueuesCancelationToken.Cancel();
+        }
+
+
+        public void CloseWebsocket()
+        {
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                webSocketClientJs.CloseWebsocket();
+            }
+            else
+            {
+                webSocketClientSharp.CloseWebsocket();
+            }
+        }
+
         public void Send(byte[] data)
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
@@ -105,27 +127,39 @@ namespace Gaos.WebSocket
             }
         }
 
-        public IEnumerator StartProcessingOutboundQueue()
+        public IEnumerator StartProcessingOutboundQueue(CancellationToken cancellationToken)
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                return  webSocketClientJs.StartProcessingOutboundQueue();
+                return  webSocketClientJs.StartProcessingOutboundQueue(cancellationToken);
             }
             else
             {
-                return webSocketClientSharp.StartProcessingOutboundQueue();
+                return webSocketClientSharp.StartProcessingOutboundQueue(cancellationToken);
             }
         }
 
-        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws)
+        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws, CancellationToken cancellationToken)
         {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                return  webSocketClientJs.StartProcessingInboundQueue(ws);
+                return  webSocketClientJs.StartProcessingInboundQueue(ws, cancellationToken);
             }
             else
             {
-                return webSocketClientSharp.StartProcessingInboundQueue(ws);
+                return webSocketClientSharp.StartProcessingInboundQueue(ws, cancellationToken);
+            }
+        }
+
+        public void ClearQueues()
+        {
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                webSocketClientJs.ClearQueues();
+            }
+            else
+            {
+                webSocketClientSharp.ClearQueues();
             }
         }
 
@@ -133,8 +167,9 @@ namespace Gaos.WebSocket
         {
             CurrentWesocketClient = this;
             Open();
-            StartCoroutine(StartProcessingOutboundQueue());
-            StartCoroutine(StartProcessingInboundQueue(this));
+            QueuesCancelationToken = new CancellationTokenSource();
+            StartCoroutine(StartProcessingOutboundQueue(QueuesCancelationToken.Token));
+            StartCoroutine(StartProcessingInboundQueue(this, QueuesCancelationToken.Token));
         }
 
         public static string ToHexString(byte[] bytes)
