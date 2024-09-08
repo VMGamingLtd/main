@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 
 namespace Gaos.GameData
@@ -174,22 +175,40 @@ namespace Gaos.GameData
             };
         }
 
-        private static OnUserGameDataSaveComplete makeOnRequestQueueItemSaveComplete(MonoBehaviour gameObject, RequestQueteItem item)
+        public delegate void OnProcessingSaveQueueFinished();
+
+        private static OnUserGameDataSaveComplete makeOnRequestQueueItemSaveComplete(MonoBehaviour gameObject, RequestQueteItem item, 
+                                                                                    bool finished, CancellationToken cancellationToken, 
+                                                                                    OnProcessingSaveQueueFinished onProcessingSaveQueueFinished)
         {
             return (UserGameDataSaveResponse response) =>
             {
                 var previousVersion = LastGameDataVersion.getVersion(item.slotId);
                 if (response != null)
                 {
+                    if (finished)
+                    {
+                        Debug.Log($"{CLASS_NAME}: finished processing, saving game data finished ok");
+                    }
                     LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
                 }
                 else
                 {
+                    if (finished)
+                    {
+                        Debug.Log($"{CLASS_NAME}: finished processing, ERROR saving game data");
+                    }
                     // error saving game data
                     LastGameDataVersion.setVersion(item.slotId, previousVersion.DocVersion, previousVersion.DocId, null);
 
                 }
                 item.onUserGameDataSaveComplete(response);
+                if (finished)
+                {
+                    requestsQueue.Clear();
+                    onProcessingSaveQueueFinished();
+                    return;
+                }
                 if (requestsQueue.Count > 0)
                 {
                     RequestQueteItem item = requestsQueue.Dequeue();
@@ -197,7 +216,7 @@ namespace Gaos.GameData
                     {
                         item = requestsQueue.Dequeue();
                     }
-                    var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item));
+                    var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item), finished, cancellationToken, onProcessingSaveQueueFinished);
                     if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                     {
                         if (previousVersion != null && previousVersion.GameDataJson != null)
@@ -236,12 +255,12 @@ namespace Gaos.GameData
                 }
                 else
                 {
-                    gameObject.StartCoroutine(ProcessSendQueue(gameObject));
+                    gameObject.StartCoroutine(ProcessSendQueue(gameObject, cancellationToken, onProcessingSaveQueueFinished));
                 }
             };
         }
 
-        public static IEnumerator ProcessSendQueue(MonoBehaviour gameObject)
+        public static IEnumerator ProcessSendQueue(MonoBehaviour gameObject, CancellationToken cancellationToken, OnProcessingSaveQueueFinished onProcessingSaveQueueFinished)
         {
             if (requestsQueue.Count > 0)
             {
@@ -250,7 +269,7 @@ namespace Gaos.GameData
                 {
                     item = requestsQueue.Dequeue();
                 }
-                var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item));
+                var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item), cancellationToken.IsCancellationRequested, cancellationToken, onProcessingSaveQueueFinished);
 
                 if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                 {
@@ -296,7 +315,7 @@ namespace Gaos.GameData
             {
                 // sleep for 1 second before checking again
                 yield return new WaitForSeconds(1);
-                gameObject.StartCoroutine(ProcessSendQueue(gameObject));
+                gameObject.StartCoroutine(ProcessSendQueue(gameObject, cancellationToken, onProcessingSaveQueueFinished));
             }
         }
 
