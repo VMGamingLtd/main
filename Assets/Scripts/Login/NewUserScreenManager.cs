@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using Gaos.Routes.Model.UserJson;
+using JetBrains.Annotations;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -277,9 +279,51 @@ public class NewUserScreen : MonoBehaviour
             return;
         }
 
+        /*
         buttonCreate.interactable = false;
         buttonBack.interactable = false;
         StartCoroutine(Gaos.User.User.UserRegister.Register(userNameTextInput.text, emailTextInput.text, passwordTextInput.text, OnUserRegisterComplete));
+        */
+
+        DoRegisterUser().Forget();
+    }
+
+    public async UniTaskVoid DoRegisterUser()
+    {
+        string METHOD_NAME = "DoRegisterUser()";
+
+        // Set both create and back buttons to be disabled so that user cannot play if there's an error while registering 
+        // or else we might risk corruption of game data.
+        // If the register is not successfull user have no other choice except of reaload the game.
+        buttonCreate.interactable = false;
+        buttonBack.interactable = false;
+
+        await CustomSceneLoader.SaveGameDataAndStopSaveManager();
+
+        await Gaos.User.User.UserRegister.Register(userNameTextInput.text, emailTextInput.text, passwordTextInput.text);
+        if (Gaos.User.User.UserRegister.IsRegistered == true)
+        {
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User registered.");
+
+
+            /*
+            CoroutineManager.registeredUser = true;
+            UserName.userName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;
+            bool isGuest = (bool)Gaos.User.User.UserRegister.RegisterResponse.User.IsGuest;
+            Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventArgs { UserName = UserName.userName, IsGuest = isGuest });
+            ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.UserRegister.RegisterResponse.User.Name;
+            ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.UserRegister.RegisterResponse.User.IsGuest;
+            //buttonBack.onClick.Invoke();
+            */
+
+            await CustomSceneLoader.RestartGame();
+
+        }
+        else
+        {
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: User not registered, erorr: {Gaos.User.User.UserRegister.ResponseErrorKind}");
+            errorText.text = GetErrorMessage(Gaos.User.User.UserRegister.ResponseErrorKind);
+        }
     }
 
     public void OnUserRegisterComplete()

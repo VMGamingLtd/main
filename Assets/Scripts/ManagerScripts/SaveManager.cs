@@ -231,6 +231,7 @@ public class SaveManager : MonoBehaviour
 
         IsSaveQueueProcessing = true;
         SaveQueueProcessingCancelationToken = new CancellationTokenSource();
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 400: SaveManager.OnEnable()");
         StartCoroutine(Gaos.GameData.UserGameDataSave.ProcessSendQueue(this, SaveQueueProcessingCancelationToken.Token, () => {
             IsSaveQueueProcessing = false;
         }));

@@ -188,7 +188,7 @@ namespace Gaos.GameData
                 {
                     if (finished)
                     {
-                        Debug.Log($"{CLASS_NAME}: finished processing, saving game data finished ok");
+                        Debug.Log($"{CLASS_NAME}: finished processing, last saving of game data finished ok");
                     }
                     LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
                 }
@@ -196,9 +196,12 @@ namespace Gaos.GameData
                 {
                     if (finished)
                     {
-                        Debug.Log($"{CLASS_NAME}: finished processing, ERROR saving game data");
+                        Debug.Log($"{CLASS_NAME}: finished processing, ERROR while last saving game data");
                     }
-                    // error saving game data
+                    // Error saving game data.
+                    // Will be trying saving again with same version, since game data is null next save will be full save of game data (not just the json diff).
+                    // TODO:
+                    // If error is 'version mismatch' such error is irrecovarable and game should be terminated/restarted!!!!!
                     LastGameDataVersion.setVersion(item.slotId, previousVersion.DocVersion, previousVersion.DocId, null);
 
                 }

@@ -92,9 +92,9 @@ public class CustomSceneLoader : MonoBehaviour
 
     }
 
-    public static IEnumerator RestartGame()
+    public static IEnumerator SaveGameDataAndStopSaveManager()
     {
-        string METHOD_NAME = "RestartGame()";
+        string METHOD_NAME = "SaveGameDataAndStopSaveManager()";
 
         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: saving game data...");
         SaveManager.CurrentSaveManager.SaveGameDataOnServer();
@@ -102,7 +102,11 @@ public class CustomSceneLoader : MonoBehaviour
         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: waiting for svae manager to finish processing...");
         yield return SaveManager.CurrentSaveManager.StopProcessingSaveQueue();
         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: svae manager to finished processing");
+    }
 
+    public static IEnumerator RestartGame()
+    {
+        string METHOD_NAME = "RestartGame()";
 
         Gaos.WebSocket.WebSocketClient.CurrentWesocketClient.Suspend();
         yield return new WaitForSeconds(0.5f);

@@ -232,6 +232,7 @@ namespace Gaos.User.User
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user registered");
 
+                        /*
                         Context.Authentication.SetUserId(RegisterResponse.User.Id);
                         Context.Authentication.SetUserName(RegisterResponse.User.Name);
                         Context.Authentication.SetCountry(RegisterResponse.User.Country);
@@ -244,6 +245,7 @@ namespace Gaos.User.User
                             Context.Authentication.SetIsGuest(false);
                         }
                         Context.Authentication.SetJWT(RegisterResponse.Jwt);
+                        */
                     }
                     else
                     {
@@ -364,11 +366,13 @@ namespace Gaos.User.User
                     if (IsLoggedIn == true)
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user logged in");
+                        /*
                         Gaos.Context.Authentication.SetJWT(LoginResponse.Jwt);
                         Gaos.Context.Authentication.SetUserId(LoginResponse.UserId);
                         Gaos.Context.Authentication.SetUserName(LoginResponse.UserName);
                         Gaos.Context.Authentication.SetCountry(LoginResponse.Country);
                         Gaos.Context.Authentication.SetIsGuest(false);
+                        */
                     }
                     else
                     {
