@@ -222,7 +222,6 @@ public class Planet : MonoBehaviour
         EventIcon eventIcon = eventObject.GetComponent<EventIcon>();
         eventIcon.SetPlanet(gameObject);
         eventObjects.Add(eventObject);
-        Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 4125: eventObjects.Count: {eventObjects.Count}");
     }
 
     public void RecreateEventObject(string Name, Vector3 position, EventIconType iconType, float currentQuantity, float minQuantityRange, float maxQuantityRange,

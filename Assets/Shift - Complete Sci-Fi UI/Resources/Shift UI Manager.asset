@@ -23,9 +23,9 @@ MonoBehaviour:
   backgroundSpeed: 1.25
   primaryColor: {r: 0.3882353, g: 0.9254902, b: 1, a: 1}
   secondaryColor: {r: 1, g: 1, b: 1, a: 1}
-  primaryReversed: {r: 0.1764706, g: 0.1764706, b: 0.1764706, a: 1}
-  negativeColor: {r: 1, g: 0.43137255, b: 0.39215687, a: 1}
-  backgroundColor: {r: 0.09803922, g: 0.09803922, b: 0.09803922, a: 0.9411765}
+  primaryReversed: {r: 0.9137255, g: 0.49019608, b: 0.22745098, a: 0.2784314}
+  negativeColor: {r: 1, g: 0.23137255, b: 0.23137255, a: 1}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 0.8}
   lightFont: {fileID: 11400000, guid: 244fc04fa3bb0124eab01cdb1633b570, type: 2}
   regularFont: {fileID: 11400000, guid: 244fc04fa3bb0124eab01cdb1633b570, type: 2}
   mediumFont: {fileID: 11400000, guid: 244fc04fa3bb0124eab01cdb1633b570, type: 2}

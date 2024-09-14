@@ -80,7 +80,6 @@ public class NewGameUI : MonoBehaviour
             GlobalCalculator.hours = gameData.hours;
             GlobalCalculator.minutes = gameData.minutes;
             GlobalCalculator.seconds = gameData.seconds;
-            CoroutineManager.registeredUser = gameData.registeredUser;
             GoalManager.firstGoal = gameData.firstGoal;
             GoalManager.secondGoal = gameData.secondGoal;
             GoalManager.thirdGoal = gameData.thirdGoal;
@@ -102,7 +101,6 @@ public class NewGameUI : MonoBehaviour
             equipmentManager.ResetPlayerStats();
 
             // event icons
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 3450: gameData.EventObjects.Count { gameData.EventObjects.Count } to list");
             for (int i = 0; i < gameData.EventObjects.Count; i++)
             {
                 EventIconModel iconModel = gameData.EventObjects[i];

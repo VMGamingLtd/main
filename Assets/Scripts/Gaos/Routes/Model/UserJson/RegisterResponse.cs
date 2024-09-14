@@ -1,5 +1,7 @@
 ﻿#pragma warning disable 8632
 
+using Gaos.Dbo.Model;
+
 namespace Gaos.Routes.Model.UserJson
 {
     public enum RegisterResponseErrorKind
@@ -23,6 +25,7 @@ namespace Gaos.Routes.Model.UserJson
         public RegisterResponseErrorKind? ErrorKind;
 
         public Dbo.Model.User? User;
+        public UserInterfaceColors? UserInterfaceColors;
 
         public string? Jwt;
     }

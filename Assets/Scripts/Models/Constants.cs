@@ -162,6 +162,7 @@ public static class Constants
     public const string NoEnergyObjects = "NoEnergyObjects";
     public const string ItemCreatorList = "ItemCreatorList";
     public const string LevelMark = "LevelMark";
+    public const string UIManagerReference = "UIMANAGER";
 
     // Science projects
     public const string ResearchPoint = "ResearchPoint";

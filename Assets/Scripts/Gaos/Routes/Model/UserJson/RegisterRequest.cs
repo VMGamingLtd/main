@@ -1,5 +1,7 @@
 ﻿#pragma warning disable 8632
 
+using Gaos.Dbo.Model;
+
 namespace Gaos.Routes.Model.UserJson
 {
 
@@ -11,6 +13,10 @@ namespace Gaos.Routes.Model.UserJson
         public string? Email;
 
         public string? Password;
+        public string? Language;
+        public string? Country;
+
+        public UserInterfaceColors? UserInterfaceColors;
 
         public string? PasswordVerify;
         public int? DeviceId;

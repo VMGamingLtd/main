@@ -131,7 +131,15 @@ namespace Gaos.WebSocket
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                int state = WebSocketReadyState(Ws);
+                int state;
+                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                {
+                    state = WebSocketReadyState(Ws);
+                }
+                else
+                {
+                    state = 1;
+                }
                 if (state == 1) // 1 is OPEN
                 {
                     if (MessagesOutbound.Count > 0)
@@ -142,7 +150,10 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                WebSocketSendBytes(Ws, data);
+                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                                {
+                                    WebSocketSendBytes(Ws, data);
+                                }
                             }
                             catch (System.Exception e)
                             {
@@ -189,7 +200,15 @@ namespace Gaos.WebSocket
             const string METHOD_NAME = "StartProcessingInboundQueue()";
             while (!cancellationToken.IsCancellationRequested)
             {
-                int state = WebSocketReadyState(Ws);
+                int state;
+                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                {
+                    state = WebSocketReadyState(Ws);
+                }
+                else
+                {
+                    state = 1;
+                }
                 if (state == 1) // 1 is OPEN
                 {
                     if (MessagesInbound.Count > 0)
@@ -200,7 +219,10 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                ws.Process(data);
+                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                                {
+                                    ws.Process(data);
+                                }
                             }
                             catch (System.Exception e)
                             {

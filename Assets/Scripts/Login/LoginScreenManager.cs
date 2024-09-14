@@ -138,7 +138,6 @@ public class LoginScreenManager : MonoBehaviour
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User logged in.");
 
 
-            CoroutineManager.registeredUser = true;
             UserName.userName = Gaos.User.User.UserLogin.LoginResponse.UserName;
             bool isGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest;
             Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventArgs { UserName = UserName.userName, IsGuest = isGuest });
@@ -156,39 +155,5 @@ public class LoginScreenManager : MonoBehaviour
             errorText.text = GetErrorMessage(Gaos.User.User.UserLogin.ResponseErrorKind);
         }
     }
-
-
-    /*
-    private void OnUserLoginComplete()
-    {
-        const string METHOD_NAME = "OnUserLoginComplete()";
-
-        buttonBack.interactable = true;
-        buttonLogin.interactable = true;
-
-        if (Gaos.User.User.UserLogin.IsLoggedIn == true)
-        {
-            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User logged in.");
-
-
-            CoroutineManager.registeredUser = true;
-            UserName.userName = Gaos.User.User.UserLogin.LoginResponse.UserName;
-            bool isGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest;
-            Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventArgs { UserName = UserName.userName, IsGuest = isGuest });
-            //mainUI.SetActive(true);
-            //this.gameObject.SetActive(false);
-            ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.UserLogin.LoginResponse.UserName;
-            ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest; 
-            //buttonBack.onClick.Invoke();
-
-            StartCoroutine(CustomSceneLoader.RestartGame());
-        }
-        else
-        {
-            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: User not logged in, erorr: {Gaos.User.User.UserLogin.ResponseErrorKind}");
-            errorText.text = GetErrorMessage(Gaos.User.User.UserLogin.ResponseErrorKind);
-        }
-    }
-    */
 
 }

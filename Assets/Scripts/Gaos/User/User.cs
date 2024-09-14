@@ -1,6 +1,7 @@
 #pragma warning disable 8632
 
 using Cysharp.Threading.Tasks;
+using Gaos.Dbo.Model;
 using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
@@ -106,6 +107,8 @@ namespace Gaos.User.User
                 Context.Authentication.SetUserId(GuestLoginResponse.UserId);
                 Context.Authentication.SetUserName(GuestLoginResponse.UserName);
                 Context.Authentication.SetCountry(GuestLoginResponse.Country);
+                Context.Authentication.SetLanguage(GuestLoginResponse.Language);
+                Context.Authentication.SetUserInterfaceColors(GuestLoginResponse.UserInterfaceColors);
                 Context.Authentication.SetIsGuest(true);
             }
             else
@@ -150,6 +153,9 @@ namespace Gaos.User.User
             request.UserName = userName;
             request.Email = email;
             request.Password = password;
+            request.Language = Gaos.Context.Authentication.GetLanguage();
+            request.Country = Gaos.Context.Authentication.GetCountry();
+            request.UserInterfaceColors = Gaos.Context.Authentication.UserInterfaceColors;
 
             if (Gaos.Device.Device.Registration.IsDeviceRegistered == true)
             {
@@ -236,6 +242,9 @@ namespace Gaos.User.User
                         Context.Authentication.SetUserId(RegisterResponse.User.Id);
                         Context.Authentication.SetUserName(RegisterResponse.User.Name);
                         Context.Authentication.SetCountry(RegisterResponse.User.Country);
+                        Context.Authentication.SetLanguage(RegisterResponse.User.Language);
+                        Context.Authentication.SetEmail(RegisterResponse.User.Email);
+                        Context.Authentication.SetUserInterfaceColors(RegisterResponse.UserInterfaceColors);
                         if (RegisterResponse.User.IsGuest == true)
                         {
                             Context.Authentication.SetIsGuest(true);
@@ -371,6 +380,9 @@ namespace Gaos.User.User
                         Gaos.Context.Authentication.SetUserId(LoginResponse.UserId);
                         Gaos.Context.Authentication.SetUserName(LoginResponse.UserName);
                         Gaos.Context.Authentication.SetCountry(LoginResponse.Country);
+                        Gaos.Context.Authentication.SetLanguage(LoginResponse.Language);
+                        Gaos.Context.Authentication.SetEmail(LoginResponse.Email);
+                        Gaos.Context.Authentication.SetUserInterfaceColors(LoginResponse.UserInterfaceColors);
                         Gaos.Context.Authentication.SetIsGuest(false);
                         */
                     }
@@ -513,6 +525,35 @@ namespace Gaos.User.User
         }
     }
 
+    public class LanguageUpdater
+    {
+        private readonly static string CLASS_NAME = typeof(LanguageUpdater).Name;
+
+        public static IEnumerator UpdateLanguage(int userId, string language)
+        {
+            const string METHOD_NAME = "UpdateLanguage()";
+
+            Gaos.Routes.Model.UserJson.UpdateLanguageRequest request = new Routes.Model.UserJson.UpdateLanguageRequest()
+            {
+                UserId = userId,
+                Language = language
+            };
+
+            string requestJsonStr = JsonConvert.SerializeObject(request);
+            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/updateLanguage", requestJsonStr);
+            yield return apiCall.Call();
+
+            if (apiCall.IsResponseError == true)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Failed to update language. Error: {apiCall.ResponseJsonStr}");
+            }
+            else
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Language update successful. Response: {apiCall.ResponseJsonStr}");
+            }
+        }
+    }
+
     public class CountryUpdater
     {
         private readonly static string CLASS_NAME = typeof(CountryUpdater).Name;
@@ -538,6 +579,34 @@ namespace Gaos.User.User
             else
             {
                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Country update successful. Response: {apiCall.ResponseJsonStr}");
+            }
+        }
+    }
+
+    public class UserInterfaceColorsUpdater
+    {
+        private readonly static string CLASS_NAME = typeof(UserInterfaceColorsUpdater).Name;
+        public static IEnumerator UpdateUserInterfaceColors(int userId, UserInterfaceColors userInterfaceColors)
+        {
+            const string METHOD_NAME = "UpdateUserInterfaceColors()";
+
+            Gaos.Routes.Model.UserJson.UpdateUserColorsRequest request = new Routes.Model.UserJson.UpdateUserColorsRequest()
+            {
+                UserId = userId,
+                UserInterfaceColors = userInterfaceColors
+            };
+
+            string requestJsonStr = JsonConvert.SerializeObject(request);
+            Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("user/updateUserColors", requestJsonStr);
+            yield return apiCall.Call();
+
+            if (apiCall.IsResponseError == true)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: Failed to update user interface colors. Error: {apiCall.ResponseJsonStr}");
+            }
+            else
+            {
+                //Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User interface colors update successful. Response: {apiCall.ResponseJsonStr}");
             }
         }
     }

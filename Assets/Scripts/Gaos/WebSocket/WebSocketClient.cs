@@ -47,9 +47,18 @@ namespace Gaos.WebSocket
 
         public void Open()
         {
+            const string METHOD_NAME = "Open()";
+            if (Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false")
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: websocket is disabled");
+            }
+
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                webSocketClientJs.Open();
+                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                {
+                    webSocketClientJs.Open();
+                }
             }
             else
             {
@@ -74,13 +83,16 @@ namespace Gaos.WebSocket
 
         public void CloseWebsocket()
         {
-            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
             {
-                webSocketClientJs.CloseWebsocket();
-            }
-            else
-            {
-                webSocketClientSharp.CloseWebsocket();
+                if (Application.platform == RuntimePlatform.WebGLPlayer)
+                {
+                    webSocketClientJs.CloseWebsocket();
+                }
+                else
+                {
+                    webSocketClientSharp.CloseWebsocket();
+                }
             }
         }
 

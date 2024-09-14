@@ -533,17 +533,17 @@
       },
       {
         ""identifier"": ""Email"",
-        ""english"": ""e-mail"",
+        ""english"": ""E-mail"",
         ""russian"": ""E-мейл"",
         ""chinese"": ""电邮"",
-        ""slovak"": ""e-mail""
+        ""slovak"": ""E-mail""
       },
       {
         ""identifier"": ""Username"",
-        ""english"": ""username"",
-        ""russian"": ""имя"",
+        ""english"": ""Username"",
+        ""russian"": ""Имя"",
         ""chinese"": ""用户名"",
-        ""slovak"": ""meno""
+        ""slovak"": ""Meno""
       },
       {
         ""identifier"": ""EmailOrUsername"",
@@ -554,10 +554,10 @@
       },
       {
         ""identifier"": ""Password"",
-        ""english"": ""password"",
-        ""russian"": ""пароль"",
+        ""english"": ""Password"",
+        ""russian"": ""Пароль"",
         ""chinese"": ""密码"",
-        ""slovak"": ""heslo""
+        ""slovak"": ""Heslo""
       },
       {
         ""identifier"": ""VerificationCode"",
@@ -566,7 +566,146 @@
         ""chinese"": ""验证码"",
         ""slovak"": ""overovací kód""
       },
-
+      {
+        ""identifier"": ""ChooseLanguage"",
+        ""english"": ""Choose language"",
+        ""russian"": ""Выберите язык"",
+        ""chinese"": ""选择语言"",
+        ""slovak"": ""Zvoľte jazyk""       
+      },
+      {
+        ""identifier"": ""English"",
+        ""english"": ""English"",
+        ""russian"": ""Английский"",
+        ""chinese"": ""英语"",
+        ""slovak"": ""Anglický""
+      },
+      {
+        ""identifier"": ""Russian"",
+        ""english"": ""Russian"",
+        ""russian"": ""Русский"",
+        ""chinese"": ""俄语"",
+        ""slovak"": ""Ruský""
+      },
+      {
+        ""identifier"": ""Chinese"",
+        ""english"": ""Chinese"",
+        ""russian"": ""Китайский"",
+        ""chinese"": ""俄语"",
+        ""slovak"": ""Čínsky""
+      },
+      {
+        ""identifier"": ""Slovak"",
+        ""english"": ""Slovak"",
+        ""russian"": ""Cловацкий"",
+        ""chinese"": ""斯洛伐克语"",
+        ""slovak"": ""Slovenský""
+      },
+      {
+        ""identifier"": ""Guest"",
+        ""english"": ""Guest"",
+        ""russian"": ""Гость"",
+        ""chinese"": ""访客帐户"",
+        ""slovak"": ""Hosť""       
+      },
+      {
+        ""identifier"": ""ChooseCountry"",
+        ""english"": ""Please, choose your country"",
+        ""russian"": ""Пожалуйста, выберите вашу страну"",
+        ""chinese"": ""请选择您的国家"",
+        ""slovak"": ""Prosím, zvoľte svoju krajinu""       
+      },
+      {
+        ""identifier"": ""Settings"",
+        ""english"": ""Settings"",
+        ""russian"": ""Настройки"",
+        ""chinese"": ""设置"",
+        ""slovak"": ""Nastavenia""
+      },
+      {
+        ""identifier"": ""Language"",
+        ""english"": ""Language"",
+        ""russian"": ""Язык"",
+        ""chinese"": ""语言"",
+        ""slovak"": ""Jazyk""       
+      },
+      {
+        ""identifier"": ""ScreenResolution"",
+        ""english"": ""Screen resolution"",
+        ""russian"": ""Разрешение экрана"",
+        ""chinese"": ""屏幕分辨率"",
+        ""slovak"": ""Rozlíšenie obrazovky""       
+      },
+      {
+        ""identifier"": ""PrimaryColor"",
+        ""english"": ""Primary color"",
+        ""russian"": ""Основной цвет"",
+        ""chinese"": ""原色"",
+        ""slovak"": ""Primárna farba""
+      },
+      {
+        ""identifier"": ""SecondaryColor"",
+        ""english"": ""Secondary color"",
+        ""russian"": ""Вторичный цвет"",
+        ""chinese"": ""次要颜色"",
+        ""slovak"": ""Sekundárna farba""
+      },
+      {
+        ""identifier"": ""BackgroundColor"",
+        ""english"": ""Background color"",
+        ""russian"": ""Цвет фона"",
+        ""chinese"": ""背景颜色"",
+        ""slovak"": ""Farba pozadia""
+      },
+      {
+        ""identifier"": ""SecondaryBackgroundColor"",
+        ""english"": ""Secondary background color"",
+        ""russian"": ""Дополнительный цвет фона"",
+        ""chinese"": ""辅助背景颜色"",
+        ""slovak"": ""Sekundárna farba pozadia""
+      },
+      {
+        ""identifier"": ""NegativeColor"",
+        ""english"": ""Negative color"",
+        ""russian"": ""Отрицательный цвет"",
+        ""chinese"": ""负界面颜色"",
+        ""slovak"": ""Negatívna farba""
+      },
+      {
+        ""identifier"": ""Music"",
+        ""english"": ""Music"",
+        ""russian"": ""Музыка"",
+        ""chinese"": ""音乐"",
+        ""slovak"": ""Hudba""       
+      },
+      {
+        ""identifier"": ""Account"",
+        ""english"": ""Account"",
+        ""russian"": ""Счет"",
+        ""chinese"": ""帐户"",
+        ""slovak"": ""Účet""       
+      },
+      {
+        ""identifier"": ""Interface"",
+        ""english"": ""Interface"",
+        ""russian"": ""Интерфейс"",
+        ""chinese"": ""用户界面"",
+        ""slovak"": ""Interface""       
+      },
+      {
+        ""identifier"": ""Gameplay"",
+        ""english"": ""Gameplay"",
+        ""russian"": ""Геймплей"",
+        ""chinese"": ""游戏"",
+        ""slovak"": ""Hrateľnosť""       
+      },
+      {
+        ""identifier"": ""Country"",
+        ""english"": ""Country"",
+        ""russian"": ""Страна"",
+        ""chinese"": ""国家"",
+        ""slovak"": ""Krajina""       
+      },
       {
         ""identifier"": ""Start"",
         ""english"": ""Start"",

@@ -26,6 +26,8 @@ namespace Gaos.Environment
 
                 env.Add("IS_SEND_GAME_DATA_DIFF", "false");
 
+                env.Add("IS_WEBSOCKET", "false");
+
                 env.Add("IS_DEBUG", "true");
                 env.Add("IS_DEBUG_GAME_DATA", "false");
                 env.Add("IS_DEBUG_SEND_GAMEDATA_BASE", "false");
@@ -44,6 +46,8 @@ namespace Gaos.Environment
                 env.Add("RELEASE_URL", "https://test.galacticodyssey.space/release");
 
                 env.Add("IS_SEND_GAME_DATA_DIFF", "true");
+
+                env.Add("IS_WEBSOCKET", "false");
 
                 env.Add("IS_DEBUG", "true");
                 env.Add("IS_DEBUG_GAME_DATA", "false");
