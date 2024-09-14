@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
@@ -42,6 +43,19 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("AudioMixer not assigned in the Inspector!");
         }
     }
+
+    public void UpdateMusicVolume(Slider slider)
+    {
+        if (audioMixer != null)
+        {
+            audioMixer.SetFloat("Music", slider.value);
+        }
+        else
+        {
+            Debug.LogWarning("AudioMixer not assigned in the Inspector!");
+        }
+    }
+
     public void PlayHoverSound()
     {
         audioSource.PlayOneShot(hoverSound, GlobalVolume);

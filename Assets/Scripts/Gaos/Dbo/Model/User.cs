@@ -16,6 +16,6 @@ namespace Gaos.Dbo.Model
         public string? EmailVerificationCode;
         public bool? IsEmailVerified;
         public string? Country;
-
+        public string? Language;
     }
 }

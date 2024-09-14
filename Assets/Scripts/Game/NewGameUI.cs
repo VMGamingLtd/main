@@ -77,7 +77,6 @@ public class NewGameUI : MonoBehaviour
             GlobalCalculator.hours = gameData.hours;
             GlobalCalculator.minutes = gameData.minutes;
             GlobalCalculator.seconds = gameData.seconds;
-            CoroutineManager.registeredUser = gameData.registeredUser;
             GoalManager.firstGoal = gameData.firstGoal;
             GoalManager.secondGoal = gameData.secondGoal;
             GoalManager.thirdGoal = gameData.thirdGoal;

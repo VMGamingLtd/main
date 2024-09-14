@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Gaos.Dbo.Model;
 using ItemManagement;
 using RecipeManagement;
 using System;
@@ -56,7 +57,6 @@ public class CoroutineManager : MonoBehaviour
     public Image ExpBar;
 
     // data for server
-    public static bool registeredUser = false;
     public static bool manualProduction = false;
     public static bool autoProduction = false;
     public static bool[] AllCoroutineBooleans = new bool[36];
@@ -505,6 +505,37 @@ public class CoroutineManager : MonoBehaviour
     public IEnumerator LoadSaveSlots()
     {
         var country = Gaos.Context.Authentication.GetCountry();
+        var userInterfaceColors = Gaos.Context.Authentication.GetUserInterfaceColors();
+        UIManagerReference uIManagerReference = GameObject.Find("UIMANAGER").GetComponent<UIManagerReference>();
+
+        if (userInterfaceColors != null)
+        {
+            uIManagerReference.UIManagerAsset.primaryColor = ColorUtils.StringToColor(userInterfaceColors.PrimaryColor);
+            uIManagerReference.UIManagerAsset.secondaryColor = ColorUtils.StringToColor(userInterfaceColors.SecondaryColor);
+            uIManagerReference.UIManagerAsset.backgroundColor = ColorUtils.StringToColor(userInterfaceColors.BackgroundColor);
+            uIManagerReference.UIManagerAsset.primaryReversed = ColorUtils.StringToColor(userInterfaceColors.SecondaryBackgroundColor);
+            uIManagerReference.UIManagerAsset.negativeColor = ColorUtils.StringToColor(userInterfaceColors.NegativeColor);
+        }
+        else
+        {
+            UserInterfaceColors colors = new()
+            {
+                UserId = Gaos.Context.Authentication.GetUserId(),
+                PrimaryColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.primaryColor),
+                SecondaryColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.secondaryColor),
+                BackgroundColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.backgroundColor),
+                SecondaryBackgroundColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.primaryReversed),
+                NegativeColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.negativeColor),
+            };
+
+            Gaos.Context.Authentication.SetUserInterfaceColors(colors);
+
+            //Gaos.Context.Authentication.UserInterfaceColors.PrimaryColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.primaryColor);
+            //Gaos.Context.Authentication.UserInterfaceColors.SecondaryColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.secondaryColor);
+            //Gaos.Context.Authentication.UserInterfaceColors.BackgroundColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.backgroundColor);
+            //Gaos.Context.Authentication.UserInterfaceColors.SecondaryBackgroundColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.primaryReversed);
+            //Gaos.Context.Authentication.UserInterfaceColors.NegativeColor = ColorUtils.ColorToString(uIManagerReference.UIManagerAsset.negativeColor);
+        }
 
         if (country.IsNullOrEmpty())
         {
@@ -523,6 +554,11 @@ public class CoroutineManager : MonoBehaviour
     {
         StartCoroutine(Gaos.User.User.CountryUpdater.UpdateCountry(Gaos.Context.Authentication.GetUserId(), country));
         StartCoroutine(LoadSaveSlots());
+    }
+
+    public void CallLanguageUpdate(string language)
+    {
+        StartCoroutine(Gaos.User.User.LanguageUpdater.UpdateLanguage(Gaos.Context.Authentication.GetUserId(), language));
     }
 
     public static void ResetAllCoroutineBooleans()

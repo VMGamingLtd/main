@@ -341,4 +341,17 @@ public class BuildingCycles : MonoBehaviour
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        cts?.Cancel();
+    }
+
+    private void OnDestroy()
+    {
+        if (cts != null)
+        {
+            cts.Cancel();
+            cts.Dispose();
+        }
+    }
 }

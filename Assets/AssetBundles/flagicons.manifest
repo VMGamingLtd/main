@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1588294750
+CRC: 1959403447
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 56d16bc20e8513d2236746b90ed0926f
+    Hash: f04e7748bad9a3e7b9d11c82d36d6363
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -154,7 +154,7 @@ Assets:
 - Assets/AssetBundlesRepo/FlagIcons/Malaysia.png
 - Assets/AssetBundlesRepo/FlagIcons/Grenada.png
 - Assets/AssetBundlesRepo/FlagIcons/Wales.png
-- Assets/AssetBundlesRepo/FlagIcons/Qatar.png
+- Assets/AssetBundlesRepo/FlagIcons/Quatar.png
 - Assets/AssetBundlesRepo/FlagIcons/Luxembourg.png
 - Assets/AssetBundlesRepo/FlagIcons/Indonesia.png
 - Assets/AssetBundlesRepo/FlagIcons/Nepal.png

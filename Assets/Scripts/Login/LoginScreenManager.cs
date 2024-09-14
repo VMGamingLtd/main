@@ -128,15 +128,13 @@ public class LoginScreenManager : MonoBehaviour
         {
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User logged in.");
 
-
-            CoroutineManager.registeredUser = true;
             UserName.userName = Gaos.User.User.UserLogin.LoginResponse.UserName;
             bool isGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest;
             Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventArgs { UserName = UserName.userName, IsGuest = isGuest });
             //mainUI.SetActive(true);
             //this.gameObject.SetActive(false);
             ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.UserLogin.LoginResponse.UserName;
-            ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest; 
+            ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest;
             buttonBack.onClick.Invoke();
         }
         else

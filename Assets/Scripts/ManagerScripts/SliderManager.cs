@@ -50,6 +50,11 @@ public class SliderManager : MonoBehaviour
     {
         Time.timeScale = 1f;
     }
+
+    public void OnDestroy()
+    {
+        Time.timeScale = 1f;
+    }
     public float GetCurrentSplitQuantity()
     {
         currentSplitQuantity = mainSlider.value;

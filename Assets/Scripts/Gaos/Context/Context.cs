@@ -1,4 +1,5 @@
-﻿using Gaos.Routes.Model.DeviceJson;
+﻿using Gaos.Dbo.Model;
+using Gaos.Routes.Model.DeviceJson;
 using System.Linq;
 using UnityEngine;
 
@@ -10,9 +11,11 @@ namespace Gaos.Context
         private static int UserId = -1;
         private static string UserName;
         private static string Country;
+        private static string Email;
+        private static string Language = null;
         private static bool IsGuest = false;
         private static DeviceRegisterResponseUserSlot[] UserSlots = new DeviceRegisterResponseUserSlot[0];
-
+        public static UserInterfaceColors UserInterfaceColors = null;
 
         public static void SetJWT(string jwt)
         {
@@ -52,11 +55,31 @@ namespace Gaos.Context
             return Country;
         }
 
+
         public static void SetCountry(string country)
         {
             Country = country;
         }
 
+        public static string GetEmail()
+        {
+            return Email;
+        }
+
+        public static void SetEmail(string email)
+        {
+            Email = email;
+        }
+
+        public static string GetLanguage()
+        {
+            return Language;
+        }
+
+        public static void SetLanguage(string language)
+        {
+            Language = language;
+        }
         public static string GetUserName()
         {
             return UserName;
@@ -85,6 +108,16 @@ namespace Gaos.Context
         public static void RemoveUserSlot(int slotId)
         {
             UserSlots = UserSlots.Where(slot => slot.SlotId != slotId).ToArray();
+        }
+
+        public static UserInterfaceColors GetUserInterfaceColors()
+        {
+            return UserInterfaceColors;
+        }
+
+        public static void SetUserInterfaceColors(UserInterfaceColors userColors)
+        {
+            UserInterfaceColors = userColors;
         }
     }
 

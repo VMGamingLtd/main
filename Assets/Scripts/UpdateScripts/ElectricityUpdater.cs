@@ -1,5 +1,7 @@
 using BuildingManagement;
 using Cysharp.Threading.Tasks; // Import UniTask namespace
+using System;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 
@@ -8,20 +10,43 @@ public class ElectricityUpdater : MonoBehaviour
     public TextMeshProUGUI[] textFields; // An array of TextMeshProUGUI for multiple text fields
     private NumberFormater formatter;
     public BuildingManager buildingManager;
+    private CancellationTokenSource _cancellationTokenSource;
+
+    private void Awake()
+    {
+        _cancellationTokenSource = new CancellationTokenSource();
+    }
 
     private async UniTaskVoid Start()
     {
         formatter = new NumberFormater();
-        await RefreshCurrentElectricityLoop(); // Start the electricity refresh loop
+        await RefreshCurrentElectricityLoop(_cancellationTokenSource.Token); // Start the electricity refresh loop
     }
 
-    private async UniTask RefreshCurrentElectricityLoop()
+    private async UniTask RefreshCurrentElectricityLoop(CancellationToken cancellationToken)
     {
-        await UniTask.Delay(1000); // Use UniTask.Delay to wait for 1 second (1000 milliseconds)
-        UpdateCurrentElectricityText();
+        try
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await UniTask.Delay(1000, cancellationToken: cancellationToken);
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    UpdateCurrentElectricityText();
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Handle the cancellation if necessary
+        }
     }
 
-    private async void UpdateCurrentElectricityText()
+    private void UpdateCurrentElectricityText()
     {
         if (GlobalCalculator.GameStarted)
         {
@@ -47,9 +72,6 @@ public class ElectricityUpdater : MonoBehaviour
                 }
             }
         }
-
-        await RefreshCurrentElectricityLoop();
-
     }
 
     private int CalculateTotalElectricity()
@@ -108,5 +130,16 @@ public class ElectricityUpdater : MonoBehaviour
             }
         }
         return totalConsumption;
+    }
+
+    private void OnApplicationQuit()
+    {
+        _cancellationTokenSource.Cancel();
+    }
+
+    private void OnDestroy()
+    {
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
     }
 }
