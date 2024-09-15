@@ -85,6 +85,13 @@ function GAO_WebSocketReadyState(ws) {
   }
 }
 
+function GAO_WebSocketClose(ws) {
+  var websocket = window.GAO_WEB_SOCKETS.websockets[ws];
+  if (websocket) {
+    websocket.close();
+  }
+}
+
 function GAO_UnityBrowserChannel_BaseMessages_sendString(_str) {
   var str = UTF8ToString(_str); 
   if (window.GAO_UnityBrowserChannel) {
@@ -107,6 +114,7 @@ mergeInto(LibraryManager.library, {
   WebSocketCreate: GAO_WebSocketCreate,
   WebSocketSend: GAO_WebSocketSend,
   WebSocketReadyState: GAO_WebSocketReadyState,
+  WebSocketClose: GAO_WebSocketClose,
 
   UnityBrowserChannel_BaseMessages_sendString: GAO_UnityBrowserChannel_BaseMessages_sendString,
 });

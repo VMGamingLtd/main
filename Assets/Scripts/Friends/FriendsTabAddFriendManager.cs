@@ -74,7 +74,6 @@ namespace Friends
 
         private async UniTask ReadAllUsers(string friendNameSubstring = null)
         {
-            Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp200 ReadAllUsers()");
             Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(friendNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
             if (response == null)
             {

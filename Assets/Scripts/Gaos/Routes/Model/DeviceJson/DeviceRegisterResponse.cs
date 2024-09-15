@@ -1,4 +1,6 @@
 #pragma warning disable 8632, 8618
+using Gaos.Dbo.Model;
+
 namespace Gaos.Routes.Model.DeviceJson
 {
 
@@ -6,7 +8,7 @@ namespace Gaos.Routes.Model.DeviceJson
     public class DeviceRegisterResponseUserSlot
     {
         public string MongoDocumentId;
-        public string MongoDocumentVersion;
+        public int MongoDocumentVersion;
         public int SlotId;
 
         public string UserName;
@@ -28,7 +30,7 @@ namespace Gaos.Routes.Model.DeviceJson
 
         public Dbo.Model.User? User;
         public Dbo.Model.JWT? JWT;
-
+        public UserInterfaceColors? UserInterfaceColors;
         public DeviceRegisterResponseUserSlot[]? UserSlots;
 
     }

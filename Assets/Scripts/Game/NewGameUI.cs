@@ -39,6 +39,9 @@ public class NewGameUI : MonoBehaviour
     void Awake()
     {
         translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+        inventoryManager.PopulateInventoryArrays();
+        buildingManager.PopulateBuildingArrays();
+        recipeManager.PopulateInventoryArrays();
     }
 
     public void StartNewGameUI()
@@ -77,7 +80,6 @@ public class NewGameUI : MonoBehaviour
             GlobalCalculator.hours = gameData.hours;
             GlobalCalculator.minutes = gameData.minutes;
             GlobalCalculator.seconds = gameData.seconds;
-            CoroutineManager.registeredUser = gameData.registeredUser;
             GoalManager.firstGoal = gameData.firstGoal;
             GoalManager.secondGoal = gameData.secondGoal;
             GoalManager.thirdGoal = gameData.thirdGoal;
@@ -610,6 +612,7 @@ public class NewGameUI : MonoBehaviour
 
             // Search in gaos context if there's an active user slot with same slotNumber
             var userSlots = Gaos.Context.Authentication.GetUserSlots();
+
             foreach (var slot in userSlots)
             {
                 if (slot.SlotId == slotNumber)
@@ -626,6 +629,7 @@ public class NewGameUI : MonoBehaviour
                         // If there's a user slot with same slotNumber and there was at least one game data save from the game on the slot then boot existing game
                         LoadSlotGame();
                         UserName.userName = slot.UserName;
+                        //UserName.country = slot.
                         return;
                     }
                 }

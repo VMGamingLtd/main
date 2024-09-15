@@ -10,7 +10,7 @@ namespace Gaos.Routes.Model.GameDataJson
         public string? ErrorMessage;
 
         public string? Id;
-        public string? Version;
+        public int Version;
         public string? GameDataJson;
     }
 }

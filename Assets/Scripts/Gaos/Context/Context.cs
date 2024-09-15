@@ -1,9 +1,6 @@
-﻿using Gaos.Routes.Model.DeviceJson;
-using System;
-using System.Collections.Generic;
+﻿using Gaos.Dbo.Model;
+using Gaos.Routes.Model.DeviceJson;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Gaos.Context
@@ -13,12 +10,15 @@ namespace Gaos.Context
         private static string JWT = null;
         private static int UserId = -1;
         private static string UserName;
+        private static string Country;
+        private static string Email;
+        private static string Language = null;
         private static bool IsGuest = false;
         private static DeviceRegisterResponseUserSlot[] UserSlots = new DeviceRegisterResponseUserSlot[0];
-
+        public static UserInterfaceColors UserInterfaceColors = null;
 
         public static void SetJWT(string jwt)
-        { 
+        {
             JWT = jwt;
             if (Gaos.Environment.Environment.GetEnvironment()["ENV_NAME"] == "Development")
             {
@@ -40,7 +40,7 @@ namespace Gaos.Context
             UserId = userId;
         }
 
-        public static int GetUserId() 
+        public static int GetUserId()
         {
             return UserId;
         }
@@ -50,6 +50,36 @@ namespace Gaos.Context
             UserName = userName;
         }
 
+        public static string GetCountry()
+        {
+            return Country;
+        }
+
+
+        public static void SetCountry(string country)
+        {
+            Country = country;
+        }
+
+        public static string GetEmail()
+        {
+            return Email;
+        }
+
+        public static void SetEmail(string email)
+        {
+            Email = email;
+        }
+
+        public static string GetLanguage()
+        {
+            return Language;
+        }
+
+        public static void SetLanguage(string language)
+        {
+            Language = language;
+        }
         public static string GetUserName()
         {
             return UserName;
@@ -58,12 +88,12 @@ namespace Gaos.Context
         public static void SetIsGuest(bool isGuest)
         {
             IsGuest = isGuest;
-        }   
+        }
 
         public static bool GetIsGuest()
         {
             return IsGuest;
-        }   
+        }
 
         public static void SetUserSlots(DeviceRegisterResponseUserSlot[] userSlots)
         {
@@ -78,6 +108,16 @@ namespace Gaos.Context
         public static void RemoveUserSlot(int slotId)
         {
             UserSlots = UserSlots.Where(slot => slot.SlotId != slotId).ToArray();
+        }
+
+        public static UserInterfaceColors GetUserInterfaceColors()
+        {
+            return UserInterfaceColors;
+        }
+
+        public static void SetUserInterfaceColors(UserInterfaceColors userColors)
+        {
+            UserInterfaceColors = userColors;
         }
     }
 

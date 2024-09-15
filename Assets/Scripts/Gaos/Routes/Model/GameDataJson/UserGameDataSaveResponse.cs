@@ -16,7 +16,7 @@ namespace Gaos.Routes.Model.GameDataJson
         public UserGameDataSaveErrorKind? ErrorKind;
 
         public string? Id;
-        public string? Version;
+        public int Version;
 
         public string? GameDataJson;
 

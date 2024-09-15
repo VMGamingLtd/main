@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Gaos.Routes.Model.UserJson;
 using TMPro;
 using UnityEngine;
@@ -110,26 +111,33 @@ public class LoginScreenManager : MonoBehaviour
 
     public void StartLoginUser()
     {
+        /*
         buttonBack.interactable = false;
         buttonLogin.interactable = false;
 
         StartCoroutine(Gaos.User.User.UserLogin.Login(userNameTextInput.text, passwordTextInput.text, OnUserLoginComplete));
+        */
+        DoLogin().Forget();
     }
 
-
-    private void OnUserLoginComplete()
+    public async UniTaskVoid DoLogin()
     {
-        const string METHOD_NAME = "OnUserLoginComplete()";
+        const string METHOD_NAME = "DoLogin()";
 
-        buttonBack.interactable = true;
-        buttonLogin.interactable = true;
+        // Set both login and back buttons to be disabled so that user cannot play if there's an error while logging in
+        // or else we might risk corruption of game data.
+        // If the login is not successfull user have no other choice except of reaload the game.
+        buttonBack.interactable = false;
+        buttonLogin.interactable = false;
 
+        await CustomSceneLoader.SaveGameDataAndStopSaveManager();
+
+        await Gaos.User.User.UserLogin.Login(userNameTextInput.text, passwordTextInput.text);
         if (Gaos.User.User.UserLogin.IsLoggedIn == true)
         {
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User logged in.");
 
 
-            CoroutineManager.registeredUser = true;
             UserName.userName = Gaos.User.User.UserLogin.LoginResponse.UserName;
             bool isGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest;
             Assets.Scripts.Login.UserChangedEvent.Emit(new Assets.Scripts.Login.UserChangedEventArgs { UserName = UserName.userName, IsGuest = isGuest });
@@ -137,7 +145,9 @@ public class LoginScreenManager : MonoBehaviour
             //this.gameObject.SetActive(false);
             ModelsRx.ContextRx.UserRx.UserName = Gaos.User.User.UserLogin.LoginResponse.UserName;
             ModelsRx.ContextRx.UserRx.IsGuest = (bool)Gaos.User.User.UserLogin.LoginResponse.IsGuest; 
-            buttonBack.onClick.Invoke();
+            //buttonBack.onClick.Invoke();
+
+            await CustomSceneLoader.RestartGame();
         }
         else
         {

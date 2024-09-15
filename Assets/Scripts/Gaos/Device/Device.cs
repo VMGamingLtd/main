@@ -101,6 +101,9 @@ namespace Gaos.Device.Device
                 {
                     Context.Authentication.SetUserId(DeviceRegisterResponse.User.Id);
                     Context.Authentication.SetUserName(DeviceRegisterResponse.User.Name);
+                    Context.Authentication.SetCountry(DeviceRegisterResponse.User.Country);
+                    Context.Authentication.SetLanguage(DeviceRegisterResponse.User.Language);
+                    Context.Authentication.SetUserInterfaceColors(DeviceRegisterResponse.UserInterfaceColors);
                     if (DeviceRegisterResponse.User.IsGuest == true)
                     {
                         Context.Authentication.SetIsGuest(true);
@@ -118,6 +121,7 @@ namespace Gaos.Device.Device
                         {
                             if (Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true")
                             {
+                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: user id: {DeviceRegisterResponse.User.Id}");
                                 Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: userSlot id: {userSlot.SlotId}, user name: {userSlot.UserName}, game data (id, version): ({userSlot.MongoDocumentId}, {userSlot.MongoDocumentVersion})");
                             }
                             Gaos.GameData.LastGameDataVersion.setVersion(userSlot.SlotId, userSlot.MongoDocumentVersion, userSlot.MongoDocumentId, null);

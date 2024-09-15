@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 
 namespace Gaos.GameData
@@ -12,7 +13,7 @@ namespace Gaos.GameData
     public class DocumentVersion
     {
         public string DocId;
-        public string DocVersion;
+        public int DocVersion;
         public string GameDataJson; // game data at version DocVersion
     }
 
@@ -30,7 +31,7 @@ namespace Gaos.GameData
             return slotToVersion[slotId];
         }
 
-        public static void setVersion(int slotId, string docVersion, string docId, string gameDataJson)
+        public static void setVersion(int slotId, int docVersion, string docId, string gameDataJson)
         {
             slotToVersion[slotId] = new DocumentVersion { DocId = docId, DocVersion = docVersion, GameDataJson = gameDataJson };
         }
@@ -174,22 +175,43 @@ namespace Gaos.GameData
             };
         }
 
-        private static OnUserGameDataSaveComplete makeOnRequestQueueItemSaveComplete(MonoBehaviour gameObject, RequestQueteItem item)
+        public delegate void OnProcessingSaveQueueFinished();
+
+        private static OnUserGameDataSaveComplete makeOnRequestQueueItemSaveComplete(MonoBehaviour gameObject, RequestQueteItem item, 
+                                                                                    bool finished, CancellationToken cancellationToken, 
+                                                                                    OnProcessingSaveQueueFinished onProcessingSaveQueueFinished)
         {
             return (UserGameDataSaveResponse response) =>
             {
                 var previousVersion = LastGameDataVersion.getVersion(item.slotId);
                 if (response != null)
                 {
+                    if (finished)
+                    {
+                        Debug.Log($"{CLASS_NAME}: finished processing, last saving of game data finished ok");
+                    }
                     LastGameDataVersion.setVersion(item.slotId, response.Version, response.Id, item.request.GameDataJson);
                 }
                 else
                 {
-                    // error saving game data
-                    LastGameDataVersion.setVersion(item.slotId, previousVersion.DocId, previousVersion.DocVersion, null);
+                    if (finished)
+                    {
+                        Debug.Log($"{CLASS_NAME}: finished processing, ERROR while last saving game data");
+                    }
+                    // Error saving game data.
+                    // Will be trying saving again with same version, since game data is null next save will be full save of game data (not just the json diff).
+                    // TODO:
+                    // If error is 'version mismatch' such error is irrecovarable and game should be terminated/restarted!!!!!
+                    LastGameDataVersion.setVersion(item.slotId, previousVersion.DocVersion, previousVersion.DocId, null);
 
                 }
                 item.onUserGameDataSaveComplete(response);
+                if (finished)
+                {
+                    requestsQueue.Clear();
+                    onProcessingSaveQueueFinished();
+                    return;
+                }
                 if (requestsQueue.Count > 0)
                 {
                     RequestQueteItem item = requestsQueue.Dequeue();
@@ -197,7 +219,7 @@ namespace Gaos.GameData
                     {
                         item = requestsQueue.Dequeue();
                     }
-                    var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item));
+                    var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item), finished, cancellationToken, onProcessingSaveQueueFinished);
                     if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                     {
                         if (previousVersion != null && previousVersion.GameDataJson != null)
@@ -236,12 +258,12 @@ namespace Gaos.GameData
                 }
                 else
                 {
-                    gameObject.StartCoroutine(ProcessSendQueue(gameObject));
+                    gameObject.StartCoroutine(ProcessSendQueue(gameObject, cancellationToken, onProcessingSaveQueueFinished));
                 }
             };
         }
 
-        public static IEnumerator ProcessSendQueue(MonoBehaviour gameObject)
+        public static IEnumerator ProcessSendQueue(MonoBehaviour gameObject, CancellationToken cancellationToken, OnProcessingSaveQueueFinished onProcessingSaveQueueFinished)
         {
             if (requestsQueue.Count > 0)
             {
@@ -250,7 +272,7 @@ namespace Gaos.GameData
                 {
                     item = requestsQueue.Dequeue();
                 }
-                var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item));
+                var onUserGameDataSaveComplete = makeOnRequestQueueItemSaveComplete(gameObject, cloneQueueItem(item), cancellationToken.IsCancellationRequested, cancellationToken, onProcessingSaveQueueFinished);
 
                 if (Environment.Environment.GetEnvironment()["IS_SEND_GAME_DATA_DIFF"] == "true") 
                 {
@@ -296,7 +318,7 @@ namespace Gaos.GameData
             {
                 // sleep for 1 second before checking again
                 yield return new WaitForSeconds(1);
-                gameObject.StartCoroutine(ProcessSendQueue(gameObject));
+                gameObject.StartCoroutine(ProcessSendQueue(gameObject, cancellationToken, onProcessingSaveQueueFinished));
             }
         }
 
@@ -392,7 +414,7 @@ namespace Gaos.GameData
                     onEnsureNewSlotComplete(null);
                     yield break;
                 }
-                Gaos.GameData.LastGameDataVersion.setVersion(slotId, response.MongoDocumentVersion, response.MongoDocumentVersion, null);
+                Gaos.GameData.LastGameDataVersion.setVersion(slotId, response.MongoDocumentVersion, response.MongoDocumentId, null);
                 onEnsureNewSlotComplete(response);
             }
 
