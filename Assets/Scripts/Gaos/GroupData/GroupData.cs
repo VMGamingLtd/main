@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 namespace Gaos.GroupData.GroupData
 {
@@ -8,14 +10,15 @@ namespace Gaos.GroupData.GroupData
     {
         public readonly static string CLASS_NAME = typeof(GetGroupData).Name;
 
-        public static async UniTask<Gaos.Routes.Model.GroupDataJson.GetGroupDataResponse> CallAsync()
+        public static async UniTask<Gaos.Routes.Model.GroupDataJson.GetGroupDataResponse> CallAsync(long version = -1, int slotId = 1)
         {
             const string METHOD_NAME = "/api/groupData/getGroupData";
             try
             {
 
                 Gaos.Routes.Model.GroupDataJson.GetGroupDataGetRequest request = new Gaos.Routes.Model.GroupDataJson.GetGroupDataGetRequest();
-                request.SlotId = 1;
+                request.SlotId = slotId;
+                request.Version = version;
                 string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/groupData/getGroupData", requestJsonStr);
                 await apiCall.CallAsync();
@@ -47,7 +50,8 @@ namespace Gaos.GroupData.GroupData
     {
         public readonly static string CLASS_NAME = typeof(SaveGroupData).Name;
 
-        public static async UniTask<Gaos.Routes.Model.GroupDataJson.SaveGroupDataResponse> CallAsync(string groupDataJson, int version)
+
+        public static async UniTask<Gaos.Routes.Model.GroupDataJson.SaveGroupDataResponse> CallAsync(string groupDataJson, bool isJsonDiff, long version, int slotId = 1)
         {
             const string METHOD_NAME = "/api/groupData/saveGroupData";
             try
@@ -55,6 +59,7 @@ namespace Gaos.GroupData.GroupData
                 Gaos.Routes.Model.GroupDataJson.SaveGroupDataRequest request = new Gaos.Routes.Model.GroupDataJson.SaveGroupDataRequest();
                 request.SlotId = 1;
                 request.GroupDataJson = groupDataJson;
+                request.IsJsonDiff = isJsonDiff;
                 request.Version = version;
 
                 string requestJsonStr = JsonConvert.SerializeObject(request);
@@ -71,7 +76,7 @@ namespace Gaos.GroupData.GroupData
                     if (response.IsError == true)
                     {
                         Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error saving group data: {response.ErrorMessage}");
-                        return null;
+                        return response;
                     }
                     return response;
                 }
