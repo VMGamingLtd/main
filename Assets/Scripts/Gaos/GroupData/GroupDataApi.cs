@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine.Rendering;
 
-namespace Gaos.GroupData.GroupData
+namespace Gaos.GroupData
 {
     public class GetGroupData
     {
