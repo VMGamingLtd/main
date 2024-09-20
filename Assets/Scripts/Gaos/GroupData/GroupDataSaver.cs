@@ -15,7 +15,6 @@ namespace Gaos.GroupData
     {
         public int slotId;
         public long version;
-        public string GroupDataStr;
         public GroupDataModel GroupDataJson;
 
     }
@@ -42,8 +41,20 @@ namespace Gaos.GroupData
         }
 
         CurrentGroupData currentGroupData;
+        private long groupDataLatesVersion;
 
         public delegate GroupDataModel MutateGroupDataFn(GroupDataModel groupData, System.Object context);
+
+        GroupDataSaver()
+        {
+            Messages.Group.GroupGameDataChanged.RegisterListener(GroupDataChangedHandler);
+
+        }
+
+        void GroupDataChangedHandler(GaoProtobuf.GroupDataChanged message)
+        {
+            groupDataLatesVersion = message.Version;
+        }
 
         public void Save(MutateGroupDataFn mutateFn, System.Object mutateContext = null)
         {
@@ -95,23 +106,45 @@ namespace Gaos.GroupData
             }
         }
 
+        public async Task EnsureLatestGroupData()
+        {
+            const string METHOD_NAME = "EnsureLatestGroupData()";
+            const int slotId = 1;
+
+            if (currentGroupData.version == groupDataLatesVersion)
+            {
+                return;
+            }
+
+            // fetch the diffrence towards newest version of the group data
+            var gdResponse = await GetGroupData.CallAsync(currentGroupData.version, true, slotId);
+
+            // add the diff to the current group data
+            JObject objA = JObject.FromObject(currentGroupData.GroupDataJson);
+            var diff = JsonConvert.DeserializeObject<jsondiff.DiffValue>(gdResponse.GroupDataJson, jsonSerializerSettings);
+            var objB = jsondiff.Difference.AddDiff(objA, diff);
+
+            currentGroupData.GroupDataJson = objB.ToObject<GroupDataModel>();
+            currentGroupData.version = gdResponse.Version;
+        }
+
         public async UniTaskVoid StartProcessing(CancellationToken cancellationToken)
         {
             const string METHOD_NAME = "StartProcessing()";
             const int slotId = 1;
 
             // fetch the newest version of the group data
-            var gdResponse = await GetGroupData.CallAsync(-1, slotId);
+            var gdResponse = await GetGroupData.CallAsync();
             currentGroupData = new CurrentGroupData
             {
                 slotId = slotId,
                 version = gdResponse.Version,
-                GroupDataStr = gdResponse.GroupDataJson,
                 GroupDataJson = JsonConvert.DeserializeObject<GroupDataModel>(gdResponse.GroupDataJson)
             };
 
             while (!cancellationToken.IsCancellationRequested)
             {
+                await EnsureLatestGroupData();
                 if (requestsQueue.Count > 1)
                 {
                     var queueItem = requestsQueue.Peek();
@@ -124,30 +157,14 @@ namespace Gaos.GroupData
                     {
                         if (saveStatus == SaveStatus.VersionMismatch)
                         {
-                            // fetch the newest version of the group data
-                            gdResponse = await GetGroupData.CallAsync(-1, slotId);
-                            currentGroupData = new CurrentGroupData
-                            {
-                                slotId = slotId,
-                                version = gdResponse.Version,
-                                GroupDataStr = gdResponse.GroupDataJson,
-                                GroupDataJson = JsonConvert.DeserializeObject<GroupDataModel>(gdResponse.GroupDataJson)
-                            };
+                            await EnsureLatestGroupData();
                         }
 
                         saveStatus = await SaveData(currentGroupData.GroupDataJson, currentGroupData.version, mutateFn, mutateContext, slotId) ;
-                        await UniTask.Delay(10);
                     }
-                    if (saveStatus != SaveStatus.Success)
-                    {
-                        Debug.LogError($"{CLASS_NAME}:{METHOD_NAME} Fatal Error: could nnot save group data (error: {saveStatus}), quitting the game...");
-                        Application.Quit();
-                    }
+                    requestsQueue.Dequeue();
                 }
-                else
-                {
-                    await UniTask.Delay(10);
-                }
+                await UniTask.Delay(10);
             }
         }
     }

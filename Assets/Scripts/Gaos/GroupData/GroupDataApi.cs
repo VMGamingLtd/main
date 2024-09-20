@@ -10,7 +10,7 @@ namespace Gaos.GroupData
     {
         public readonly static string CLASS_NAME = typeof(GetGroupData).Name;
 
-        public static async UniTask<Gaos.Routes.Model.GroupDataJson.GetGroupDataResponse> CallAsync(long version = -1, int slotId = 1)
+        public static async UniTask<Gaos.Routes.Model.GroupDataJson.GetGroupDataResponse> CallAsync(long version = -1, bool isJsonDiff = false, int slotId = 1)
         {
             const string METHOD_NAME = "/api/groupData/getGroupData";
             try
@@ -19,6 +19,7 @@ namespace Gaos.GroupData
                 Gaos.Routes.Model.GroupDataJson.GetGroupDataGetRequest request = new Gaos.Routes.Model.GroupDataJson.GetGroupDataGetRequest();
                 request.SlotId = slotId;
                 request.Version = version;
+                request.IsGameDataDiff = isJsonDiff;
                 string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/groupData/getGroupData", requestJsonStr);
                 await apiCall.CallAsync();
