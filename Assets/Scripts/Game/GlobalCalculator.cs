@@ -48,7 +48,18 @@ public class GlobalCalculator : MonoBehaviour
 
     void OnEnable()
     {
-        StartCoroutine(Gaos.GameData.UserGameDataSave.ProcessSendQueue(this));
+        //StartCoroutine(Gaos.GameData.UserGameDataSave.ProcessSendQueue(this));
+
+        // reset global static state so thtat on game reboot we start anew 
+        days = 0;
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
+        EnergyTimer = 0;
+
+        isPlayerInBiologicalBiome = true;
+
+        GameStarted = false;
     }
 
     void Start()
@@ -79,7 +90,7 @@ public class GlobalCalculator : MonoBehaviour
                 if (seconds == 0 || seconds == 5 || seconds == 10 || seconds == 15 || seconds == 20 || seconds == 25 || seconds == 30 || seconds == 35 ||
                     seconds == 40 || seconds == 45 || seconds == 50 || seconds == 55)
                 {
-                    saveManager.TestSaveGameDataOnServer();
+                    saveManager.SaveGameDataOnServer();
                 }
 
                 if (seconds > 59)

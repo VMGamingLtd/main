@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 88544022
+CRC: 2165176241
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 950828dfbf8d0b2696f142e211c0aa61
+    Hash: 432c368afdffb35aecb01c0a6bb59e54
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -15,17 +15,17 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/AssetBundlesRepo/BuildingIcons/Pipe.png
+- Assets/AssetBundlesRepo/BuildingIcons/pipe.png
 - Assets/AssetBundlesRepo/BuildingIcons/FibrousPlantField.png
 - Assets/AssetBundlesRepo/BuildingIcons/HiveNest.png
 - Assets/AssetBundlesRepo/BuildingIcons/SmallPowerGrid.png
 - Assets/AssetBundlesRepo/BuildingIcons/EnergyGrid.png
 - Assets/AssetBundlesRepo/BuildingIcons/ResearchDevice.png
 - Assets/AssetBundlesRepo/BuildingIcons/CyberHideout.png
-- Assets/AssetBundlesRepo/BuildingIcons/Turbine.png
+- Assets/AssetBundlesRepo/BuildingIcons/turbine.png
 - Assets/AssetBundlesRepo/BuildingIcons/VolcanicCave.png
 - Assets/AssetBundlesRepo/BuildingIcons/ResearchLab.png
-- Assets/AssetBundlesRepo/BuildingIcons/Boiler.png
+- Assets/AssetBundlesRepo/BuildingIcons/boiler.png
 - Assets/AssetBundlesRepo/BuildingIcons/SteamGenerator.png
 - Assets/AssetBundlesRepo/BuildingIcons/BiofuelGenerator.png
 - Assets/AssetBundlesRepo/BuildingIcons/IceCave.png

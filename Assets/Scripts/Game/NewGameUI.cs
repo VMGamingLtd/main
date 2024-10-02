@@ -39,6 +39,9 @@ public class NewGameUI : MonoBehaviour
     void Awake()
     {
         translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+        inventoryManager.PopulateInventoryArrays();
+        buildingManager.PopulateBuildingArrays();
+        recipeManager.PopulateInventoryArrays();
     }
 
     public void StartNewGameUI()

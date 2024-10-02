@@ -238,6 +238,7 @@ namespace Gaos.User.User
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user registered");
 
+                        /*
                         Context.Authentication.SetUserId(RegisterResponse.User.Id);
                         Context.Authentication.SetUserName(RegisterResponse.User.Name);
                         Context.Authentication.SetCountry(RegisterResponse.User.Country);
@@ -253,6 +254,7 @@ namespace Gaos.User.User
                             Context.Authentication.SetIsGuest(false);
                         }
                         Context.Authentication.SetJWT(RegisterResponse.Jwt);
+                        */
                     }
                     else
                     {
@@ -373,6 +375,7 @@ namespace Gaos.User.User
                     if (IsLoggedIn == true)
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}:  user logged in");
+                        /*
                         Gaos.Context.Authentication.SetJWT(LoginResponse.Jwt);
                         Gaos.Context.Authentication.SetUserId(LoginResponse.UserId);
                         Gaos.Context.Authentication.SetUserName(LoginResponse.UserName);
@@ -381,6 +384,7 @@ namespace Gaos.User.User
                         Gaos.Context.Authentication.SetEmail(LoginResponse.Email);
                         Gaos.Context.Authentication.SetUserInterfaceColors(LoginResponse.UserInterfaceColors);
                         Gaos.Context.Authentication.SetIsGuest(false);
+                        */
                     }
                     else
                     {
@@ -602,7 +606,7 @@ namespace Gaos.User.User
             }
             else
             {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User interface colors update successful. Response: {apiCall.ResponseJsonStr}");
+                //Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: User interface colors update successful. Response: {apiCall.ResponseJsonStr}");
             }
         }
     }

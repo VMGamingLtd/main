@@ -7,14 +7,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using static Enumerations;
 
 public class SaveManager : MonoBehaviour
 {
+    public readonly static string CLASS_NAME = typeof(SaveManager).Name;
 
     public static int CurrentGameSlotId;
+    public static SaveManager CurrentSaveManager; 
+    private bool IsSavingDisabled; 
+
+    CancellationTokenSource SaveQueueProcessingCancelationToken;
+    bool IsSaveQueueProcessing;
 
     private const string FileName = "Savegame.json";
     private string filePath;
@@ -215,6 +222,29 @@ public class SaveManager : MonoBehaviour
         public int powerConsumption;
         public int actualPowerConsumption;
         public float researchPoints;
+    }
+
+    public void OnEnable()
+    {
+        // Subscribe to the event
+        IsSavingDisabled = false;
+        CurrentSaveManager = this;
+
+        IsSaveQueueProcessing = true;
+        SaveQueueProcessingCancelationToken = new CancellationTokenSource();
+        StartCoroutine(Gaos.GameData.UserGameDataSave.ProcessSendQueue(this, SaveQueueProcessingCancelationToken.Token, () => {
+            IsSaveQueueProcessing = false;
+        }));
+    }
+
+    public System.Collections.IEnumerator StopProcessingSaveQueue()
+    {
+        IsSavingDisabled = true;
+        SaveQueueProcessingCancelationToken.Cancel();
+        while (IsSaveQueueProcessing)
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     void Awake()
@@ -1090,9 +1120,15 @@ public class SaveManager : MonoBehaviour
 
     }
 
-    public void TestSaveGameDataOnServer()
+    public void SaveGameDataOnServer()
     {
+        const string METHOD_NAME = "SaveGameDataOnServer()";
         int slotId = CurrentGameSlotId;
+        if (IsSavingDisabled)
+        {
+            Debug.Log($"{CLASS_NAME}.{METHOD_NAME}: Saving is disabled. Skipping save!");
+            return;
+        }
 
         // fill in game data
 

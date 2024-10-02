@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using Newtonsoft.Json;
 using Cysharp.Threading.Tasks;
 
@@ -208,6 +207,7 @@ namespace Gaos.Friends.Friends
             {
                 Gaos.Routes.Model.FriendsJson.GetFriendRequestsRequest request = new Gaos.Routes.Model.FriendsJson.GetFriendRequestsRequest();
                 request.MaxCount = MaxCount;
+                request.IsCountOnly = false;
                 if (OwnerNamePattern != null && OwnerNamePattern != "")
                 {
                     request.OwnerNamePattern = OwnerNamePattern;
@@ -233,6 +233,43 @@ namespace Gaos.Friends.Friends
                         return null;
                     }
                     return response;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {ex.Message}");
+                throw ex;
+            }
+        }
+    }
+
+    public class GetFriendRequestsCount
+    {
+        public readonly static string CLASS_NAME = typeof(GetFriendRequestsCount).Name;
+        public static async UniTask<int> CallAsync()
+        {
+            const string METHOD_NAME = "api/friends/getFriendRequests";
+            try
+            {
+                Gaos.Routes.Model.FriendsJson.GetFriendRequestsRequest request = new Gaos.Routes.Model.FriendsJson.GetFriendRequestsRequest();
+                request.IsCountOnly = true;
+                string requestJsonStr = JsonConvert.SerializeObject(request);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getFriendRequests", requestJsonStr);
+                await apiCall.CallAsync();
+                if (apiCall.IsResponseError)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting friend requests");
+                    return 0;
+                }
+                else
+                {
+                    Gaos.Routes.Model.FriendsJson.GetFriendRequestsResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetFriendRequestsResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting friend requests: {response.ErrorMessage}");
+                        return 0;
+                    }
+                    return (int)response.TotalCount;
                 }
             }
             catch (System.Exception ex)
@@ -366,6 +403,7 @@ namespace Gaos.Friends.Friends
                 Gaos.Routes.Model.FriendsJson.GetMyFriendsRequest request = new Gaos.Routes.Model.FriendsJson.GetMyFriendsRequest();
                 request.GroupId = groupId;
                 request.MaxCount = maxCount;
+                request.IsCountOnly = false;
                 string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getMyFriends", requestJsonStr);
                 await apiCall.CallAsync();
@@ -383,6 +421,45 @@ namespace Gaos.Friends.Friends
                         return null;
                     }
                     return response;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {ex.Message}");
+                throw ex;
+            }
+        }
+    }
+
+    public class GetMyFriendsCount
+    {
+        public readonly static string CLASS_NAME = typeof(GetMyFriendsCount).Name;
+
+        public static async UniTask<int> CallAsync(int groupId)
+        {
+            const string METHOD_NAME = "api/friends/getMyFriends";
+            try
+            {
+                Gaos.Routes.Model.FriendsJson.GetMyFriendsRequest request = new Gaos.Routes.Model.FriendsJson.GetMyFriendsRequest();
+                request.GroupId = groupId;
+                request.IsCountOnly = true;
+                string requestJsonStr = JsonConvert.SerializeObject(request);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getMyFriends", requestJsonStr);
+                await apiCall.CallAsync();
+                if (apiCall.IsResponseError)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting my friends");
+                    return 0;
+                }
+                else
+                {
+                    Gaos.Routes.Model.FriendsJson.GetMyFriendsResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetMyFriendsResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting my friends: {response.ErrorMessage}");
+                        return 0;
+                    }
+                    return (int)response.TotalCount;
                 }
             }
             catch (System.Exception ex)

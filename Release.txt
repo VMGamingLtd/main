@@ -63,3 +63,12 @@ Websocket server
 - Group handling (add friend request, accept / reject friend request, leave group, display friend requests panel,  
   display group members panel, websocket server group handling in preparation for multiplayer)
 
+
+20240914
+==============
+
+- added in-game menu Settings and Api routes with Language, Country and UserInterfaceColors save for UserId.
+- moved add friend dialog invocation to group dialog
+- gaos - added services gor friend requests count
+- simplified deployment scripts
+- passwords are encrypted

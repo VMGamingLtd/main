@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Collections.Concurrent;
+using System.Threading;
 
 namespace Gaos.WebSocket
 {
@@ -26,6 +27,10 @@ namespace Gaos.WebSocket
 
         [DllImport("__Internal")]
         private static extern int WebSocketReadyState(int ws);
+
+        [DllImport("__Internal")]
+        private static extern void WebSocketClose(int ws);
+
 
         private static void WebSocketSendBytes(int ws, byte[] buffer)
         {
@@ -90,6 +95,12 @@ namespace Gaos.WebSocket
             return MessagesInbound;
         }
 
+        public void ClearQueues()
+        {
+            MessagesOutbound.Clear();
+            MessagesInbound.Clear();
+        }
+
 
         public void Open()
         {
@@ -97,6 +108,12 @@ namespace Gaos.WebSocket
             Ws = WebSocketCreate(url, "OnOpen", "OnClose", "OnError", "OnMessage");
             IsAuthenticated = false;
         }
+
+        public void CloseWebsocket()
+        {
+            WebSocketClose(Ws);
+        }
+
 
         public void Send(byte[] data)
         {
@@ -108,13 +125,21 @@ namespace Gaos.WebSocket
         }
 
 
-        public IEnumerator StartProcessingOutboundQueue()
+        public IEnumerator StartProcessingOutboundQueue(CancellationToken cancellationToken)
         {
             const string METHOD_NAME = "StartProcessingOutboundQueue()";
 
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                int state = WebSocketReadyState(Ws);
+                int state;
+                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                {
+                    state = WebSocketReadyState(Ws);
+                }
+                else
+                {
+                    state = 1;
+                }
                 if (state == 1) // 1 is OPEN
                 {
                     if (MessagesOutbound.Count > 0)
@@ -125,7 +150,10 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                WebSocketSendBytes(Ws, data);
+                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                                {
+                                    WebSocketSendBytes(Ws, data);
+                                }
                             }
                             catch (System.Exception e)
                             {
@@ -141,6 +169,7 @@ namespace Gaos.WebSocket
                 }
                 else
                 {
+
                     if (state == 3) // 3 is CLOSED
                     {
                         Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket is closed, will try to open it again");
@@ -158,19 +187,28 @@ namespace Gaos.WebSocket
                     else
                     {
                         Debug.LogWarning($"{CLASS_NAME}.{METHOD_NAME}: ERROR: websocket is in unknown state: {state}");
-                        yield return new WaitForSeconds(5);
+                        yield return new WaitForSeconds(0.5f);
                         Open();
                     }
                 }
             }
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: processing outbound queue finished");
         }
 
-        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws)
+        public IEnumerator StartProcessingInboundQueue(WebSocketClient ws, CancellationToken cancellationToken)
         {
             const string METHOD_NAME = "StartProcessingInboundQueue()";
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                int state = WebSocketReadyState(Ws);
+                int state;
+                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                {
+                    state = WebSocketReadyState(Ws);
+                }
+                else
+                {
+                    state = 1;
+                }
                 if (state == 1) // 1 is OPEN
                 {
                     if (MessagesInbound.Count > 0)
@@ -181,7 +219,10 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                ws.Process(data);
+                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                                {
+                                    ws.Process(data);
+                                }
                             }
                             catch (System.Exception e)
                             {
@@ -203,6 +244,7 @@ namespace Gaos.WebSocket
                     yield return new WaitForSeconds(0.1f);
                 }
             }
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: processing inbound queue finished");
         }
 
         public bool GetIsAuthenticated()
