@@ -15,7 +15,7 @@ public class CoreTranslations
 public class TranslationManager : MonoBehaviour
 {
     private List<CoreTranslations> coreTranslationList;
-    private string? language;
+    private string language;
 
     [Serializable]
     private class JsonArray

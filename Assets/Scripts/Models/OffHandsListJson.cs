@@ -13,6 +13,7 @@ namespace Assets.Scripts.Models
       ""itemName"": ""SpiritCrystal"",
       ""itemProduct"": ""ASSEMBLED"",
       ""itemType"": ""OFFHAND"",
+      ""weaponType"": ""Crystal"",
       ""itemClass"": ""CLASS-F"",
       ""equipable"": ""true"",
       ""durability"": 20,

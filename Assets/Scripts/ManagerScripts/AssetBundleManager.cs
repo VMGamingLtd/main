@@ -139,4 +139,10 @@ public static class AssetBundleManager
         Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.MiscIcons, spriteName);
         return sprite;
     }
+
+    public static Sprite AssignCharacterSpriteToSlot(string spriteName)
+    {
+        Sprite sprite = LoadAssetFromBundle<Sprite>(Constants.CharacterIcons, spriteName);
+        return sprite;
+    }
 }

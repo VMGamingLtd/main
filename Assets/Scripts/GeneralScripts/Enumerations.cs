@@ -103,7 +103,15 @@ public class Enumerations : MonoBehaviour
         Armor = 5,
         Shield = 6,
         HitChance = 7,
-        Dodge = 8
+        Dodge = 8,
+        CounterChance = 9
+    }
+
+    public enum PrefabSpawn
+    {
+        User,
+        Target,
+        BattlefieldCenter
     }
 
     public enum PrefabRotation

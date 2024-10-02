@@ -2624,7 +2624,14 @@
         ""russian"": ""<color=#63ECFF>{activeCharName}</color> получает <color=yellow>{damage} урона от эффекта</color> from <color=yellow>{statusEffectName}</color>."",
         ""chinese"": ""<color=#63ECFF>{activeCharName}</color> 因 <color=yellow>{statusEffectName}</color> 的效果而受到 <color=yellow>{damage} 点伤害</color>."",
         ""slovak"": ""<color=#63ECFF>{activeCharName}</color> dostal/a <color=yellow>{damage} rany</color> z efektu <color=yellow>{statusEffectName}</color>.""       
-      }
+      },
+      {
+        ""identifier"": ""FireEatingLeviathan"",
+        ""english"": ""Fire-Eating Leviathan"",
+        ""russian"": ""Гигантский пожиратель огня"",
+        ""chinese"": ""噬火利维坦"",
+        ""slovak"": ""Obrovský požierač ohňa""
+      },
     ]
   }
 ";

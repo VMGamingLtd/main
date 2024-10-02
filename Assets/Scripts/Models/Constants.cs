@@ -24,6 +24,7 @@ public static class Constants
     public const string SkillsIcons = "skillsicons";
     public const string CombatIcons = "combaticons";
     public const string MiscIcons = "miscicons";
+    public const string CharacterIcons = "charactericons";
     public const string FlagIcons = "flagicons";
     public const string AbilityPrefabs = "abilityprefabs";
 

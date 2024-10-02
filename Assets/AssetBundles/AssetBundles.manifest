@@ -1,22 +1,18 @@
 ManifestFileVersion: 0
-<<<<<<< HEAD
-CRC: 165459198
-=======
-CRC: 1776557967
->>>>>>> main
+CRC: 4094633434
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: resourceicons
       Dependencies: {}
     Info_1:
-      Name: equipmenticons
-      Dependencies: {}
-    Info_2:
       Name: skillicons
       Dependencies: {}
-    Info_3:
+    Info_2:
       Name: buildingicons
+      Dependencies: {}
+    Info_3:
+      Name: equipmenticons
       Dependencies: {}
     Info_4:
       Name: combaticons
@@ -29,4 +25,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_7:
       Name: abilityprefabs
+      Dependencies: {}
+    Info_8:
+      Name: charactericons
       Dependencies: {}
