@@ -11,6 +11,7 @@ namespace Gaos.Websocket
     {
         WebbSocket = 1,
         UnityBrowserChannel = 2,
+        Group = 3
     }
 
     public enum WebSocketClassIds
@@ -41,6 +42,17 @@ namespace Gaos.Websocket
     {
         ReceiveString = 1,
     }
+
+    public enum GroupClassIds
+    {
+       Broadcast = 1,
+    }
+
+    public enum GroupBroadcastMethodIds
+    {
+        GroupGameDataChanged = 1,
+    }
+
 
     public class Dispatcher 
     {
@@ -86,6 +98,9 @@ namespace Gaos.Websocket
                         return;
                     case (int)NamespaceIds.UnityBrowserChannel:
                         DispatchUnityBrowserChannel(ws, namespaceId, classId, methodId, message);
+                        return;
+                    case (int)NamespaceIds.Group:
+                        DispatchGroup(ws, namespaceId, classId, methodId, message);
                         return;
                     default:
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such namespaceId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
@@ -153,6 +168,27 @@ namespace Gaos.Websocket
                     Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
                     return;
                 }
+        }
+
+        public static void DispatchGroup(Gaos.WebSocket.IWebSocketClient ws, int namespaceId, int classId, int methodId, byte[] message)
+        {
+            const string METHOD_NAME = "DispatchGroup()";
+            switch (classId)
+            {
+                case (int)GroupClassIds.Broadcast:
+                    switch (methodId)
+                    {
+                        case (int)GroupBroadcastMethodIds.GroupGameDataChanged:
+                            Gaos.Messages.Group.GroupGameDataChanged.receive(ws, message);
+                            return;
+                        default:
+                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                            return;
+                    }
+                default:
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                    return;
+            }
         }
 
         static void disposeRequests()

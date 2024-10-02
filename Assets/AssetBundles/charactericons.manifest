@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+CRC: 2688362783
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: cd3487c6900b6e59f049cb6fb57938df
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 2d8df09e698f722ada1caa03d3413830
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/AssetBundlesRepo/CharacterIcons/MagmaSlime.png
+- Assets/AssetBundlesRepo/CharacterIcons/FireBeetle.png
+- Assets/AssetBundlesRepo/CharacterIcons/HellSpawn.png
+- Assets/AssetBundlesRepo/CharacterIcons/Avatar1.png
+- Assets/AssetBundlesRepo/CharacterIcons/EmberSerpent.png
+Dependencies: []

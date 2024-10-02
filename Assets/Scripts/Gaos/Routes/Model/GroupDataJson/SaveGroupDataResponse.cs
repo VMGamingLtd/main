@@ -9,6 +9,6 @@ namespace Gaos.Routes.Model.GroupDataJson
         public bool? IsError;
         public string? ErrorMessage;
 
-        public int Version;
+        public long Version;
     }
 }

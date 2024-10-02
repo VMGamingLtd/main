@@ -9,6 +9,8 @@ public class AbilityPrefab
 {
     public string prefabName;
     [JsonConverter(typeof(StringEnumConverter))]
+    public PrefabSpawn prefabSpawn;
+    [JsonConverter(typeof(StringEnumConverter))]
     public PrefabRotation prefabRotation;
     [JsonConverter(typeof(StringEnumConverter))]
     public PrefabStart prefabStart;

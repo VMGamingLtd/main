@@ -13,7 +13,7 @@ namespace Gaos.GameData
     public class DocumentVersion
     {
         public string DocId;
-        public int DocVersion;
+        public long DocVersion;
         public string GameDataJson; // game data at version DocVersion
     }
 
@@ -31,7 +31,7 @@ namespace Gaos.GameData
             return slotToVersion[slotId];
         }
 
-        public static void setVersion(int slotId, int docVersion, string docId, string gameDataJson)
+        public static void setVersion(int slotId, long docVersion, string docId, string gameDataJson)
         {
             slotToVersion[slotId] = new DocumentVersion { DocId = docId, DocVersion = docVersion, GameDataJson = gameDataJson };
         }

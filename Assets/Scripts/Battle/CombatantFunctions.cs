@@ -40,25 +40,23 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         }
     }
 
-    // If the attacker has any negative status effects in their ability that hit the target
+    // If the attacker has any negative or positive status effects in their ability that hit the target
     // we have to create an object on the target combatant for visibility and apply them
-    public void DisplayDots(GameObject targetCombatant, StatusEffect statusEffect)
+    public void DisplayEffect(GameObject targetCombatant, StatusEffect statusEffect, bool isDebuff)
     {
         GameObject newItem;
         Transform targetTransform = targetCombatant.transform.Find("StatusEffects");
         newItem = Instantiate(fightManager.GetStatusEffectTemplate(), targetTransform);
-        newItem.transform.Find("Duration").GetComponent<TextMeshProUGUI>().text = statusEffect.duration.ToString();
-        newItem.transform.Find("Image").GetComponent<Image>().color = UIColors.NeonRedFull;
-        newItem.transform.Find("Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignCombatSpriteToSlot(statusEffect.name);
-        newItem.transform.Find("GUID/guid").name = statusEffect.guid.ToString();
-    }
 
-    public void DisplayBuff(GameObject targetCombatant, StatusEffect statusEffect)
-    {
-        GameObject newItem;
-        Transform targetTransform = targetCombatant.transform.Find("StatusEffects");
-        newItem = Instantiate(fightManager.GetStatusEffectTemplate(), targetTransform);
-        newItem.transform.Find("Image").GetComponent<Image>().color = UIColors.NeonGreenFull;
+        if (!isDebuff)
+        {
+            newItem.transform.Find("Image").GetComponent<Image>().color = UIColors.NeonGreenFull;
+        }
+        else
+        {
+            newItem.transform.Find("Image").GetComponent<Image>().color = UIColors.NeonRedFull;
+        }
+
         newItem.transform.Find("Duration").GetComponent<TextMeshProUGUI>().text = statusEffect.duration.ToString();
         newItem.transform.Find("Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignCombatSpriteToSlot(statusEffect.name);
         newItem.transform.Find("GUID/guid").name = statusEffect.guid.ToString();
@@ -145,7 +143,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                     targetCharacter.ReceiveDamage(damage);
 
                     // display damage in the UI and show a message in the combat log
-                    targetCombatant.transform.Find("CharacterRow/Damage/Value").GetComponent<TextMeshProUGUI>().text = damage.ToString();
+                    targetCombatant.transform.Find("Damage/Value").GetComponent<TextMeshProUGUI>().text = damage.ToString();
 
                     if (fightManager.ActiveCombatant != null && fightManager.ActiveCombatant.TryGetComponent<BattleCharacter>(out var activeChar))
                     {
@@ -188,7 +186,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                                 var newStatusEffect = new StatusEffect(effect.name, effect.type, effect.statAffection, effect.chance, effect.portionValue, damage,
                                     effect.duration, effect.isFrontLineAoe, effect.isBackLineAoe);
 
-                                DisplayDots(targetCombatant, newStatusEffect);
+                                DisplayEffect(targetCombatant, newStatusEffect, true);
                                 targetCharacter.AddStatusEffect(newStatusEffect, false);
 
                                 // if the negative effect is a debuff, then apply the reductions to the target
@@ -210,7 +208,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                             var newStatusEffect = new StatusEffect(effect.name, effect.type, effect.statAffection, effect.chance, effect.portionValue, effect.damageValue,
                                 effect.duration, effect.isFrontLineAoe, effect.isBackLineAoe);
 
-                            DisplayBuff(fightManager.ActiveCombatant, newStatusEffect);
+                            DisplayEffect(fightManager.ActiveCombatant, newStatusEffect, false);
                             activeCharacter.AddStatusEffect(newStatusEffect, true);
 
                             // if the positive effect is a buff, then apply the additions to the caster
@@ -220,12 +218,6 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                             }
                         }
                     }
-                }
-
-                // if a target has more than 4 dots we have to hide the Level HUD so it's not blocking the view
-                if (targetCharacter.CheckStatusEffectCount() > 4)
-                {
-                    targetCharacter.DisplayLevelHUD(false);
                 }
             }
         }
@@ -319,7 +311,8 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
 
             if (fightManager.EnemyTarget.TryGetComponent<BattleCharacter>(out var targetCharacter))
             {
-                if (counterChance < targetCharacter.GetCombatantIntStat(Constants.CounterChance))
+                if (counterChance < targetCharacter.GetCombatantIntStat(Constants.CounterChance) &&
+                    !targetCharacter.IsCombatantStunned())
                 {
                     counterAttackProc = true;
                     fightManager.CreateFlyingMessage(fightManager.EnemyTarget, null).Forget();
@@ -380,7 +373,8 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
 
             if (fightManager.EnemiesTarget.TryGetComponent<BattleCharacter>(out var targetCharacter))
             {
-                if (counterChance < targetCharacter.GetCombatantIntStat(Constants.CounterChance))
+                if (counterChance < targetCharacter.GetCombatantIntStat(Constants.CounterChance) &&
+                    !targetCharacter.IsCombatantStunned())
                 {
                     counterAttackProc = true;
                     fightManager.CreateFlyingMessage(fightManager.EnemiesTarget, null).Forget();
@@ -457,6 +451,8 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
 
             elapsed = 0f;
 
+            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, castingTime, targetCombatants, isPlayerGroup, elapsed, movingTime);
+
             // Damage phase
             if (targetCombatants.Count > 0)
             {
@@ -486,69 +482,22 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             // Move phase - in this case it's a phase where combatant should be moving but most probably it involves
             // spawning some initial prefab for spell or animation travelling to enemy
-            if (ability.AbilityPrefabs.Count > 0)
+            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, castingTime, targetCombatants, isPlayerGroup, elapsed, movingTime);
+
+            // Damage phase
+            if (targetCombatants.Count > 0)
             {
-                foreach (var abilityPrefab in ability.AbilityPrefabs)
+                foreach (var combatant in targetCombatants)
                 {
-                    if (abilityPrefab.prefabStart == Enumerations.PrefabStart.MovePhase)
-                    {
-                        GameObject movePhasePrefab = prefabManager.GetAbilityPrefab(abilityPrefab.prefabName);
-                        GameObject instantiatedPrefab = Instantiate(movePhasePrefab, activeCombatant.transform);
-                        instantiatedPrefab.AddComponent<DestroyWhenFinished>();
-
-                        if (abilityPrefab.prefabRotation == Enumerations.PrefabRotation.ToEnemy)
-                        {
-                            RotatePrefabToEnemy(abilityPrefab, targetCombatant, activeCombatant, instantiatedPrefab);
-                            await UniTask.Delay(castingTime);
-                        }
-
-                        if (abilityPrefab.prefabMovement == Enumerations.PrefabMovement.ToEnemy)
-                        {
-                            float prefabX = instantiatedPrefab.transform.position.x;
-                            float prefabY = instantiatedPrefab.transform.position.y;
-                            instantiatedPrefab.transform.SetParent(highestObject.transform);
-                            (var targetX, var targetY) = GetTargetCoordinates(targetCombatant, targetCombatants, isPlayerGroup, true);
-                            Vector2 newVector;
-
-                            while (elapsed < movingTime)
-                            {
-                                elapsed += Time.deltaTime;
-                                float newX = Mathf.Lerp(prefabX, targetX, elapsed / movingTime);
-                                float newY = Mathf.Lerp(prefabY, targetY, elapsed / movingTime);
-                                newVector = new(newX, newY);
-                                instantiatedPrefab.transform.position = newVector;
-                                await UniTask.Yield();
-                            }
-
-                            Destroy(instantiatedPrefab);
-                        }
-                    }
-
-                    if (abilityPrefab.prefabStart == Enumerations.PrefabStart.DamagePhase)
-                    {
-                        GameObject damagePhasePrefab = prefabManager.GetAbilityPrefab(abilityPrefab.prefabName);
-                        Transform prefabContainer = targetCombatant.transform.Find("CharacterRow/PrefabContainer").transform;
-                        GameObject instantiatedPrefab = Instantiate(damagePhasePrefab, prefabContainer);
-                        instantiatedPrefab.AddComponent<DestroyWhenFinished>();
-                    }
+                    CalculateChances(combatant);
                 }
-
-
-                // Damage phase
-                if (targetCombatants.Count > 0)
-                {
-                    foreach (var combatant in targetCombatants)
-                    {
-                        CalculateChances(combatant);
-                    }
-                }
-                else
-                {
-                    CalculateChances(targetCombatant);
-                }
-
-                // Return phase
             }
+            else
+            {
+                CalculateChances(targetCombatant);
+            }
+
+            // Return phase
         }
 
         if (activeCombatant.TryGetComponent<BattleCharacter>(out var character))
@@ -561,6 +510,78 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         if (fightManager.ActiveAbility.Cooldown > 0)
         {
             fightManager.ActiveAbility.SetAbilityOnCooldown();
+        }
+    }
+
+    private async UniTask CheckForAbilityPrefabs(CombatAbility ability, GameObject activeCombatant, GameObject targetCombatant, int castingTime,
+        List<GameObject> targetCombatants, bool isPlayerGroup, float elapsed, float movingTime)
+    {
+        if (ability.AbilityPrefabs.Count > 0)
+        {
+            foreach (var abilityPrefab in ability.AbilityPrefabs)
+            {
+                if (abilityPrefab.prefabStart == Enumerations.PrefabStart.MovePhase)
+                {
+                    GameObject movePhasePrefab = prefabManager.GetAbilityPrefab(abilityPrefab.prefabName);
+                    GameObject instantiatedPrefab;
+
+                    if (abilityPrefab.prefabSpawn == Enumerations.PrefabSpawn.User)
+                    {
+                        instantiatedPrefab = Instantiate(movePhasePrefab, activeCombatant.transform);
+                        instantiatedPrefab.AddComponent<DestroyWhenFinished>();
+                    }
+                    else if (abilityPrefab.prefabSpawn == Enumerations.PrefabSpawn.Target)
+                    {
+                        instantiatedPrefab = Instantiate(movePhasePrefab, targetCombatant.transform);
+                        instantiatedPrefab.AddComponent<DestroyWhenFinished>();
+                    }
+                    else if (abilityPrefab.prefabSpawn == Enumerations.PrefabSpawn.BattlefieldCenter)
+                    {
+                        instantiatedPrefab = Instantiate(movePhasePrefab, highestObject.transform);
+                        instantiatedPrefab.AddComponent<DestroyWhenFinished>();
+                    }
+                    else
+                    {
+                        instantiatedPrefab = Instantiate(movePhasePrefab, targetCombatant.transform);
+                        instantiatedPrefab.AddComponent<DestroyWhenFinished>();
+                    }
+
+                    if (abilityPrefab.prefabRotation == Enumerations.PrefabRotation.ToEnemy)
+                    {
+                        RotatePrefabToEnemy(abilityPrefab, targetCombatant, activeCombatant, instantiatedPrefab);
+                        await UniTask.Delay(castingTime);
+                    }
+
+                    if (abilityPrefab.prefabMovement == Enumerations.PrefabMovement.ToEnemy)
+                    {
+                        float prefabX = instantiatedPrefab.transform.position.x;
+                        float prefabY = instantiatedPrefab.transform.position.y;
+                        instantiatedPrefab.transform.SetParent(highestObject.transform);
+                        (var targetX, var targetY) = GetTargetCoordinates(targetCombatant, targetCombatants, isPlayerGroup, true);
+                        Vector2 newVector;
+
+                        while (elapsed < movingTime)
+                        {
+                            elapsed += Time.deltaTime;
+                            float newX = Mathf.Lerp(prefabX, targetX, elapsed / movingTime);
+                            float newY = Mathf.Lerp(prefabY, targetY, elapsed / movingTime);
+                            newVector = new(newX, newY);
+                            instantiatedPrefab.transform.position = newVector;
+                            await UniTask.Yield();
+                        }
+
+                        Destroy(instantiatedPrefab);
+                    }
+                }
+
+                if (abilityPrefab.prefabStart == Enumerations.PrefabStart.DamagePhase)
+                {
+                    GameObject damagePhasePrefab = prefabManager.GetAbilityPrefab(abilityPrefab.prefabName);
+                    Transform prefabContainer = targetCombatant.transform.Find("PrefabContainer").transform;
+                    GameObject instantiatedPrefab = Instantiate(damagePhasePrefab, prefabContainer);
+                    instantiatedPrefab.AddComponent<DestroyWhenFinished>();
+                }
+            }
         }
     }
 
@@ -628,12 +649,12 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         if (gameObject.TryGetComponent<BattleCharacter>(out var battleCharacter) && !battleCharacter.IsEnemy() &&
             !fightManager.IsBattleRunning)
         {
-            gameObject.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.NeonBlueOriginalHalf;
+            gameObject.transform.Find("Glow").GetComponent<Image>().color = UIColors.NeonBlueOriginalHalf;
         }
         else if (gameObject.TryGetComponent<BattleCharacter>(out var enemyCharacter) && enemyCharacter.IsEnemy() &&
                  fightManager.IsBattleRunning)
         {
-            gameObject.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
+            gameObject.transform.Find("Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
         }
     }
 
@@ -642,12 +663,12 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         if (gameObject.TryGetComponent<BattleCharacter>(out var battleCharacter) && !battleCharacter.IsEnemy() &&
             !fightManager.IsBattleRunning)
         {
-            gameObject.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.invisibleCol;
+            gameObject.transform.Find("Glow").GetComponent<Image>().color = UIColors.invisibleCol;
         }
         else if (gameObject.TryGetComponent<BattleCharacter>(out var enemyCharacter) && enemyCharacter.IsEnemy() &&
                  fightManager.IsBattleRunning)
         {
-            gameObject.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.invisibleCol;
+            gameObject.transform.Find("Glow").GetComponent<Image>().color = UIColors.invisibleCol;
         }
     }
 

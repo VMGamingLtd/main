@@ -16,10 +16,19 @@ namespace Assets.Scripts.Models
     /// Left = 4,
     /// Right = 5
     /// 
+    /// Prefab spawn reference:
+    /// User = 0,
+    /// Target = 1,
+    /// BattlefieldCenter = 2
+    /// 
     /// Prefab start reference:
     /// MovePhase = 0,
     /// DamagePhase = 1,
     /// ReturnPhase = 2,
+    /// 
+    /// Prefab movement reference:
+    /// None = 0,
+    /// ToEnemy = 1
     /// 
     /// Stat affection type reference:
     /// None = 0
@@ -30,7 +39,8 @@ namespace Assets.Scripts.Models
     /// Armor = 5,
     /// Shield = 6,
     /// HitChance = 7,
-    /// Dodge = 8
+    /// Dodge = 8,
+    /// CounterChance = 9
     /// </summary>
     public class AbilitiesListJson
     {
@@ -157,7 +167,7 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0.8,
       ""scaleMultiplication"": 1.5,
-      ""cooldown"": 1,   
+      ""cooldown"": 2,   
       ""negativeEffectsList"": [
         {
           ""name"": ""Stun"",
@@ -165,7 +175,7 @@ namespace Assets.Scripts.Models
           ""type"": 1,
           ""statAffection"": 0,
           ""portionValue"": 0,
-          ""duration"": 1,
+          ""duration"": 2,
           ""isFrontLineAoe"": false,
           ""isBackLineAoe"": false
         }
@@ -314,6 +324,7 @@ namespace Assets.Scripts.Models
       ""abilityPrefabsList"": [
         {
           ""prefabName"": ""FireSpray"",
+          ""prefabSpawn"": 0,
           ""prefabRotation"": 1,
           ""prefabStart"": 0,
           ""prefabMovement"": 0
@@ -377,6 +388,7 @@ namespace Assets.Scripts.Models
       ""abilityPrefabsList"": [
         {
           ""prefabName"": ""ArmorBuff"",
+          ""prefabSpawn"": 0,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
           ""prefabMovement"": 0
@@ -412,12 +424,14 @@ namespace Assets.Scripts.Models
       ""abilityPrefabsList"": [
         {
           ""prefabName"": ""Fireball"",
+          ""prefabSpawn"": 0,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
           ""prefabMovement"": 1
         },
         {
           ""prefabName"": ""FireballExplosion"",
+          ""prefabSpawn"": 1,
           ""prefabRotation"": 0,
           ""prefabStart"": 1,
           ""prefabMovement"": 0
@@ -426,7 +440,7 @@ namespace Assets.Scripts.Models
     },
     {
       ""index"": 14,
-      ""abilityName"": ""AttackSpeedBuff"",
+      ""abilityName"": ""AttackSpeed"",
       ""abilityType"": ""Buff"",
       ""abilityWeapon"": null,
       ""isMovingAbility"": false,
@@ -453,6 +467,125 @@ namespace Assets.Scripts.Models
       ""abilityPrefabsList"": [
         {
           ""prefabName"": ""AttackSpeedBuff"",
+          ""prefabSpawn"": 0,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 15,
+      ""abilityName"": ""FireSmash"",
+      ""abilityType"": ""Melee"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": true,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 1.4,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 1.8,
+      ""cooldown"": 0,   
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""HitChanceDebuff"",
+          ""type"": 4,
+          ""statAffection"": 7,
+          ""chance"": 100,
+          ""portionValue"": 35,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""FireSmash"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 16,
+      ""abilityName"": ""CounterArmorBuff"",
+      ""abilityType"": ""Buff"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 0,
+      ""cooldown"": 3,   
+      ""negativeEffectsList"": [],
+      ""positiveEffectsList"": [
+        {
+          ""name"": ""ArmorBuff"",
+          ""type"": 3,
+          ""statAffection"": 5,
+          ""chance"": 100,
+          ""portionValue"": 50,
+          ""duration"": 2,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        },
+        {
+          ""name"": ""CounterChanceBuff"",
+          ""type"": 3,
+          ""statAffection"": 9,
+          ""chance"": 100,
+          ""portionValue"": 30,
+          ""duration"": 2,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""ArmorBuff"",
+          ""prefabSpawn"": 0,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 17,
+      ""abilityName"": ""MeteorShower"",
+      ""abilityType"": ""Ranged"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": true,
+      ""isBackLineAoe"": true,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 1.0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 1.5,
+      ""cooldown"": 3,   
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""Ignite"",
+          ""type"": 0,
+          ""statAffection"": 0,
+          ""chance"": 60,
+          ""portionValue"": 30,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""MeteorShower"",
+          ""prefabSpawn"": 2,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
           ""prefabMovement"": 0

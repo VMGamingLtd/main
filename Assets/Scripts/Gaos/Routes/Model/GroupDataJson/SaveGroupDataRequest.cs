@@ -6,6 +6,7 @@ namespace Gaos.Routes.Model.GroupDataJson
     {
         public int SlotId;
         public string? GroupDataJson;
-        public int Version;
+        public long Version;
+        public bool IsJsonDiff;
     }
 }

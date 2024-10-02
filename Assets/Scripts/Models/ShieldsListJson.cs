@@ -13,6 +13,7 @@ namespace Assets.Scripts.Models
       ""itemName"": ""PSP-1"",
       ""itemProduct"": ""ASSEMBLED"",
       ""itemType"": ""SHIELD"",
+      ""weaponType"": ""Shield"",
       ""itemClass"": ""CLASS-F"",
       ""equipable"": ""true"",
       ""durability"": 20,

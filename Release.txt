@@ -72,3 +72,8 @@ Websocket server
 - gaos - added services gor friend requests count
 - simplified deployment scripts
 - passwords are encrypted
+
+20241002
+==============
+- UI changes for comat feature
+- game data changes 

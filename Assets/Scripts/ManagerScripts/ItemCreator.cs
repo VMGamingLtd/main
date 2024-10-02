@@ -34,7 +34,7 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class ArmorDataJson : EquipmentDataJson // 3rd layer mono behaviour
+    public class ArmorDataJson : EquipmentDataJson // 3rd layer
     {
         public int physicalProtection;
         public int fireProtection;
@@ -56,7 +56,7 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class WeaponDataJson : EquipmentDataJson // 3rd layer mono behaviour
+    public class WeaponDataJson : EquipmentDataJson // 3rd layer
     {
         public string weaponType;
         public float attackSpeed;
@@ -85,7 +85,7 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class MeleeWeaponDataJson : WeaponDataJson // 4th layer mono behaviour
+    public class MeleeWeaponDataJson : WeaponDataJson // 4th layer
     {
         public int meleePhysicalDamage;
         public int meleeFireDamage;
@@ -95,7 +95,7 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class RangedWeaponDataJson : WeaponDataJson // 4th layer mono behaviour
+    public class RangedWeaponDataJson : WeaponDataJson // 4th layer
     {
         public int rangedPhysicalDamage;
         public int rangedFireDamage;
@@ -105,7 +105,7 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class ShieldDataJson : MeleeWeaponDataJson // 4th layer mono behaviour
+    public class ShieldDataJson : MeleeWeaponDataJson // 4th layer
     {
         public int physicalProtection;
         public int fireProtection;
@@ -119,7 +119,7 @@ namespace ItemManagement
     }
 
     [Serializable]
-    public class OffHandDataJson : ShieldDataJson // 5th layer mono behaviour
+    public class OffHandDataJson : ShieldDataJson // 5th layer
     {
         public int rangedPhysicalDamage;
         public int rangedFireDamage;
@@ -154,6 +154,11 @@ namespace ItemManagement
         public int agility;
         public int charisma;
         public int willpower;
+
+        public virtual void Repair()
+        {
+            durability = maxDurability;
+        }
     }
 
     [Serializable]

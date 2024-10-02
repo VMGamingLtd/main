@@ -13,6 +13,7 @@ namespace Assets.Scripts.Models
       ""itemName"": ""StunBaton"",
       ""itemProduct"": ""ASSEMBLED"",
       ""itemType"": ""MELEEWEAPON"",
+      ""weaponType"": ""Blunt"",
       ""itemClass"": ""CLASS-F"",
       ""equipable"": ""true"",
       ""durability"": 20,

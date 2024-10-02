@@ -13,6 +13,7 @@ namespace Assets.Scripts.Models
       ""itemName"": ""EF-10"",
       ""itemProduct"": ""ASSEMBLED"",
       ""itemType"": ""RANGEDWEAPON"",
+      ""weaponType"": ""Gun"",
       ""itemClass"": ""CLASS-F"",
       ""equipable"": ""true"",
       ""durability"": 40,

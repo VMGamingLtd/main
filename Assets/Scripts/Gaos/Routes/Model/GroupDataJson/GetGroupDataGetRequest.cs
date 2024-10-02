@@ -5,5 +5,8 @@ namespace Gaos.Routes.Model.GroupDataJson
     public class GetGroupDataGetRequest
     {
         public int SlotId;
+        public  long Version;
+
+        public bool IsGameDataDiff;
     }
 }
