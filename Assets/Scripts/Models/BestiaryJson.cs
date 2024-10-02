@@ -136,7 +136,7 @@ namespace Assets.Scripts.Models
         }
       ]
     },
-        {
+    {
       ""index"": 2,
       ""location"": 9,
       ""tier"": 2,
@@ -185,7 +185,7 @@ namespace Assets.Scripts.Models
         },
         {
           ""index"": 12,
-          ""name"": ""Reinforce""
+          ""name"": ""ArmorBuff""
         }
       ]
     },
@@ -239,6 +239,169 @@ namespace Assets.Scripts.Models
         {
           ""index"": 14,
           ""name"": ""AttackSpeedBuff""
+        }
+      ]
+    },
+    {
+      ""index"": 4,
+      ""location"": 9,
+      ""tier"": 3,
+      ""name"": ""FireGolem"",
+      ""race"": 5,
+      ""classType"": 0,
+      ""battleFormation"": 0,
+      ""physicalProtection"": 6,
+      ""fireProtection"": 8,
+      ""coldProtection"": 0,
+      ""poisonProtection"": 0,
+      ""energyProtection"": 0,
+      ""psiProtection"": 0,
+      ""shieldPoints"": 0,
+      ""armor"": 18,
+      ""hitPoints"": 32,
+      ""attackSpeed"": 1,
+      ""meleePhysicalDamage"": 10,
+      ""meleeFireDamage"": 10,
+      ""meleeColdDamage"": 0,
+      ""meleePoisonDamage"": 0,
+      ""meleeEnergyDamage"": 0,
+      ""rangedPhysicalDamage"": 0,
+      ""rangedFireDamage"": 0,
+      ""rangedColdDamage"": 0,  
+      ""rangedPoisonDamage"": 0,
+      ""rangedEnergyDamage"": 0,
+      ""psiDamage"": 0,
+      ""hitChance"": 90,
+      ""criticalChance"": 8,
+      ""criticalDamage"": 60,
+      ""dodge"": 8,
+      ""resistance"": 16,
+      ""counterChance"": 6,
+      ""penetration"": 12,
+      ""strength"": 6,
+      ""perception"": 0,
+      ""intelligence"": 0,
+      ""agility"": 2,
+      ""charisma"": 0,
+      ""willpower"": 0,
+      ""abilities"": [
+        {
+          ""index"": 15,
+          ""name"": ""FireSmash""
+        },
+        {
+          ""index"": 16,
+          ""name"": ""CounterArmorBuff""
+        }
+      ]
+    },
+    {
+      ""index"": 5,
+      ""location"": 9,
+      ""tier"": 3,
+      ""name"": ""HellSpawn"",
+      ""race"": 5,
+      ""classType"": 0,
+      ""battleFormation"": 0,
+      ""physicalProtection"": 6,
+      ""fireProtection"": 8,
+      ""coldProtection"": 0,
+      ""poisonProtection"": 0,
+      ""energyProtection"": 0,
+      ""psiProtection"": 0,
+      ""shieldPoints"": 0,
+      ""armor"": 18,
+      ""hitPoints"": 32,
+      ""attackSpeed"": 1,
+      ""meleePhysicalDamage"": 10,
+      ""meleeFireDamage"": 10,
+      ""meleeColdDamage"": 0,
+      ""meleePoisonDamage"": 0,
+      ""meleeEnergyDamage"": 0,
+      ""rangedPhysicalDamage"": 0,
+      ""rangedFireDamage"": 0,
+      ""rangedColdDamage"": 0,  
+      ""rangedPoisonDamage"": 0,
+      ""rangedEnergyDamage"": 0,
+      ""psiDamage"": 0,
+      ""hitChance"": 90,
+      ""criticalChance"": 8,
+      ""criticalDamage"": 60,
+      ""dodge"": 8,
+      ""resistance"": 16,
+      ""counterChance"": 6,
+      ""penetration"": 12,
+      ""strength"": 6,
+      ""perception"": 0,
+      ""intelligence"": 0,
+      ""agility"": 2,
+      ""charisma"": 0,
+      ""willpower"": 0,
+      ""abilities"": [
+        {
+          ""index"": 15,
+          ""name"": ""FireSmash""
+        },
+        {
+          ""index"": 16,
+          ""name"": ""CounterArmorBuff""
+        }
+      ]
+    },
+    {
+      ""index"": 6,
+      ""location"": 9,
+      ""tier"": 4,
+      ""name"": ""FireEatingLeviathan"",
+      ""race"": 7,
+      ""classType"": 4,
+      ""battleFormation"": 0,
+      ""physicalProtection"": 12,
+      ""fireProtection"": 16,
+      ""coldProtection"": 0,
+      ""poisonProtection"": 0,
+      ""energyProtection"": 0,
+      ""psiProtection"": 16,
+      ""shieldPoints"": 0,
+      ""armor"": 36,
+      ""hitPoints"": 64,
+      ""attackSpeed"": 1.5,
+      ""meleePhysicalDamage"": 20,
+      ""meleeFireDamage"": 20,
+      ""meleeColdDamage"": 0,
+      ""meleePoisonDamage"": 0,
+      ""meleeEnergyDamage"": 0,
+      ""rangedPhysicalDamage"": 0,
+      ""rangedFireDamage"": 0,
+      ""rangedColdDamage"": 0,  
+      ""rangedPoisonDamage"": 0,
+      ""rangedEnergyDamage"": 0,
+      ""psiDamage"": 24,
+      ""hitChance"": 95,
+      ""criticalChance"": 12,
+      ""criticalDamage"": 100,
+      ""dodge"": 4,
+      ""resistance"": 32,
+      ""counterChance"": 12,
+      ""penetration"": 24,
+      ""strength"": 20,
+      ""perception"": 0,
+      ""intelligence"": 0,
+      ""agility"": 10,
+      ""charisma"": 0,
+      ""willpower"": 0,
+      ""abilities"": [
+        {
+          ""index"": 15,
+          ""name"": ""FireSmash""
+        },
+        {
+          ""index"": 5,
+          ""name"": ""Terrify""
+        },
+        {
+          ""index"": 17,
+          ""name"": ""MeteorShower""
         }
       ]
     }

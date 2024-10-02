@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1776557967
+CRC: 4094633434
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -25,4 +25,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_7:
       Name: abilityprefabs
+      Dependencies: {}
+    Info_8:
+      Name: charactericons
       Dependencies: {}

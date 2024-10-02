@@ -45,7 +45,7 @@ Material:
     - _ColorStrB: 0.865
     - _ColorStrG: 0.01
     - _ColorStrR: 4
-    - _ColorStrength: 5
+    - _ColorStrength: 1
     - _CoreStrength: 1
     - _CutOutLightCore: 0
     - _Cutoff: 0.5

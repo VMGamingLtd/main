@@ -34,7 +34,7 @@ public class TargetService
                             if (combatant.TryGetComponent<BattleCharacter>(out var enemyCharacter) &&
                                 enemyCharacter.IsEnemy())
                             {
-                                combatant.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
+                                combatant.transform.Find("Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
                             }
                         }
                     }
@@ -45,7 +45,7 @@ public class TargetService
                             if (combatant.TryGetComponent<BattleCharacter>(out var enemyCharacter) &&
                                 enemyCharacter.IsEnemy() && frontLineIDs.Contains(enemyCharacter.GetCombatantPosition()))
                             {
-                                combatant.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
+                                combatant.transform.Find("Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
                             }
                         }
                     }
@@ -56,7 +56,7 @@ public class TargetService
                             if (combatant.TryGetComponent<BattleCharacter>(out var enemyCharacter) &&
                                 enemyCharacter.IsEnemy() && backLineIDs.Contains(enemyCharacter.GetCombatantPosition()))
                             {
-                                combatant.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
+                                combatant.transform.Find("Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
                             }
                         }
                     }
@@ -67,7 +67,7 @@ public class TargetService
                             if (combatant.TryGetComponent<BattleCharacter>(out var enemyCharacter) &&
                                 enemyCharacter.IsEnemy())
                             {
-                                combatant.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
+                                combatant.transform.Find("Glow").GetComponent<Image>().color = UIColors.NeonRedHalf;
                                 break;
                             }
                         }
@@ -194,7 +194,7 @@ public class TargetService
             if (combatant.TryGetComponent<BattleCharacter>(out var enemyCharacter) &&
                 enemyCharacter.IsEnemy() && frontLineIDs.Contains(enemyCharacter.GetCombatantPosition()))
             {
-                combatant.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.invisibleCol;
+                combatant.transform.Find("Glow").GetComponent<Image>().color = UIColors.invisibleCol;
             }
         }
     }

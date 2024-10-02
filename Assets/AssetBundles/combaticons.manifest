@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1619329322
+CRC: 2856506664
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f0de94fe64ff5136b14afe9b62af0bb7
+    Hash: 5d3b477dac67a58e14259d16b680c257
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -16,13 +16,16 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/AssetBundlesRepo/CombatIcons/DodgeChance.png
+- Assets/AssetBundlesRepo/CombatIcons/AoE.png
 - Assets/AssetBundlesRepo/CombatIcons/Stun.png
 - Assets/AssetBundlesRepo/CombatIcons/CounterChance.png
 - Assets/AssetBundlesRepo/CombatIcons/Player.png
+- Assets/AssetBundlesRepo/CombatIcons/AttackBuff.png
 - Assets/AssetBundlesRepo/CombatIcons/HitPoints.png
 - Assets/AssetBundlesRepo/CombatIcons/Blade.png
 - Assets/AssetBundlesRepo/CombatIcons/Turn.png
 - Assets/AssetBundlesRepo/CombatIcons/AttackDebuff.png
+- Assets/AssetBundlesRepo/CombatIcons/CounterChanceBuff.png
 - Assets/AssetBundlesRepo/CombatIcons/Skull.png
 - Assets/AssetBundlesRepo/CombatIcons/Psi.png
 - Assets/AssetBundlesRepo/CombatIcons/ArmorIcon.png
@@ -31,9 +34,11 @@ Assets:
 - Assets/AssetBundlesRepo/CombatIcons/Resistance.png
 - Assets/AssetBundlesRepo/CombatIcons/Gun.png
 - Assets/AssetBundlesRepo/CombatIcons/AttackSpeed.png
+- Assets/AssetBundlesRepo/CombatIcons/HitChanceDebuff.png
 - Assets/AssetBundlesRepo/CombatIcons/ArmorBuff.png
 - Assets/AssetBundlesRepo/CombatIcons/Ignite.png
 - Assets/AssetBundlesRepo/CombatIcons/Penetration.png
 - Assets/AssetBundlesRepo/CombatIcons/ShieldPoints.png
-- Assets/AssetBundlesRepo/CombatIcons/AoE.png
+- Assets/AssetBundlesRepo/CombatIcons/ArmorDebuff.png
+- Assets/AssetBundlesRepo/CombatIcons/HitChanceBuff.png
 Dependencies: []

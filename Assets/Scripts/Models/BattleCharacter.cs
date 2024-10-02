@@ -11,10 +11,14 @@ using static Enumerations;
 public class BattleCharacter : MonoBehaviour
 {
     [SerializeField] Image Timebar;
+    [SerializeField] Image ShieldBar;
+    [SerializeField] Image ArmorBar;
+    [SerializeField] Image LifeBar;
     [SerializeField] GameObject Selection1;
     [SerializeField] GameObject Selection2;
     [SerializeField] GameObject Selection3;
     [SerializeField] GameObject Selection4;
+    [SerializeField] GameObject InfoPanel;
     private BattleFormation BattleFormation;
     private Faction Faction;
     private Race Race;
@@ -23,10 +27,14 @@ public class BattleCharacter : MonoBehaviour
     private int Level;
     private float AttackSpeed;
     private int HitChance;
+    private int BuffHitChance;
+    private int DebuffHitChance;
     private int CriticalChance;
     private int CriticalDamage;
     private int Penetration;
     private int CounterChance;
+    private int BuffCounterChance;
+    private int DebuffCounterChance;
     private int MeleeAttack;
     private int RangedAttack;
     private int PsiDamage;
@@ -40,9 +48,13 @@ public class BattleCharacter : MonoBehaviour
     private int RangedColdDamage;
     private int RangedPoisonDamage;
     private int RangedEnergyDamage;
+    private int MaxShieldPoints;
     private int ShieldPoints;
+    private int StoredShieldPoints;
+    private int BufShieldPoints;
     private int Armor;
     private int MaxArmor;
+    private int StoredArmor;
     private int BuffArmor;
     private int HitPoints;
     private int MaxHitPoints;
@@ -64,13 +76,11 @@ public class BattleCharacter : MonoBehaviour
     private IList<CombatAbility> CombatAbilities = new List<CombatAbility>();
     private readonly IList<StatusEffect> NegativeAppliedEffects = new List<StatusEffect>();
     private readonly IList<StatusEffect> PositiveAppliedEffects = new List<StatusEffect>();
-    private GameObject LevelHUD;
     private CancellationTokenSource cts = null;
     private CancellationToken cancellationToken;
 
     public void CreateCombatant(BattleFormation battleFormation, Faction faction, Race race, int position, string name, int level, BestiaryDataJson creatureData = null)
     {
-        LevelHUD = gameObject.transform.Find("Level").gameObject;
         BattleFormation = battleFormation;
         Faction = faction;
         Race = race;
@@ -78,21 +88,18 @@ public class BattleCharacter : MonoBehaviour
         Name = name;
         Level = level;
 
-        if (faction == Faction.Player || faction == Faction.Ally)
+        if (faction == Faction.Player)
         {
-            if (faction == Faction.Player)
-            {
-                InjectMainData(level, name, Player.AttackSpeed, Player.HitPoints, Player.Armor, Player.ShieldPoints, Player.MeleeAttack, Player.MeleePhysicalDamage, Player.MeleeFireDamage, Player.MeleeColdDamage,
-                    Player.MeleePoisonDamage, Player.MeleeEnergyDamage, Player.RangedAttack, Player.RangedPhysicalDamage, Player.RangedFireDamage, Player.RangedColdDamage, Player.RangedPoisonDamage, Player.RangedEnergyDamage,
-                    Player.PsiDamage, Player.PhysicalProtection, Player.FireProtection, Player.ColdProtection, Player.PoisonProtection, Player.EnergyProtection, Player.PsiProtection, Player.HitChance, Player.CriticalDamage,
-                    Player.CriticalDamage, Player.Dodge, Player.Resistance, Player.CounterChance, Player.Penetration);
+            InjectMainData(level, name, Player.AttackSpeed, Player.HitPoints, Player.Armor, Player.ShieldPoints, Player.MeleeAttack, Player.MeleePhysicalDamage, Player.MeleeFireDamage, Player.MeleeColdDamage,
+                Player.MeleePoisonDamage, Player.MeleeEnergyDamage, Player.RangedAttack, Player.RangedPhysicalDamage, Player.RangedFireDamage, Player.RangedColdDamage, Player.RangedPoisonDamage, Player.RangedEnergyDamage,
+                Player.PsiDamage, Player.PhysicalProtection, Player.FireProtection, Player.ColdProtection, Player.PoisonProtection, Player.EnergyProtection, Player.PsiProtection, Player.HitChance, Player.CriticalDamage,
+                Player.CriticalDamage, Player.Dodge, Player.Resistance, Player.CounterChance, Player.Penetration);
 
-                CombatAbilities = Player.CombatAbilities;
-            }
-            else
-            {
+            CombatAbilities = Player.CombatAbilities;
+        }
+        else if (faction == Faction.Ally)
+        {
 
-            }
         }
         else
         {
@@ -123,11 +130,8 @@ public class BattleCharacter : MonoBehaviour
                     creatureData.fireProtection, creatureData.coldProtection, creatureData.poisonProtection, creatureData.energyProtection, creatureData.psiProtection, creatureData.hitChance, creatureData.criticalChance,
                     creatureData.criticalDamage, creatureData.dodge, creatureData.resistance, creatureData.counterChance, creatureData.penetration);
 
-                gameObject.transform.Find("CharacterRow/FirstRow/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignCombatSpriteToSlot("Skull");
-                gameObject.transform.Find("Level/LevelValue").GetComponent<TextMeshProUGUI>().text = Level.ToString();
-                gameObject.transform.Find("Level/Image").GetComponent<Image>().color = Color.red;
-                gameObject.transform.Find("CharacterRow/Border").GetComponent<Image>().color = Color.red;
-                gameObject.transform.Find("CharacterRow/Glow").GetComponent<Image>().color = UIColors.invisibleCol;
+                gameObject.transform.Find("VisualPanel/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignCharacterSpriteToSlot(name);
+                gameObject.transform.Find("VisualPanel/Frame").GetComponent<Image>().color = Color.red;
             }
 
         }
@@ -155,6 +159,10 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Applies a specific debuff effect to the target by using its portion value to reduce the appropriate stat.
+    /// </summary>
+    /// <param name="statusEffect"></param>
     public void ApplyDebuffEffect(StatusEffect statusEffect)
     {
         if (statusEffect.type == StatusEffectType.Debuff)
@@ -179,22 +187,47 @@ public class BattleCharacter : MonoBehaviour
                 var deductedRangedAttack = RangedPhysicalDamage + RangedFireDamage + RangedColdDamage
                     + RangedPoisonDamage + RangedEnergyDamage;
 
-                if (MeleeAttack > 0)
+                if (InfoPanel.activeSelf)
                 {
-                    gameObject.transform.Find("CharacterRow/ThirdRow/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedMeleeAttack.ToString();
-                    gameObject.transform.Find("CharacterRow/ThirdRow/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
-                }
+                    if (MeleeAttack > 0)
+                    {
+                        gameObject.transform.Find("InfoPanel/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedMeleeAttack.ToString();
+                        gameObject.transform.Find("InfoPanel/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                    }
 
-                if (RangedAttack > 0)
-                {
-                    gameObject.transform.Find("CharacterRow/ThirdRow/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedRangedAttack.ToString();
-                    gameObject.transform.Find("CharacterRow/ThirdRow/RangedAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                    if (RangedAttack > 0)
+                    {
+                        gameObject.transform.Find("InfoPanel/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedRangedAttack.ToString();
+                        gameObject.transform.Find("InfoPanel/RangedAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                    }
                 }
             }
             else if (statusEffect.statAffection == StatAffection.Armor)
             {
                 int debuffedArmor = MaxArmor * ((statusEffect.portionValue / 100) + 1);
                 Armor -= debuffedArmor;
+            }
+            else if (statusEffect.statAffection == StatAffection.HitChance)
+            {
+                DebuffHitChance = statusEffect.portionValue;
+                HitChance -= statusEffect.portionValue;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/HitChance/Value").GetComponent<TextMeshProUGUI>().text = HitChance.ToString();
+                    gameObject.transform.Find("InfoPanel/HitChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                }
+            }
+            else if (statusEffect.statAffection == StatAffection.CounterChance)
+            {
+                DebuffCounterChance = statusEffect.portionValue;
+                CounterChance -= statusEffect.portionValue;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/CounterChance/Value").GetComponent<TextMeshProUGUI>().text = CounterChance.ToString();
+                    gameObject.transform.Find("InfoPanel/CounterChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                }
             }
         }
     }
@@ -223,26 +256,70 @@ public class BattleCharacter : MonoBehaviour
                 var deductedRangedAttack = RangedPhysicalDamage + RangedFireDamage + RangedColdDamage
                     + RangedPoisonDamage + RangedEnergyDamage;
 
-                if (MeleeAttack > 0)
+                if (InfoPanel.activeSelf)
                 {
-                    gameObject.transform.Find("CharacterRow/ThirdRow/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedMeleeAttack.ToString();
-                    gameObject.transform.Find("CharacterRow/ThirdRow/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
-                }
+                    if (MeleeAttack > 0)
+                    {
+                        gameObject.transform.Find("InfoPanel/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedMeleeAttack.ToString();
+                        gameObject.transform.Find("InfoPanel/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                    }
 
-                if (RangedAttack > 0)
-                {
-                    gameObject.transform.Find("CharacterRow/ThirdRow/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedRangedAttack.ToString();
-                    gameObject.transform.Find("CharacterRow/ThirdRow/RangedAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                    if (RangedAttack > 0)
+                    {
+                        gameObject.transform.Find("InfoPanel/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedRangedAttack.ToString();
+                        gameObject.transform.Find("InfoPanel/RangedAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                    }
                 }
             }
             else if (statusEffect.statAffection == StatAffection.Armor)
             {
+                if (BuffArmor > 0)
+                {
+                    Armor -= BuffArmor;
+                }
+
                 float buffedArmor = MaxArmor * ((float)statusEffect.portionValue / (float)100);
+                StoredArmor = Armor;
                 BuffArmor = (int)Math.Round(buffedArmor);
                 Armor += BuffArmor;
 
-                gameObject.transform.Find("CharacterRow/SecondRow/Armor/Value").GetComponent<TextMeshProUGUI>().text = Armor.ToString();
-                gameObject.transform.Find("CharacterRow/SecondRow/Armor/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/Armor/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = Armor.ToString();
+                    gameObject.transform.Find("InfoPanel/Armor/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                }
+            }
+            else if (statusEffect.statAffection == StatAffection.HitChance)
+            {
+                if (BuffHitChance > 0)
+                {
+                    HitChance -= BuffHitChance;
+                }
+
+                BuffHitChance = statusEffect.portionValue;
+                HitChance += statusEffect.portionValue;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/HitChance/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = HitChance.ToString();
+                    gameObject.transform.Find("InfoPanel/HitChance/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                }
+            }
+            else if (statusEffect.statAffection == StatAffection.CounterChance)
+            {
+                if (BuffCounterChance > 0)
+                {
+                    CounterChance -= BuffCounterChance;
+                }
+
+                BuffCounterChance = statusEffect.portionValue;
+                CounterChance += statusEffect.portionValue;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/CounterChance/Value").GetComponent<TextMeshProUGUI>().text = CounterChance.ToString();
+                    gameObject.transform.Find("InfoPanel/CounterChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                }
             }
         }
     }
@@ -322,37 +399,65 @@ public class BattleCharacter : MonoBehaviour
             DeductHitPoints(damage);
         }
 
-        gameObject.transform.Find("CharacterRow/SecondRow/Shield/Value").GetComponent<TextMeshProUGUI>().text = ShieldPoints.ToString();
-        gameObject.transform.Find("CharacterRow/SecondRow/Armor/Value").GetComponent<TextMeshProUGUI>().text = Armor.ToString();
-        gameObject.transform.Find("CharacterRow/SecondRow/Health/Value").GetComponent<TextMeshProUGUI>().text = HitPoints.ToString();
+        ShieldBar.fillAmount = (float)ShieldPoints / (float)MaxShieldPoints;
+        ArmorBar.fillAmount = (float)Armor / (float)MaxArmor;
+        LifeBar.fillAmount = (float)HitPoints / (float)MaxHitPoints;
+
+        if (InfoPanel.activeSelf)
+        {
+            gameObject.transform.Find("InfoPanel/Shield/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = ShieldPoints.ToString();
+            gameObject.transform.Find("InfoPanel/Armor/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = Armor.ToString();
+            gameObject.transform.Find("InfoPanel/Health/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = HitPoints.ToString();
+        }
+
 
         if (ShieldPoints == 0)
         {
-            gameObject.transform.Find("CharacterRow/SecondRow/Shield/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+            if (InfoPanel.activeSelf)
+                gameObject.transform.Find("InfoPanel/Shield/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
         }
 
         if (Armor == 0)
         {
-            gameObject.transform.Find("CharacterRow/SecondRow/Armor/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+            if (InfoPanel.activeSelf)
+                gameObject.transform.Find("InfoPanel/Armor/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
         }
 
         if (HitPoints == 0)
         {
             IsDead = true;
             Timebar.fillAmount = 0f;
-            gameObject.transform.Find("CharacterRow/SecondRow/Health/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+
+            if (InfoPanel.activeSelf)
+                gameObject.transform.Find("InfoPanel/Health/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
         }
     }
 
     public void BlinkCombatant()
     {
-        gameObject.transform.Find("CharacterRow/Blink").GetComponent<Animation>().Play("BlinkTarget");
+        if (InfoPanel.activeSelf)
+        {
+            gameObject.transform.Find("Blink").GetComponent<Animation>().Play("BlinkTarget");
+        }
+        else
+        {
+            gameObject.transform.Find("VisualPanel/Blink").GetComponent<Animation>().Play("BlinkTarget");
+        }
+
     }
 
     public void StopBlinkingCombatant()
     {
-        gameObject.transform.Find("CharacterRow/Blink").GetComponent<Animation>().Stop("BlinkTarget");
-        gameObject.transform.Find("CharacterRow/Blink").GetComponent<Image>().color = UIColors.YellowInvisible;
+        if (InfoPanel.activeSelf)
+        {
+            gameObject.transform.Find("Blink").GetComponent<Animation>().Stop("BlinkTarget");
+            gameObject.transform.Find("Blink").GetComponent<Image>().color = UIColors.YellowInvisible;
+        }
+        else
+        {
+            gameObject.transform.Find("VisualPanel/Blink").GetComponent<Animation>().Stop("BlinkTarget");
+            gameObject.transform.Find("VisualPanel/Blink").GetComponent<Image>().color = UIColors.YellowInvisible;
+        }
     }
 
     public bool IsCombatantStunned()
@@ -393,11 +498,6 @@ public class BattleCharacter : MonoBehaviour
     public string GetCombatantName()
     {
         return Name;
-    }
-
-    public void DisplayLevelHUD(bool state)
-    {
-        LevelHUD.SetActive(state);
     }
 
     public int CheckStatusEffectCount()
@@ -634,6 +734,78 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This method supplements animation where InfoPanel is opened to keep it in its parameters.
+    /// It is enclosed in CombatantTemplate/Button UI button.
+    /// </summary>
+    public void ShowInfoPanel()
+    {
+        InfoPanel.SetActive(true);
+        FillInfoPanelStats(AttackSpeed, HitPoints, Armor, ShieldPoints, MeleeAttack, RangedAttack, PsiDamage, HitChance, Dodge, Resistance, CounterChance, Penetration);
+        _ = ShowInfoPanelAsync();
+    }
+
+    /// <summary>
+    /// This method supplements animation where InfoPanel is hidden.
+    /// It is contained and used in CombatantTemplate/InfoPanel/Close UI button.
+    /// </summary>
+    public void HideInfoPanel()
+    {
+        _ = HideInfoPanelAsync();
+    }
+
+    public async UniTask ShowInfoPanelAsync()
+    {
+        float totalTime = 1f;
+        float currentTime = 0f;
+        float visualPosXend = 119.81f;
+        float visualPosXstart = 0f;
+        float infoPosXend = -78f;
+        float infoPosXstart = 0f;
+        float infoWidthEnd = 253.6927f;
+        float infoWidthStart = 0f;
+        GameObject visualPanel = gameObject.transform.Find("VisualPanel").gameObject;
+
+        while (currentTime < totalTime)
+        {
+            currentTime += Time.deltaTime;
+            var t = currentTime / totalTime;
+            float newVisualPanelX = Mathf.Lerp(visualPosXstart, visualPosXend, currentTime / totalTime);
+            float newInfoPanelX = Mathf.Lerp(infoPosXstart, infoPosXend, currentTime / totalTime);
+            visualPanel.transform.localPosition = new(newVisualPanelX, 0);
+            InfoPanel.transform.localPosition = new(newInfoPanelX, 0);
+            InfoPanel.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(Mathf.Lerp(infoWidthStart, infoWidthEnd, t), 170);
+            await UniTask.Delay(1);
+        }
+    }
+
+    public async UniTask HideInfoPanelAsync()
+    {
+        float totalTime = 1f;
+        float currentTime = 0f;
+        float visualPosXstart = 119.81f;
+        float visualPosXend = 0f;
+        float infoPosXstart = -78f;
+        float infoPosXend = 0f;
+        float infoWidthStart = 253.6927f;
+        float infoWidthEnd = 0f;
+        GameObject visualPanel = gameObject.transform.Find("VisualPanel").gameObject;
+
+        while (currentTime < totalTime)
+        {
+            currentTime += Time.deltaTime;
+            var t = currentTime / totalTime;
+            float newVisualPanelX = Mathf.Lerp(visualPosXstart, visualPosXend, currentTime / totalTime);
+            float newInfoPanelX = Mathf.Lerp(infoPosXstart, infoPosXend, currentTime / totalTime);
+            visualPanel.transform.localPosition = new(newVisualPanelX, 0);
+            InfoPanel.transform.localPosition = new(newInfoPanelX, 0);
+            InfoPanel.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(Mathf.Lerp(infoWidthStart, infoWidthEnd, t), 170);
+            await UniTask.Delay(1);
+        }
+
+        InfoPanel.SetActive(false);
+    }
+
     private void DeductArmor(int damage)
     {
         if (BuffArmor > 0)
@@ -658,14 +830,16 @@ public class BattleCharacter : MonoBehaviour
                     if (positiveEffect.statAffection == StatAffection.Armor)
                     {
                         effectsToRemove.Add(positiveEffect);
-                        gameObject.transform.Find("CharacterRow/SecondRow/Armor/Value").GetComponent<TextMeshProUGUI>().color = UIColors.White;
+
+                        if (InfoPanel.activeSelf)
+                            gameObject.transform.Find("InfoPanel/Armor/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.White;
                     }
                 }
 
                 RemovePositiveEffect(effectsToRemove);
             }
 
-            Armor += BuffArmor;
+            Armor = StoredArmor + BuffArmor;
         }
 
         if (Armor >= damage)
@@ -721,7 +895,9 @@ public class BattleCharacter : MonoBehaviour
                     {
                         Armor -= BuffArmor;
                         BuffArmor = 0;
-                        gameObject.transform.Find("CharacterRow/SecondRow/Armor/Value").GetComponent<TextMeshProUGUI>().color = UIColors.White;
+
+                        if (InfoPanel.activeSelf)
+                            gameObject.transform.Find("InfoPanel/Armor/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.White;
                     }
                 }
                 else
@@ -755,6 +931,7 @@ public class BattleCharacter : MonoBehaviour
         {
             foreach (var statusEffect in NegativeAppliedEffects)
             {
+                // apply DoT damage here
                 if (statusEffect.portionValue > 0 && statusEffect.type == StatusEffectType.Damage)
                 {
                     shouldBlink = true;
@@ -787,12 +964,12 @@ public class BattleCharacter : MonoBehaviour
             {
                 NegativeAppliedEffects.Remove(effect);
 
-                // if character has less than 5 effects, we have to enable the Level HUD
-
-                if (CheckStatusEffectCount() < 5)
+                if (effect.type == StatusEffectType.Debuff)
                 {
-                    DisplayLevelHUD(true);
+                    RemoveDebuff(effect);
                 }
+
+                // if character has less than 5 effects, we have to enable the Level HUD
 
                 // as we remove the effect from the combatant we also have to remove it visually from the object
                 var statusEffectsLocation = gameObject.transform.Find("StatusEffects").transform;
@@ -821,6 +998,76 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes the particular debuff from the target combatant and returns the affected stat back to 
+    /// its original portion. This only applies for debuff effects and those that expire only after
+    /// desired turns or are dispelled.
+    /// </summary>
+    /// <param name="statusEffect"></param>
+    private void RemoveDebuff(StatusEffect statusEffect)
+    {
+        if (statusEffect.statAffection == StatAffection.HitChance)
+        {
+            HitChance += DebuffHitChance;
+            DebuffHitChance = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/HitChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+        }
+        else if (statusEffect.statAffection == StatAffection.CounterChance)
+        {
+            CounterChance += DebuffCounterChance;
+            DebuffCounterChance = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/CounterChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+        }
+    }
+
+    /// <summary>
+    /// Removes the particular buff from the target combatant and returns the affected stat back
+    /// to its original portion. This only applies to buff effects that add fixed unchanged value
+    /// and expire after fixed amount of turns or are dispelled.
+    /// </summary>
+    /// <param name="statusEffect"></param>
+    private void RemoveBuff(StatusEffect statusEffect)
+    {
+        if (statusEffect.statAffection == StatAffection.HitChance)
+        {
+            HitChance -= BuffHitChance;
+            BuffHitChance = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/HitChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+        }
+        else if (statusEffect.statAffection == StatAffection.CounterChance)
+        {
+            CounterChance -= BuffCounterChance;
+            BuffCounterChance = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/CounterChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+        }
+    }
+
+    private void ReturnStatToOriginal(string path, int stat, int buffStat, int debuffStat)
+    {
+        gameObject.transform.Find(path).GetComponent<TextMeshProUGUI>().text = HitChance.ToString();
+
+        if (buffStat > 0)
+        {
+            gameObject.transform.Find(path).GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+        }
+        else if (debuffStat > 0)
+        {
+            gameObject.transform.Find(path).GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+        }
+        else
+        {
+            gameObject.transform.Find(path).GetComponent<TextMeshProUGUI>().color = UIColors.White;
+        }
+    }
+
     private void RemovePositiveEffect(IList<StatusEffect> effectsToRemove)
     {
         if (effectsToRemove.Count > 0)
@@ -829,10 +1076,9 @@ public class BattleCharacter : MonoBehaviour
             {
                 PositiveAppliedEffects.Remove(effect);
 
-                // if character has less than 5 effects, we have to enable the Level HUD
-                if (CheckStatusEffectCount() < 5)
+                if (effect.type == StatusEffectType.Buff)
                 {
-                    DisplayLevelHUD(true);
+                    RemoveBuff(effect);
                 }
 
                 // as we remove the effect from the combatant we also have to remove it visually from the object
@@ -867,6 +1113,7 @@ public class BattleCharacter : MonoBehaviour
         Armor = armor;
         MaxArmor = armor;
         ShieldPoints = shieldPoints;
+        MaxShieldPoints = shieldPoints;
         MeleeAttack = meleeAttack;
         RangedAttack = rangedAttack;
         Dodge = dodge;
@@ -894,99 +1141,141 @@ public class BattleCharacter : MonoBehaviour
         EnergyProtection = energyProtection;
         PsiProtection = psiProtection;
 
-        gameObject.transform.Find("Level/LevelValue").GetComponent<TextMeshProUGUI>().text = level.ToString();
-        gameObject.transform.Find("CharacterRow/FirstRow/Character").GetComponent<TextMeshProUGUI>().text = name;
-        gameObject.transform.Find("CharacterRow/FirstRow/AttackSpeedValue").GetComponent<TextMeshProUGUI>().text = attackSpeed.ToString("F1");
-        gameObject.transform.Find("CharacterRow/SecondRow/Health/Value").GetComponent<TextMeshProUGUI>().text = hitPoints.ToString();
+        LifeBar.fillAmount = 1f;
 
-        if (armor > 0)
+        gameObject.transform.Find("VisualPanel/Level/LevelValue").GetComponent<TextMeshProUGUI>().text = level.ToString();
+        gameObject.transform.Find("VisualPanel/Name").GetComponent<TextMeshProUGUI>().text = name;
+
+        if (InfoPanel.activeSelf)
         {
-            gameObject.transform.Find("CharacterRow/SecondRow/Armor/Value").GetComponent<TextMeshProUGUI>().text = armor.ToString();
+            FillInfoPanelStats(attackSpeed, hitPoints, armor, shieldPoints, meleeAttack, rangedAttack, psiDamage, hitChance, dodge, resistance, counterChance, penetration);
         }
         else
         {
-            gameObject.transform.Find("CharacterRow/SecondRow/Armor").gameObject.SetActive(false);
-        }
+            if (armor > 0)
+            {
+                ArmorBar.fillAmount = 1f;
+            }
+            else
+            {
+                ArmorBar.fillAmount = 0f;
+            }
 
-        if (shieldPoints > 0)
-        {
-            gameObject.transform.Find("CharacterRow/SecondRow/Shield/Value").GetComponent<TextMeshProUGUI>().text = shieldPoints.ToString();
+            if (shieldPoints > 0)
+            {
+                ShieldBar.fillAmount = 1f;
+            }
+            else
+            {
+                ShieldBar.fillAmount = 0f;
+            }
         }
-        else
-        {
-            gameObject.transform.Find("CharacterRow/SecondRow/Shield").gameObject.SetActive(false);
-        }
+    }
 
-        if (meleeAttack > 0)
+    public void FillInfoPanelStats(float attackSpeed, int hitPoints, int armor, int shieldPoints, int meleeAttack, int rangedAttack, int psiDamage, int hitChance,
+        int dodge, int resistance, int counterChance, int penetration)
+    {
+        if (InfoPanel.activeSelf)
         {
-            gameObject.transform.Find("CharacterRow/ThirdRow/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = meleeAttack.ToString();
-        }
-        else
-        {
-            gameObject.transform.Find("CharacterRow/ThirdRow/MeleeAttack").gameObject.SetActive(false);
-        }
+            gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().text = attackSpeed.ToString("F1");
+            gameObject.transform.Find("InfoPanel/Health/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = hitPoints.ToString();
+            gameObject.transform.Find("InfoPanel/Health/Value/MaxValue").GetComponent<TextMeshProUGUI>().text = hitPoints.ToString();
 
-        if (rangedAttack > 0)
-        {
-            gameObject.transform.Find("CharacterRow/ThirdRow/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = rangedAttack.ToString();
-        }
-        else
-        {
-            gameObject.transform.Find("CharacterRow/ThirdRow/RangedAttack").gameObject.SetActive(false);
-        }
+            if (armor > 0)
+            {
+                gameObject.transform.Find("InfoPanel/Armor/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = armor.ToString();
+                gameObject.transform.Find("InfoPanel/Armor/Value/MaxValue").GetComponent<TextMeshProUGUI>().text = armor.ToString();
+                ArmorBar.fillAmount = 1f;
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/Armor").gameObject.SetActive(false);
+                ArmorBar.fillAmount = 0f;
+            }
 
-        if (psiDamage > 0)
-        {
-            gameObject.transform.Find("CharacterRow/ThirdRow/PsiAttack/Value").GetComponent<TextMeshProUGUI>().text = psiDamage.ToString();
-        }
-        else
-        {
-            gameObject.transform.Find("CharacterRow/ThirdRow/PsiAttack").gameObject.SetActive(false);
-        }
+            if (shieldPoints > 0)
+            {
+                gameObject.transform.Find("InfoPanel/Shield/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = shieldPoints.ToString();
+                gameObject.transform.Find("InfoPanel/Shield/Value/MaxValue").GetComponent<TextMeshProUGUI>().text = shieldPoints.ToString();
+                ShieldBar.fillAmount = 1f;
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/Shield").gameObject.SetActive(false);
+                ShieldBar.fillAmount = 0f;
+            }
 
-        if (hitChance > 0)
-        {
-            gameObject.transform.Find("CharacterRow/ThirdRow/HitChance/Value").GetComponent<TextMeshProUGUI>().text = hitChance.ToString() + "%";
-        }
-        else
-        {
-            gameObject.transform.Find("CharacterRow/ThirdRow/HitChance").gameObject.SetActive(false);
-        }
+            if (meleeAttack > 0)
+            {
+                gameObject.transform.Find("InfoPanel/Row0/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = meleeAttack.ToString();
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/Row0/MeleeAttack").gameObject.SetActive(false);
+            }
 
-        if (dodge > 0)
-        {
-            gameObject.transform.Find("CharacterRow/FourthRow/Dodge/Value").GetComponent<TextMeshProUGUI>().text = dodge.ToString() + "%";
-        }
-        else
-        {
-            gameObject.transform.Find("CharacterRow/FourthRow/Dodge").gameObject.SetActive(false);
-        }
+            if (rangedAttack > 0)
+            {
+                gameObject.transform.Find("InfoPanel/Row0/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = rangedAttack.ToString();
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/Row0/RangedAttack").gameObject.SetActive(false);
+            }
 
-        if (resistance > 0)
-        {
-            gameObject.transform.Find("CharacterRow/FourthRow/Resistance/Value").GetComponent<TextMeshProUGUI>().text = resistance.ToString();
-        }
-        else
-        {
-            gameObject.transform.Find("CharacterRow/FourthRow/Resistance").gameObject.SetActive(false);
-        }
+            if (psiDamage > 0)
+            {
+                gameObject.transform.Find("InfoPanel/PsiAttack/Value").GetComponent<TextMeshProUGUI>().text = psiDamage.ToString();
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/PsiAttack").gameObject.SetActive(false);
+            }
 
-        if (counterChance > 0)
-        {
-            gameObject.transform.Find("CharacterRow/FourthRow/CounterChance/Value").GetComponent<TextMeshProUGUI>().text = counterChance.ToString() + "%";
-        }
-        else
-        {
-            gameObject.transform.Find("CharacterRow/FourthRow/CounterChance").gameObject.SetActive(false);
-        }
+            if (hitChance > 0)
+            {
+                gameObject.transform.Find("InfoPanel/Row1/HitChance/Value").GetComponent<TextMeshProUGUI>().text = hitChance.ToString() + "%";
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/Row1/HitChance").gameObject.SetActive(false);
+            }
 
-        if (penetration > 0)
-        {
-            gameObject.transform.Find("CharacterRow/FourthRow/Penetration/Value").GetComponent<TextMeshProUGUI>().text = penetration.ToString();
-        }
-        else
-        {
-            gameObject.transform.Find("CharacterRow/FourthRow/Penetration").gameObject.SetActive(false);
+            if (dodge > 0)
+            {
+                gameObject.transform.Find("InfoPanel/Row2/Dodge/Value").GetComponent<TextMeshProUGUI>().text = dodge.ToString() + "%";
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/Row2/Dodge").gameObject.SetActive(false);
+            }
+
+            if (resistance > 0)
+            {
+                gameObject.transform.Find("InfoPanel/Row2/Resistance/Value").GetComponent<TextMeshProUGUI>().text = resistance.ToString();
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/Row2/Resistance").gameObject.SetActive(false);
+            }
+
+            if (counterChance > 0)
+            {
+                gameObject.transform.Find("InfoPanel/Row3/CounterChance/Value").GetComponent<TextMeshProUGUI>().text = counterChance.ToString() + "%";
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/Row3/CounterChance").gameObject.SetActive(false);
+            }
+
+            if (penetration > 0)
+            {
+                gameObject.transform.Find("InfoPanel/Row3/Penetration/Value").GetComponent<TextMeshProUGUI>().text = penetration.ToString();
+            }
+            else
+            {
+                gameObject.transform.Find("InfoPanel/Row3/Penetration").gameObject.SetActive(false);
+            }
         }
     }
 
