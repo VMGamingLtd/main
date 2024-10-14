@@ -11,7 +11,9 @@ namespace Gaos.Websocket
     {
         WebbSocket = 1,
         UnityBrowserChannel = 2,
-        Group = 3
+        Group = 3,
+        Gaos = 4
+          
     }
 
     public enum WebSocketClassIds
@@ -53,6 +55,16 @@ namespace Gaos.Websocket
         GroupGameDataChanged = 1,
     }
 
+    public enum GaosClassIds
+    {
+        Broadcast = 1,
+    }
+
+    public enum GaosBroadcastMethodIds
+    {
+        GroupCreditsChange = 1,
+    }
+
 
     public class Dispatcher 
     {
@@ -83,7 +95,7 @@ namespace Gaos.Websocket
         }
 
 
-        public static void Dispatch(Gaos.WebSocket.IWebSocketClient ws, int namespaceId, int classId, int methodId, byte[] message)
+        public static void Dispatch(Gaos.WebSocket.IWebSocketClient ws, GaoProtobuf.MessageHeader header, byte[] message)
         {
             const string METHOD_NAME = "Dispatch()";
 
@@ -91,37 +103,37 @@ namespace Gaos.Websocket
 
             try
             {
-                switch (namespaceId)
+                switch (header.NamespaceId)
                 {
                     case (int)NamespaceIds.WebbSocket:
-                        DispatchWebsocket(ws, namespaceId,   classId, methodId, message);
+                        DispatchWebsocket(ws, header, message);
                         return;
                     case (int)NamespaceIds.UnityBrowserChannel:
-                        DispatchUnityBrowserChannel(ws, namespaceId, classId, methodId, message);
+                        DispatchUnityBrowserChannel(ws, header, message);
                         return;
                     case (int)NamespaceIds.Group:
-                        DispatchGroup(ws, namespaceId, classId, methodId, message);
+                        DispatchGroup(ws, header, message);
                         return;
                     default:
-                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such namespaceId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such namespaceId, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
                         return;
                 }
             }
             catch (System.Exception e) 
             {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
                 Debug.Log(e);
                 return;
             }
         }
 
-        public static void DispatchWebsocket(Gaos.WebSocket.IWebSocketClient ws, int namespaceId, int classId, int methodId, byte[] message)
+        public static void DispatchWebsocket(Gaos.WebSocket.IWebSocketClient ws, GaoProtobuf.MessageHeader header, byte[] message)
         {
             const string METHOD_NAME = "DispatchWebsocket()";
-            switch (classId)
+            switch (header.ClassId)
             {
                 case (int)WebSocketClassIds.PingPong:
-                    switch (methodId)
+                    switch (header.MethodId)
                     {
                         case (int)WebSocketPingPongMethodIds.Ping:
                             PingPong.OnPing(ws, message);
@@ -130,63 +142,84 @@ namespace Gaos.Websocket
                             PingPong.OnPong(ws, message);
                             return;
                         default:
-                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId} , methodId:  {header.MethodId}");
                             return;
                     }
                 case (int)WebSocketClassIds.Authenticate:
-                        switch (methodId)
+                        switch (header.MethodId)
                         {
                             case (int)WebSocketAuthenticateMethodIds.AuthenticateResponse:
                                 Gaos.Messages.WsAuthentication.receiveAuthenticateResponse(message);
                                 return;
                             default:
-                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId} , methodId:  {header.MethodId}");
                                 return;
                         }
                 default:
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId} , methodId:  {header.MethodId}");
                     return;
                 }
         }
 
-        public static void DispatchUnityBrowserChannel(Gaos.WebSocket.IWebSocketClient ws, int namespaceId, int classId, int methodId, byte[] message)
+        public static void DispatchUnityBrowserChannel(Gaos.WebSocket.IWebSocketClient ws, GaoProtobuf.MessageHeader header, byte[] message)
         {
             const string METHOD_NAME = "DispatchUnityBrowserChannel()";
-            switch (classId)
+            switch (header.ClassId)
             {
                 case (int)UnityBrowserChannelClassIds.BaseMessages:
-                        switch (methodId)
+                        switch (header.MethodId)
                         {
                             case (int)UnityBrowserChannelBaseMessagingMethodIds.ReceiveString:
                                 UnityBrowserChannel.BaseMessages.receiveStringWs(ws, message);
                                 return;
                             default:
-                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId}  , classId:   {header.ClassId}  , methodId:   {header.MethodId}");
                                 return;
                         }
                 default:
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {header.NamespaceId}  , classId:   {header.ClassId}  , methodId:   {header.MethodId}");
                     return;
                 }
         }
 
-        public static void DispatchGroup(Gaos.WebSocket.IWebSocketClient ws, int namespaceId, int classId, int methodId, byte[] message)
+        public static void DispatchGroup(Gaos.WebSocket.IWebSocketClient ws, GaoProtobuf.MessageHeader header, byte[] message)
         {
             const string METHOD_NAME = "DispatchGroup()";
-            switch (classId)
+            switch (header.ClassId)
             {
                 case (int)GroupClassIds.Broadcast:
-                    switch (methodId)
+                    switch (header.MethodId)
                     {
                         case (int)GroupBroadcastMethodIds.GroupGameDataChanged:
                             Gaos.Messages.Group.GroupGameDataChanged.receive(ws, message);
                             return;
                         default:
-                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId}  , classId:   {header.ClassId}  , methodId:   {header.MethodId}");
                             return;
                     }
                 default:
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
+                    return;
+            }
+        }
+
+        public static void DispatchGaos(Gaos.WebSocket.IWebSocketClient ws, GaoProtobuf.MessageHeader header, byte[] message)
+        {
+            const string METHOD_NAME = "DispatchGaos()";
+            switch (header.ClassId)
+            {
+                case (int)GaosClassIds.Broadcast:
+                    switch (header.MethodId)
+                    {
+                        case (int)GaosBroadcastMethodIds.GroupCreditsChange:
+                            Gaos.Messages.GaosServer.GroupCreditsChange.receive(ws, header, message);
+                            return;
+                        default:
+                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId}, methodId: {header.MethodId}");
+                            return;
+                    }
+                default:
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId}, methodId: {header.MethodId}");
                     return;
             }
         }
