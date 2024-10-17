@@ -212,7 +212,7 @@ namespace Gaos.Websocket
                     switch (header.MethodId)
                     {
                         case (int)GaosBroadcastMethodIds.GroupCreditsChange:
-                            Gaos.Messages.GaosServer.GroupCreditsChange.receive(ws, header, message);
+                            Gaos.Messages.Group1.GroupCreditsChange.receive(ws, header, message);
                             return;
                         default:
                             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId}, methodId: {header.MethodId}");

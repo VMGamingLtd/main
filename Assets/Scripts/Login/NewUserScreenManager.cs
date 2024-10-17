@@ -323,6 +323,8 @@ public class NewUserScreen : MonoBehaviour
         {
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: User not registered, erorr: {Gaos.User.User.UserRegister.ResponseErrorKind}");
             errorText.text = GetErrorMessage(Gaos.User.User.UserRegister.ResponseErrorKind);
+            buttonCreate.interactable = false;
+            buttonBack.interactable = false;
         }
     }
 

@@ -48,7 +48,7 @@ namespace Gaos.GroupData1
     {
         public readonly static string CLASS_NAME = typeof(AddMyCredits).Name;
 
-        public static async UniTask<Gaos.Routes.Model.GroupData1Json.AddCreditsResponse> CallAsync(int credits)
+        public static async UniTask<Gaos.Routes.Model.GroupData1Json.AddCreditsResponse> CallAsync(float credits)
         {
             const string METHOD_NAME = "api/groupData1/addMyCredits";
             try
@@ -83,8 +83,46 @@ namespace Gaos.GroupData1
                 return null;
             }
         }
+    }
 
+    public class ResetMyCredits
+    {
+        public readonly static string CLASS_NAME = typeof(ResetMyCredits).Name;
 
+        public static async UniTask<Gaos.Routes.Model.GroupData1Json.ResetCreditsResponse> CallAsync(float credits)
+        {
+            const string METHOD_NAME = "api/groupData1/resetMyCredits";
+            try
+            {
+                Gaos.Routes.Model.GroupData1Json.ResetCreditsRequest request = new Gaos.Routes.Model.GroupData1Json.ResetCreditsRequest();
+                request.Credits = credits;
+
+                string requestJsonStr = JsonConvert.SerializeObject(request);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall(METHOD_NAME, requestJsonStr);
+                await apiCall.CallAsync();
+
+                if (apiCall.IsResponseError)
+                {
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error resetting my credits");
+                    return null;
+                }
+                else
+                {
+                    Gaos.Routes.Model.GroupData1Json.ResetCreditsResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.GroupData1Json.ResetCreditsResponse>(apiCall.ResponseJsonStr);
+                    if (response.IsError == true)
+                    {
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error resetting my credits: {response.ErrorMessage}");
+                        return null;
+                    }
+                    return response;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error resetting my credits: {e.Message}");
+                return null;
+            }
+        }
     }
 
 
