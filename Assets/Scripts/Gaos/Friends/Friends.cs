@@ -391,33 +391,33 @@ namespace Gaos.Friends.Friends
         }
     }
 
-    public class GetMyFriends
+    public class GetMyGroupMembers
     {
-        public readonly static string CLASS_NAME = typeof(GetMyFriends).Name;
+        public readonly static string CLASS_NAME = typeof(GetMyGroupMembers).Name;
 
-        public static async UniTask<Gaos.Routes.Model.FriendsJson.GetMyFriendsResponse> CallAsync(int groupId, int maxCount)
+        public static async UniTask<Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse> CallAsync(int groupId, int maxCount)
         {
-            const string METHOD_NAME = "api/friends/getMyFriends";
+            const string METHOD_NAME = "api/friends/getMyGroupMembers";
             try
             {
-                Gaos.Routes.Model.FriendsJson.GetMyFriendsRequest request = new Gaos.Routes.Model.FriendsJson.GetMyFriendsRequest();
+                Gaos.Routes.Model.FriendsJson.GetMyGroupMembersRequest request = new Gaos.Routes.Model.FriendsJson.GetMyGroupMembersRequest();
                 request.GroupId = groupId;
                 request.MaxCount = maxCount;
                 request.IsCountOnly = false;
                 string requestJsonStr = JsonConvert.SerializeObject(request);
-                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getMyFriends", requestJsonStr);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getMyGroupMembers", requestJsonStr);
                 await apiCall.CallAsync();
                 if (apiCall.IsResponseError)
                 {
-                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting my friends");
+                    Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting my group members");
                     return null;
                 }
                 else
                 {
-                    Gaos.Routes.Model.FriendsJson.GetMyFriendsResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetMyFriendsResponse>(apiCall.ResponseJsonStr);
+                    Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse>(apiCall.ResponseJsonStr);
                     if (response.IsError == true)
                     {
-                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting my friends: {response.ErrorMessage}");
+                        Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting my group members: {response.ErrorMessage}");
                         return null;
                     }
                     return response;
@@ -431,20 +431,20 @@ namespace Gaos.Friends.Friends
         }
     }
 
-    public class GetMyFriendsCount
+    public class GetMyGroupMembersCount
     {
-        public readonly static string CLASS_NAME = typeof(GetMyFriendsCount).Name;
+        public readonly static string CLASS_NAME = typeof(GetMyGroupMembersCount).Name;
 
         public static async UniTask<int> CallAsync(int groupId)
         {
-            const string METHOD_NAME = "api/friends/getMyFriends";
+            const string METHOD_NAME = "api/friends/getMyGroupMembers";
             try
             {
-                Gaos.Routes.Model.FriendsJson.GetMyFriendsRequest request = new Gaos.Routes.Model.FriendsJson.GetMyFriendsRequest();
+                Gaos.Routes.Model.FriendsJson.GetMyGroupMembersRequest request = new Gaos.Routes.Model.FriendsJson.GetMyGroupMembersRequest();
                 request.GroupId = groupId;
                 request.IsCountOnly = true;
                 string requestJsonStr = JsonConvert.SerializeObject(request);
-                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getMyFriends", requestJsonStr);
+                Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall("api/friends/getMyGroupMembers", requestJsonStr);
                 await apiCall.CallAsync();
                 if (apiCall.IsResponseError)
                 {
@@ -453,7 +453,7 @@ namespace Gaos.Friends.Friends
                 }
                 else
                 {
-                    Gaos.Routes.Model.FriendsJson.GetMyFriendsResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetMyFriendsResponse>(apiCall.ResponseJsonStr);
+                    Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse response = JsonConvert.DeserializeObject<Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse>(apiCall.ResponseJsonStr);
                     if (response.IsError == true)
                     {
                         Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: error getting my friends: {response.ErrorMessage}");

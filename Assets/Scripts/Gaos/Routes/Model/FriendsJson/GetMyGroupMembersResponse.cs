@@ -9,7 +9,7 @@ namespace Gaos.Routes.Model.FriendsJson
     }
 
     [System.Serializable]
-    public class GetMyFriendsResponse
+    public class GetMyGroupMembersResponse
     {
         public bool? IsError;
         public string? ErrorMessage;

@@ -8,12 +8,15 @@ namespace Gaos.GroupData1
     {
         public readonly static string CLASS_NAME = typeof(GetCredits).Name;
 
-        public static async UniTask<Gaos.Routes.Model.GroupData1Json.GetCreditsResponse> CallAsync()
+        public static async UniTask<Gaos.Routes.Model.GroupData1Json.GetCreditsResponse> CallAsync(int groupId, int userId)
         {
             const string METHOD_NAME = "api/groupData1/getCredits";
             try
             {
                 Gaos.Routes.Model.GroupData1Json.GetCreditsRequest request = new Gaos.Routes.Model.GroupData1Json.GetCreditsRequest();
+                request.GroupId = groupId;
+                request.UserId = userId;
+
 
                 string requestJsonStr = JsonConvert.SerializeObject(request);
                 Gaos.Api.ApiCall apiCall = new Gaos.Api.ApiCall(METHOD_NAME, requestJsonStr);
