@@ -27,6 +27,32 @@ namespace Assets.Scripts.Debuggging
         void OnEnable()
         {
             LoadGroupUntill().Forget();
+            // Register the listener
+            Gaos.Messages.Group1.GroupCreditsChange.OnGroupCreditsChange += HandleGroupCreditsChange;
+        }
+
+        void OnDisable()
+        {
+            // Unregister the listener
+            Gaos.Messages.Group1.GroupCreditsChange.OnGroupCreditsChange -= HandleGroupCreditsChange;
+        }
+
+        private void HandleGroupCreditsChange(int groupId, int userId, float credits)
+        {
+            if (groupId != mGroupId) return;
+
+            if (userId == groupOwner.UserId)
+            {
+                groupOwner.Credits = credits;
+            }
+            else
+            {
+                var member = groupMembers.Find(m => m.UserId == userId);
+                if (member != null)
+                {
+                    member.Credits = credits;
+                }
+            }
         }
 
         void Update()
@@ -38,7 +64,6 @@ namespace Assets.Scripts.Debuggging
         }
 
         private string textField_value;
-        private string textField_diff;
 
         void OnGUI()
         {
@@ -46,16 +71,15 @@ namespace Assets.Scripts.Debuggging
 
             GUI.Box(new Rect(10,10,200,400), $"Credits {Credits.credits}");
 
-            GUI.Label (new Rect (25, 50, 100, 30), "Value"); textField_value = GUI.TextField (new Rect (65, 50, 100, 30), textField_diff);
-            GUI.Label (new Rect (25, 90, 100, 30), "Diff"); textField_diff = GUI.TextField (new Rect (65, 90, 100, 30), textField_diff);
-            if(GUI.Button(new Rect(25, 130,60,30), "Plus"))
+            GUI.Label (new Rect (25, 50, 100, 30), "Value"); textField_value = GUI.TextField (new Rect (65, 50, 100, 30), textField_value);
+            if(GUI.Button(new Rect(25, 130,60,30), "Add"))
             {
-                Debug.Log("@@@@@@@@@@@@@@@@@@@@@ Increse"); 
+                Debug.Log("@@@@@@@@@@@@@@@@@@@@@ Add"); 
                 AddCredits();
             }
-            if(GUI.Button(new Rect(95, 130,60,30), "Minus")) 
+            if(GUI.Button(new Rect(95, 130,60,30), "Reset")) 
             {
-                Debug.Log("@@@@@@@@@@@@@@@@@@@@@ Decrease"); 
+                Debug.Log("@@@@@@@@@@@@@@@@@@@@@ Reset"); 
             }
 
             GUI.Label(new Rect(25, 180, 200, 20), $"[ {groupOwner.UserName} {groupOwner.Credits} ]");
@@ -70,13 +94,13 @@ namespace Assets.Scripts.Debuggging
         async void AddCredits()
         {
             var result = await Gaos.GroupData1.AddMyCredits.CallAsync(float.Parse(textField_value));
-            if (result.IsError == true)
+            if (result == null)
             {
-                Debug.LogError($"Error adding credits: {result.ErrorMessage}");
+                Debug.LogError($"Error adding credits");
             }
             else
             {
-                Debug.Log($"Credits added: {result.Credits}");
+                Debug.Log($"Credits added");
                 Credits.credits = result.Credits;
             }
         }
@@ -84,7 +108,7 @@ namespace Assets.Scripts.Debuggging
         async void ResetCredits()
         {
             var result = await Gaos.GroupData1.ResetMyCredits.CallAsync(float.Parse(textField_value));
-            if (result.IsError == true)
+            if (result == null)
             {
                 Debug.LogError($"Error resetting credits: {result.ErrorMessage}");
             }
@@ -149,6 +173,15 @@ namespace Assets.Scripts.Debuggging
                 groupMember.Credits = 0.0f;
                 groupMembers.Add(groupMember);
             }
+
+            // Keep loading initial credits for each user
+            List<UniTask> tasks = new List<UniTask>();
+            foreach (var member in groupMembers)
+            {
+                tasks.Add(LoadCreditsForUser(member.UserId));
+            }
+            await UniTask.WhenAll(tasks);
+
             return true;
         }
 
