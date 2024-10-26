@@ -41,6 +41,12 @@ namespace Assets.Scripts.Debuggging
         {
             if (groupId != mGroupId) return;
 
+            UpdateCreditsForUser(userId, credits);
+
+        }
+
+        private void UpdateCreditsForUser(int userId, float credits)
+        {
             if (userId == groupOwner.UserId)
             {
                 groupOwner.Credits = credits;
@@ -102,8 +108,14 @@ namespace Assets.Scripts.Debuggging
             {
                 Debug.Log($"Credits added");
                 Credits.credits = result.Credits;
+
+                UpdateCreditsForUser(Gaos.Context.Authentication.GetUserId(), result.Credits);
+
+                // Update the credits for the group owner
+
             }
         }
+
 
         async void ResetCredits()
         {
@@ -116,6 +128,7 @@ namespace Assets.Scripts.Debuggging
             {
                 Debug.Log($"Credits reset: {result.Credits}");
                 Credits.credits = result.Credits;
+                UpdateCreditsForUser(Gaos.Context.Authentication.GetUserId() , result.Credits);
             }
         }
 

@@ -114,6 +114,9 @@ namespace Gaos.Websocket
                     case (int)NamespaceIds.Group:
                         DispatchGroup(ws, header, message);
                         return;
+                    case (int)NamespaceIds.Gaos:
+                        DispatchGaos(ws, header, message);
+                        return;
                     default:
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such namespaceId, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
                         return;
