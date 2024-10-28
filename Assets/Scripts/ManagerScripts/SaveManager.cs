@@ -17,8 +17,8 @@ public class SaveManager : MonoBehaviour
     public readonly static string CLASS_NAME = typeof(SaveManager).Name;
 
     public static int CurrentGameSlotId;
-    public static SaveManager CurrentSaveManager; 
-    private bool IsSavingDisabled; 
+    public static SaveManager CurrentSaveManager;
+    private bool IsSavingDisabled;
 
     CancellationTokenSource SaveQueueProcessingCancelationToken;
     bool IsSaveQueueProcessing;
@@ -37,6 +37,7 @@ public class SaveManager : MonoBehaviour
         public string username;
         public string password;
         public string email;
+        public string country;
         public string showItemProducts;
         public string showRecipeProducts;
         public string showItemTypes;
@@ -232,7 +233,8 @@ public class SaveManager : MonoBehaviour
 
         IsSaveQueueProcessing = true;
         SaveQueueProcessingCancelationToken = new CancellationTokenSource();
-        StartCoroutine(Gaos.GameData.UserGameDataSave.ProcessSendQueue(this, SaveQueueProcessingCancelationToken.Token, () => {
+        StartCoroutine(Gaos.GameData.UserGameDataSave.ProcessSendQueue(this, SaveQueueProcessingCancelationToken.Token, () =>
+        {
             IsSaveQueueProcessing = false;
         }));
     }
@@ -379,6 +381,7 @@ public class SaveManager : MonoBehaviour
 
         currentSaveData.AchievementPoints = Achievements.AchievementPoints;
         currentSaveData.username = Gaos.Context.Authentication.GetUserName();
+        currentSaveData.country = Gaos.Context.Authentication.GetCountry();
         currentSaveData.password = "xxxxxx";
         currentSaveData.email = "xxxxx@xxxxx.xxxs";
         currentSaveData.showItemProducts = InventoryManager.ShowItemProducts;
@@ -1131,7 +1134,6 @@ public class SaveManager : MonoBehaviour
         }
 
         // fill in game data
-
         Gaos.Routes.Model.GameDataJson.UserGameDataSaveRequest userGameDataSaveRequest = new()
         {
             UserId = Gaos.Context.Authentication.GetUserId(),
@@ -1139,6 +1141,18 @@ public class SaveManager : MonoBehaviour
             GameDataJson = SerializeGameData()
         };
 
+        Gaos.Dbo.Model.LeaderboardData leaderboardData = new()
+        {
+            UserId = Gaos.Context.Authentication.GetUserId(),
+            Username = Gaos.Context.Authentication.GetUserName(),
+            Country = Gaos.Context.Authentication.GetCountry(),
+            Hours = GlobalCalculator.hours,
+            Minutes = GlobalCalculator.minutes,
+            Seconds = GlobalCalculator.seconds,
+            Score = Player.Score,
+        };
+
+        StartCoroutine(Gaos.Leaderboard.Leaderboard.UpdateLeaderboardData(leaderboardData));
         // get the color settings from UI Manager profile and save them on server
         StartCoroutine(Gaos.User.User.UserInterfaceColorsUpdater.UpdateUserInterfaceColors(Gaos.Context.Authentication.GetUserId(), Gaos.Context.Authentication.GetUserInterfaceColors()));
         StartCoroutine(Gaos.GameData.UserGameDataSave.Save(slotId, userGameDataSaveRequest, OnUserGameDataSaveComplete));

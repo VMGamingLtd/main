@@ -40,28 +40,6 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         }
     }
 
-    // If the attacker has any negative or positive status effects in their ability that hit the target
-    // we have to create an object on the target combatant for visibility and apply them
-    public void DisplayEffect(GameObject targetCombatant, StatusEffect statusEffect, bool isDebuff)
-    {
-        GameObject newItem;
-        Transform targetTransform = targetCombatant.transform.Find("StatusEffects");
-        newItem = Instantiate(fightManager.GetStatusEffectTemplate(), targetTransform);
-
-        if (!isDebuff)
-        {
-            newItem.transform.Find("Image").GetComponent<Image>().color = UIColors.NeonGreenFull;
-        }
-        else
-        {
-            newItem.transform.Find("Image").GetComponent<Image>().color = UIColors.NeonRedFull;
-        }
-
-        newItem.transform.Find("Duration").GetComponent<TextMeshProUGUI>().text = statusEffect.duration.ToString();
-        newItem.transform.Find("Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignCombatSpriteToSlot(statusEffect.name);
-        newItem.transform.Find("GUID/guid").name = statusEffect.guid.ToString();
-    }
-
     public void AttackAllyTarget(CombatAbility ability)
     {
         if (fightManager.ActiveCombatant != null && fightManager.EnemiesTarget != null)
@@ -127,6 +105,23 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
 
                 if (fightManager.ActiveAbility.Type != Constants.Buff)
                 {
+                    // we check if the target has any reflection debuffs that should be applied before the damage is calculated
+                    if (targetCharacter.GetReflectionStatusEffects().Count > 0)
+                    {
+                        foreach (var re in targetCharacter.GetReflectionStatusEffects())
+                        {
+                            var chance = Random.Range(0, 100);
+                            if (chance <= re.chance)
+                            {
+                                var newStatusEffect = new StatusEffect(re.name, re.type, re.statAffection, re.chance, re.portionValue, re.damageValue,
+                                    re.duration, re.isFrontLineAoe, re.isBackLineAoe);
+
+                                activeCharacter.DisplayEffect(fightManager.ActiveCombatant, newStatusEffect, true, false);
+                                activeCharacter.AddStatusEffect(newStatusEffect, false);
+                            }
+                        }
+                    }
+
                     damage = targetCharacter.ApplyDamagedReductions(activeCharacter, fightManager.ActiveAbility);
 
                     var criticalChanceStrike = Random.Range(0, 100);
@@ -186,7 +181,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                                 var newStatusEffect = new StatusEffect(effect.name, effect.type, effect.statAffection, effect.chance, effect.portionValue, damage,
                                     effect.duration, effect.isFrontLineAoe, effect.isBackLineAoe);
 
-                                DisplayEffect(targetCombatant, newStatusEffect, true);
+                                targetCharacter.DisplayEffect(targetCombatant, newStatusEffect, true, false);
                                 targetCharacter.AddStatusEffect(newStatusEffect, false);
 
                                 // if the negative effect is a debuff, then apply the reductions to the target
@@ -208,7 +203,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                             var newStatusEffect = new StatusEffect(effect.name, effect.type, effect.statAffection, effect.chance, effect.portionValue, effect.damageValue,
                                 effect.duration, effect.isFrontLineAoe, effect.isBackLineAoe);
 
-                            DisplayEffect(fightManager.ActiveCombatant, newStatusEffect, false);
+                            activeCharacter.DisplayEffect(fightManager.ActiveCombatant, newStatusEffect, false, false);
                             activeCharacter.AddStatusEffect(newStatusEffect, true);
 
                             // if the positive effect is a buff, then apply the additions to the caster
@@ -549,6 +544,27 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                     if (abilityPrefab.prefabRotation == Enumerations.PrefabRotation.ToEnemy)
                     {
                         RotatePrefabToEnemy(abilityPrefab, targetCombatant, activeCombatant, instantiatedPrefab);
+
+                        // we are shortening the frost beam range if the combatant is placed in front line
+                        if (instantiatedPrefab.name == "FrostBeam(Clone)")
+                        {
+                            if (activeCombatant.TryGetComponent(out BattleCharacter battleCharacter) &&
+                                battleCharacter.GetBattleFormation() == Enumerations.BattleFormation.Front)
+                            {
+                                var velocityModule = instantiatedPrefab.transform.Find("Trail").GetComponent<ParticleSystem>().velocityOverLifetime;
+                                velocityModule.enabled = true;
+                                velocityModule.x = new ParticleSystem.MinMaxCurve(-5f, 5f);
+                                velocityModule.y = new ParticleSystem.MinMaxCurve(0f, 25f);
+                                velocityModule.z = new ParticleSystem.MinMaxCurve(0f, 0f);
+
+                                var velocityModule2 = instantiatedPrefab.transform.Find("TrailCore").GetComponent<ParticleSystem>().velocityOverLifetime;
+                                velocityModule2.enabled = true;
+                                velocityModule2.x = 0f;
+                                velocityModule2.y = 40f;
+                                velocityModule2.z = 0f;
+                            }
+                        }
+
                         await UniTask.Delay(castingTime);
                     }
 

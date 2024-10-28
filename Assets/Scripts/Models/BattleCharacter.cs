@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using ItemManagement;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using TMPro;
 using UnityEngine;
@@ -25,7 +26,10 @@ public class BattleCharacter : MonoBehaviour
     private int Position;
     private string Name = string.Empty;
     private int Level;
+    private float BuffAttackSpeed;
+    private float DebuffAttackSpeed;
     private float AttackSpeed;
+    private float StoredAttackSpeed;
     private int HitChance;
     private int BuffHitChance;
     private int DebuffHitChance;
@@ -135,6 +139,8 @@ public class BattleCharacter : MonoBehaviour
             }
 
         }
+
+        ApplyPassiveEffects();
     }
 
     public BattleFormation GetBattleFormation()
@@ -191,14 +197,14 @@ public class BattleCharacter : MonoBehaviour
                 {
                     if (MeleeAttack > 0)
                     {
-                        gameObject.transform.Find("InfoPanel/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedMeleeAttack.ToString();
-                        gameObject.transform.Find("InfoPanel/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                        gameObject.transform.Find("InfoPanel/Row0/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedMeleeAttack.ToString();
+                        gameObject.transform.Find("InfoPanel/Row0/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
                     }
 
                     if (RangedAttack > 0)
                     {
-                        gameObject.transform.Find("InfoPanel/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedRangedAttack.ToString();
-                        gameObject.transform.Find("InfoPanel/RangedAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                        gameObject.transform.Find("InfoPanel/Row0/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedRangedAttack.ToString();
+                        gameObject.transform.Find("InfoPanel/Row0/RangedAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
                     }
                 }
             }
@@ -214,8 +220,8 @@ public class BattleCharacter : MonoBehaviour
 
                 if (InfoPanel.activeSelf)
                 {
-                    gameObject.transform.Find("InfoPanel/HitChance/Value").GetComponent<TextMeshProUGUI>().text = HitChance.ToString();
-                    gameObject.transform.Find("InfoPanel/HitChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                    gameObject.transform.Find("InfoPanel/Row1/HitChance/Value").GetComponent<TextMeshProUGUI>().text = HitChance.ToString();
+                    gameObject.transform.Find("InfoPanel/Row1/HitChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
                 }
             }
             else if (statusEffect.statAffection == StatAffection.CounterChance)
@@ -225,11 +231,114 @@ public class BattleCharacter : MonoBehaviour
 
                 if (InfoPanel.activeSelf)
                 {
-                    gameObject.transform.Find("InfoPanel/CounterChance/Value").GetComponent<TextMeshProUGUI>().text = CounterChance.ToString();
-                    gameObject.transform.Find("InfoPanel/CounterChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                    gameObject.transform.Find("InfoPanel/Row3/CounterChance/Value").GetComponent<TextMeshProUGUI>().text = CounterChance.ToString();
+                    gameObject.transform.Find("InfoPanel/Row3/CounterChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                }
+            }
+            else if (statusEffect.statAffection == StatAffection.AttackSpeed)
+            {
+                StoredAttackSpeed = AttackSpeed;
+                DebuffAttackSpeed = AttackSpeed * (statusEffect.portionValue / 100);
+                AttackSpeed -= DebuffAttackSpeed;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().text = CounterChance.ToString();
+                    gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// At the start of the battle check for all passive effects and apply them to the combatant.
+    /// But only those that should proc every turn.
+    /// </summary>
+    public void ApplyPassiveEffects()
+    {
+        if (CombatAbilities.Count > 0)
+        {
+            foreach (var ability in CombatAbilities)
+            {
+                if (ability.Type == Constants.Passive || ability.Type == Constants.PassiveReflect)
+                {
+                    foreach (var statusEffect in ability.PositiveStatusEffects)
+                    {
+                        // this means that the passive effect should proc every start of the turn
+                        if (statusEffect.duration == 0)
+                        {
+                            AddStatusEffect(statusEffect, true);
+                            DisplayEffect(gameObject, statusEffect, false, true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checks if combatant has any reflection effects that should be applied to attacker during the attack and puts them into a list.
+    /// </summary>
+    /// <returns></returns>
+    public List<StatusEffect> GetReflectionStatusEffects()
+    {
+        List<StatusEffect> statusEffects = new();
+
+        foreach (var ability in CombatAbilities)
+        {
+            if (ability.Type == Constants.PassiveReflect)
+            {
+                foreach (var statusEffect in ability.NegativeStatusEffects)
+                {
+                    statusEffects.Add(statusEffect);
+                }
+            }
+        }
+
+        return statusEffects;
+    }
+
+    /// <summary>
+    /// Used to check if character doesn't have some passive abilities that can trigget e.g. when his HP is below 50%.
+    /// </summary>
+    public void CheckAbilityTriggers()
+    {
+
+    }
+
+    /// <summary>
+    /// Displays the buf or debuff effect visually in the StatusEffects part of the combatant object.
+    /// </summary>
+    /// <param name="targetCombatant"></param>
+    /// <param name="statusEffect"></param>
+    /// <param name="isDebuff"></param>
+    public void DisplayEffect(GameObject targetCombatant, StatusEffect statusEffect, bool isDebuff, bool isPassive)
+    {
+        FightManager fightManager = GameObject.Find(Constants.FightManager).GetComponent<FightManager>();
+        GameObject newItem;
+        Transform targetTransform = targetCombatant.transform.Find("StatusEffects");
+        newItem = Instantiate(fightManager.GetStatusEffectTemplate(), targetTransform);
+
+        if (!isDebuff)
+        {
+            newItem.transform.Find("Image").GetComponent<Image>().color = UIColors.NeonGreenFull;
+        }
+        else
+        {
+            newItem.transform.Find("Image").GetComponent<Image>().color = UIColors.NeonRedFull;
+        }
+
+        if (!isPassive)
+        {
+            newItem.transform.Find("Duration").GetComponent<TextMeshProUGUI>().text = statusEffect.duration.ToString();
+        }
+        else
+        {
+            newItem.transform.Find("Duration").gameObject.SetActive(false);
+        }
+   
+        newItem.transform.Find("Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignCombatSpriteToSlot(statusEffect.name);
+        newItem.transform.Find("GUID/guid").name = statusEffect.guid.ToString();
     }
 
     public void ApplyBuffEffect(StatusEffect statusEffect)
@@ -260,14 +369,14 @@ public class BattleCharacter : MonoBehaviour
                 {
                     if (MeleeAttack > 0)
                     {
-                        gameObject.transform.Find("InfoPanel/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedMeleeAttack.ToString();
-                        gameObject.transform.Find("InfoPanel/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                        gameObject.transform.Find("InfoPanel/Row0/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedMeleeAttack.ToString();
+                        gameObject.transform.Find("InfoPanel/Row0/MeleeAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
                     }
 
                     if (RangedAttack > 0)
                     {
-                        gameObject.transform.Find("InfoPanel/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedRangedAttack.ToString();
-                        gameObject.transform.Find("InfoPanel/RangedAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                        gameObject.transform.Find("InfoPanel/Row0/RangedAttack/Value").GetComponent<TextMeshProUGUI>().text = deductedRangedAttack.ToString();
+                        gameObject.transform.Find("InfoPanel/Row0/RangedAttack/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
                     }
                 }
             }
@@ -301,8 +410,8 @@ public class BattleCharacter : MonoBehaviour
 
                 if (InfoPanel.activeSelf)
                 {
-                    gameObject.transform.Find("InfoPanel/HitChance/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = HitChance.ToString();
-                    gameObject.transform.Find("InfoPanel/HitChance/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                    gameObject.transform.Find("InfoPanel/Row1/HitChance/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = HitChance.ToString();
+                    gameObject.transform.Find("InfoPanel/Row1/HitChance/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
                 }
             }
             else if (statusEffect.statAffection == StatAffection.CounterChance)
@@ -317,8 +426,20 @@ public class BattleCharacter : MonoBehaviour
 
                 if (InfoPanel.activeSelf)
                 {
-                    gameObject.transform.Find("InfoPanel/CounterChance/Value").GetComponent<TextMeshProUGUI>().text = CounterChance.ToString();
-                    gameObject.transform.Find("InfoPanel/CounterChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                    gameObject.transform.Find("InfoPanel/Row3/CounterChance/Value").GetComponent<TextMeshProUGUI>().text = CounterChance.ToString();
+                    gameObject.transform.Find("InfoPanel/Row3/CounterChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                }
+            }
+            else if (statusEffect.statAffection == StatAffection.AttackSpeed)
+            {
+                StoredAttackSpeed = AttackSpeed;
+                BuffAttackSpeed = AttackSpeed * (statusEffect.portionValue / 100);
+                AttackSpeed -= DebuffAttackSpeed;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().text = CounterChance.ToString();
+                    gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
                 }
             }
         }
@@ -399,9 +520,32 @@ public class BattleCharacter : MonoBehaviour
             DeductHitPoints(damage);
         }
 
-        ShieldBar.fillAmount = (float)ShieldPoints / (float)MaxShieldPoints;
-        ArmorBar.fillAmount = (float)Armor / (float)MaxArmor;
-        LifeBar.fillAmount = (float)HitPoints / (float)MaxHitPoints;
+        if (ShieldPoints > 0)
+        {
+            ShieldBar.fillAmount = (float)ShieldPoints / (float)MaxShieldPoints;
+        }
+        else
+        {
+            ShieldBar.fillAmount = 0;
+        }
+        
+        if (Armor > 0)
+        {
+            ArmorBar.fillAmount = (float)Armor / (float)MaxArmor;
+        }
+        else
+        {
+            ArmorBar.fillAmount = 0;
+        }
+        
+        if (HitPoints > 0)
+        {
+            LifeBar.fillAmount = (float)HitPoints / (float)MaxHitPoints;
+        }
+        else
+        {
+            LifeBar.fillAmount = 0;
+        }
 
         if (InfoPanel.activeSelf)
         {
@@ -652,7 +796,8 @@ public class BattleCharacter : MonoBehaviour
                     abilityIndex = index;
                 }
 
-                var randomAbility = CombatAbilities[abilityIndex];
+                var filteredAbilities = CombatAbilities.Where(ability => ability.Type != Constants.Passive).ToList();
+                var randomAbility = filteredAbilities[abilityIndex];
                 fightManager.ActiveAbility = randomAbility;
                 combatantFunctions.AttackAllyTarget(randomAbility);
             }
@@ -886,6 +1031,20 @@ public class BattleCharacter : MonoBehaviour
                         shouldBlink = true;
                     }
                 }
+                // it this is a passive effect that should proc at the start of every turn
+                else if (statusEffect.portionValue > 0 && statusEffect.type == StatusEffectType.Passive && statusEffect.duration == 0)
+                {
+                    if (statusEffect.statAffection == StatAffection.Health)
+                    {
+                        if (HitPoints < MaxHitPoints)
+                        {
+                            HitPoints *= (statusEffect.portionValue / 100) + 1;
+
+                            if (InfoPanel.activeSelf)
+                                gameObject.transform.Find("InfoPanel/Health/Value/CurrentValue").GetComponent<TextMeshProUGUI>().color = UIColors.White;
+                        }
+                    }
+                }
 
                 if (statusEffect.currentDuration == 1)
                 {
@@ -1012,7 +1171,7 @@ public class BattleCharacter : MonoBehaviour
             DebuffHitChance = 0;
 
             if (InfoPanel.activeSelf)
-                ReturnStatToOriginal("InfoPanel/HitChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+                ReturnStatToOriginal("InfoPanel/Row1/HitChance/Value", HitChance, BuffHitChance, DebuffHitChance);
         }
         else if (statusEffect.statAffection == StatAffection.CounterChance)
         {
@@ -1020,7 +1179,15 @@ public class BattleCharacter : MonoBehaviour
             DebuffCounterChance = 0;
 
             if (InfoPanel.activeSelf)
-                ReturnStatToOriginal("InfoPanel/CounterChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+                ReturnStatToOriginal("InfoPanel/Row3/CounterChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+        }
+        else if (statusEffect.statAffection == StatAffection.AttackSpeed)
+        {
+            AttackSpeed += DebuffAttackSpeed;
+            DebuffAttackSpeed = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginalFloat("InfoPanel/Row1/AttackSpeed/Value", AttackSpeed, BuffAttackSpeed, DebuffAttackSpeed);
         }
     }
 
@@ -1038,7 +1205,7 @@ public class BattleCharacter : MonoBehaviour
             BuffHitChance = 0;
 
             if (InfoPanel.activeSelf)
-                ReturnStatToOriginal("InfoPanel/HitChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+                ReturnStatToOriginal("InfoPanel/Row1/HitChance/Value", HitChance, BuffHitChance, DebuffHitChance);
         }
         else if (statusEffect.statAffection == StatAffection.CounterChance)
         {
@@ -1046,11 +1213,37 @@ public class BattleCharacter : MonoBehaviour
             BuffCounterChance = 0;
 
             if (InfoPanel.activeSelf)
-                ReturnStatToOriginal("InfoPanel/CounterChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+                ReturnStatToOriginal("InfoPanel/Row3/CounterChance/Value", HitChance, BuffHitChance, DebuffHitChance);
+        }
+        else if (statusEffect.statAffection == StatAffection.AttackSpeed)
+        {
+            AttackSpeed -= BuffAttackSpeed;
+            BuffAttackSpeed = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginalFloat("InfoPanel/Row1/AttackSpeed/Value", AttackSpeed, BuffAttackSpeed, DebuffAttackSpeed);
         }
     }
 
     private void ReturnStatToOriginal(string path, int stat, int buffStat, int debuffStat)
+    {
+        gameObject.transform.Find(path).GetComponent<TextMeshProUGUI>().text = HitChance.ToString();
+
+        if (buffStat > 0)
+        {
+            gameObject.transform.Find(path).GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+        }
+        else if (debuffStat > 0)
+        {
+            gameObject.transform.Find(path).GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+        }
+        else
+        {
+            gameObject.transform.Find(path).GetComponent<TextMeshProUGUI>().color = UIColors.White;
+        }
+    }
+
+    private void ReturnStatToOriginalFloat(string path, float stat, float buffStat, float debuffStat)
     {
         gameObject.transform.Find(path).GetComponent<TextMeshProUGUI>().text = HitChance.ToString();
 
