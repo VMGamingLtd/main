@@ -77,3 +77,11 @@ Websocket server
 ==============
 - UI changes for comat feature
 - game data changes 
+
+20241028
+========
+- Added new abties and enemies. 
+- Fixed a lot of bugs regarding combat mechanics. 
+- Added reflection status effects.
+- Added group game data broadcasting via websockets.
+- Bug fixes in group handlings.
