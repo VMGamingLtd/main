@@ -632,12 +632,12 @@ public class FightManager : MonoBehaviour
                                             .ToList();
 
         var creaturesListTestFrontline = bestiaryDataList.Where(type => type.location == DungeonType)
-                            .Where(diff => diff.tier == 3)
+                            .Where(diff => diff.tier == 1)
                             .Where(formation => formation.battleFormation == BattleFormation.Front)
                             .ToList();
 
         var creaturesListTestBackline = bestiaryDataList.Where(type => type.location == DungeonType)
-                                    .Where(diff => diff.tier == 2)
+                                    .Where(diff => diff.tier == 1)
                                     .Where(formation => formation.battleFormation == BattleFormation.Back)
                                     .ToList();
 

@@ -90,7 +90,16 @@ public class Enumerations : MonoBehaviour
         Stun = 1,
         Sleep = 2,
         Buff = 3,
-        Debuff = 4
+        Debuff = 4,
+        Passive = 5
+    }
+
+    public enum AbilityTrigger
+    {
+        None = 0,
+        Health25 = 1,
+        Health50 = 2,
+        Health75 = 3
     }
 
     public enum StatAffection

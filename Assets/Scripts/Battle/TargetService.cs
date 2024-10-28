@@ -10,7 +10,7 @@ public class TargetService
 {
     private readonly FightManager _fightManager;
     private readonly List<int> frontLineIDs = new() { 1, 2, 3 };
-    private readonly List<int> backLineIDs = new() { 4, 5, 7 };
+    private readonly List<int> backLineIDs = new() { 4, 5, 6 };
 
     public TargetService(FightManager fightManager)
     {
@@ -25,7 +25,7 @@ public class TargetService
             {
                 var ability = battleCharacter.GetCombatantAbility(abilityName);
 
-                if (ability != null)
+                if (ability != null && ability.Type != Constants.Passive)
                 {
                     if (ability.IsFrontlineAoe && ability.IsBacklineAoe)
                     {
@@ -73,10 +73,6 @@ public class TargetService
                         }
                     }
                 }
-                else
-                {
-                    Debug.LogError("Ability was not found");
-                }
             }
         }
         else
@@ -93,7 +89,7 @@ public class TargetService
             {
                 var ability = charComponent.GetCombatantAbility(objectName);
 
-                if (ability.IsAbilityOnCooldown())
+                if (ability.IsAbilityOnCooldown() || ability.Type == Constants.Passive)
                 {
                     return;
                 }

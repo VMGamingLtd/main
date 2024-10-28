@@ -34,20 +34,21 @@ public class CombatAbility
     public float AbilityHigherDamage { get; set; }
     public int Cooldown { get; private set; }
     public int RemainingCooldown { get; private set; }
+    public AbilityTrigger AbilityTrigger { get; private set; }
     public List<StatusEffect> PositiveStatusEffects { get; private set; } = new List<StatusEffect>();
     public List<StatusEffect> NegativeStatusEffects { get; private set; } = new List<StatusEffect>();
     public List<AbilityPrefab> AbilityPrefabs { get; private set; } = new List<AbilityPrefab>();
 
     public CombatAbility(
         int index, string name, string type, string weapon, bool isFrontlineAoe, bool isBacklineAoe, float meleeDamageScale,
-        float rangedDamageScale, float psiDamageScale, float scaleMultiplication, int cooldown, bool isMovingAbility,
+        float rangedDamageScale, float psiDamageScale, float scaleMultiplication, int cooldown, bool isMovingAbility, AbilityTrigger abilityTrigger,
         List<StatusEffect> positiveStatusEffects, List<StatusEffect> negativeStatusEffects, List<AbilityPrefab> abilityPrefabs)
     {
         Index = index;
         Name = name;
         Type = type;
         Weapon = weapon;
-
+        AbilityTrigger = abilityTrigger;
         IsMovingAbility = isMovingAbility;
         IsFrontlineAoe = isFrontlineAoe;
         IsBacklineAoe = isBacklineAoe;

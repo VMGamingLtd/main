@@ -1,7 +1,10 @@
 using Assets.Scripts.ItemFactory;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Enumerations;
 
 namespace ItemManagement
 {
@@ -270,6 +273,8 @@ namespace ItemManagement
         public float psiDamageScale;
         public float scaleMultiplication;
         public int cooldown;
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AbilityTrigger abilityTrigger;
         public List<StatusEffect> negativeEffectsList;
         public List<StatusEffect> positiveEffectsList;
         public List<AbilityPrefab> abilityPrefabsList;
@@ -413,7 +418,7 @@ namespace ItemManagement
         {
             return new CombatAbility(abilityData.index, abilityData.abilityName, abilityData.abilityType, abilityData.abilityWeapon, abilityData.isFrontLineAoe, abilityData.isBackLineAoe,
                 abilityData.meleeDamageScale, abilityData.rangedDamageScale, abilityData.psiDamageScale, abilityData.scaleMultiplication, abilityData.cooldown, abilityData.isMovingAbility,
-                abilityData.positiveEffectsList, abilityData.negativeEffectsList, abilityData.abilityPrefabsList);
+                abilityData.abilityTrigger, abilityData.positiveEffectsList, abilityData.negativeEffectsList, abilityData.abilityPrefabsList);
         }
 
         public void Recreateitem(float quantity, string itemProduct, string itemType, string itemClass, string itemName,
