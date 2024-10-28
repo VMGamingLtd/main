@@ -108,7 +108,8 @@ namespace Friends
         private void OnButtonAddClicked(int index)
         {
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 300: OnAddFriendButtonClicked({index})");
-            FriendAddModel user = AllUsers[index];
+            int index_allusers = FilteredUsers[index];
+            FriendAddModel user = AllUsers[index_allusers];
 
             Gaos.Friends.Friends.AddFriend.CallAsync(user.UserId).Forget();
             user.IsFriendRequest = true;
@@ -126,7 +127,8 @@ namespace Friends
         private void OnButtonRevokeClicked(int index)
         {
             Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 310: OnRevokeFriendButtonClicked({index})");
-            FriendAddModel user = AllUsers[index];
+            int index_allusers = FilteredUsers[index];
+            FriendAddModel user = AllUsers[index_allusers];
 
             Gaos.Friends.Friends.RevokeFriendRequest.CallAsync(user.UserId).Forget();
             user.IsFriendRequest = false;
@@ -395,6 +397,7 @@ namespace Friends
         }
 
 
+        /*
         private async UniTaskVoid OnAddFriendDialogButtonYesAsync()
         {
             var response = await Gaos.Friends.Friends.AddFriend.CallAsync(AllUsers[FilteredUsers[0]].UserId);
@@ -420,6 +423,7 @@ namespace Friends
         {
             OnAddFriendDialogButtonNoAsync().Forget();
         }
+        */
 
 
         public void OnSearchIconClick()

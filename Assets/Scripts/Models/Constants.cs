@@ -69,6 +69,8 @@ public static class Constants
     public const string Buff = "Buff";
     public const string Debuff = "Debuff";
     public const string Damage = "Damage";
+    public const string Passive = "Passive";
+    public const string PassiveReflect = "PassiveReflect";
 
     // Item type names
     public const string Suit = "SUIT";

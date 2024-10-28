@@ -7,6 +7,7 @@ namespace Assets.Scripts.Models
     /// Sleep = 2
     /// Buff = 3
     /// Debuff = 4
+    /// Passive = 5
     /// 
     /// Prefab rotation reference:
     /// None = 0,
@@ -41,6 +42,13 @@ namespace Assets.Scripts.Models
     /// HitChance = 7,
     /// Dodge = 8,
     /// CounterChance = 9
+    /// 
+    /// Ability trigger reference:
+    /// None 0
+    /// None = 0,
+    /// Health25 = 1,
+    /// Health50 = 2,
+    /// Health75 = 3
     /// </summary>
     public class AbilitiesListJson
     {
@@ -61,6 +69,7 @@ namespace Assets.Scripts.Models
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.4,
       ""cooldown"": 0,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [],
       ""positiveEffectsList"": [],
       ""abilityPrefabsList"": []
@@ -77,7 +86,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.6,
-      ""cooldown"": 1,   
+      ""cooldown"": 1,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Bleed"",
@@ -105,7 +115,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 1.6,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.8,
-      ""cooldown"": 2,   
+      ""cooldown"": 2,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [],
       ""positiveEffectsList"": [],
       ""abilityPrefabsList"": []
@@ -122,7 +133,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 1.2,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.1,
-      ""cooldown"": 1,   
+      ""cooldown"": 1,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [],
       ""positiveEffectsList"": [],
       ""abilityPrefabsList"": []
@@ -139,7 +151,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 1.4,
       ""scaleMultiplication"": 1.6,
-      ""cooldown"": 0,   
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Stun"",
@@ -167,7 +180,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0.8,
       ""scaleMultiplication"": 1.5,
-      ""cooldown"": 2,   
+      ""cooldown"": 2,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Stun"",
@@ -181,7 +195,15 @@ namespace Assets.Scripts.Models
         }
       ],
       ""positiveEffectsList"": [],
-      ""abilityPrefabsList"": []
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""Terrify"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 0
+        }
+      ]
     },
     {
       ""index"": 6,
@@ -195,7 +217,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 1.8,
       ""scaleMultiplication"": 2,
-      ""cooldown"": 3,   
+      ""cooldown"": 3,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Stun"",
@@ -223,7 +246,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.5,
-      ""cooldown"": 0,   
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Stun"",
@@ -251,7 +275,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.8,
-      ""cooldown"": 2,   
+      ""cooldown"": 2,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Stun"",
@@ -279,7 +304,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.4,
-      ""cooldown"": 0,   
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Ignite"",
@@ -293,7 +319,15 @@ namespace Assets.Scripts.Models
         }
       ],
       ""positiveEffectsList"": [],
-      ""abilityPrefabsList"": []
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""FireHit1"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0
+        }
+      ]
     },
     {
       ""index"": 10,
@@ -307,7 +341,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 1.2,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.8,
-      ""cooldown"": 0,   
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Ignite"",
@@ -343,7 +378,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.4,
-      ""cooldown"": 0,   
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""AttackDebuff"",
@@ -371,7 +407,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 0,
-      ""cooldown"": 3,   
+      ""cooldown"": 3,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [],
       ""positiveEffectsList"": [
         {
@@ -407,7 +444,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 1.2,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.8,
-      ""cooldown"": 0,   
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Ignite"",
@@ -450,7 +488,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 0,
-      ""cooldown"": 3,   
+      ""cooldown"": 3,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [],
       ""positiveEffectsList"": [
         {
@@ -486,7 +525,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.8,
-      ""cooldown"": 0,   
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""HitChanceDebuff"",
@@ -522,7 +562,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 0,
-      ""cooldown"": 3,   
+      ""cooldown"": 3,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [],
       ""positiveEffectsList"": [
         {
@@ -568,7 +609,8 @@ namespace Assets.Scripts.Models
       ""rangedDamageScale"": 1.0,
       ""psiDamageScale"": 0,
       ""scaleMultiplication"": 1.5,
-      ""cooldown"": 3,   
+      ""cooldown"": 3,
+      ""abilityTrigger"": 0,
       ""negativeEffectsList"": [
         {
           ""name"": ""Ignite"",
@@ -586,6 +628,194 @@ namespace Assets.Scripts.Models
         {
           ""prefabName"": ""MeteorShower"",
           ""prefabSpawn"": 2,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 18,
+      ""abilityName"": ""ArcticRend"",
+      ""abilityType"": ""Melee"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": true,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 1,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 1.6,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""AttackSpeedDebuff"",
+          ""type"": 4,
+          ""statAffection"": 2,
+          ""chance"": 35,
+          ""portionValue"": 30,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""IceHit1"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 19,
+      ""abilityName"": ""FrostBeam"",
+      ""abilityType"": ""Ranged"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 1.2,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 1.8,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""AttackSpeedDebuff"",
+          ""type"": 4,
+          ""statAffection"": 2,
+          ""chance"": 35,
+          ""portionValue"": 30,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""FrostBeam"",
+          ""prefabSpawn"": 0,
+          ""prefabRotation"": 1,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 20,
+      ""abilityName"": ""LifeRegen"",
+      ""abilityType"": ""Passive"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 0,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [],
+      ""positiveEffectsList"": [
+        {
+          ""name"": ""HitPointsBuff"",
+          ""type"": 5,
+          ""statAffection"": 4,
+          ""chance"": 100,
+          ""portionValue"": 10,
+          ""duration"": 0,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""LifeRegen"",
+          ""prefabSpawn"": 0,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 21,
+      ""abilityName"": ""ChillingAura"",
+      ""abilityType"": ""PassiveReflect"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 0,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""AttackSpeedDebuff"",
+          ""type"": 4,
+          ""statAffection"": 2,
+          ""chance"": 60,
+          ""portionValue"": 30,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [
+        {
+          ""name"": ""ChillingAura"",
+          ""type"": 4,
+          ""statAffection"": 0,
+          ""chance"": 100,
+          ""portionValue"": 0,
+          ""duration"": 0,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""abilityPrefabsList"": []
+    },
+    {
+      ""index"": 22,
+      ""abilityName"": ""Enrage"",
+      ""abilityType"": ""Passive"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 0,
+      ""cooldown"": 3,
+      ""abilityTrigger"": 2,
+      ""negativeEffectsList"": [],
+      ""positiveEffectsList"": [
+        {
+          ""name"": ""DamageBuff"",
+          ""type"": 5,
+          ""statAffection"": 1,
+          ""chance"": 100,
+          ""portionValue"": 25,
+          ""duration"": 3,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""DamageBuff"",
+          ""prefabSpawn"": 0,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
           ""prefabMovement"": 0

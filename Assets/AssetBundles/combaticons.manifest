@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2856506664
+CRC: 604535092
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5d3b477dac67a58e14259d16b680c257
+    Hash: a288e404a9bb067ad0d73b2d47de6835
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -27,14 +27,17 @@ Assets:
 - Assets/AssetBundlesRepo/CombatIcons/AttackDebuff.png
 - Assets/AssetBundlesRepo/CombatIcons/CounterChanceBuff.png
 - Assets/AssetBundlesRepo/CombatIcons/Skull.png
+- Assets/AssetBundlesRepo/CombatIcons/AttackSpeedDebuff.png
+- Assets/AssetBundlesRepo/CombatIcons/AttackSpeedBuff.png
 - Assets/AssetBundlesRepo/CombatIcons/Psi.png
-- Assets/AssetBundlesRepo/CombatIcons/ArmorIcon.png
+- Assets/AssetBundlesRepo/CombatIcons/ChillingAura.png
 - Assets/AssetBundlesRepo/CombatIcons/Blunt.png
 - Assets/AssetBundlesRepo/CombatIcons/Bleed.png
 - Assets/AssetBundlesRepo/CombatIcons/Resistance.png
 - Assets/AssetBundlesRepo/CombatIcons/Gun.png
 - Assets/AssetBundlesRepo/CombatIcons/AttackSpeed.png
 - Assets/AssetBundlesRepo/CombatIcons/HitChanceDebuff.png
+- Assets/AssetBundlesRepo/CombatIcons/ArmorIcon.png
 - Assets/AssetBundlesRepo/CombatIcons/ArmorBuff.png
 - Assets/AssetBundlesRepo/CombatIcons/Ignite.png
 - Assets/AssetBundlesRepo/CombatIcons/Penetration.png

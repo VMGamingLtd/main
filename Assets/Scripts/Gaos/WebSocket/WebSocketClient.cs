@@ -131,7 +131,7 @@ namespace Gaos.WebSocket
                 Array.Copy(buffer, bytesReadHeader + bytesReadSize, data, 0, messageObjectSize);
 
 
-                Dispatcher.Dispatch(this, header.NamespaceId, header.ClassId, header.MethodId, data);
+                Dispatcher.Dispatch(this, header, data);
             } 
             catch (System.Exception e)
             {

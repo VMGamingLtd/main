@@ -175,7 +175,7 @@ namespace Friends
 
             Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp200 ReadAllUsers()");
             //Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(frienNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
-            Gaos.Routes.Model.FriendsJson.GetMyFriendsResponse response = await Gaos.Friends.Friends.GetMyFriends.CallAsync(GetMyGroupResponse.GroupId, MAX_SCROLL_LIST_LINES_COUNT);
+            Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse response = await Gaos.Friends.Friends.GetMyGroupMembers.CallAsync(GetMyGroupResponse.GroupId, MAX_SCROLL_LIST_LINES_COUNT);
             if (response == null)
             {
                 // error occured

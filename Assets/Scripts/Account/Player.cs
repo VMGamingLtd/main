@@ -11,6 +11,7 @@ public static class Player
     public static int MaxExp = 40;
     public static int SkillPoints;
     public static int StatPoints;
+    public static int Score;
     public static float ResearchPoints;
 
     // BATTLE GROUP STATS

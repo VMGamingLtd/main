@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2688362783
+CRC: 978204448
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: cd3487c6900b6e59f049cb6fb57938df
+    Hash: 0a157f50d1b73213969e5c4e9afe6415
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -16,8 +16,23 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/AssetBundlesRepo/CharacterIcons/MagmaSlime.png
+- Assets/AssetBundlesRepo/CharacterIcons/SnowWarden.png
+- Assets/AssetBundlesRepo/CharacterIcons/Frostwyrm.png
 - Assets/AssetBundlesRepo/CharacterIcons/FireBeetle.png
+- Assets/AssetBundlesRepo/CharacterIcons/HiveCenturion.png
 - Assets/AssetBundlesRepo/CharacterIcons/HellSpawn.png
+- Assets/AssetBundlesRepo/CharacterIcons/Cinderling.png
+- Assets/AssetBundlesRepo/CharacterIcons/IceTalon.png
+- Assets/AssetBundlesRepo/CharacterIcons/PoisonHornet.png
+- Assets/AssetBundlesRepo/CharacterIcons/CryoBasilisk.png
+- Assets/AssetBundlesRepo/CharacterIcons/HiveBerserker.png
+- Assets/AssetBundlesRepo/CharacterIcons/FreezingOrb.png
+- Assets/AssetBundlesRepo/CharacterIcons/AcidSpitter.png
 - Assets/AssetBundlesRepo/CharacterIcons/Avatar1.png
+- Assets/AssetBundlesRepo/CharacterIcons/FireEatingLeviathan.png
+- Assets/AssetBundlesRepo/CharacterIcons/HiveOverseer.png
 - Assets/AssetBundlesRepo/CharacterIcons/EmberSerpent.png
+- Assets/AssetBundlesRepo/CharacterIcons/Yeti.png
+- Assets/AssetBundlesRepo/CharacterIcons/IceCreep.png
+- Assets/AssetBundlesRepo/CharacterIcons/FireGolem.png
 Dependencies: []

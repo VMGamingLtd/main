@@ -16,7 +16,7 @@ namespace Gaos.WebSocket
 
         public WebSocketSharp.WebSocket WebSocket;
 
-        public string WsUrl = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
+        private string WsUrl = Gaos.Environment.Environment.GetEnvironment()["GAOS_WS"];
 
         private bool IsAuthenticated = false;
 
