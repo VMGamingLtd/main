@@ -48,17 +48,10 @@ namespace Gaos.WebSocket
         public void Open()
         {
             const string METHOD_NAME = "Open()";
-            if (Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false")
-            {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: websocket is disabled");
-            }
 
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                {
-                    webSocketClientJs.Open();
-                }
+                webSocketClientJs.Open();
             }
             else
             {
@@ -83,16 +76,13 @@ namespace Gaos.WebSocket
 
         public void CloseWebsocket()
         {
-            if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                if (Application.platform == RuntimePlatform.WebGLPlayer)
-                {
-                    webSocketClientJs.CloseWebsocket();
-                }
-                else
-                {
-                    webSocketClientSharp.CloseWebsocket();
-                }
+                webSocketClientJs.CloseWebsocket();
+            }
+            else
+            {
+                webSocketClientSharp.CloseWebsocket();
             }
         }
 
@@ -177,6 +167,8 @@ namespace Gaos.WebSocket
 
         public void OnEnable()
         {
+            const string METHOD_NAME = "OnEnable()";
+
             CurrentWesocketClient = this;
             Open();
             QueuesCancelationToken = new CancellationTokenSource();

@@ -132,14 +132,7 @@ namespace Gaos.WebSocket
             while (!cancellationToken.IsCancellationRequested)
             {
                 int state;
-                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                {
-                    state = WebSocketReadyState(Ws);
-                }
-                else
-                {
-                    state = 1;
-                }
+                state = WebSocketReadyState(Ws);
                 if (state == 1) // 1 is OPEN
                 {
                     if (MessagesOutbound.Count > 0)
@@ -150,10 +143,7 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                                {
-                                    WebSocketSendBytes(Ws, data);
-                                }
+                                WebSocketSendBytes(Ws, data);
                             }
                             catch (System.Exception e)
                             {
@@ -201,14 +191,7 @@ namespace Gaos.WebSocket
             while (!cancellationToken.IsCancellationRequested)
             {
                 int state;
-                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                {
-                    state = WebSocketReadyState(Ws);
-                }
-                else
-                {
-                    state = 1;
-                }
+                state = WebSocketReadyState(Ws);
                 if (state == 1) // 1 is OPEN
                 {
                     if (MessagesInbound.Count > 0)
@@ -219,10 +202,7 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                                {
-                                    ws.Process(data);
-                                }
+                                ws.Process(data);
                             }
                             catch (System.Exception e)
                             {

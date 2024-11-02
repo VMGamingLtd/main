@@ -108,10 +108,14 @@ public class CustomSceneLoader : MonoBehaviour
     {
         string METHOD_NAME = "RestartGame()";
 
-        Gaos.WebSocket.WebSocketClient.CurrentWesocketClient.Suspend();
-        yield return new WaitForSeconds(0.5f);
-        Gaos.WebSocket.WebSocketClient.CurrentWesocketClient.CloseWebsocket();
-        yield return new WaitForSeconds(0.5f);
+        if (Gaos.WebSocket.WebSocketClient.CurrentWesocketClient != null)
+        {
+            Gaos.WebSocket.WebSocketClient.CurrentWesocketClient.Suspend();
+            yield return new WaitForSeconds(0.5f);
+            Gaos.WebSocket.WebSocketClient.CurrentWesocketClient.CloseWebsocket();
+            yield return new WaitForSeconds(0.5f);
+        }
+
         SceneManager.LoadScene("First");
     }
 }
