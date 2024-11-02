@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1569670646
+CRC: 696959170
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2b1a0e1c3d6065b8b9c4dfe6aaf50c8a
+    Hash: f38923ec59a230e44d929bcff55fcce3
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -15,5 +15,6 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/AssetBundlesRepo/MiscIcons/GalacticCredits.png
 - Assets/AssetBundlesRepo/MiscIcons/CircleGlow.png
 Dependencies: []

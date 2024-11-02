@@ -555,8 +555,61 @@ namespace Assets.Scripts.Models
           ""name"": ""ArcticRend""
         },
         {
-          ""index"": 20,
-          ""name"": ""LifeRegen""
+          ""index"": 22,
+          ""name"": ""Enrage""
+        }
+      ]
+    },
+    {
+      ""index"": 10,
+      ""location"": 10,
+      ""tier"": 2,
+      ""name"": ""IceCreep"",
+      ""race"": 2,
+      ""classType"": 1,
+      ""battleFormation"": 1,
+      ""physicalProtection"": 4,
+      ""fireProtection"": 0,
+      ""coldProtection"": 8,
+      ""poisonProtection"": 0,
+      ""energyProtection"": 0,
+      ""psiProtection"": 0,
+      ""shieldPoints"": 0,
+      ""armor"": 14,
+      ""hitPoints"": 16,
+      ""attackSpeed"": 1.6,
+      ""meleePhysicalDamage"": 0,
+      ""meleeFireDamage"": 0,
+      ""meleeColdDamage"": 0,
+      ""meleePoisonDamage"": 0,
+      ""meleeEnergyDamage"": 0,
+      ""rangedPhysicalDamage"": 12,
+      ""rangedFireDamage"": 0,
+      ""rangedColdDamage"": 15,  
+      ""rangedPoisonDamage"": 0,
+      ""rangedEnergyDamage"": 0,
+      ""psiDamage"": 0,
+      ""hitChance"": 85,
+      ""criticalChance"": 10,
+      ""criticalDamage"": 65,
+      ""dodge"": 6,
+      ""resistance"": 6,
+      ""counterChance"": 2,
+      ""penetration"": 8,
+      ""strength"": 2,
+      ""perception"": 0,
+      ""intelligence"": 0,
+      ""agility"": 2,
+      ""charisma"": 0,
+      ""willpower"": 0,
+      ""abilities"": [
+        {
+          ""index"": 23,
+          ""name"": ""IceSpike""
+        },
+        {
+          ""index"": 24,
+          ""name"": ""Stealth""
         }
       ]
     }

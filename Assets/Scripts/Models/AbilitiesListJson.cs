@@ -31,6 +31,10 @@ namespace Assets.Scripts.Models
     /// None = 0,
     /// ToEnemy = 1
     /// 
+    /// Prefab casting time reference:
+    /// represents miliseconds delay for UniTask 
+    /// in Start phase
+    /// 
     /// Stat affection type reference:
     /// None = 0
     /// Attack = 1,
@@ -201,7 +205,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 1,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 800
         }
       ]
     },
@@ -325,7 +330,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 1,
           ""prefabRotation"": 0,
           ""prefabStart"": 1,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -362,7 +368,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 0,
           ""prefabRotation"": 1,
           ""prefabStart"": 0,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -428,7 +435,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 0,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -465,14 +473,16 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 0,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
-          ""prefabMovement"": 1
+          ""prefabMovement"": 1,
+          ""castingTime"": 0
         },
         {
           ""prefabName"": ""FireballExplosion"",
           ""prefabSpawn"": 1,
           ""prefabRotation"": 0,
           ""prefabStart"": 1,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -509,7 +519,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 0,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -546,7 +557,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 1,
           ""prefabRotation"": 0,
           ""prefabStart"": 1,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -593,7 +605,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 0,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -630,7 +643,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 2,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -667,7 +681,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 1,
           ""prefabRotation"": 0,
           ""prefabStart"": 1,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -704,7 +719,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 0,
           ""prefabRotation"": 1,
           ""prefabStart"": 0,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 800
         }
       ]
     },
@@ -741,7 +757,8 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 0,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
     },
@@ -774,7 +791,7 @@ namespace Assets.Scripts.Models
       ""positiveEffectsList"": [
         {
           ""name"": ""ChillingAura"",
-          ""type"": 4,
+          ""type"": 3,
           ""statAffection"": 0,
           ""chance"": 100,
           ""portionValue"": 0,
@@ -802,8 +819,8 @@ namespace Assets.Scripts.Models
       ""negativeEffectsList"": [],
       ""positiveEffectsList"": [
         {
-          ""name"": ""DamageBuff"",
-          ""type"": 5,
+          ""name"": ""AttackBuff"",
+          ""type"": 3,
           ""statAffection"": 1,
           ""chance"": 100,
           ""portionValue"": 25,
@@ -818,9 +835,85 @@ namespace Assets.Scripts.Models
           ""prefabSpawn"": 0,
           ""prefabRotation"": 0,
           ""prefabStart"": 0,
-          ""prefabMovement"": 0
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
         }
       ]
+    },
+    {
+      ""index"": 23,
+      ""abilityName"": ""IceSpike"",
+      ""abilityType"": ""Ranged"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 1.4,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 1.6,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""AttackSpeedDebuff"",
+          ""type"": 4,
+          ""statAffection"": 2,
+          ""chance"": 40,
+          ""portionValue"": 30,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""IceSpike"",
+          ""prefabSpawn"": 0,
+          ""prefabRotation"": 1,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 1,
+          ""castingTime"": 0
+        },
+        {
+          ""prefabName"": ""IceExplosion"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 24,
+      ""abilityName"": ""Stealth"",
+      ""abilityType"": ""Passive"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 0,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [],
+      ""positiveEffectsList"": [
+        {
+          ""name"": ""Invisible"",
+          ""type"": 3,
+          ""statAffection"": 0,
+          ""chance"": 100,
+          ""portionValue"": 0,
+          ""duration"": 0,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""abilityPrefabsList"": []
     }
   ]
 }
