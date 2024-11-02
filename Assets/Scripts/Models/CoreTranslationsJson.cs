@@ -2626,6 +2626,34 @@
         ""slovak"": ""<color=#63ECFF>{activeCharName}</color> dostal/a <color=yellow>{damage} rany</color> z efektu <color=yellow>{statusEffectName}</color>.""       
       },
       {
+        ""identifier"": ""Wallet"",
+        ""english"": ""Wallet"",
+        ""russian"": ""Кошелек"",
+        ""chinese"": ""钱包"",
+        ""slovak"": ""Peňaženka""
+      },
+      {
+        ""identifier"": ""GalacticCredits"",
+        ""english"": ""Galactic credits"",
+        ""russian"": ""Галактические кредиты"",
+        ""chinese"": ""银河币"",
+        ""slovak"": ""Galaktické kredity""
+      },
+      {
+        ""identifier"": ""CurrencyRequest"",
+        ""english"": ""Please enter the recipient and the amount you are requesting."",
+        ""russian"": ""Пожалуйста, укажите получателя и сумму, которую вы запрашиваете."",
+        ""chinese"": ""请输入收件人和您要请求的金额。"",
+        ""slovak"": ""Zadajte príjemcu a sumu, ktorú požadujete.""
+      },
+      {
+        ""identifier"": ""CurrencySend"",
+        ""english"": ""Please enter the recipient and the amount you want to send."",
+        ""russian"": ""Пожалуйста, введите получателя и сумму, которую вы хотите отправить."",
+        ""chinese"": ""请输入收件人和您要发送的金额。"",
+        ""slovak"": ""Zadajte príjemcu a sumu, ktorú chcete poslať.""
+      },
+      {
         ""identifier"": ""FireEatingLeviathan"",
         ""english"": ""Fire-Eating Leviathan"",
         ""russian"": ""Гигантский пожиратель огня"",

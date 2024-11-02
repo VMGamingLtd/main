@@ -16,6 +16,7 @@ public class AbilityPrefab
     public PrefabStart prefabStart;
     [JsonConverter(typeof(StringEnumConverter))]
     public PrefabMovement prefabMovement;
+    public int castingTime;
 }
 public class CombatAbility
 {

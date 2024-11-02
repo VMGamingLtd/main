@@ -299,11 +299,39 @@ public class BattleCharacter : MonoBehaviour
     }
 
     /// <summary>
-    /// Used to check if character doesn't have some passive abilities that can trigget e.g. when his HP is below 50%.
+    /// Used to check if character doesn't have some passive abilities that can trigger when certain conditions are met e.g. his HP is below 50%.
     /// </summary>
-    public void CheckAbilityTriggers()
+    public void CheckTriggerStatusEffect()
     {
+        foreach (var ability in CombatAbilities)
+        {
+            if (ability.Type == Constants.Passive && ability.AbilityTrigger != AbilityTrigger.None)
+            {
+                foreach (var statusEffect in ability.PositiveStatusEffects)
+                {
+                    if (PositiveAppliedEffects.Count > 0)
+                    {
+                        foreach (var positiveEffect in PositiveAppliedEffects)
+                        {
+                            if (positiveEffect.name == statusEffect.name)
+                            {
+                                return;
+                            }
+                        }
+                    }
 
+                    float currentHealth = (float)HitPoints / (float)MaxHitPoints;
+
+                    if (ability.AbilityTrigger == AbilityTrigger.Health75 && currentHealth <= 0.75 ||
+                        ability.AbilityTrigger == AbilityTrigger.Health50 && currentHealth <= 0.5 ||
+                        ability.AbilityTrigger == AbilityTrigger.Health25 && currentHealth <= 0.25)
+                    {
+                        ApplyBuffEffect(statusEffect);
+                        DisplayEffect(gameObject, statusEffect, false, false);
+                    }
+                }           
+            }
+        }
     }
 
     /// <summary>
@@ -786,17 +814,17 @@ public class BattleCharacter : MonoBehaviour
             if (CombatAbilities.Count > 0)
             {
                 int abilityIndex;
+                var filteredAbilities = CombatAbilities.Where(ability => ability.Type != Constants.Passive).ToList();
 
                 if (index == -1)
                 {
-                    abilityIndex = UnityEngine.Random.Range(0, CombatAbilities.Count);
+                    abilityIndex = UnityEngine.Random.Range(0, filteredAbilities.Count);
                 }
                 else
                 {
                     abilityIndex = index;
                 }
 
-                var filteredAbilities = CombatAbilities.Where(ability => ability.Type != Constants.Passive).ToList();
                 var randomAbility = filteredAbilities[abilityIndex];
                 fightManager.ActiveAbility = randomAbility;
                 combatantFunctions.AttackAllyTarget(randomAbility);

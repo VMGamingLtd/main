@@ -135,6 +135,15 @@ public static class Player
     public static bool PharmaceuticalsResearch;
     public static bool ExplosivesResearch;
 
+    // CURRENCIES
+    public static List<Currency> Currencies = new();
+    //public static float GalacticCredits;
+    //public static float StellarTokens;
+    //public static float NebulaShards;
+    //public static float QuantumCoins;
+    //public static float VoidMarks;
+    //public static float ZyrrhCrystals;
+
     // Player abilities and status effects
     public static IList<CombatAbility> CombatAbilities = new List<CombatAbility>();
     public static IList<StatusEffect> CombatStatusEffects = new List<StatusEffect>();

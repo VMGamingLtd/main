@@ -145,4 +145,14 @@ public class Enumerations : MonoBehaviour
         None = 0,
         ToEnemy = 1
     }
+
+    public enum CurrencyType
+    {
+        GLC, // Galactic credits
+        STT, // Stellar tokens
+        NBS, // Nebula shards
+        QTC, // Quantum coins
+        VDM, // Void marks
+        ZHC // Zyrrh Crystals
+    }
 }

@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 604535092
+CRC: 2141890882
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a288e404a9bb067ad0d73b2d47de6835
+    Hash: 59fe64db09a97aa684628a4aa7b489c4
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -29,6 +29,8 @@ Assets:
 - Assets/AssetBundlesRepo/CombatIcons/Skull.png
 - Assets/AssetBundlesRepo/CombatIcons/AttackSpeedDebuff.png
 - Assets/AssetBundlesRepo/CombatIcons/AttackSpeedBuff.png
+- Assets/AssetBundlesRepo/CombatIcons/Enrage.png
+- Assets/AssetBundlesRepo/CombatIcons/Invisible.png
 - Assets/AssetBundlesRepo/CombatIcons/Psi.png
 - Assets/AssetBundlesRepo/CombatIcons/ChillingAura.png
 - Assets/AssetBundlesRepo/CombatIcons/Blunt.png

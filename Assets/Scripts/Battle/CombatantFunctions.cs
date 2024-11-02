@@ -214,6 +214,8 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                         }
                     }
                 }
+
+                targetCharacter.CheckTriggerStatusEffect();
             }
         }
         else
@@ -446,7 +448,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
 
             elapsed = 0f;
 
-            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, castingTime, targetCombatants, isPlayerGroup, elapsed, movingTime);
+            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, targetCombatants, isPlayerGroup, elapsed, movingTime);
 
             // Damage phase
             if (targetCombatants.Count > 0)
@@ -477,7 +479,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             // Move phase - in this case it's a phase where combatant should be moving but most probably it involves
             // spawning some initial prefab for spell or animation travelling to enemy
-            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, castingTime, targetCombatants, isPlayerGroup, elapsed, movingTime);
+            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, targetCombatants, isPlayerGroup, elapsed, movingTime);
 
             // Damage phase
             if (targetCombatants.Count > 0)
@@ -508,7 +510,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         }
     }
 
-    private async UniTask CheckForAbilityPrefabs(CombatAbility ability, GameObject activeCombatant, GameObject targetCombatant, int castingTime,
+    private async UniTask CheckForAbilityPrefabs(CombatAbility ability, GameObject activeCombatant, GameObject targetCombatant,
         List<GameObject> targetCombatants, bool isPlayerGroup, float elapsed, float movingTime)
     {
         if (ability.AbilityPrefabs.Count > 0)
@@ -565,7 +567,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                             }
                         }
 
-                        await UniTask.Delay(castingTime);
+                        await UniTask.Delay(abilityPrefab.castingTime);
                     }
 
                     if (abilityPrefab.prefabMovement == Enumerations.PrefabMovement.ToEnemy)

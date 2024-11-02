@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 public class PrefabManager : MonoBehaviour
 {
-    public List<GameObject> AbilityPrefabs;
+    [SerializeField] List<GameObject> AbilityPrefabs;
 
     public GameObject GetAbilityPrefab(string name)
     {
