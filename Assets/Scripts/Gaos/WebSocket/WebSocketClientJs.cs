@@ -67,23 +67,10 @@ namespace Gaos.WebSocket
             Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {errorStr}");
         }
 
-        public void OnMessage(int _data)
+        public void OnMessage(String strBase64)
         {
-            var data = new IntPtr(_data);
-
-            int length =  Marshal.ReadInt32(data);
-            byte[] buffer = new byte[length];
-
-            unsafe
-            {
-                byte* p = (byte*)data + 4; // skip the length
-                for (int i = 0; i < length; i++)
-                {
-                    buffer[i] = *p++;
-                }
-            }
-            MessagesInbound.Enqueue(buffer);
-
+            byte[] message = System.Convert.FromBase64String(strBase64);
+            MessagesInbound.Enqueue(message);
         }
 
         public ConcurrentQueue<byte[]> GetOutboundQueue()

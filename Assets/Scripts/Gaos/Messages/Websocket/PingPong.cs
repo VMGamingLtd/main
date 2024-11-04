@@ -47,6 +47,7 @@ namespace Gaos.Messages.Websocket
             const string METHOD_NAME = "SendPing()";
             try
             {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: sending ping");
                 GaoProtobuf.Ping ping = new GaoProtobuf.Ping();
                 ping.Message = message;
                 byte[] data = ping.ToByteArray();
