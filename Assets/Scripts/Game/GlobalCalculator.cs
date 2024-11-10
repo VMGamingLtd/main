@@ -74,7 +74,7 @@ public class GlobalCalculator : MonoBehaviour
     /// <result> seconds </result>
     void Update()
     {
-        if (GameStarted == true)
+        if (GameStarted)
         {
             timer += Time.deltaTime;
             if (timer >= delayTime)
@@ -87,7 +87,8 @@ public class GlobalCalculator : MonoBehaviour
                     recipeCreator.StartManualQueueProduction();
                 }
 
-                if (seconds == 0 || seconds == 5 || seconds == 10 || seconds == 15 || seconds == 20 || seconds == 25 || seconds == 30 || seconds == 35 ||
+                if (seconds == 0 || seconds == 5 || seconds == 10 || seconds == 15 || 
+                    seconds == 20 || seconds == 25 || seconds == 30 || seconds == 35 ||
                     seconds == 40 || seconds == 45 || seconds == 50 || seconds == 55)
                 {
                     saveManager.SaveGameDataOnServer();

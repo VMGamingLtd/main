@@ -96,6 +96,7 @@ public class FightManager : MonoBehaviour
     [SerializeField] List<GameObject> DungeonLevels;
     [SerializeField] TextMeshProUGUI AvailableCombatantsCount;
     [SerializeField] TextMeshProUGUI EventLevel;
+    [SerializeField] TextMeshProUGUI DungeonUIname;
 
     private readonly IList<GameObject> combatants = new List<GameObject>();
     private readonly IList<string> formationStyles = new List<string> { "FF", "FB", "BB" };
@@ -455,7 +456,9 @@ public class FightManager : MonoBehaviour
             AvailableCombatantsCount.text = Player.PassiveCombatants.ToString();
             EventLevel.text = startingObject.transform.Find("Info/Level").GetComponent<TextMeshProUGUI>().text;
             DungeonName = startingObject.transform.Find("DungeonName").GetChild(0).name;
+            DungeonUIname.text = translationManager.Translate(DungeonName);
             CurrentDungeonLevel = 1;
+            Player.InCombat = true;
 
             if (EventSize == EventSize.Small)
             {
@@ -517,6 +520,51 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// We need to check if the attacker is facing only stealthed enemies or not. Because if there are only
+    /// invisible enemies, they can't be targeted.
+    /// </summary>
+    /// <returns></returns>
+    public bool EnemyGroupInvisible()
+    {
+        if (Combatants.Count > 0)
+        {
+            foreach (var combatant in Combatants)
+            {
+                if (combatant.TryGetComponent(out BattleCharacter battleCharacter) &&
+                    battleCharacter.IsEnemy())
+                {
+                    if (!battleCharacter.IsInvisible())
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public bool PlayerGroupInvisible()
+    {
+        if (Combatants.Count > 0)
+        {
+            foreach (var combatant in Combatants)
+            {
+                if (combatant.TryGetComponent(out BattleCharacter battleCharacter) &&
+                    !battleCharacter.IsEnemy())
+                {
+                    if (!battleCharacter.IsInvisible())
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     public void ClearLoot()
     {
         LootService.ClearLoot();
@@ -531,6 +579,7 @@ public class FightManager : MonoBehaviour
         Scoreboard.GetComponent<Animator>().Play("Victory");
         await UniTask.WaitForSeconds(1);
         LootService.CreateRandomLoot();
+        Player.InCombat = false;
         RemoveAllCombatants();
     }
 
@@ -541,6 +590,7 @@ public class FightManager : MonoBehaviour
         IsAbilitySelected = false;
         Scoreboard.SetActive(true);
         Scoreboard.GetComponent<Animator>().Play("Defeat");
+        Player.InCombat = false;
         RemoveAllCombatants();
     }
 
