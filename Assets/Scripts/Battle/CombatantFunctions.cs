@@ -26,11 +26,15 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             if (battleCharacter.IsEnemy() && !fightManager.IsPerformingAbility)
             {
-                battleCharacter.TargetCombatant();
-
-                if (fightManager.IsAbilitySelected)
+                if (battleCharacter.IsInvisible() && fightManager.EnemyGroupInvisible() ||
+                    !battleCharacter.IsInvisible())
                 {
-                    AttackEnemyTarget(false);
+                    battleCharacter.TargetCombatant();
+
+                    if (fightManager.IsAbilitySelected)
+                    {
+                        AttackEnemyTarget(false);
+                    }
                 }
             }
         }
@@ -309,7 +313,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
             if (fightManager.EnemyTarget.TryGetComponent<BattleCharacter>(out var targetCharacter))
             {
                 if (counterChance < targetCharacter.GetCombatantIntStat(Constants.CounterChance) &&
-                    !targetCharacter.IsCombatantStunned())
+                    !targetCharacter.IsStunned() && !targetCharacter.IsInvisible())
                 {
                     counterAttackProc = true;
                     fightManager.CreateFlyingMessage(fightManager.EnemyTarget, null).Forget();
@@ -371,7 +375,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
             if (fightManager.EnemiesTarget.TryGetComponent<BattleCharacter>(out var targetCharacter))
             {
                 if (counterChance < targetCharacter.GetCombatantIntStat(Constants.CounterChance) &&
-                    !targetCharacter.IsCombatantStunned())
+                    !targetCharacter.IsStunned() && !targetCharacter.IsInvisible())
                 {
                     counterAttackProc = true;
                     fightManager.CreateFlyingMessage(fightManager.EnemiesTarget, null).Forget();
@@ -421,7 +425,6 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         float movingTime = 0.3f;
         float elapsed = 0f;
-        int castingTime = 800; // representing UniTask delay
 
         if (ability.IsMovingAbility)
         {

@@ -72,6 +72,10 @@ public static class Constants
     public const string Passive = "Passive";
     public const string PassiveReflect = "PassiveReflect";
 
+    // Status effect names
+    public const string StatusEffect = "StatusEffect";
+    public const string Invisible = "Invisible";
+
     // Currency names
     public const string CurrencyRequest = "CurrencyRequest";
     public const string CurrencySend = "CurrencySend";

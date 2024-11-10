@@ -367,6 +367,8 @@ public class BattleCharacter : MonoBehaviour
    
         newItem.transform.Find("Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignCombatSpriteToSlot(statusEffect.name);
         newItem.transform.Find("GUID/guid").name = statusEffect.guid.ToString();
+        newItem.transform.Find("ChildName").name = statusEffect.name;
+        newItem.name = statusEffect.name;
     }
 
     public void ApplyBuffEffect(StatusEffect statusEffect)
@@ -632,7 +634,23 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public bool IsCombatantStunned()
+    public bool IsInvisible()
+    {
+        if (PositiveAppliedEffects.Count > 0)
+        {
+            foreach (var effect in PositiveAppliedEffects)
+            {
+                if (effect.name == Constants.Invisible)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public bool IsStunned()
     {
         if (NegativeAppliedEffects.Count > 0)
         {
@@ -748,7 +766,7 @@ public class BattleCharacter : MonoBehaviour
 
         if (GameObject.Find(Constants.FightManager).TryGetComponent<FightManager>(out var fightManager))
         {
-            if (IsCombatantStunned())
+            if (IsStunned())
             {
                 Timebar.fillAmount = 0;
                 CheckNegativeEffects(fightManager).Forget();
@@ -788,8 +806,12 @@ public class BattleCharacter : MonoBehaviour
                 {
                     if (battleCharacter != null && battleCharacter.Faction == Faction.Player)
                     {
-                        fightManager.EnemiesTarget = combatant;
-                        break;
+                        if (!battleCharacter.IsInvisible() ||
+                            battleCharacter.IsInvisible() && fightManager.PlayerGroupInvisible())
+                        {
+                            fightManager.EnemiesTarget = combatant;
+                            break;
+                        }
                     }
                 }
             }

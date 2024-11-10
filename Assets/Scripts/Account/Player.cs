@@ -92,6 +92,7 @@ public static class Player
     // MODE VARIABLES
     public static bool CanProduce; // represents if player has Fabricator tool equipped
     public static bool InCombat; // represents if player is currently in battle (will pause all BuildingCycles)
+    public static bool InMultiplayer;
 
     // DISCOVERY FILTER
     public static bool CavesSwitch;

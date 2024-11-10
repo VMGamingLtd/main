@@ -2659,6 +2659,20 @@
         ""russian"": ""Гигантский пожиратель огня"",
         ""chinese"": ""噬火利维坦"",
         ""slovak"": ""Obrovský požierač ohňa""
+      },
+      {
+        ""identifier"": ""IceCreep"",
+        ""english"": ""Ice stalker"",
+        ""russian"": ""Ледяной сталкер"",
+        ""chinese"": ""冰影"",
+        ""slovak"": ""Ľadová obluda""
+      },
+      {
+        ""identifier"": ""Invisible"",
+        ""english"": ""Invisible"",
+        ""russian"": ""Невидимый"",
+        ""chinese"": ""无形的"",
+        ""slovak"": ""Neviditeľný""
       }
     ]
   }

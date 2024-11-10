@@ -581,6 +581,7 @@ public class NewGameUI : MonoBehaviour
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
+        Player.InCombat = false;
     }
 
     public void LoadSlotGame()
