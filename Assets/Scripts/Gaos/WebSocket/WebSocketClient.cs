@@ -106,6 +106,12 @@ namespace Gaos.WebSocket
 
             try
             {
+                {
+                    // convert buffer to hexa string
+                    string hex = ToHexString(buffer);
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: buffer: {hex}");
+                }
+
                 uint bytesReadHeader = 0;
                 GaoProtobuf.MessageHeader header = ParseMessageHeader(buffer, ref bytesReadHeader);
 

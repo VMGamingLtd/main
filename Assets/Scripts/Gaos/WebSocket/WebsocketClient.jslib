@@ -43,6 +43,16 @@ function GAO_WebSocketCreate(GAOS_WS, fnNameOnOpen, fnNameOnClose, fnNameOnError
     } else if (event.data instanceof ArrayBuffer) {
       var binaryData = new Uint8Array(event.data);
 
+      {
+        const uint8View = new Uint8Array(binaryData);
+        const hexString = Array.from(uint8View, byte =>
+          ('0' + byte.toString(16)).slice(-2)
+        ).join('');
+        console.log(`websocketJs: message: ${hexString}`);
+      }
+      
+
+
       // base64 encode the binary data
       let binaryString = '';
       const len = binaryData.byteLength;

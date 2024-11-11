@@ -69,7 +69,13 @@ namespace Gaos.WebSocket
 
         public void OnMessage(String strBase64)
         {
+            const string METHOD_NAME = "OnMessage()";
             byte[] message = System.Convert.FromBase64String(strBase64);
+            {
+                // convert buffer to hexa string
+                string hex = WebSocketClient.ToHexString(message);
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: message: {hex}");
+            }
             MessagesInbound.Enqueue(message);
         }
 

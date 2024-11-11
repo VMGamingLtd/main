@@ -39,6 +39,7 @@ namespace Assets.Scripts.Debuggging
 
         private void HandleGroupCreditsChange(int groupId, int userId, float credits)
         {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: HandleGroupCreditsChange: {groupId} {userId} {credits}");
             if (groupId != mGroupId) return;
 
             UpdateCreditsForUser(userId, credits);
