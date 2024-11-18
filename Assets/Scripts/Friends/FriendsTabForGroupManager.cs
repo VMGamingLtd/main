@@ -149,7 +149,7 @@ namespace Friends
 
             // get my group
 
-            GetMyGroupResponse = await Gaos.Friends.Friends.GetMyGroup.CallAsync();
+            GetMyGroupResponse = await Gaos.Groups.Groups.GetMyGroup.CallAsync();
             if (GetMyGroupResponse == null)
             {
                 return;
@@ -175,7 +175,7 @@ namespace Friends
 
             Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp200 ReadAllUsers()");
             //Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(frienNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
-            Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse response = await Gaos.Friends.Friends.GetMyGroupMembers.CallAsync(GetMyGroupResponse.GroupId, MAX_SCROLL_LIST_LINES_COUNT);
+            Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse response = await Gaos.Groups.Groups.GetMyGroupMembers.CallAsync(GetMyGroupResponse.GroupId, MAX_SCROLL_LIST_LINES_COUNT);
             if (response == null)
             {
                 // error occured
@@ -420,7 +420,7 @@ namespace Friends
 
         public async UniTaskVoid OnButtonLeaveFromGroupYesAsync()
         {
-            var response = await Gaos.Friends.Friends.LeaveGroup.CallAsync();
+            var response = await Gaos.Groups.Groups.LeaveGroup.CallAsync();
             if (response == null)
             {
                 // error occured
@@ -462,7 +462,7 @@ namespace Friends
         {
             int index_all = FilteredUsers[State_RemoveFromGroupDialog_index_filtered];
             FriendModel user = AllUsers[index_all];
-            var response = await Gaos.Friends.Friends.RemoveFromGroup.CallAsync(user.UserId);
+            var response = await Gaos.Groups.Groups.RemoveFromGroup.CallAsync(user.UserId);
             if (response == null)
             {
                 // error occured

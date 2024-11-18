@@ -157,7 +157,7 @@ namespace Assets.Scripts.Debuggging
 
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Loading group");
 
-            var getMyGroupResponse = await Gaos.Friends.Friends.GetMyGroup.CallAsync();
+            var getMyGroupResponse = await Gaos.Groups.Groups.GetMyGroup.CallAsync();
             if (getMyGroupResponse == null)
             {
                 return false;
@@ -172,7 +172,7 @@ namespace Assets.Scripts.Debuggging
             groupOwner.UserName = getMyGroupResponse.GroupOwnerName;
             groupOwner.UserId = getMyGroupResponse.GroupOwnerId;
 
-            var getMyGroupMembersResponse = await Gaos.Friends.Friends.GetMyGroupMembers.CallAsync(getMyGroupResponse.GroupId, 100);
+            var getMyGroupMembersResponse = await Gaos.Groups.Groups.GetMyGroupMembers.CallAsync(getMyGroupResponse.GroupId, 100);
             if (getMyGroupMembersResponse == null)
             {
                 return false;

@@ -74,7 +74,7 @@ namespace Friends
 
         private async UniTask ReadAllUsers(string friendNameSubstring = null)
         {
-            Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(friendNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
+            Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Groups.Groups.GetUsersList.CallAsync(friendNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
             if (response == null)
             {
                 // error occured
@@ -111,7 +111,7 @@ namespace Friends
             int index_allusers = FilteredUsers[index];
             FriendAddModel user = AllUsers[index_allusers];
 
-            Gaos.Friends.Friends.AddFriend.CallAsync(user.UserId).Forget();
+            Gaos.Groups.Groups.AddFriend.CallAsync(user.UserId).Forget();
             user.IsFriendRequest = true;
             DisplayFriendButton(index);
         }
@@ -130,7 +130,7 @@ namespace Friends
             int index_allusers = FilteredUsers[index];
             FriendAddModel user = AllUsers[index_allusers];
 
-            Gaos.Friends.Friends.RevokeFriendRequest.CallAsync(user.UserId).Forget();
+            Gaos.Groups.Groups.RevokeFriendRequest.CallAsync(user.UserId).Forget();
             user.IsFriendRequest = false;
             DisplayFriendButton(index);
         }

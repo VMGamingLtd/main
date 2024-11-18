@@ -29,7 +29,7 @@ public class FriendsTabLoader : MonoBehaviour
     private async UniTaskVoid GetMyGroups()
     {
 
-        myGroupResponse = await Gaos.Friends.Friends.GetMyGroup.CallAsync();
+        myGroupResponse = await Gaos.Groups.Groups.GetMyGroup.CallAsync();
         if (myGroupResponse == null)
         {
             Debug.Log("ERROR: error calling server: GetMyGroup");

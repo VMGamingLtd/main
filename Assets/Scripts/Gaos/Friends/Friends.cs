@@ -2,7 +2,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Cysharp.Threading.Tasks;
 
-namespace Gaos.Friends.Friends
+namespace Gaos.Groups.Groups
 {
 
     public class GetUsersList
@@ -11,7 +11,7 @@ namespace Gaos.Friends.Friends
 
         public static async UniTask<Gaos.Routes.Model.FriendsJson.GetUsersListResponse> CallAsync(string filterUserName, int maxCount)
         {
-            const string METHOD_NAME = "api/friends/getUsersList";
+            const string METHOD_NAME = "api/groups/getUsersList";
             try
             {
 
@@ -53,7 +53,7 @@ namespace Gaos.Friends.Friends
 
         public static async UniTask<Gaos.Routes.Model.FriendsJson.AddFriendResponse> CallAsync(int userIdOfFriend)
         {
-            const string METHOD_NAME = "api/friends/addFriend";
+            const string METHOD_NAME = "api/groups/addFriend";
             try
             {
 
@@ -92,7 +92,7 @@ namespace Gaos.Friends.Friends
         public readonly static string CLASS_NAME = typeof(RevokeFriendRequest).Name;
         public static async UniTask<Gaos.Routes.Model.FriendsJson.RevokeFriendRequestResponse> CallAsync(int userIdOfFriend)
         {
-            const string METHOD_NAME = "api/friends/revokeFriendRequest";
+            const string METHOD_NAME = "api/groups/revokeFriendRequest";
             try
             {
                 Gaos.Routes.Model.FriendsJson.RevokeFriendRequestRequest request = new Gaos.Routes.Model.FriendsJson.RevokeFriendRequestRequest();
@@ -129,7 +129,7 @@ namespace Gaos.Friends.Friends
         public readonly static string CLASS_NAME = typeof(RemoveFromGroup).Name;
         public static async UniTask<Gaos.Routes.Model.FriendsJson.RemoveFromGroupResponse> CallAsync(int userIdOfFriend)
         {
-            const string METHOD_NAME = "api/friends/removeFromGroup";
+            const string METHOD_NAME = "api/groups/removeFromGroup";
             try
             {
                 Gaos.Routes.Model.FriendsJson.RemoveFromGroupRequest request = new Gaos.Routes.Model.FriendsJson.RemoveFromGroupRequest();
@@ -166,7 +166,7 @@ namespace Gaos.Friends.Friends
         public readonly static string CLASS_NAME = typeof(LeaveGroup).Name;
         public static async UniTask<Gaos.Routes.Model.FriendsJson.LeaveGroupResponse> CallAsync()
         {
-            const string METHOD_NAME = "api/friends/leaveGroup";
+            const string METHOD_NAME = "api/groups/leaveGroup";
             try
             {
                 Gaos.Routes.Model.FriendsJson.LeaveGroupRequest request = new Gaos.Routes.Model.FriendsJson.LeaveGroupRequest();
@@ -202,7 +202,7 @@ namespace Gaos.Friends.Friends
         public readonly static string CLASS_NAME = typeof(GetFriendRequests).Name;
         public static async UniTask<Gaos.Routes.Model.FriendsJson.GetFriendRequestsResponse> CallAsync(int MaxCount, string OwnerNamePattern)
         {
-            const string METHOD_NAME = "api/friends/getFriendRequests";
+            const string METHOD_NAME = "api/groups/getFriendRequests";
             try
             {
                 Gaos.Routes.Model.FriendsJson.GetFriendRequestsRequest request = new Gaos.Routes.Model.FriendsJson.GetFriendRequestsRequest();
@@ -248,7 +248,7 @@ namespace Gaos.Friends.Friends
         public readonly static string CLASS_NAME = typeof(GetFriendRequestsCount).Name;
         public static async UniTask<int> CallAsync()
         {
-            const string METHOD_NAME = "api/friends/getFriendRequests";
+            const string METHOD_NAME = "api/groups/getFriendRequests";
             try
             {
                 Gaos.Routes.Model.FriendsJson.GetFriendRequestsRequest request = new Gaos.Routes.Model.FriendsJson.GetFriendRequestsRequest();
@@ -285,7 +285,7 @@ namespace Gaos.Friends.Friends
         public readonly static string CLASS_NAME = typeof(AcceptFriendRequest).Name;
         public static async UniTask<Gaos.Routes.Model.FriendsJson.AcceptFriendRequestResponse> CallAsync(int groupId)
         {
-            const string METHOD_NAME = "api/friends/acceptFriendRequest";
+            const string METHOD_NAME = "api/groups/acceptFriendRequest";
             try
             {
                 Gaos.Routes.Model.FriendsJson.AcceptFriendRequestRequest request = new Gaos.Routes.Model.FriendsJson.AcceptFriendRequestRequest();
@@ -322,7 +322,7 @@ namespace Gaos.Friends.Friends
         public readonly static string CLASS_NAME = typeof(RejectFriendRequest).Name;
         public static async UniTask<Gaos.Routes.Model.FriendsJson.RejectFriendRequestResponse> CallAsync(int groupId)
         {
-            const string METHOD_NAME = "api/friends/rejectFriendRequest";
+            const string METHOD_NAME = "api/groups/rejectFriendRequest";
             try
             {
                 Gaos.Routes.Model.FriendsJson.RejectFriendRequestRequest request = new Gaos.Routes.Model.FriendsJson.RejectFriendRequestRequest();
@@ -360,7 +360,7 @@ namespace Gaos.Friends.Friends
 
         public static async UniTask<Gaos.Routes.Model.FriendsJson.GetMyGroupResponse> CallAsync()
         {
-            const string METHOD_NAME = "api/friends/getMyGroup";
+            const string METHOD_NAME = "api/groups/getMyGroup";
             try
             {
                 Gaos.Routes.Model.FriendsJson.GetMyGroupRequest request = new Gaos.Routes.Model.FriendsJson.GetMyGroupRequest();
@@ -397,7 +397,7 @@ namespace Gaos.Friends.Friends
 
         public static async UniTask<Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse> CallAsync(int groupId, int maxCount)
         {
-            const string METHOD_NAME = "api/friends/getMyGroupMembers";
+            const string METHOD_NAME = "api/groups/getMyGroupMembers";
             try
             {
                 Gaos.Routes.Model.FriendsJson.GetMyGroupMembersRequest request = new Gaos.Routes.Model.FriendsJson.GetMyGroupMembersRequest();
@@ -437,7 +437,7 @@ namespace Gaos.Friends.Friends
 
         public static async UniTask<int> CallAsync(int groupId)
         {
-            const string METHOD_NAME = "api/friends/getMyGroupMembers";
+            const string METHOD_NAME = "api/groups/getMyGroupMembers";
             try
             {
                 Gaos.Routes.Model.FriendsJson.GetMyGroupMembersRequest request = new Gaos.Routes.Model.FriendsJson.GetMyGroupMembersRequest();
