@@ -74,7 +74,7 @@ namespace Friends
 
         private async UniTask ReadAllUsers(string friendNameSubstring = null)
         {
-            Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Groups.Groups.GetUsersList.CallAsync(friendNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
+            Gaos.Routes.Model.GroupJson.GetUsersListResponse response = await Gaos.Groups.Groups.GetUsersList.CallAsync(friendNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
             if (response == null)
             {
                 // error occured

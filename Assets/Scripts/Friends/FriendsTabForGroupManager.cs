@@ -54,7 +54,7 @@ namespace Friends
         private GameObject[] AllFriendsButtons = new GameObject[MAX_SCROLL_LIST_LINES_COUNT]; // all friends buttons in the scroll list
         private int LastIndexAllFriendsButtons = -1;
 
-        Gaos.Routes.Model.FriendsJson.GetMyGroupResponse GetMyGroupResponse;
+        Gaos.Routes.Model.GroupJson.GetMyGroupResponse GetMyGroupResponse;
 
         FriendsTabForGroupManager()
         {
@@ -175,7 +175,7 @@ namespace Friends
 
             Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp200 ReadAllUsers()");
             //Gaos.Routes.Model.FriendsJson.GetUsersListResponse response = await Gaos.Friends.Friends.GetUsersList.CallAsync(frienNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
-            Gaos.Routes.Model.FriendsJson.GetMyGroupMembersResponse response = await Gaos.Groups.Groups.GetMyGroupMembers.CallAsync(GetMyGroupResponse.GroupId, MAX_SCROLL_LIST_LINES_COUNT);
+            Gaos.Routes.Model.GroupJson.GetMyGroupMembersResponse response = await Gaos.Groups.Groups.GetMyGroupMembers.CallAsync(GetMyGroupResponse.GroupId, MAX_SCROLL_LIST_LINES_COUNT);
             if (response == null)
             {
                 // error occured

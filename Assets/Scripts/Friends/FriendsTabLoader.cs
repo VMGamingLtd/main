@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using Gaos.Routes.Model.FriendsJson;
+using Gaos.Routes.Model.GroupJson;
 
 public class FriendsTabLoader : MonoBehaviour
 {

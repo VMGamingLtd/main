@@ -7,7 +7,8 @@ namespace Gaos.Dbo.Model
         public int Id;
         public int? UserId;
         public User? User;
-        public int? FriendUserId;
-        public User? FriendUser;
+        public int? FriendId;
+        public User? Friend;
+        public bool? IsFriendAgreement;
     }
 }

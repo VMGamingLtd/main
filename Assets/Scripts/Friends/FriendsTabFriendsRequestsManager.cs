@@ -67,7 +67,7 @@ namespace Friends
 
         private async UniTask ReadAllRequests(string frienNameSubstring = null)
         {
-            Gaos.Routes.Model.FriendsJson.GetFriendRequestsResponse response = await Gaos.Groups.Groups.GetFriendRequests.CallAsync(MAX_SCROLL_LIST_LINES_COUNT, frienNameSubstring);
+            Gaos.Routes.Model.GroupJson.GetFriendRequestsResponse response = await Gaos.Groups.Groups.GetFriendRequests.CallAsync(MAX_SCROLL_LIST_LINES_COUNT, frienNameSubstring);
             if (response == null)
             {
                 // error occured
@@ -103,7 +103,7 @@ namespace Friends
 
         private async UniTaskVoid AcceptFriendRequestAsync(int groupId)
         {
-            Gaos.Routes.Model.FriendsJson.AcceptFriendRequestResponse response = await Gaos.Groups.Groups.AcceptFriendRequest.CallAsync(groupId);
+            Gaos.Routes.Model.GroupJson.AcceptFriendRequestResponse response = await Gaos.Groups.Groups.AcceptFriendRequest.CallAsync(groupId);
             if (response == null)
             {
                 // error occured
@@ -134,7 +134,7 @@ namespace Friends
 
         private async UniTaskVoid RejectFriendRequestAsync(int groupId)
         {
-            Gaos.Routes.Model.FriendsJson.RejectFriendRequestResponse response = await Gaos.Groups.Groups.RejectFriendRequest.CallAsync(groupId);
+            Gaos.Routes.Model.GroupJson.RejectFriendRequestResponse response = await Gaos.Groups.Groups.RejectFriendRequest.CallAsync(groupId);
             if (response == null)
             {
                 // error occured
