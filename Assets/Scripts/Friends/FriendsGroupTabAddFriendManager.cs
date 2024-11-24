@@ -30,8 +30,8 @@ namespace Friends
 
         public GameObject Title;
 
-        public GameObject AddFriendDialog;
-        public TMP_Text AddFriendDialogText;
+        public GameObject AddFriendDialog; //TODO: verify that is is not used and remove it
+        public TMP_Text AddFriendDialogText; // TODO: verify that is is not used and remove it
 
         //public GameObject SearchTextBox;
         public TMP_InputField SearchTextBox;
