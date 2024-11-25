@@ -114,9 +114,18 @@ namespace Friends
 
         }
 
+        private async UniTask  GuiReadAllUsersList(string userNamePattern)
+        {
+            RemoveAllFriendsButtons();
+            await ReadAllUsers(userNamePattern);
+            AllocateFriendsButtons();
+            FilterUsers("");
+            DisplayFilteredUsers();
+        }
+
         private async UniTask ReadAllUsers(string friendNameSubstring = null)
         {
-            //Gaos.Routes.Model.GroupJson.GetUsersListResponse response = await Gaos.Groups.Groups.GetUsersList.CallAsync(friendNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 500: ReadAllUsers({friendNameSubstring})");
             Gaos.Routes.Model.FriendJson.GetUsersForFriendsSearchResponse response = await Gaos.Friends.GetUsersForFriendsSearch.CallAsync(friendNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
             if (response == null)
             {
@@ -277,8 +286,7 @@ namespace Friends
             int index_allusers = FilteredUsers[index];
             FriendAddModel user = AllUsers[index_allusers];
 
-            //Gaos.Groups.Groups.RevokeFriendRequest.CallAsync(user.UserId).Forget();
-            Debug.LogError($"Not implemented"); //TODO: implement revoke friend or friend request in gaos
+            Gaos.Friends.RemoveFriend.CallAsync(user.UserId).Forget();
             user.IsFriendRequest = false;
             DisplayFriendButton(index);
         }
@@ -343,9 +351,21 @@ namespace Friends
             }
         }
 
+        private async UniTaskVoid OnSearchIconClickAsync(string userNamePattern)
+        {
+            await GuiReadAllUsersList(userNamePattern);
+            DisplayTitle();
+        }
+
         public void DisplayTitle()
         {
             Title.SetActive(true);
+        }
+
+        public void OnSearchIconClick()
+        {
+            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 400: OnSearchIconClick(): {SearchTextBox.text}");
+            OnSearchIconClickAsync(SearchTextBox.text).Forget();
         }
     }
 }
