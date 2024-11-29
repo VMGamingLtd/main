@@ -2596,6 +2596,13 @@
          ""chinese"": ""从组中删除"",
          ""slovak"": ""Odstrániť zo skupiny""
         },
+        {
+            ""identifier"": ""Remove From Friends"",
+            ""english"": ""Remove from friends"",
+            ""russian"": ""Удалить из друзей"",
+            ""chinese"": ""从好友中删除"",
+            ""slovak"": ""Odstrániť zo zoznamu priateľov""
+        },
         
       {
         ""identifier"": ""Ignite"",

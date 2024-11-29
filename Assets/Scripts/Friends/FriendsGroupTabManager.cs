@@ -10,16 +10,18 @@ using UnityEngine.Rendering;
 
 namespace Friends
 {
-    public class FriendModel
-    {
-        public string UserName { get; set; }
-        public int UserId { get; set; }
-        public bool Gui_IsLineVisible { get; set; }
-    }
 
     public class FriendsGroupTabManager : MonoBehaviour
     {
         private static string CLASS_NAME = typeof(FriendsGroupTabManager).Name;
+
+        public class FriendModel
+        {
+            public string UserName { get; set; }
+            public int UserId { get; set; }
+            public bool Gui_IsLineVisible { get; set; }
+        }
+
 
         //private static int MAX_SCROLL_LIST_LINES_CPUNT = 100;
         private static int MAX_SCROLL_LIST_LINES_COUNT = 10;
@@ -336,6 +338,7 @@ namespace Friends
 
             if (GetMyGroupResponse.IsGroupOwner)
             {
+                buttonRemoveFromGroup.onClick.RemoveAllListeners();
                 buttonRemoveFromGroup.onClick.AddListener(MakeOnButtonRemoveFromGroupClicked(index_filtered));
                 childObject_buttonRemoveFromGroup.gameObject.SetActive(true);
             }
@@ -343,6 +346,7 @@ namespace Friends
             {
                 if (user.UserId == Gaos.Context.Authentication.GetUserId())
                 {
+                    buttonLeaveGroup.onClick.RemoveAllListeners();
                     buttonLeaveGroup.onClick.AddListener(MakeOnButtonLeaveGroupClicked(index_filtered));
                     childObject_buttonLeaveGroup.gameObject.SetActive(true);
                 }

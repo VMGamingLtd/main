@@ -4,7 +4,7 @@ namespace Gaos.Routes.Model.FriendJson
     [System.Serializable]
     public class GetUsersForFriendsSearchRequest
     {
-        public int MaxCount;
         public string UserNamePattern;
+        public int MaxCount;
     }
 }

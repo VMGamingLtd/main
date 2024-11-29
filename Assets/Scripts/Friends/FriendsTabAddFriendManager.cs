@@ -287,6 +287,7 @@ namespace Friends
             FriendAddModel user = AllUsers[index_allusers];
 
             Gaos.Friends.RemoveFriend.CallAsync(user.UserId).Forget();
+            user.IsFriend = false;
             user.IsFriendRequest = false;
             DisplayFriendButton(index);
         }

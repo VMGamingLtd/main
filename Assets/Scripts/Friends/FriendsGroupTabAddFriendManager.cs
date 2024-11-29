@@ -30,8 +30,8 @@ namespace Friends
 
         public GameObject Title;
 
-        public GameObject AddFriendDialog; //TODO: verify that is is not used and remove it
-        public TMP_Text AddFriendDialogText; // TODO: verify that is is not used and remove it
+        //public GameObject AddFriendDialog; //TODO: verify that is is not used and remove it
+        //public TMP_Text AddFriendDialogText; // TODO: verify that is is not used and remove it
 
         //public GameObject SearchTextBox;
         public TMP_InputField SearchTextBox;
@@ -367,10 +367,11 @@ namespace Friends
         public void DisplayTitle()
         {
             Title.SetActive(true);
-            AddFriendDialog.SetActive(false);
+            //AddFriendDialog.SetActive(false);
         }
 
         // TODO: find out if it is ever called from somewhere if no then remove it
+        /*
         public void DisplayAddFriendDialog(FriendModel user)
         {
             string message;
@@ -397,6 +398,7 @@ namespace Friends
             Title.SetActive(false);
             AddFriendDialog.SetActive(true);
         }
+        */
 
 
         /*
