@@ -125,7 +125,6 @@ namespace Friends
 
         private async UniTask ReadAllUsers(string friendNameSubstring = null)
         {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 500: ReadAllUsers({friendNameSubstring})");
             Gaos.Routes.Model.FriendJson.GetUsersForFriendsSearchResponse response = await Gaos.Friends.GetUsersForFriendsSearch.CallAsync(friendNameSubstring, MAX_SCROLL_LIST_LINES_COUNT);
             if (response == null)
             {
@@ -259,7 +258,6 @@ namespace Friends
 
         private void OnButtonAddClicked(int index)
         {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 300: OnAddFriendButtonClicked({index})");
             int index_allusers = FilteredUsers[index];
             FriendAddModel user = AllUsers[index_allusers];
 
@@ -282,7 +280,6 @@ namespace Friends
 
         private void OnButtonRevokeClicked(int index)
         {
-            Debug.Log($"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 310: OnRevokeFriendButtonClicked({index})");
             int index_allusers = FilteredUsers[index];
             FriendAddModel user = AllUsers[index_allusers];
 

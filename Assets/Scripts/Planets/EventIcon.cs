@@ -89,7 +89,7 @@ public class EventIcon : MonoBehaviour, IPointerClickHandler
             sphericalRadius = Player.VisibilityRadius / 20;
             float distanceToCamera = Vector3.Distance(transform.position, renderCamera.transform.position);
             float distanceToPlayer = Vector3.Distance(transform.position, playerIcon.transform.position);
-            Debug.Log($"sphericalRadius {sphericalRadius}");
+            //Debug.Log($"sphericalRadius {sphericalRadius}");
             // Check if the sprite is outside the spherical radius
             if (distanceToPlayer > sphericalRadius && transform.name != "Player" ||
                 distanceToPlayer > sphericalRadius && transform.name != "Player" && Component.CurrentQuantity <= 0)
