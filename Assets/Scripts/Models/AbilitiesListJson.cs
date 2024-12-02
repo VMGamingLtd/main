@@ -45,7 +45,9 @@ namespace Assets.Scripts.Models
     /// Shield = 6,
     /// HitChance = 7,
     /// Dodge = 8,
-    /// CounterChance = 9
+    /// CounterChance = 9,
+    /// CriticalChance = 10,
+    /// CriticalDamage = 11
     /// 
     /// Ability trigger reference:
     /// None 0
@@ -425,7 +427,7 @@ namespace Assets.Scripts.Models
           ""chance"": 100,
           ""portionValue"": 30,
           ""duration"": 2,
-          ""isFrontLineAoe"": true,
+          ""isFrontLineAoe"": false,
           ""isBackLineAoe"": false
         }
       ],
@@ -613,14 +615,14 @@ namespace Assets.Scripts.Models
     {
       ""index"": 17,
       ""abilityName"": ""MeteorShower"",
-      ""abilityType"": ""Ranged"",
+      ""abilityType"": ""Psi"",
       ""abilityWeapon"": null,
       ""isMovingAbility"": false,
       ""isFrontLineAoe"": true,
       ""isBackLineAoe"": true,
       ""meleeDamageScale"": 0,
-      ""rangedDamageScale"": 1.0,
-      ""psiDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 1.0,
       ""scaleMultiplication"": 1.5,
       ""cooldown"": 3,
       ""abilityTrigger"": 0,
@@ -914,6 +916,140 @@ namespace Assets.Scripts.Models
         }
       ],
       ""abilityPrefabsList"": []
+    },
+    {
+      ""index"": 25,
+      ""abilityName"": ""Inferno"",
+      ""abilityType"": ""Melee"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": true,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 1.2,
+      ""scaleMultiplication"": 1.3,
+      ""cooldown"": 3,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""Ignite"",
+          ""type"": 0,
+          ""statAffection"": 0,
+          ""chance"": 75,
+          ""portionValue"": 30,
+          ""duration"": 2,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        },
+        {
+          ""name"": ""Stun"",
+          ""type"": 1,
+          ""statAffection"": 0,
+          ""chance"": 25,
+          ""portionValue"": 0,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""Inferno"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 26,
+      ""abilityName"": ""WhisperOfDeath"",
+      ""abilityType"": ""Psi"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 1.4,
+      ""scaleMultiplication"": 1.2,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""Stun"",
+          ""chance"": 25,
+          ""type"": 1,
+          ""statAffection"": 0,
+          ""portionValue"": 0,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        },
+        {
+          ""name"": ""HitChanceDebuff"",
+          ""type"": 4,
+          ""statAffection"": 7,
+          ""chance"": 50,
+          ""portionValue"": 25,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""WhisperOfDeathHit"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 27,
+      ""abilityName"": ""Frostbite"",
+      ""abilityType"": ""Melee"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": true,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 1,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 1.2,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""CriticalChanceDebuff"",
+          ""type"": 4,
+          ""statAffection"": 10,
+          ""chance"": 40,
+          ""portionValue"": 5,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""IceHit1"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        }
+      ]
     }
   ]
 }
