@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Core
-  m_Shader: {fileID: 4800000, guid: fe01b83807a42f643a682f6b3bfa8dc9, type: 3}
+  m_Shader: {fileID: 4800000, guid: 082502fc2604a6048a641a0ade8e8286, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -46,21 +46,30 @@ Material:
     m_Ints: []
     m_Floats:
     - _BumpAmt: 0.21428578
+    - _ColorMask: 15
     - _CubeMapOpacity: 0
     - _Cutoff: 1
     - _Emission: 1
     - _EmissionLM: 0
     - _FPOW: 3
     - _Height: 0
+    - _InvFade: 1
     - _OffsetHeightMap: 1
     - _OffsetXHeightMap: 0
     - _OffsetYHeightMap: 0
     - _Opacity: 1
     - _R0: 0.05
     - _Shininess: 0.42507833
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
     m_Colors:
     - _Color: {r: 0.42766005, g: 0.47508505, b: 0.5147059, a: 1}
     - _ReflectColor: {r: 0.6708477, g: 0.8242863, b: 0.9705882, a: 1}
     - _RimColor: {r: 0.7205882, g: 0.80344826, b: 1, a: 1}
     - _SpecColor: {r: 0.5441177, g: 0.79941165, b: 1, a: 1}
+    - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
   m_BuildTextureStacks: []

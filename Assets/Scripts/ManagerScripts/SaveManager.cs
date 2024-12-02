@@ -2,6 +2,7 @@ using Assets.Scripts.ItemFactory;
 using BuildingManagement;
 using ItemManagement;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RecipeManagement;
 using System;
 using System.Collections.Generic;
@@ -350,6 +351,11 @@ public class SaveManager : MonoBehaviour
                 else if (kvp.Value is bool boolValue)
                 {
                     field.SetValue(null, boolValue);
+                }
+                else if (kvp.Value is JArray currencyArray && field.FieldType == typeof(List<Currency>))
+                {
+                    List<Currency> currencyList = currencyArray.ToObject<List<Currency>>();
+                    Player.Currencies.AddRange(currencyList);
                 }
             }
         }

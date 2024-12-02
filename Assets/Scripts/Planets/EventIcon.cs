@@ -20,8 +20,7 @@ public class EventIcon : MonoBehaviour, IPointerClickHandler
 
     #region Attributes
 
-    [SerializeField]
-    private float sphericalRadius = Player.VisibilityRadius / 20;
+    private float sphericalRadius;
     public EventIconType IconType;
     public EventSize EventSize;
 
@@ -85,12 +84,12 @@ public class EventIcon : MonoBehaviour, IPointerClickHandler
 
     void Update()
     {
-        if (renderTexture != null && IconInstance != null)
+        if (renderTexture != null && IconInstance != null && GlobalCalculator.GameStarted)
         {
             sphericalRadius = Player.VisibilityRadius / 20;
             float distanceToCamera = Vector3.Distance(transform.position, renderCamera.transform.position);
             float distanceToPlayer = Vector3.Distance(transform.position, playerIcon.transform.position);
-
+            //Debug.Log($"sphericalRadius {sphericalRadius}");
             // Check if the sprite is outside the spherical radius
             if (distanceToPlayer > sphericalRadius && transform.name != "Player" ||
                 distanceToPlayer > sphericalRadius && transform.name != "Player" && Component.CurrentQuantity <= 0)

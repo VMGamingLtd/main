@@ -72,6 +72,20 @@ public static class Constants
     public const string Passive = "Passive";
     public const string PassiveReflect = "PassiveReflect";
 
+    // Status effect names
+    public const string StatusEffect = "StatusEffect";
+    public const string Invisible = "Invisible";
+
+    // Currency names
+    public const string CurrencyRequest = "CurrencyRequest";
+    public const string CurrencySend = "CurrencySend";
+    public const string GLC = "GLC";
+    public const string STT = "STT";
+    public const string NBS = "NBS";
+    public const string QTC = "QTC";
+    public const string VDM = "VMD";
+    public const string ZHC = "ZHC";
+
     // Item type names
     public const string Suit = "SUIT";
     public const string Helmet = "HELMET";

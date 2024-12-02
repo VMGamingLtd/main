@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: IceReflectionMobile
-  m_Shader: {fileID: 4800000, guid: cbb3742d14f18b840b12244fa880a113, type: 3}
+  m_Shader: {fileID: 4800000, guid: 082502fc2604a6048a641a0ade8e8286, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -42,6 +42,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _BumpAmt: 366.07144
+    - _ColorMask: 15
     - _Cutoff: 1
     - _FPOW: 0.4
     - _InvFade: 1
@@ -50,6 +51,12 @@ Material:
     - _R0: 0.4
     - _ReflectionStrength: 5.75
     - _Shininess: 1
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
     m_Colors:
     - _Color: {r: 0.03211504, g: 0.03617109, b: 0.04411763, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 0}

@@ -46,8 +46,14 @@ public class StartGameInputChecker : MonoBehaviour
         equipmentManager.InitStartEquip();
 
         //initialize starting resources
-        Credits.ResetCredits();
-        Credits.AddCredits(42);
+        Currency currency = new()
+        {
+            FullName = "GalacticCredits",
+            ShortName = "GLC",
+            Quantity = 42
+        };
+
+        Player.Currencies.Add(currency);
 
         // force button click action to open the Exploration menu that the button is set for
         buttonToClick.onClick.Invoke();

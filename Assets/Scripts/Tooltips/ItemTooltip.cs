@@ -2,6 +2,7 @@ using BuildingManagement;
 using ItemManagement;
 using RecipeManagement;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -138,13 +139,21 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         ShieldData shieldData = null, OffHandData offHandData = null)
     {
         HideAllTooltips();
-        GameObject tooltipObject = FindTooltipObject(objectName);
+
+        GameObject tooltipObject;
+
+        if (Player.InCombat)
+        {
+            tooltipObject = FindTooltipObject(Constants.StatusEffect);
+        }
+        else
+        {
+            tooltipObject = FindTooltipObject(objectName);
+        }
 
         if (tooltipObject != null)
-        {
-            tooltipFollowMouse = tooltipObject.transform.parent.GetComponent<TooltipFollowMouse>();
-
-            if (tooltipFollowMouse != null)
+        {          
+            if (tooltipObject.transform.parent.TryGetComponent<TooltipFollowMouse>(out tooltipFollowMouse))
             {
                 tooltipFollowMouse.enabled = true;
             }
@@ -157,7 +166,13 @@ public class ItemTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
             tooltipObject.SetActive(true);
 
-            if (suitData != null)
+            if (Player.InCombat)
+            {
+                TranslationManager translationManager = GameObject.Find("TranslationManager").GetComponent<TranslationManager>();
+                Debug.Log(objectName);
+                tooltipObject.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = translationManager.Translate(objectName);
+            }
+            else if (suitData != null)
             {
                 SuitDataInjector suitDataInjector = tooltipObject.GetComponent<SuitDataInjector>();
                 suitDataInjector.InjectData(suitData);

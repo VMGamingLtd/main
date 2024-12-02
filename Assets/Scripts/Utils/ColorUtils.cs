@@ -1,10 +1,13 @@
+using System;
+using System.Globalization;
 using UnityEngine;
+using static UnityEngine.Networking.UnityWebRequest;
 
 public static class ColorUtils
 {
     public static string ColorToString(Color color)
     {
-        return $"{color.r}/{color.g}/{color.b}/{color.a}";
+        return string.Format(CultureInfo.InvariantCulture, "{0}/{1}/{2}/{3}", color.r, color.g, color.b, color.a);
     }
 
     public static Color StringToColor(string colorString)
@@ -16,11 +19,47 @@ public static class ColorUtils
             Debug.LogError("Invalid color string format");
         }
 
-        float r = float.Parse(values[0]);
-        float g = float.Parse(values[1]);
-        float b = float.Parse(values[2]);
-        float a = float.Parse(values[3]);
+        float ParseValue(string value)
+        {
+            float result;
 
-        return new Color(r, g, b, a);
+            // Attempt to parse using both formats
+            if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out result))
+            {
+                // Successfully parsed with InvariantCulture
+                return result;
+            }
+
+            if (float.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, out result))
+            {
+                // Successfully parsed with CurrentCulture
+                return result;
+            }
+
+            // If parsing fails, attempt to normalize separators
+            value = value.Replace(',', '.'); // Replace comma with period
+            if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out result))
+            {
+                return result;
+            }
+
+            Debug.LogError($"Unable to parse value: {value}");
+            return 0f; // Default to 0 if parsing fails
+        }
+
+        try
+        {
+            float r = ParseValue(values[0]);
+            float g = ParseValue(values[1]);
+            float b = ParseValue(values[2]);
+            float a = ParseValue(values[3]);
+
+            return new Color(r, g, b, a);
+        }
+        catch (FormatException ex)
+        {
+            Debug.LogError($"Error parsing color values: {ex.Message}");
+            return Color.black;
+        }
     }
 }

@@ -113,7 +113,9 @@ public class Enumerations : MonoBehaviour
         Shield = 6,
         HitChance = 7,
         Dodge = 8,
-        CounterChance = 9
+        CounterChance = 9,
+        CriticalChance = 10,
+        CriticalDamage = 11
     }
 
     public enum PrefabSpawn
@@ -144,5 +146,15 @@ public class Enumerations : MonoBehaviour
     {
         None = 0,
         ToEnemy = 1
+    }
+
+    public enum CurrencyType
+    {
+        GLC, // Galactic credits
+        STT, // Stellar tokens
+        NBS, // Nebula shards
+        QTC, // Quantum coins
+        VDM, // Void marks
+        ZHC // Zyrrh Crystals
     }
 }

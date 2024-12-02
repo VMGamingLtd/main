@@ -95,10 +95,7 @@ namespace Gaos.WebSocket
             WebSocket = null;
             threadCancelationToken = new CancellationTokenSource();
             thread = new Thread(() => {
-                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                {
-                    OpenWs();
-                }
+                OpenWs();
                 Thread.Sleep(2000);
                 StartProcessingOutboundQueue_inThread(threadCancelationToken.Token);
             });
@@ -134,14 +131,7 @@ namespace Gaos.WebSocket
             while (!token.IsCancellationRequested)
             {
                 WebSocketSharp.WebSocketState state;
-                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                {
-                    state = WebSocket.ReadyState;
-                }
-                else
-                {
-                    state = WebSocketSharp.WebSocketState.Open;
-                }
+                state = WebSocket.ReadyState;
 
                 if (state == WebSocketSharp.WebSocketState.Open)
                 {
@@ -153,10 +143,7 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                                {
-                                    WebSocket.Send(data);
-                                }
+                                WebSocket.Send(data);
                             }
                             catch (System.Exception e)
                             {
@@ -204,10 +191,7 @@ namespace Gaos.WebSocket
                 }
             }
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: processing outbound queue finished");
-            if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-            {
-                WebSocket.Close();
-            }
+            WebSocket.Close();
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: thread finished");
         }
 
@@ -222,19 +206,13 @@ namespace Gaos.WebSocket
             while (!cancellationToken.IsCancellationRequested)
             {
                 WebSocketSharp.WebSocketState state;
-                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+                if (WebSocket == null)
                 {
-                    if (WebSocket == null)
-                    {
-                        yield return new WaitForSeconds(0.1f);
-                        continue;
-                    }
-                    state = WebSocket.ReadyState;
+                    yield return new WaitForSeconds(0.1f);
+                    continue;
                 }
-                else
-                {
-                    state = WebSocketSharp.WebSocketState.Open;
-                }
+                state = WebSocket.ReadyState;
+
                 if (state == WebSocketSharp.WebSocketState.Open)
                 {
                     if (MessagesInbound.Count > 0)
@@ -246,10 +224,7 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                                {
-                                    ws.Process(data);
-                                }
+                                ws.Process(data);
                             }
                             catch (System.Exception e)
                             {

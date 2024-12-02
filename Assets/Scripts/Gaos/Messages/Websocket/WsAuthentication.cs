@@ -118,7 +118,7 @@ namespace Gaos.Messages
             }
         }
 
-        public static void disposeRequests()
+        public static void DisposeRequests()
         {
             const string METHOD_NAME = "disposeRequests()";
             List<string> keys = new List<string>(WsAuthentication.requests.Keys);

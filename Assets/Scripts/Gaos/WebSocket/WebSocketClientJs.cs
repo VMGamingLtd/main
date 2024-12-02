@@ -67,23 +67,16 @@ namespace Gaos.WebSocket
             Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ERROR: {errorStr}");
         }
 
-        public void OnMessage(int _data)
+        public void OnMessage(String strBase64)
         {
-            var data = new IntPtr(_data);
-
-            int length =  Marshal.ReadInt32(data);
-            byte[] buffer = new byte[length];
-
-            unsafe
+            const string METHOD_NAME = "OnMessage()";
+            byte[] message = System.Convert.FromBase64String(strBase64);
             {
-                byte* p = (byte*)data + 4; // skip the length
-                for (int i = 0; i < length; i++)
-                {
-                    buffer[i] = *p++;
-                }
+                // convert buffer to hexa string
+                string hex = WebSocketClient.ToHexString(message);
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: message: {hex}");
             }
-            MessagesInbound.Enqueue(buffer);
-
+            MessagesInbound.Enqueue(message);
         }
 
         public ConcurrentQueue<byte[]> GetOutboundQueue()
@@ -132,14 +125,7 @@ namespace Gaos.WebSocket
             while (!cancellationToken.IsCancellationRequested)
             {
                 int state;
-                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                {
-                    state = WebSocketReadyState(Ws);
-                }
-                else
-                {
-                    state = 1;
-                }
+                state = WebSocketReadyState(Ws);
                 if (state == 1) // 1 is OPEN
                 {
                     if (MessagesOutbound.Count > 0)
@@ -150,10 +136,7 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                                {
-                                    WebSocketSendBytes(Ws, data);
-                                }
+                                WebSocketSendBytes(Ws, data);
                             }
                             catch (System.Exception e)
                             {
@@ -201,14 +184,7 @@ namespace Gaos.WebSocket
             while (!cancellationToken.IsCancellationRequested)
             {
                 int state;
-                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                {
-                    state = WebSocketReadyState(Ws);
-                }
-                else
-                {
-                    state = 1;
-                }
+                state = WebSocketReadyState(Ws);
                 if (state == 1) // 1 is OPEN
                 {
                     if (MessagesInbound.Count > 0)
@@ -219,10 +195,7 @@ namespace Gaos.WebSocket
                         {
                             try
                             {
-                                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                                {
-                                    ws.Process(data);
-                                }
+                                ws.Process(data);
                             }
                             catch (System.Exception e)
                             {

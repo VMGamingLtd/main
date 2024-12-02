@@ -26,11 +26,15 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             if (battleCharacter.IsEnemy() && !fightManager.IsPerformingAbility)
             {
-                battleCharacter.TargetCombatant();
-
-                if (fightManager.IsAbilitySelected)
+                if (battleCharacter.IsInvisible() && fightManager.EnemyGroupInvisible() ||
+                    !battleCharacter.IsInvisible())
                 {
-                    AttackEnemyTarget(false);
+                    battleCharacter.TargetCombatant();
+
+                    if (fightManager.IsAbilitySelected)
+                    {
+                        AttackEnemyTarget(false);
+                    }
                 }
             }
         }
@@ -214,6 +218,8 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                         }
                     }
                 }
+
+                targetCharacter.CheckTriggerStatusEffect();
             }
         }
         else
@@ -307,7 +313,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
             if (fightManager.EnemyTarget.TryGetComponent<BattleCharacter>(out var targetCharacter))
             {
                 if (counterChance < targetCharacter.GetCombatantIntStat(Constants.CounterChance) &&
-                    !targetCharacter.IsCombatantStunned())
+                    !targetCharacter.IsStunned() && !targetCharacter.IsInvisible())
                 {
                     counterAttackProc = true;
                     fightManager.CreateFlyingMessage(fightManager.EnemyTarget, null).Forget();
@@ -369,7 +375,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
             if (fightManager.EnemiesTarget.TryGetComponent<BattleCharacter>(out var targetCharacter))
             {
                 if (counterChance < targetCharacter.GetCombatantIntStat(Constants.CounterChance) &&
-                    !targetCharacter.IsCombatantStunned())
+                    !targetCharacter.IsStunned() && !targetCharacter.IsInvisible())
                 {
                     counterAttackProc = true;
                     fightManager.CreateFlyingMessage(fightManager.EnemiesTarget, null).Forget();
@@ -419,7 +425,6 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         float movingTime = 0.3f;
         float elapsed = 0f;
-        int castingTime = 800; // representing UniTask delay
 
         if (ability.IsMovingAbility)
         {
@@ -446,7 +451,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
 
             elapsed = 0f;
 
-            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, castingTime, targetCombatants, isPlayerGroup, elapsed, movingTime);
+            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, targetCombatants, isPlayerGroup, elapsed, movingTime);
 
             // Damage phase
             if (targetCombatants.Count > 0)
@@ -477,7 +482,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             // Move phase - in this case it's a phase where combatant should be moving but most probably it involves
             // spawning some initial prefab for spell or animation travelling to enemy
-            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, castingTime, targetCombatants, isPlayerGroup, elapsed, movingTime);
+            await CheckForAbilityPrefabs(ability, activeCombatant, targetCombatant, targetCombatants, isPlayerGroup, elapsed, movingTime);
 
             // Damage phase
             if (targetCombatants.Count > 0)
@@ -508,7 +513,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
         }
     }
 
-    private async UniTask CheckForAbilityPrefabs(CombatAbility ability, GameObject activeCombatant, GameObject targetCombatant, int castingTime,
+    private async UniTask CheckForAbilityPrefabs(CombatAbility ability, GameObject activeCombatant, GameObject targetCombatant,
         List<GameObject> targetCombatants, bool isPlayerGroup, float elapsed, float movingTime)
     {
         if (ability.AbilityPrefabs.Count > 0)
@@ -565,7 +570,7 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
                             }
                         }
 
-                        await UniTask.Delay(castingTime);
+                        await UniTask.Delay(abilityPrefab.castingTime);
                     }
 
                     if (abilityPrefab.prefabMovement == Enumerations.PrefabMovement.ToEnemy)

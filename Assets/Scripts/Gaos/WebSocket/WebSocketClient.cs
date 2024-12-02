@@ -6,6 +6,8 @@ using Gaos.Websocket;
 using Google.Protobuf;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Gaos.WebSocket
 {
@@ -48,17 +50,10 @@ namespace Gaos.WebSocket
         public void Open()
         {
             const string METHOD_NAME = "Open()";
-            if (Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false")
-            {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: websocket is disabled");
-            }
 
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
-                {
-                    webSocketClientJs.Open();
-                }
+                webSocketClientJs.Open();
             }
             else
             {
@@ -83,16 +78,13 @@ namespace Gaos.WebSocket
 
         public void CloseWebsocket()
         {
-            if (!(Environment.Environment.GetEnvironment()["IS_WEBSOCKET"] == "false"))
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
-                if (Application.platform == RuntimePlatform.WebGLPlayer)
-                {
-                    webSocketClientJs.CloseWebsocket();
-                }
-                else
-                {
-                    webSocketClientSharp.CloseWebsocket();
-                }
+                webSocketClientJs.CloseWebsocket();
+            }
+            else
+            {
+                webSocketClientSharp.CloseWebsocket();
             }
         }
 
@@ -114,6 +106,12 @@ namespace Gaos.WebSocket
 
             try
             {
+                {
+                    // convert buffer to hexa string
+                    string hex = ToHexString(buffer);
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: buffer: {hex}");
+                }
+
                 uint bytesReadHeader = 0;
                 GaoProtobuf.MessageHeader header = ParseMessageHeader(buffer, ref bytesReadHeader);
 
@@ -177,11 +175,14 @@ namespace Gaos.WebSocket
 
         public void OnEnable()
         {
+            const string METHOD_NAME = "OnEnable()";
+
             CurrentWesocketClient = this;
             Open();
             QueuesCancelationToken = new CancellationTokenSource();
             StartCoroutine(StartProcessingOutboundQueue(QueuesCancelationToken.Token));
             StartCoroutine(StartProcessingInboundQueue(this, QueuesCancelationToken.Token));
+            DisposeTimeoutedRequests().Forget();
         }
 
         public static string ToHexString(byte[] bytes)
@@ -214,10 +215,19 @@ namespace Gaos.WebSocket
 
         public static uint DeserializeMessageSize(byte[] message, uint bufferOffset, ref uint bytesRead)
         {
-            byte[] data = new byte[4];
-            Array.Copy(message, bufferOffset, data, 0, 4);
-            bytesRead = 4;
-            return FromNetworkByteOrder(BitConverter.ToUInt32(data, 0));
+            const string METHOD_NAME = "DeserializeMessageSize()";
+            try
+            {
+                byte[] data = new byte[4];
+                Array.Copy(message, bufferOffset, data, 0, 4);
+                bytesRead = 4;
+                return FromNetworkByteOrder(BitConverter.ToUInt32(data, 0));
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: could not deserialize message size, {e}");
+                throw new Exception("could not deserialize message size");
+            }
         }
 
         public static byte[] SerializeMessageHeader(GaoProtobuf.MessageHeader messageHeader)
@@ -232,15 +242,24 @@ namespace Gaos.WebSocket
 
         public static GaoProtobuf.MessageHeader  ParseMessageHeader(byte[] message, ref uint bytesRead)
         {
-            uint bytesReadSize = 0;
-            uint messageSize = DeserializeMessageSize(message, 0,  ref bytesReadSize);
+            const string METHOD_NAME = "ParseMessageHeader()";
+            try
+            {
+                uint bytesReadSize = 0;
+                uint messageSize = DeserializeMessageSize(message, 0, ref bytesReadSize);
 
-            byte[] data = new byte[messageSize];
-            Array.Copy(message, bytesReadSize, data, 0, messageSize);
-            var messageHeader =  GaoProtobuf.MessageHeader.Parser.ParseFrom(data);
+                byte[] data = new byte[messageSize];
+                Array.Copy(message, bytesReadSize, data, 0, messageSize);
+                var messageHeader = GaoProtobuf.MessageHeader.Parser.ParseFrom(data);
 
-            bytesRead = bytesReadSize + messageSize;
-            return messageHeader;
+                bytesRead = bytesReadSize + messageSize;
+                return messageHeader;
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: could not parse message header, {e}");
+                throw new Exception("could not parse message header");
+            }
         }
 
         public static byte[] SerializeMessage(GaoProtobuf.MessageHeader messageHeader, byte [] message)
@@ -293,6 +312,23 @@ namespace Gaos.WebSocket
             }
         }
 
+        async UniTask DisposeTimeoutedRequests()
+        {
+            const string METHOD_NAME = "disposeTimeoutedRequests()";
+            try
+            {
+                while (true)
+                {
+                    await UniTask.Delay(15000);
+                    Gaos.Websocket.Dispatcher.DisposeRequests();
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error disposing timeouted requests: {e}");
+            }
+        }
     }
+
 }
 

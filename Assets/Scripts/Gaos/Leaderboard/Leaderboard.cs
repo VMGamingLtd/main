@@ -25,7 +25,7 @@ namespace Gaos.Leaderboard
             }
             else
             {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Leaderboard Data update successful. Response: {apiCall.ResponseJsonStr}");
+                //Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Leaderboard Data update successful. Response: {apiCall.ResponseJsonStr}");
             }
         }
     }

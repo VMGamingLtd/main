@@ -33,8 +33,14 @@ public class BattleCharacter : MonoBehaviour
     private int HitChance;
     private int BuffHitChance;
     private int DebuffHitChance;
+    private int StoredCriticalChance;
     private int CriticalChance;
+    private int BuffCriticalChance;
+    private int DebuffCriticalChance;
+    private int StoredCriticalDamage;
     private int CriticalDamage;
+    private int BuffCriticalDamage;
+    private int DebuffCriticalDamage;
     private int Penetration;
     private int CounterChance;
     private int BuffCounterChance;
@@ -247,6 +253,30 @@ public class BattleCharacter : MonoBehaviour
                     gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
                 }
             }
+            else if (statusEffect.statAffection == StatAffection.CriticalChance)
+            {
+                StoredCriticalChance = CriticalChance;
+                DebuffCriticalChance = CriticalChance * (statusEffect.portionValue / 100);
+                CriticalChance -= CriticalChance;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/Row4/CriticalChance/Value").GetComponent<TextMeshProUGUI>().text = CriticalChance.ToString();
+                    gameObject.transform.Find("InfoPanel/Row4/CriticalChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                }
+            }
+            else if (statusEffect.statAffection == StatAffection.CriticalDamage)
+            {
+                StoredCriticalDamage = CriticalDamage;
+                DebuffCriticalDamage = CriticalDamage * (statusEffect.portionValue / 100);
+                CriticalDamage -= CriticalDamage;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/Row4/CriticalDamage/Value").GetComponent<TextMeshProUGUI>().text = CriticalDamage.ToString();
+                    gameObject.transform.Find("InfoPanel/Row4/CriticalDamage/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                }
+            }
         }
     }
 
@@ -299,11 +329,39 @@ public class BattleCharacter : MonoBehaviour
     }
 
     /// <summary>
-    /// Used to check if character doesn't have some passive abilities that can trigget e.g. when his HP is below 50%.
+    /// Used to check if character doesn't have some passive abilities that can trigger when certain conditions are met e.g. his HP is below 50%.
     /// </summary>
-    public void CheckAbilityTriggers()
+    public void CheckTriggerStatusEffect()
     {
+        foreach (var ability in CombatAbilities)
+        {
+            if (ability.Type == Constants.Passive && ability.AbilityTrigger != AbilityTrigger.None)
+            {
+                foreach (var statusEffect in ability.PositiveStatusEffects)
+                {
+                    if (PositiveAppliedEffects.Count > 0)
+                    {
+                        foreach (var positiveEffect in PositiveAppliedEffects)
+                        {
+                            if (positiveEffect.name == statusEffect.name)
+                            {
+                                return;
+                            }
+                        }
+                    }
 
+                    float currentHealth = (float)HitPoints / (float)MaxHitPoints;
+
+                    if (ability.AbilityTrigger == AbilityTrigger.Health75 && currentHealth <= 0.75 ||
+                        ability.AbilityTrigger == AbilityTrigger.Health50 && currentHealth <= 0.5 ||
+                        ability.AbilityTrigger == AbilityTrigger.Health25 && currentHealth <= 0.25)
+                    {
+                        ApplyBuffEffect(statusEffect);
+                        DisplayEffect(gameObject, statusEffect, false, false);
+                    }
+                }           
+            }
+        }
     }
 
     /// <summary>
@@ -339,6 +397,8 @@ public class BattleCharacter : MonoBehaviour
    
         newItem.transform.Find("Image/Icon").GetComponent<Image>().sprite = AssetBundleManager.AssignCombatSpriteToSlot(statusEffect.name);
         newItem.transform.Find("GUID/guid").name = statusEffect.guid.ToString();
+        newItem.transform.Find("ChildName").name = statusEffect.name;
+        newItem.name = statusEffect.name;
     }
 
     public void ApplyBuffEffect(StatusEffect statusEffect)
@@ -438,8 +498,32 @@ public class BattleCharacter : MonoBehaviour
 
                 if (InfoPanel.activeSelf)
                 {
-                    gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().text = CounterChance.ToString();
+                    gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().text = AttackSpeed.ToString();
                     gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                }
+            }
+            else if (statusEffect.statAffection == StatAffection.CriticalChance)
+            {
+                StoredCriticalChance = CriticalChance;
+                BuffCriticalChance = CriticalChance * (statusEffect.portionValue / 100);
+                CriticalChance -= DebuffCriticalChance;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/Row4/CriticalChance/Value").GetComponent<TextMeshProUGUI>().text = CriticalChance.ToString();
+                    gameObject.transform.Find("InfoPanel/Row4/CriticalChance/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                }
+            }
+            else if (statusEffect.statAffection == StatAffection.CriticalDamage)
+            {
+                StoredCriticalDamage = CriticalDamage;
+                BuffCriticalDamage = CriticalDamage * (statusEffect.portionValue / 100);
+                CriticalDamage -= DebuffCriticalDamage;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/Row4/CriticalDamage/Value").GetComponent<TextMeshProUGUI>().text = CriticalDamage.ToString();
+                    gameObject.transform.Find("InfoPanel/Row4/CriticalDamage/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
                 }
             }
         }
@@ -604,7 +688,23 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    public bool IsCombatantStunned()
+    public bool IsInvisible()
+    {
+        if (PositiveAppliedEffects.Count > 0)
+        {
+            foreach (var effect in PositiveAppliedEffects)
+            {
+                if (effect.name == Constants.Invisible)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public bool IsStunned()
     {
         if (NegativeAppliedEffects.Count > 0)
         {
@@ -720,7 +820,7 @@ public class BattleCharacter : MonoBehaviour
 
         if (GameObject.Find(Constants.FightManager).TryGetComponent<FightManager>(out var fightManager))
         {
-            if (IsCombatantStunned())
+            if (IsStunned())
             {
                 Timebar.fillAmount = 0;
                 CheckNegativeEffects(fightManager).Forget();
@@ -760,8 +860,12 @@ public class BattleCharacter : MonoBehaviour
                 {
                     if (battleCharacter != null && battleCharacter.Faction == Faction.Player)
                     {
-                        fightManager.EnemiesTarget = combatant;
-                        break;
+                        if (!battleCharacter.IsInvisible() ||
+                            battleCharacter.IsInvisible() && fightManager.PlayerGroupInvisible())
+                        {
+                            fightManager.EnemiesTarget = combatant;
+                            break;
+                        }
                     }
                 }
             }
@@ -786,17 +890,17 @@ public class BattleCharacter : MonoBehaviour
             if (CombatAbilities.Count > 0)
             {
                 int abilityIndex;
+                var filteredAbilities = CombatAbilities.Where(ability => ability.Type != Constants.Passive).ToList();
 
                 if (index == -1)
                 {
-                    abilityIndex = UnityEngine.Random.Range(0, CombatAbilities.Count);
+                    abilityIndex = UnityEngine.Random.Range(0, filteredAbilities.Count);
                 }
                 else
                 {
                     abilityIndex = index;
                 }
 
-                var filteredAbilities = CombatAbilities.Where(ability => ability.Type != Constants.Passive).ToList();
                 var randomAbility = filteredAbilities[abilityIndex];
                 fightManager.ActiveAbility = randomAbility;
                 combatantFunctions.AttackAllyTarget(randomAbility);
@@ -886,7 +990,8 @@ public class BattleCharacter : MonoBehaviour
     public void ShowInfoPanel()
     {
         InfoPanel.SetActive(true);
-        FillInfoPanelStats(AttackSpeed, HitPoints, Armor, ShieldPoints, MeleeAttack, RangedAttack, PsiDamage, HitChance, Dodge, Resistance, CounterChance, Penetration);
+        FillInfoPanelStats(AttackSpeed, HitPoints, Armor, ShieldPoints, MeleeAttack, RangedAttack, PsiDamage, HitChance, Dodge, Resistance, CounterChance, 
+            Penetration, CriticalChance, CriticalDamage);
         _ = ShowInfoPanelAsync();
     }
 
@@ -901,7 +1006,7 @@ public class BattleCharacter : MonoBehaviour
 
     public async UniTask ShowInfoPanelAsync()
     {
-        float totalTime = 1f;
+        float totalTime = 0.3f;
         float currentTime = 0f;
         float visualPosXend = 119.81f;
         float visualPosXstart = 0f;
@@ -1189,6 +1294,22 @@ public class BattleCharacter : MonoBehaviour
             if (InfoPanel.activeSelf)
                 ReturnStatToOriginalFloat("InfoPanel/Row1/AttackSpeed/Value", AttackSpeed, BuffAttackSpeed, DebuffAttackSpeed);
         }
+        else if (statusEffect.statAffection == StatAffection.CriticalChance)
+        {
+            CriticalChance += DebuffCriticalChance;
+            DebuffCriticalChance = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/Row4/CriticalChance/Value", CriticalChance, BuffCriticalChance, DebuffCriticalChance);
+        }
+        else if (statusEffect.statAffection == StatAffection.CriticalDamage)
+        {
+            CriticalDamage += DebuffCriticalDamage;
+            DebuffCriticalDamage = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/Row4/CriticalDamage/Value", CriticalDamage, BuffCriticalDamage, DebuffCriticalDamage);
+        }
     }
 
     /// <summary>
@@ -1222,6 +1343,22 @@ public class BattleCharacter : MonoBehaviour
 
             if (InfoPanel.activeSelf)
                 ReturnStatToOriginalFloat("InfoPanel/Row1/AttackSpeed/Value", AttackSpeed, BuffAttackSpeed, DebuffAttackSpeed);
+        }
+        else if (statusEffect.statAffection == StatAffection.CriticalChance)
+        {
+            CriticalChance += BuffCriticalChance;
+            BuffCriticalChance = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/Row4/CriticalChance/Value", CriticalChance, BuffCriticalChance, DebuffCriticalChance);
+        }
+        else if (statusEffect.statAffection == StatAffection.CriticalDamage)
+        {
+            CriticalDamage += BuffCriticalDamage;
+            BuffCriticalDamage = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/Row4/CriticalDamage/Value", CriticalDamage, BuffCriticalDamage, DebuffCriticalDamage);
         }
     }
 
@@ -1341,7 +1478,8 @@ public class BattleCharacter : MonoBehaviour
 
         if (InfoPanel.activeSelf)
         {
-            FillInfoPanelStats(attackSpeed, hitPoints, armor, shieldPoints, meleeAttack, rangedAttack, psiDamage, hitChance, dodge, resistance, counterChance, penetration);
+            FillInfoPanelStats(attackSpeed, hitPoints, armor, shieldPoints, meleeAttack, rangedAttack, psiDamage, hitChance, dodge, resistance, counterChance, 
+                penetration, criticalChance, criticalDamage);
         }
         else
         {
@@ -1366,13 +1504,15 @@ public class BattleCharacter : MonoBehaviour
     }
 
     public void FillInfoPanelStats(float attackSpeed, int hitPoints, int armor, int shieldPoints, int meleeAttack, int rangedAttack, int psiDamage, int hitChance,
-        int dodge, int resistance, int counterChance, int penetration)
+        int dodge, int resistance, int counterChance, int penetration, int criticalChance, int criticalDamage)
     {
         if (InfoPanel.activeSelf)
         {
             gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().text = attackSpeed.ToString("F1");
             gameObject.transform.Find("InfoPanel/Health/Value/CurrentValue").GetComponent<TextMeshProUGUI>().text = hitPoints.ToString();
             gameObject.transform.Find("InfoPanel/Health/Value/MaxValue").GetComponent<TextMeshProUGUI>().text = hitPoints.ToString();
+            gameObject.transform.Find("InfoPanel/Row4/CriticalChance/Value").GetComponent<TextMeshProUGUI>().text = criticalChance.ToString();
+            gameObject.transform.Find("InfoPanel/Row4/CriticalDamage/Value").GetComponent<TextMeshProUGUI>().text = criticalDamage.ToString();
 
             if (armor > 0)
             {
@@ -1418,11 +1558,11 @@ public class BattleCharacter : MonoBehaviour
 
             if (psiDamage > 0)
             {
-                gameObject.transform.Find("InfoPanel/PsiAttack/Value").GetComponent<TextMeshProUGUI>().text = psiDamage.ToString();
+                gameObject.transform.Find("InfoPanel/Row4/PsiAttack/Value").GetComponent<TextMeshProUGUI>().text = psiDamage.ToString();
             }
             else
             {
-                gameObject.transform.Find("InfoPanel/PsiAttack").gameObject.SetActive(false);
+                gameObject.transform.Find("InfoPanel/Row4/PsiAttack").gameObject.SetActive(false);
             }
 
             if (hitChance > 0)

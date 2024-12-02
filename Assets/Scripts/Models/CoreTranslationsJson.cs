@@ -2596,6 +2596,13 @@
          ""chinese"": ""从组中删除"",
          ""slovak"": ""Odstrániť zo skupiny""
         },
+        {
+            ""identifier"": ""Remove From Friends"",
+            ""english"": ""Remove from friends"",
+            ""russian"": ""Удалить из друзей"",
+            ""chinese"": ""从好友中删除"",
+            ""slovak"": ""Odstrániť zo zoznamu priateľov""
+        },
         
       {
         ""identifier"": ""Ignite"",
@@ -2626,11 +2633,53 @@
         ""slovak"": ""<color=#63ECFF>{activeCharName}</color> dostal/a <color=yellow>{damage} rany</color> z efektu <color=yellow>{statusEffectName}</color>.""       
       },
       {
+        ""identifier"": ""Wallet"",
+        ""english"": ""Wallet"",
+        ""russian"": ""Кошелек"",
+        ""chinese"": ""钱包"",
+        ""slovak"": ""Peňaženka""
+      },
+      {
+        ""identifier"": ""GalacticCredits"",
+        ""english"": ""Galactic credits"",
+        ""russian"": ""Галактические кредиты"",
+        ""chinese"": ""银河币"",
+        ""slovak"": ""Galaktické kredity""
+      },
+      {
+        ""identifier"": ""CurrencyRequest"",
+        ""english"": ""Please enter the recipient and the amount you are requesting."",
+        ""russian"": ""Пожалуйста, укажите получателя и сумму, которую вы запрашиваете."",
+        ""chinese"": ""请输入收件人和您要请求的金额。"",
+        ""slovak"": ""Zadajte príjemcu a sumu, ktorú požadujete.""
+      },
+      {
+        ""identifier"": ""CurrencySend"",
+        ""english"": ""Please enter the recipient and the amount you want to send."",
+        ""russian"": ""Пожалуйста, введите получателя и сумму, которую вы хотите отправить."",
+        ""chinese"": ""请输入收件人和您要发送的金额。"",
+        ""slovak"": ""Zadajte príjemcu a sumu, ktorú chcete poslať.""
+      },
+      {
         ""identifier"": ""FireEatingLeviathan"",
         ""english"": ""Fire-Eating Leviathan"",
         ""russian"": ""Гигантский пожиратель огня"",
         ""chinese"": ""噬火利维坦"",
         ""slovak"": ""Obrovský požierač ohňa""
+      },
+      {
+        ""identifier"": ""IceCreep"",
+        ""english"": ""Ice stalker"",
+        ""russian"": ""Ледяной сталкер"",
+        ""chinese"": ""冰影"",
+        ""slovak"": ""Ľadová obluda""
+      },
+      {
+        ""identifier"": ""Invisible"",
+        ""english"": ""Invisible"",
+        ""russian"": ""Невидимый"",
+        ""chinese"": ""无形的"",
+        ""slovak"": ""Neviditeľný""
       }
     ]
   }

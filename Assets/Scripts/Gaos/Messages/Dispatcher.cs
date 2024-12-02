@@ -89,7 +89,7 @@ namespace Gaos.Websocket
             }
             catch (System.Exception e)
             {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error sending message, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: sending message, namespaceId: {namespaceId}, classId: {classId}, methodId: {methodId}");
                 Debug.Log(e);
             }
         }
@@ -99,7 +99,7 @@ namespace Gaos.Websocket
         {
             const string METHOD_NAME = "Dispatch()";
 
-            disposeRequests();
+            DisposeRequests();
 
             try
             {
@@ -118,13 +118,13 @@ namespace Gaos.Websocket
                         DispatchGaos(ws, header, message);
                         return;
                     default:
-                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such namespaceId, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message - no such namespaceId, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
                         return;
                 }
             }
             catch (System.Exception e) 
             {
-                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
                 Debug.Log(e);
                 return;
             }
@@ -145,7 +145,7 @@ namespace Gaos.Websocket
                             PingPong.OnPong(ws, message);
                             return;
                         default:
-                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId} , methodId:  {header.MethodId}");
+                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId} , methodId:  {header.MethodId}");
                             return;
                     }
                 case (int)WebSocketClassIds.Authenticate:
@@ -155,7 +155,7 @@ namespace Gaos.Websocket
                                 Gaos.Messages.WsAuthentication.receiveAuthenticateResponse(message);
                                 return;
                             default:
-                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId} , methodId:  {header.MethodId}");
+                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId} , methodId:  {header.MethodId}");
                                 return;
                         }
                 default:
@@ -176,11 +176,11 @@ namespace Gaos.Websocket
                                 UnityBrowserChannel.BaseMessages.receiveStringWs(ws, message);
                                 return;
                             default:
-                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId}  , classId:   {header.ClassId}  , methodId:   {header.MethodId}");
+                                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message - no such methodId, namespaceId: {header.NamespaceId}  , classId:   {header.ClassId}  , methodId:   {header.MethodId}");
                                 return;
                         }
                 default:
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {header.NamespaceId}  , classId:   {header.ClassId}  , methodId:   {header.MethodId}");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message - no such classId, namespaceId: {header.NamespaceId}  , classId:   {header.ClassId}  , methodId:   {header.MethodId}");
                     return;
                 }
         }
@@ -197,11 +197,11 @@ namespace Gaos.Websocket
                             Gaos.Messages.Group.GroupGameDataChanged.receive(ws, message);
                             return;
                         default:
-                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId}  , classId:   {header.ClassId}  , methodId:   {header.MethodId}");
+                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message - no such methodId, namespaceId: {header.NamespaceId}  , classId:   {header.ClassId}  , methodId:   {header.MethodId}");
                             return;
                     }
                 default:
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message - no such classId, namespaceId: {header.NamespaceId}, classId: {header.ClassId}, methodId: {header.MethodId}");
                     return;
             }
         }
@@ -218,18 +218,18 @@ namespace Gaos.Websocket
                             Gaos.Messages.Group1.GroupCreditsChange.receive(ws, header, message);
                             return;
                         default:
-                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId}, methodId: {header.MethodId}");
+                            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message - no such methodId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId}, methodId: {header.MethodId}");
                             return;
                     }
                 default:
-                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: error processing message - no such classId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId}, methodId: {header.MethodId}");
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: processing message - no such classId, namespaceId: {header.NamespaceId} , classId:  {header.ClassId}, methodId: {header.MethodId}");
                     return;
             }
         }
 
-        static void disposeRequests()
+        public static void DisposeRequests()
         {
-            Gaos.Messages.WsAuthentication.disposeRequests();
+            Gaos.Messages.WsAuthentication.DisposeRequests();
         }
     }
 }

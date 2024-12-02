@@ -43,23 +43,24 @@ function GAO_WebSocketCreate(GAOS_WS, fnNameOnOpen, fnNameOnClose, fnNameOnError
     } else if (event.data instanceof ArrayBuffer) {
       var binaryData = new Uint8Array(event.data);
 
-      // Allocate memory on emcscripten heap (Emcscripten heap is just javascript ArrayBuffer allocated and passed to module on startup,
-      // Module.HEAPU32 is just Uint32Array view on that ArrayBuffer - 'Module.HEAPU32 = new Uint32Array(arrayBuffer)'). 
-      // We are allocating memory on emcscripten for the binary data and the length of the binary data.
-      // _malloc() always returns memory alligned to the biggest word for the architecture which should be 8 bytes word for int64 which
-      // guarantees that memory will be always properly alligned for any smaller words like int32, in16, int8).
-      // We are using the first 4 bystes for passing the length of the binary data which follows after.
-      var bufferPtr = Module._malloc(Uint32Array.BYTES_PER_ELEMENT + binaryData.length * binaryData.BYTES_PER_ELEMENT);
-      // write the length of the binary data to the buffer, 'bufferPtr >> 4' is divsion by 4 to get the number of 32-bit words (aka. Uint32Array elements)
-      Module.HEAPU32.set([binaryData.length], bufferPtr >> 4);
-      // write the binary data to the buffer
-      Module.HEAPU8.set(binaryData, bufferPtr + Uint32Array.BYTES_PER_ELEMENT);
+      {
+        const uint8View = new Uint8Array(binaryData);
+        const hexString = Array.from(uint8View, byte =>
+          ('0' + byte.toString(16)).slice(-2)
+        ).join('');
+        console.log(`websocketJs: message: ${hexString}`);
+      }
+      
 
-      window.unityInstance.SendMessage('WebSocketClientJs', fnNameOnMessageStr, bufferPtr);
 
-      Module._free(bufferPtr);
-    } else {
-      console.error('websocket - received data of unknown format');
+      // base64 encode the binary data
+      let binaryString = '';
+      const len = binaryData.byteLength;
+      for (let i = 0; i < len; i++) {
+          binaryString += String.fromCharCode(binaryData[i]);
+      }
+      let binaryString64 = window.btoa(binaryString);
+      window.unityInstance.SendMessage('WebSocketClientJs', fnNameOnMessageStr, binaryString64);
     }
   })
 

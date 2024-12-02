@@ -79,7 +79,7 @@ public static class Player
     public static int EnergyCapacity;
     public static int InventorySlots = 30;
     public static int ExplorationRadius;
-    public static int VisibilityRadius;
+    public static float VisibilityRadius = 1;
     public static int PickupRadius;
     public static int UsedInventorySlots;
     public static int BattleGroupSize = 3;
@@ -92,6 +92,7 @@ public static class Player
     // MODE VARIABLES
     public static bool CanProduce; // represents if player has Fabricator tool equipped
     public static bool InCombat; // represents if player is currently in battle (will pause all BuildingCycles)
+    public static bool InMultiplayer;
 
     // DISCOVERY FILTER
     public static bool CavesSwitch;
@@ -134,6 +135,15 @@ public static class Player
     public static bool PoweredEngineeringResearch;
     public static bool PharmaceuticalsResearch;
     public static bool ExplosivesResearch;
+
+    // CURRENCIES
+    public static List<Currency> Currencies = new();
+    //public static float GalacticCredits;
+    //public static float StellarTokens;
+    //public static float NebulaShards;
+    //public static float QuantumCoins;
+    //public static float VoidMarks;
+    //public static float ZyrrhCrystals;
 
     // Player abilities and status effects
     public static IList<CombatAbility> CombatAbilities = new List<CombatAbility>();
