@@ -79,7 +79,7 @@ public static class Player
     public static int EnergyCapacity;
     public static int InventorySlots = 30;
     public static int ExplorationRadius;
-    public static int VisibilityRadius;
+    public static float VisibilityRadius = 1;
     public static int PickupRadius;
     public static int UsedInventorySlots;
     public static int BattleGroupSize = 3;

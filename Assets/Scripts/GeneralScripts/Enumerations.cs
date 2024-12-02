@@ -113,7 +113,9 @@ public class Enumerations : MonoBehaviour
         Shield = 6,
         HitChance = 7,
         Dodge = 8,
-        CounterChance = 9
+        CounterChance = 9,
+        CriticalChance = 10,
+        CriticalDamage = 11
     }
 
     public enum PrefabSpawn

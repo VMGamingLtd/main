@@ -111,4 +111,12 @@ public class WalletManager : MonoBehaviour
             }
         }
     }
+
+    private void OnDisable()
+    {
+        foreach (Transform child in CurrencyList)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 }

@@ -13,8 +13,8 @@ EditorBuildSettings:
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: Assets/Scenes/milan_old.unity
-    guid: 7ab60da8a7c080b459967691751a8d02
-  - enabled: 1
+    guid: 18e63b581de9c894bba38c045b59378c
+  - enabled: 0
     path: Assets/Scenes/milan.unity
     guid: c19055c8aa294dc4ba62d0c9dd3324d9
   m_configObjects:
