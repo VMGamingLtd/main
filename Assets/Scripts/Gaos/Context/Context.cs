@@ -20,7 +20,7 @@ namespace Gaos.Context
         public static void SetJWT(string jwt)
         {
             JWT = jwt;
-            if (Gaos.Environment.Environment.GetEnvironment()["ENV_NAME"] == "Development")
+            if ((Gaos.Environment.Environment.GetEnvironment()["ENV_NAME"] == "Development") || (Gaos.Environment.Environment.GetEnvironment()["ENV_NAME"] == "Development_multi") )
             {
                 Debug.Log($"JWT: {jwt}");
             }

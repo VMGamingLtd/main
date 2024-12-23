@@ -24,7 +24,26 @@ namespace Gaos.Environment
                 env.Add("IS_PROFILE_HTTP_CALLS", "true");
                 env.Add("RELEASE_URL", "https://local.galacticodyssey.space/release");
 
-                env.Add("IS_SEND_GAME_DATA_DIFF", "false");
+                env.Add("IS_SEND_GAME_DATA_DIFF", "true");
+
+                env.Add("IS_DEBUG", "true");
+                env.Add("IS_DEBUG_GAME_DATA", "false");
+                env.Add("IS_DEBUG_SEND_GAMEDATA_BASE", "false");
+            } 
+            else if (envName == "Development_multi")
+            {
+                if (!wasEnvironmentNamePrinted)
+                {
+                    Debug.Log("Environment: Development_multi");
+                    wasEnvironmentNamePrinted = true;
+                }
+                env.Add("ENV_NAME", "Development_multi");
+                env.Add("GAOS_URL", "https://local.galacticodyssey.space/gaos");
+                env.Add("GAOS_WS", "wss://local.galacticodyssey.space/gaos/ws_multi");
+                env.Add("IS_PROFILE_HTTP_CALLS", "true");
+                env.Add("RELEASE_URL", "https://local.galacticodyssey.space/release");
+
+                env.Add("IS_SEND_GAME_DATA_DIFF", "true");
 
                 env.Add("IS_DEBUG", "true");
                 env.Add("IS_DEBUG_GAME_DATA", "false");
@@ -62,7 +81,8 @@ namespace Gaos.Environment
         public static Dictionary<string, string> GetEnvironment()
         {
             //return Environment.GetEnvironment_("Test");
-            return GetEnvironment_("Development");
+            return GetEnvironment_("Development_multi");
+            //return GetEnvironment_("Development");
         }
 
     }
