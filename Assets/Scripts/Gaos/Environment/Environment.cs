@@ -80,8 +80,8 @@ namespace Gaos.Environment
 
         public static Dictionary<string, string> GetEnvironment()
         {
-            //return Environment.GetEnvironment_("Test");
-            return GetEnvironment_("Development_multi");
+            return Environment.GetEnvironment_("Test");
+            //return GetEnvironment_("Development_multi");
             //return GetEnvironment_("Development");
         }
 
