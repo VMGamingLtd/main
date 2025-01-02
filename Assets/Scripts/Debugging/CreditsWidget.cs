@@ -66,6 +66,7 @@ namespace Assets.Scripts.Debuggging
         {
             if (Input.GetKeyDown(KeyCode.BackQuote))
             {
+                Debug.Log("@@@@@@@@@@@@@@@@@@@@@ BackQuote"); //@@@@@@@@@@@@@@@@@ 
                 showConsole = !showConsole;
             }
         }
