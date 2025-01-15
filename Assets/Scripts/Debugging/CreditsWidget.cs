@@ -156,7 +156,7 @@ namespace Assets.Scripts.Debuggging
         {
             const string METHOD_NAME = "LoadGroup()";
 
-            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Loading group");
+            //Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Loading group");
 
             var getMyGroupResponse = await Gaos.Groups.Groups.GetMyGroup.CallAsync();
             if (getMyGroupResponse == null)
