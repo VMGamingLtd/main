@@ -106,11 +106,14 @@ namespace Gaos.WebSocket
 
             try
             {
+                /*
+                if (Gaos.Environment.Environment.GetEnvironment()["IS_DEBUG"] == "true")
                 {
                     // convert buffer to hexa string
                     string hex = ToHexString(buffer);
                     Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: buffer: {hex}");
                 }
+                */
 
                 uint bytesReadHeader = 0;
                 GaoProtobuf.MessageHeader header = ParseMessageHeader(buffer, ref bytesReadHeader);
