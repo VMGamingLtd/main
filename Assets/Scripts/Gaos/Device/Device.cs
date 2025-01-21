@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
+using Js;
 
 namespace Gaos.Device.Device
 {
@@ -30,6 +31,28 @@ namespace Gaos.Device.Device
             request.Identification = SystemInfo.deviceUniqueIdentifier;
             request.PlatformType = GetPlatformType();
             request.BuildVersion = Application.version;
+
+            Context.Device.SetSharedSecret(null);
+            if (Application.platform == RuntimePlatform.WebGLPlayer && false)
+            {
+                JsDeriveSharedSecret.DeriveSharedSecret__Step1_GenerateKeyPair_coroutineResult coroutineResult = new JsDeriveSharedSecret.DeriveSharedSecret__Step1_GenerateKeyPair_coroutineResult();
+                yield return JsDeriveSharedSecret.DeriveSharedSecret__Step1_GenerateKeyPair(coroutineResult);
+                while(coroutineResult.isFinished == false)
+                {
+                    yield return JsDeriveSharedSecret.DeriveSharedSecret__Step1_GenerateKeyPair(coroutineResult);
+                }
+                if (coroutineResult.isError == true)
+                {
+                    TryToRegisterAgain = false;
+                    Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: DeriveSharedSecret__Step1_GenerateKeyPair failed");
+                    yield break; // this will exit the coroutine immediately
+                }
+
+                // derive the shared key for cleint/server encryption
+                int ecdhContext = coroutineResult.edhcContext;
+                string pubKey = JsDeriveSharedSecret.DeriveSharedSecret__Step2_Get_mySpkiPubKeyBase64(ecdhContext); 
+                request.ecdhPublicKey = pubKey;
+            }
 
             string requestJsonStr = JsonConvert.SerializeObject(request);
 
@@ -134,6 +157,26 @@ namespace Gaos.Device.Device
                     Context.Authentication.SetUserName("");
                     Context.Authentication.SetIsGuest(false);
                     Context.Authentication.SetJWT("");
+                }
+
+                if (DeviceRegisterResponse.ecdhContext != null)
+                {
+                    JsDeriveSharedSecret.DeriveSharedSecret__Step3_Import_serverPubkey_coroutineResult coroutineResult = new JsDeriveSharedSecret.DeriveSharedSecret__Step3_Import_serverPubkey_coroutineResult();
+                    yield return JsDeriveSharedSecret.DeriveSharedSecret__Step3_Import_serverPubkey_async(coroutineResult, (int)DeviceRegisterResponse.ecdhContext, DeviceRegisterResponse.ecdhPublicKey);
+                    while (coroutineResult.isFinished == false)
+                    {
+                        yield return JsDeriveSharedSecret.DeriveSharedSecret__Step3_Import_serverPubkey_async(coroutineResult, (int)DeviceRegisterResponse.ecdhContext, DeviceRegisterResponse.ecdhPublicKey);
+                    }
+                    if (coroutineResult.isError == true)
+                    {
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: DeriveSharedSecret__Step3_Import_serverPubkey failed");
+                        throw new System.Exception($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
+                    }
+                    string sharedSecret = JsDeriveSharedSecret.DeriveSharedSecret__Step4_Get_sharedSecret((int)DeviceRegisterResponse.ecdhContext);
+
+                    // base64 decode the shared secret
+                    byte[] sharedSecretBytes = System.Convert.FromBase64String(sharedSecret);
+                    Context.Device.SetSharedSecret(sharedSecretBytes);
                 }
             }
             else

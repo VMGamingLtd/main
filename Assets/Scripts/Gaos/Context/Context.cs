@@ -124,6 +124,7 @@ namespace Gaos.Context
     public class Device
     {
         private static int DeviceId = -1;
+        private static byte[] SharedSecret = null;
         public static void SetDeviceId(int deviceId)
         {
             DeviceId = deviceId;
@@ -131,6 +132,16 @@ namespace Gaos.Context
         public static int GetDeviceId()
         {
             return DeviceId;
+        }
+
+        public static void SetSharedSecret(byte[] sharedSecret)
+        {
+            SharedSecret = sharedSecret;
+        }
+
+        public static byte[] GetSharedSecret()
+        {
+            return SharedSecret;
         }
     }
 }
