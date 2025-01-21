@@ -1050,6 +1050,298 @@ namespace Assets.Scripts.Models
           ""castingTime"": 0
         }
       ]
+    },
+    {
+      ""index"": 28,
+      ""abilityName"": ""ThermalLeech"",
+      ""abilityType"": ""Melee"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": true,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 1.2,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 1.4,
+      ""cooldown"": 3,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""CriticalChanceDebuff"",
+          ""type"": 4,
+          ""statAffection"": 10,
+          ""chance"": 90,
+          ""portionValue"": 10,
+          ""duration"": 2,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        },
+        {
+          ""name"": ""CriticalDamageDebuff"",
+          ""type"": 4,
+          ""statAffection"": 11,
+          ""chance"": 90,
+          ""portionValue"": 50,
+          ""duration"": 2,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        },
+        {
+          ""name"": ""DodgeChanceDebuff"",
+          ""type"": 4,
+          ""statAffection"": 8,
+          ""chance"": 90,
+          ""portionValue"": 10,
+          ""duration"": 2,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""IceHit1"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 29,
+      ""abilityName"": ""GlacialBlight"",
+      ""abilityType"": ""Melee"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": true,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 1.4,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 1.6,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""AttackSpeedDebuff"",
+          ""type"": 4,
+          ""statAffection"": 2,
+          ""chance"": 50,
+          ""portionValue"": 20,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        },
+        {
+          ""name"": ""Poison"",
+          ""type"": 0,
+          ""statAffection"": 0,
+          ""chance"": 60,
+          ""portionValue"": 30,
+          ""duration"": 2,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""IcePoisonHit1"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 30,
+      ""abilityName"": ""BasiliskFreeze"",
+      ""abilityType"": ""Psi"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": true,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 1.0,
+      ""scaleMultiplication"": 1.4,
+      ""cooldown"": 3,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""Freeze"",
+          ""chance"": 80,
+          ""type"": 2,
+          ""statAffection"": 0,
+          ""portionValue"": 0,
+          ""duration"": 2,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""BasiliskEyes"",
+          ""prefabSpawn"": 0,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 0,
+          ""castingTime"": 1
+        },
+        {
+          ""prefabName"": ""Freeze"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 31,
+      ""abilityName"": ""IcetailSwing"",
+      ""abilityType"": ""Ranged"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": true,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 1.4,
+      ""psiDamageScale"": 0,
+      ""scaleMultiplication"": 1.6,
+      ""cooldown"": 0,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""AttackSpeedDebuff"",
+          ""type"": 4,
+          ""statAffection"": 2,
+          ""chance"": 40,
+          ""portionValue"": 30,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""IcetailSwing"",
+          ""prefabSpawn"": 0,
+          ""prefabRotation"": 1,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        },
+        {
+          ""prefabName"": ""IceExplosion"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 32,
+      ""abilityName"": ""Frostbolt"",
+      ""abilityType"": ""Psi"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": true,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 1.0,
+      ""scaleMultiplication"": 1.4,
+      ""cooldown"": 3,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [
+        {
+          ""name"": ""AttackSpeedDebuff"",
+          ""type"": 4,
+          ""statAffection"": 2,
+          ""chance"": 60,
+          ""portionValue"": 40,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        },
+        {
+          ""name"": ""Freeze"",
+          ""chance"": 25,
+          ""type"": 2,
+          ""statAffection"": 0,
+          ""portionValue"": 0,
+          ""duration"": 1,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""positiveEffectsList"": [],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""Frostbolt"",
+          ""prefabSpawn"": 0,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 1,
+          ""castingTime"": 1
+        },
+        {
+          ""prefabName"": ""FrostboltExplosion"",
+          ""prefabSpawn"": 1,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 1,
+          ""prefabMovement"": 0,
+          ""castingTime"": 0
+        }
+      ]
+    },
+    {
+      ""index"": 33,
+      ""abilityName"": ""GlacialBeacon"",
+      ""abilityType"": ""Summon"",
+      ""abilityWeapon"": null,
+      ""isMovingAbility"": false,
+      ""isFrontLineAoe"": false,
+      ""isBackLineAoe"": false,
+      ""meleeDamageScale"": 0,
+      ""rangedDamageScale"": 0,
+      ""psiDamageScale"": 1.0,
+      ""scaleMultiplication"": 1.4,
+      ""cooldown"": 2,
+      ""abilityTrigger"": 0,
+      ""negativeEffectsList"": [],
+      ""positiveEffectsList"": [
+        {
+          ""name"": ""AttackBuff"",
+          ""type"": 3,
+          ""statAffection"": 1,
+          ""chance"": 100,
+          ""portionValue"": 30,
+          ""duration"": 5,
+          ""isFrontLineAoe"": false,
+          ""isBackLineAoe"": false
+        }
+      ],
+      ""abilityPrefabsList"": [
+        {
+          ""prefabName"": ""Frostbolt"",
+          ""prefabSpawn"": 0,
+          ""prefabRotation"": 0,
+          ""prefabStart"": 0,
+          ""prefabMovement"": 1,
+          ""castingTime"": 1
+        }
+      ]
     }
   ]
 }

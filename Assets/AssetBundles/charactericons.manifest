@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 978204448
+CRC: 804291142
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0a157f50d1b73213969e5c4e9afe6415
+    Hash: 0ba9d71485f326b92d458312f0a64c3c
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -17,7 +17,7 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/AssetBundlesRepo/CharacterIcons/MagmaSlime.png
 - Assets/AssetBundlesRepo/CharacterIcons/SnowWarden.png
-- Assets/AssetBundlesRepo/CharacterIcons/Frostwyrm.png
+- Assets/AssetBundlesRepo/CharacterIcons/FrostWyrm.png
 - Assets/AssetBundlesRepo/CharacterIcons/FireBeetle.png
 - Assets/AssetBundlesRepo/CharacterIcons/HiveCenturion.png
 - Assets/AssetBundlesRepo/CharacterIcons/HellSpawn.png

@@ -620,7 +620,7 @@ namespace Assets.Scripts.Models
       ""name"": ""FrostWyrm"",
       ""race"": 3,
       ""classType"": 0,
-      ""battleFormation"": 1,
+      ""battleFormation"": 0,
       ""physicalProtection"": 6,
       ""fireProtection"": 0,
       ""coldProtection"": 9,
@@ -663,6 +663,124 @@ namespace Assets.Scripts.Models
         {
           ""index"": 24,
           ""name"": ""Stealth""
+        },
+        {
+          ""index"": 28,
+          ""name"": ""ThermalLeech""
+        }
+      ]
+    },
+    {
+      ""index"": 12,
+      ""location"": 10,
+      ""tier"": 3,
+      ""name"": ""CryoBasilisk"",
+      ""race"": 3,
+      ""classType"": 4,
+      ""battleFormation"": 1,
+      ""physicalProtection"": 10,
+      ""fireProtection"": 0,
+      ""coldProtection"": 10,
+      ""poisonProtection"": 6,
+      ""energyProtection"": 4,
+      ""psiProtection"": 0,
+      ""shieldPoints"": 0,
+      ""armor"": 28,
+      ""hitPoints"": 28,
+      ""attackSpeed"": 1.6,
+      ""meleePhysicalDamage"": 0,
+      ""meleeFireDamage"": 0,
+      ""meleeColdDamage"": 0,
+      ""meleePoisonDamage"": 0,
+      ""meleeEnergyDamage"": 0,
+      ""rangedPhysicalDamage"": 14,
+      ""rangedFireDamage"": 0,
+      ""rangedColdDamage"": 16,  
+      ""rangedPoisonDamage"": 0,
+      ""rangedEnergyDamage"": 0,
+      ""psiDamage"": 0,
+      ""hitChance"": 95,
+      ""criticalChance"": 8,
+      ""criticalDamage"": 60,
+      ""dodge"": 4,
+      ""resistance"": 10,
+      ""counterChance"": 3,
+      ""penetration"": 12,
+      ""strength"": 4,
+      ""perception"": 0,
+      ""intelligence"": 0,
+      ""agility"": 4,
+      ""charisma"": 0,
+      ""willpower"": 0,
+      ""abilities"": [
+        {
+          ""index"": 29,
+          ""name"": ""GlacialBlight""
+        },
+        {
+          ""index"": 30,
+          ""name"": ""BasiliskFreeze""
+        },
+        {
+          ""index"": 31,
+          ""name"": ""IcetailSwing""
+        }
+      ]
+    },
+    {
+      ""index"": 13,
+      ""location"": 10,
+      ""tier"": 4,
+      ""name"": ""SnowWarden"",
+      ""race"": 5,
+      ""classType"": 3,
+      ""battleFormation"": 0,
+      ""physicalProtection"": 10,
+      ""fireProtection"": 0,
+      ""coldProtection"": 20,
+      ""poisonProtection"": 16,
+      ""energyProtection"": 14,
+      ""psiProtection"": 20,
+      ""shieldPoints"": 35,
+      ""armor"": 15,
+      ""hitPoints"": 20,
+      ""attackSpeed"": 1.8,
+      ""meleePhysicalDamage"": 16,
+      ""meleeFireDamage"": 0,
+      ""meleeColdDamage"": 15,
+      ""meleePoisonDamage"": 0,
+      ""meleeEnergyDamage"": 0,
+      ""rangedPhysicalDamage"": 0,
+      ""rangedFireDamage"": 0,
+      ""rangedColdDamage"": 0,  
+      ""rangedPoisonDamage"": 0,
+      ""rangedEnergyDamage"": 0,
+      ""psiDamage"": 34,
+      ""hitChance"": 95,
+      ""criticalChance"": 10,
+      ""criticalDamage"": 80,
+      ""dodge"": 6,
+      ""resistance"": 20,
+      ""counterChance"": 6,
+      ""penetration"": 18,
+      ""strength"": 4,
+      ""perception"": 0,
+      ""intelligence"": 0,
+      ""agility"": 4,
+      ""charisma"": 0,
+      ""willpower"": 10,
+      ""abilities"": [
+        {
+          ""index"": 32,
+          ""name"": ""Frostbolt""
+        },
+        {
+          ""index"": 30,
+          ""name"": ""BasiliskFreeze""
+        },
+        {
+          ""index"": 31,
+          ""name"": ""IcetailSwing""
         }
       ]
     }

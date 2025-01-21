@@ -68,6 +68,7 @@ public static class Constants
     // Ability type names
     public const string Buff = "Buff";
     public const string Debuff = "Debuff";
+    public const string Summon = "Summon";
     public const string Damage = "Damage";
     public const string Passive = "Passive";
     public const string PassiveReflect = "PassiveReflect";
