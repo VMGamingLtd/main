@@ -15,8 +15,9 @@ namespace Friends
         {
             public string UserName { get; set; }
             public int UserId { get; set; }
-            public bool? IsFriend { get; set; }
-            public bool? IsFriendRequest { get; set; }
+            public bool? IsMyFriend { get; set; }
+            public bool? IsMyFriendRequest { get; set; }
+            public bool? IsFrienddRequestToMe { get; set; }
         }
 
         private static string CLASS_NAME = typeof(FriendsTabAddFriendManager).Name;
@@ -144,8 +145,9 @@ namespace Friends
                 AllUsers[++LastIndexAllUsers] = new FriendAddModel {
                     UserId = response.Users[i].UserId,
                     UserName = response.Users[i].UserName,
-                    IsFriend = response.Users[i].IsFriend,
-                    IsFriendRequest = response.Users[i].IsFriendRequest,
+                    IsMyFriend = response.Users[i].IsMyFriend,
+                    IsMyFriendRequest = response.Users[i].IsMyFriendRequest,
+                    IsFrienddRequestToMe = response.Users[i].IsFriendRequestToMe
                 };
 
                 if (i + 1 == MAX_SCROLL_LIST_LINES_COUNT)
@@ -183,30 +185,53 @@ namespace Friends
             Transform childObject_friendStatus = AllFriendsButtons[index].transform.Find("Info/Status");
             TextMeshProUGUI friendStatus = childObject_friendStatus.GetComponent<TextMeshProUGUI>();
             friendStatus.text = "";
-            if (user.IsFriendRequest == true)
+            if (user.IsMyFriendRequest == true)
             {
                 string message;
                 switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
-                        message = "Friend request";
+                        message = "Friend request from me";
                         break;
                     case SystemLanguage.Russian:
-                        message = "Запрос в друзья";
+                        message = "Запрос в друзья от меня";
                         break;
                     case SystemLanguage.Chinese:
-                        message = "好友请求";
+                        message = "我发出的朋友请求";
                         break;
                     case SystemLanguage.Slovak:
-                        message = "Žiadosť o priateľstvo";
+                        message = "Žiadosť o priateľstvo od mňa";
                         break;
                     default:
-                        message = "Friend request";
+                        message = "Friend request from me";
                         break;
                 }
                 friendStatus.text = message;
             }
-            if (user.IsFriend == true)
+            if (user.IsFrienddRequestToMe == true)
+            {
+                string message;
+                switch (Application.systemLanguage)
+                {
+                    case SystemLanguage.English:
+                        message = "Friend request to me";
+                        break;
+                    case SystemLanguage.Russian:
+                        message = "Запрос в друзья мне";
+                        break;
+                    case SystemLanguage.Chinese:
+                        message = "我收到的朋友请求";
+                        break;
+                    case SystemLanguage.Slovak:
+                        message = "Žiadosť o priateľstvo mne";
+                        break;
+                    default:
+                        message = "Friend request to me";
+                        break;
+                }
+                friendStatus.text = message;
+            }
+            if (user.IsMyFriend == true)
             {
                 string message;
                 switch (Application.systemLanguage)
@@ -231,26 +256,26 @@ namespace Friends
             }
 
             // disable / enable buttons
-            if (user.IsFriend == true)
+            if (user.IsMyFriend == true)
             {
                 AllFriendsButtons[index].transform.Find("ButtonAdd").gameObject.SetActive(false);
-                AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(true);
+                AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(false);
             }
             else
             {
-                if (user.IsFriendRequest == true)
+                if (user.IsMyFriendRequest == true)
                 {
                     AllFriendsButtons[index].transform.Find("ButtonAdd").gameObject.SetActive(false);
                     AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(true);
                 }
-                else if (user.IsFriend == false)
+                else if (user.IsFrienddRequestToMe == true)
                 {
                     AllFriendsButtons[index].transform.Find("ButtonAdd").gameObject.SetActive(true);
-                    AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(false);
+                    AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(true);
                 }
                 else
                 {
-                    AllFriendsButtons[index].transform.Find("ButtonAdd").gameObject.SetActive(false);
+                    AllFriendsButtons[index].transform.Find("ButtonAdd").gameObject.SetActive(true);
                     AllFriendsButtons[index].transform.Find("ButtonRevoke").gameObject.SetActive(false);
                 }
             }
@@ -261,12 +286,19 @@ namespace Friends
             int index_allusers = FilteredUsers[index];
             FriendAddModel user = AllUsers[index_allusers];
 
-            if (user.IsFriend == true) {
-                return;
-            }
-
             Gaos.Friends.RequestFriend.CallAsync(user.UserId).Forget();
-            user.IsFriendRequest = true;
+            if (user.IsFrienddRequestToMe == true)
+            {
+                user.IsMyFriend = true;
+                user.IsMyFriendRequest = false;
+                user.IsFrienddRequestToMe = false;
+            }
+            else
+            {
+                user.IsMyFriend = false;
+                user.IsMyFriendRequest = true;
+                user.IsFrienddRequestToMe = false;
+            }
             DisplayFriendButton(index);
         }
 
@@ -284,8 +316,9 @@ namespace Friends
             FriendAddModel user = AllUsers[index_allusers];
 
             Gaos.Friends.RemoveFriend.CallAsync(user.UserId).Forget();
-            user.IsFriend = false;
-            user.IsFriendRequest = false;
+                user.IsMyFriend = false;
+                user.IsMyFriendRequest = false;
+                user.IsFrienddRequestToMe = false;
             DisplayFriendButton(index);
         }
 

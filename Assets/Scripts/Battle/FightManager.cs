@@ -594,6 +594,34 @@ public class FightManager : MonoBehaviour
         RemoveAllCombatants();
     }
 
+    public int CheckActiveCombatants(bool isEnemyGroup)
+    {
+        int activeCombatants = 0;
+
+        foreach (var combatant in combatants)
+        {
+            if (isEnemyGroup)
+            {
+                if (combatant.TryGetComponent(out BattleCharacter battleCharacter) &&
+                    battleCharacter.IsEnemy())
+                {
+                    activeCombatants++;
+                }
+            }
+            else
+            {
+                if (combatant.TryGetComponent(out BattleCharacter battleCharacter) &&
+                    !battleCharacter.IsEnemy())
+                {
+                    activeCombatants++;
+                }
+            }
+        }
+
+        return activeCombatants;
+    }
+
+
     public void StartTimebars()
     {
         if (Combatants.Count > 0)

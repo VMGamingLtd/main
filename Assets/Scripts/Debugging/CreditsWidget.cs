@@ -24,14 +24,14 @@ namespace Assets.Scripts.Debuggging
         private GroupMember groupOwner = new GroupMember();
         private List<GroupMember> groupMembers = new List<GroupMember>();
 
-        void OnEnable()
+        public void OnEnable()
         {
             LoadGroupUntill().Forget();
             // Register the listener
             Gaos.Messages.Group1.GroupCreditsChange.OnGroupCreditsChange += HandleGroupCreditsChange;
         }
 
-        void OnDisable()
+        public void OnDisable()
         {
             // Unregister the listener
             Gaos.Messages.Group1.GroupCreditsChange.OnGroupCreditsChange -= HandleGroupCreditsChange;
@@ -62,17 +62,18 @@ namespace Assets.Scripts.Debuggging
             }
         }
 
-        void Update()
+        public void Update()
         {
             if (Input.GetKeyDown(KeyCode.BackQuote))
             {
+                Debug.Log("@@@@@@@@@@@@@@@@@@@@@ BackQuote"); //@@@@@@@@@@@@@@@@@ 
                 showConsole = !showConsole;
             }
         }
 
         private string textField_value;
 
-        void OnGUI()
+        public void OnGUI()
         {
             if (!showConsole) return;
 
@@ -155,7 +156,7 @@ namespace Assets.Scripts.Debuggging
         {
             const string METHOD_NAME = "LoadGroup()";
 
-            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Loading group");
+            //Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: Loading group");
 
             var getMyGroupResponse = await Gaos.Groups.Groups.GetMyGroup.CallAsync();
             if (getMyGroupResponse == null)

@@ -153,6 +153,9 @@ public class LoginScreenManager : MonoBehaviour
         {
             Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: User not logged in, erorr: {Gaos.User.User.UserLogin.ResponseErrorKind}");
             errorText.text = GetErrorMessage(Gaos.User.User.UserLogin.ResponseErrorKind);
+
+            buttonBack.interactable = true;
+            buttonLogin.interactable = true;
         }
     }
 

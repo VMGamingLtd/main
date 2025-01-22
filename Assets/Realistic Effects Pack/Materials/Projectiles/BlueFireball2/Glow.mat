@@ -29,8 +29,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _ColorStrength: 1
     - _InvFade: 3
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _TintColor: {r: 0, g: 0.07251522, b: 0.19117647, a: 1}
+    - _TintColor: {r: 0.0944108, g: 0.23993723, b: 0.49056602, a: 1}
   m_BuildTextureStacks: []

@@ -20,7 +20,7 @@ namespace Gaos.Context
         public static void SetJWT(string jwt)
         {
             JWT = jwt;
-            if (Gaos.Environment.Environment.GetEnvironment()["ENV_NAME"] == "Development")
+            if ((Gaos.Environment.Environment.GetEnvironment()["ENV_NAME"] == "Development") || (Gaos.Environment.Environment.GetEnvironment()["ENV_NAME"] == "Development_multi") )
             {
                 Debug.Log($"JWT: {jwt}");
             }
@@ -124,6 +124,7 @@ namespace Gaos.Context
     public class Device
     {
         private static int DeviceId = -1;
+        private static byte[] SharedSecret = null;
         public static void SetDeviceId(int deviceId)
         {
             DeviceId = deviceId;
@@ -131,6 +132,16 @@ namespace Gaos.Context
         public static int GetDeviceId()
         {
             return DeviceId;
+        }
+
+        public static void SetSharedSecret(byte[] sharedSecret)
+        {
+            SharedSecret = sharedSecret;
+        }
+
+        public static byte[] GetSharedSecret()
+        {
+            return SharedSecret;
         }
     }
 }

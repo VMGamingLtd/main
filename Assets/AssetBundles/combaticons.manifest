@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2141890882
+CRC: 1828773824
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 59fe64db09a97aa684628a4aa7b489c4
+    Hash: 6188a25345b6a31ea1e572b05eda8e89
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2d8df09e698f722ada1caa03d3413830
@@ -17,6 +17,7 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/AssetBundlesRepo/CombatIcons/DodgeChance.png
 - Assets/AssetBundlesRepo/CombatIcons/AoE.png
+- Assets/AssetBundlesRepo/CombatIcons/Freeze..png
 - Assets/AssetBundlesRepo/CombatIcons/Stun.png
 - Assets/AssetBundlesRepo/CombatIcons/CounterChance.png
 - Assets/AssetBundlesRepo/CombatIcons/Player.png
@@ -26,6 +27,7 @@ Assets:
 - Assets/AssetBundlesRepo/CombatIcons/Turn.png
 - Assets/AssetBundlesRepo/CombatIcons/AttackDebuff.png
 - Assets/AssetBundlesRepo/CombatIcons/CounterChanceBuff.png
+- Assets/AssetBundlesRepo/CombatIcons/Poison.png
 - Assets/AssetBundlesRepo/CombatIcons/Skull.png
 - Assets/AssetBundlesRepo/CombatIcons/AttackSpeedDebuff.png
 - Assets/AssetBundlesRepo/CombatIcons/AttackSpeedBuff.png

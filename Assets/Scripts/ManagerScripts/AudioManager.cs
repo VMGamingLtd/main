@@ -20,7 +20,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip hungerSlotClip;
     public AudioClip equipClip;
 
-    private void Awake()
+    private void Start()
     {
         audioSource = GetComponent<AudioSource>();
         UpdateVolume();

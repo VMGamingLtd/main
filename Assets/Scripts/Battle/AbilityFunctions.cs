@@ -6,7 +6,7 @@ public class AbilityFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private FightManager fightManager;
     void Awake()
     {
-        fightManager = GameObject.Find("FIGHTMANAGER").GetComponent<FightManager>();
+        fightManager = GameObject.Find(Constants.FightManager).GetComponent<FightManager>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

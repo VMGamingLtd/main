@@ -107,7 +107,24 @@ public class CombatantFunctions : MonoBehaviour, IPointerEnterHandler, IPointerE
             {
                 int damage = 0;
 
-                if (fightManager.ActiveAbility.Type != Constants.Buff)
+                if (fightManager.ActiveAbility.Type == Constants.Summon)
+                {
+                    if (activeCharacter.IsEnemy())
+                    {
+                        if (fightManager.CheckActiveCombatants(true) < 6)
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        if (fightManager.CheckActiveCombatants(false) < 6)
+                        {
+
+                        }
+                    }
+                }
+                else if (fightManager.ActiveAbility.Type != Constants.Buff)
                 {
                     // we check if the target has any reflection debuffs that should be applied before the damage is calculated
                     if (targetCharacter.GetReflectionStatusEffects().Count > 0)

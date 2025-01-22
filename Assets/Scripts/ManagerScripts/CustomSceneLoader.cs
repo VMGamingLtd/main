@@ -108,6 +108,15 @@ public class CustomSceneLoader : MonoBehaviour
     {
         string METHOD_NAME = "RestartGame()";
 
+        // If webgl restart the game by reloading the page
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: reloading the page...");
+            yield return new WaitForSeconds(1);
+            Js.JsCalls.Restart();
+            yield return null;
+        }
+
         if (Gaos.WebSocket.WebSocketClient.CurrentWesocketClient != null)
         {
             Gaos.WebSocket.WebSocketClient.CurrentWesocketClient.Suspend();
