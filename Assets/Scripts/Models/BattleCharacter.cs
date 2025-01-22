@@ -75,7 +75,10 @@ public class BattleCharacter : MonoBehaviour
     private int EnergyProtection;
     private int PsiProtection;
     private int Resistance;
+    private int StoredDodge;
     private int Dodge;
+    private int BuffDodge;
+    private int DebuffDodge;
     private int Strength;
     private int Perception;
     private int Intelligence;
@@ -253,11 +256,23 @@ public class BattleCharacter : MonoBehaviour
                     gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
                 }
             }
+            else if (statusEffect.statAffection == StatAffection.Dodge)
+            {
+                StoredDodge = Dodge;
+                DebuffDodge = Dodge * (statusEffect.portionValue / 100);
+                Dodge -= DebuffDodge;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/Row2/Dodge/Value").GetComponent<TextMeshProUGUI>().text = Dodge.ToString();
+                    gameObject.transform.Find("InfoPanel/Row2/Dodge/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonRedFull;
+                }
+            }
             else if (statusEffect.statAffection == StatAffection.CriticalChance)
             {
                 StoredCriticalChance = CriticalChance;
                 DebuffCriticalChance = CriticalChance * (statusEffect.portionValue / 100);
-                CriticalChance -= CriticalChance;
+                CriticalChance -= DebuffCriticalChance;
 
                 if (InfoPanel.activeSelf)
                 {
@@ -269,7 +284,7 @@ public class BattleCharacter : MonoBehaviour
             {
                 StoredCriticalDamage = CriticalDamage;
                 DebuffCriticalDamage = CriticalDamage * (statusEffect.portionValue / 100);
-                CriticalDamage -= CriticalDamage;
+                CriticalDamage -= DebuffCriticalDamage;
 
                 if (InfoPanel.activeSelf)
                 {
@@ -500,6 +515,18 @@ public class BattleCharacter : MonoBehaviour
                 {
                     gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().text = AttackSpeed.ToString();
                     gameObject.transform.Find("InfoPanel/Row1/AttackSpeed/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
+                }
+            }
+            else if (statusEffect.statAffection == StatAffection.Dodge)
+            {
+                StoredDodge = Dodge;
+                BuffDodge = Dodge * (statusEffect.portionValue / 100);
+                Dodge -= DebuffDodge;
+
+                if (InfoPanel.activeSelf)
+                {
+                    gameObject.transform.Find("InfoPanel/Row2/Dodge/Value").GetComponent<TextMeshProUGUI>().text = Dodge.ToString();
+                    gameObject.transform.Find("InfoPanel/Row2/Dodge/Value").GetComponent<TextMeshProUGUI>().color = UIColors.NeonGreenFull;
                 }
             }
             else if (statusEffect.statAffection == StatAffection.CriticalChance)
@@ -961,12 +988,16 @@ public class BattleCharacter : MonoBehaviour
         Selection3.SetActive(true);
         Selection4.SetActive(true);
 
-        if (GameObject.Find("FIGHTMANAGER").TryGetComponent<FightManager>(out var fightManager))
+        if (GameObject.Find(Constants.FightManager).TryGetComponent<FightManager>(out var fightManager))
         {
             fightManager.EnemyTarget = gameObject;
         }
     }
 
+    /// <summary>
+    /// Determines whether the combatant belongs to Enemy faction or Player faction.
+    /// </summary>
+    /// <returns></returns>
     public bool IsEnemy()
     {
         if (Faction == Faction.Enemy)
@@ -1294,6 +1325,14 @@ public class BattleCharacter : MonoBehaviour
             if (InfoPanel.activeSelf)
                 ReturnStatToOriginalFloat("InfoPanel/Row1/AttackSpeed/Value", AttackSpeed, BuffAttackSpeed, DebuffAttackSpeed);
         }
+        else if (statusEffect.statAffection == StatAffection.Dodge)
+        {
+            Dodge += DebuffDodge;
+            DebuffDodge = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/Row2/Dodge/Value", Dodge, BuffDodge, DebuffDodge);
+        }
         else if (statusEffect.statAffection == StatAffection.CriticalChance)
         {
             CriticalChance += DebuffCriticalChance;
@@ -1343,6 +1382,14 @@ public class BattleCharacter : MonoBehaviour
 
             if (InfoPanel.activeSelf)
                 ReturnStatToOriginalFloat("InfoPanel/Row1/AttackSpeed/Value", AttackSpeed, BuffAttackSpeed, DebuffAttackSpeed);
+        }
+        else if (statusEffect.statAffection == StatAffection.Dodge)
+        {
+            Dodge += BuffDodge;
+            BuffDodge = 0;
+
+            if (InfoPanel.activeSelf)
+                ReturnStatToOriginal("InfoPanel/Row2/Dodge/Value", Dodge, BuffDodge, DebuffDodge);
         }
         else if (statusEffect.statAffection == StatAffection.CriticalChance)
         {
