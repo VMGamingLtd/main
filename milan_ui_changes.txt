@@ -1,2 +1,0 @@
-1)
-modified game object Canvas/Account/FriendsTabAddFriend/GuiTemplates/FrriendsButton

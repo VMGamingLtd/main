@@ -8,13 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/First.unity
     guid: 8936248ebef31c74c9427e56b81c8f92
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Start.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: Assets/Scenes/milan_old.unity
-    guid: 9cb49213e119c7d4191e58b6b6e2cc21
-  - enabled: 1
+    guid: 5c29386f7534f1947bfccac6848a8720
+  - enabled: 0
     path: Assets/Scenes/milan.unity
     guid: 370d174f11d755c45bd4b881cbb3cd82
   m_configObjects: {}
