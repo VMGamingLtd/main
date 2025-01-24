@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Gaos.Routes.Model.GroupJson;
+using UnityEngine;
 
 public class FriendsGroupTabLoader : MonoBehaviour
 {
@@ -17,18 +15,11 @@ public class FriendsGroupTabLoader : MonoBehaviour
     {
         isMyGroupLoaded = false;
         GetMyGroups().Forget();
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
 
     }
 
     private async UniTaskVoid GetMyGroups()
     {
-
         myGroupResponse = await Gaos.Groups.Groups.GetMyGroup.CallAsync();
         if (myGroupResponse == null)
         {

@@ -12,15 +12,16 @@ using static SaveManager;
 public class NewGameUI : MonoBehaviour
 {
     public int slotNumber;
-    public GameObject newGameUI;
-    public GameObject saveSlots;
-    public BuildingManager buildingManager;
-    public InventoryManager inventoryManager;
-    public RecipeManager recipeManager;
-    public GameObject MainUI;
-    public GameObject Account;
-    public Button buttonToClick;
-    public BuildingIncrementor buildingIncrementor;
+    [SerializeField] GameObject newGameUI;
+    [SerializeField] GameObject saveSlots;
+    [SerializeField] BuildingManager buildingManager;
+    [SerializeField] InventoryManager inventoryManager;
+    [SerializeField] RecipeManager recipeManager;
+    [SerializeField] GameObject MainUI;
+    [SerializeField] GameObject Account;
+    [SerializeField] GameObject Multiplayer;
+    [SerializeField] Button buttonToClick;
+    [SerializeField] BuildingIncrementor buildingIncrementor;
     public RectTransform[] equipButtons = new RectTransform[9];
     private TranslationManager translationManager;
     private RecipeCreator recipeCreator;
@@ -565,6 +566,7 @@ public class NewGameUI : MonoBehaviour
         await UniTask.DelayFrame(50);
         CanvasGroup mainCanvasGroup = MainUI.GetComponent<CanvasGroup>();
         CanvasGroup accountCanvasGroup = Account.GetComponent<CanvasGroup>();
+        CanvasGroup multiplayerCanvasGroup = Multiplayer.GetComponent<CanvasGroup>();
         float totalTime = 0.5f;
         float currentTime = 0f;
         float currentAlpha = 0f;
@@ -576,10 +578,12 @@ public class NewGameUI : MonoBehaviour
             float t = currentTime / totalTime;
             mainCanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, t);
             accountCanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, t);
+            multiplayerCanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, t);
             await UniTask.Yield();
         }
         mainCanvasGroup.interactable = true;
         accountCanvasGroup.interactable = true;
+        multiplayerCanvasGroup.interactable = true;
         GlobalCalculator.GameStarted = true;
         Player.InCombat = false;
     }
