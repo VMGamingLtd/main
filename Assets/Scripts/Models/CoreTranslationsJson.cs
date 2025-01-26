@@ -840,6 +840,13 @@
         ""slovak"": ""Žiadosti o priateľstvá""
       },
       {
+          ""identifier"": ""GroupRequestList"",
+          ""english"": ""Group request list"",
+          ""russian"": ""Список запросов в группу"",
+          ""chinese"": ""群组请求列表"",
+          ""slovak"": ""Zoznam žiadostí do skupiny""
+      },
+      {
         ""identifier"": ""Submit"",
         ""english"": ""Submit"",
         ""russian"": ""Подтверждать"",
@@ -2583,6 +2590,13 @@
          ""slovak"": ""Žiadosť o priateľstvo""
        },
        {
+         ""identifier"": ""Friend Requests"",
+        ""english"": ""Friend requests"",
+        ""russian"": ""Запросы на дружбу"",
+        ""chinese"": ""好友请求"",
+        ""slovak"": ""Žiadosti o priateľstvo""
+       },
+       {
          ""identifier"": ""Leave Group"",
          ""english"": ""Leave group"",
          ""russian"": ""Покинуть группу"",
@@ -2602,6 +2616,13 @@
             ""russian"": ""Удалить из друзей"",
             ""chinese"": ""从好友中删除"",
             ""slovak"": ""Odstrániť zo zoznamu priateľov""
+        },
+        {
+            ""identifier"": ""Add group member"",
+            ""english"": ""Add group member"",
+            ""russian"": ""Добавить участника группы"",
+            ""chinese"": ""添加组成员"",
+            ""slovak"": ""Pridať člena skupiny""
         },
         
       {

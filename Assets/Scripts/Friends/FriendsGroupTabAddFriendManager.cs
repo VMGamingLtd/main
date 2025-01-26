@@ -229,19 +229,19 @@ namespace Friends
                 switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
-                        message = "Friend request";
+                        message = "Group request";
                         break;
                     case SystemLanguage.Russian:
-                        message = "Запрос в друзья";
+                        message = "Запрос в группу";
                         break;
                     case SystemLanguage.Chinese:
-                        message = "好友请求";
+                        message = "群组请求";
                         break;
                     case SystemLanguage.Slovak:
-                        message = "Žiadosť o priateľstvo";
+                        message = "Žiadosť o skupinu";
                         break;
                     default:
-                        message = "Friend request";
+                        message = "Group request";
                         break;
                 }
                 friendStatus.text = message;
@@ -252,19 +252,19 @@ namespace Friends
                 switch (Application.systemLanguage)
                 {
                     case SystemLanguage.English:
-                        message = "Friend";
+                        message = "Group member";
                         break;
                     case SystemLanguage.Russian:
-                        message = "Друг";
+                        message = "Член группы";
                         break;
                     case SystemLanguage.Chinese:
-                        message = "朋友";
+                        message = "群组成员";
                         break;
                     case SystemLanguage.Slovak:
-                        message = "Priateľ";
+                        message = "Člen skupiny";
                         break;
                     default:
-                        message = "Friend";
+                        message = "Group member";
                         break;
                 }
                 friendStatus.text = message;
