@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
 using Js;
+using System;
 
 namespace Gaos.Device.Device
 {
@@ -33,13 +34,13 @@ namespace Gaos.Device.Device
             request.BuildVersion = Application.version;
 
             Context.Device.SetSharedSecret(null);
-            if (Application.platform == RuntimePlatform.WebGLPlayer && false)
+            if (Application.platform == RuntimePlatform.WebGLPlayer && true)
             {
-                JsDeriveSharedSecret.DeriveSharedSecret__Step1_GenerateKeyPair_coroutineResult coroutineResult = new JsDeriveSharedSecret.DeriveSharedSecret__Step1_GenerateKeyPair_coroutineResult();
-                yield return JsDeriveSharedSecret.DeriveSharedSecret__Step1_GenerateKeyPair(coroutineResult);
+                JsDeriveSharedSecret.Step1_GenerateKeyPair_coroutineResult coroutineResult = new JsDeriveSharedSecret.Step1_GenerateKeyPair_coroutineResult();
+                yield return JsDeriveSharedSecret.Step1_GenerateKeyPair(coroutineResult);
                 while(coroutineResult.isFinished == false)
                 {
-                    yield return JsDeriveSharedSecret.DeriveSharedSecret__Step1_GenerateKeyPair(coroutineResult);
+                    yield return JsDeriveSharedSecret.Step1_GenerateKeyPair(coroutineResult);
                 }
                 if (coroutineResult.isError == true)
                 {
@@ -48,9 +49,12 @@ namespace Gaos.Device.Device
                     yield break; // this will exit the coroutine immediately
                 }
 
+
                 // derive the shared key for cleint/server encryption
                 int ecdhContext = coroutineResult.edhcContext;
-                string pubKey = JsDeriveSharedSecret.DeriveSharedSecret__Step2_Get_mySpkiPubKeyBase64(ecdhContext); 
+                string pubKey = JsDeriveSharedSecret.Step2_Get_mySpkiPubKeyBase64(ecdhContext); 
+                Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ cp 2700: edhcContext: {coroutineResult.edhcContext}");
+                request.ecdhContext = ecdhContext;
                 request.ecdhPublicKey = pubKey;
             }
 
@@ -161,21 +165,28 @@ namespace Gaos.Device.Device
 
                 if (DeviceRegisterResponse.ecdhContext != null)
                 {
-                    JsDeriveSharedSecret.DeriveSharedSecret__Step3_Import_serverPubkey_coroutineResult coroutineResult = new JsDeriveSharedSecret.DeriveSharedSecret__Step3_Import_serverPubkey_coroutineResult();
-                    yield return JsDeriveSharedSecret.DeriveSharedSecret__Step3_Import_serverPubkey_async(coroutineResult, (int)DeviceRegisterResponse.ecdhContext, DeviceRegisterResponse.ecdhPublicKey);
+                    JsDeriveSharedSecret.Step3_Import_serverPubkey_coroutineResult coroutineResult = new JsDeriveSharedSecret.Step3_Import_serverPubkey_coroutineResult();
+                    yield return JsDeriveSharedSecret.Step3_Import_serverPubkey_async(coroutineResult, (int)DeviceRegisterResponse.ecdhContext, DeviceRegisterResponse.ecdhPublicKey);
                     while (coroutineResult.isFinished == false)
                     {
-                        yield return JsDeriveSharedSecret.DeriveSharedSecret__Step3_Import_serverPubkey_async(coroutineResult, (int)DeviceRegisterResponse.ecdhContext, DeviceRegisterResponse.ecdhPublicKey);
+                        yield return JsDeriveSharedSecret.Step3_Import_serverPubkey_async(coroutineResult, (int)DeviceRegisterResponse.ecdhContext, DeviceRegisterResponse.ecdhPublicKey);
                     }
                     if (coroutineResult.isError == true)
                     {
                         Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: ERROR: DeriveSharedSecret__Step3_Import_serverPubkey failed");
                         throw new System.Exception($"{CLASS_NAME}:{METHOD_NAME}: ERROR: device not registered");
                     }
-                    string sharedSecret = JsDeriveSharedSecret.DeriveSharedSecret__Step4_Get_sharedSecret((int)DeviceRegisterResponse.ecdhContext);
+                    string sharedSecret = JsDeriveSharedSecret.Step4_Get_sharedSecret((int)DeviceRegisterResponse.ecdhContext);
 
                     // base64 decode the shared secret
                     byte[] sharedSecretBytes = System.Convert.FromBase64String(sharedSecret);
+                    // log the shared secret bytes as unsigned int
+                    /*
+                    for (int i = 0; i < sharedSecretBytes.Length; i++)
+                    {
+                        Debug.Log($"{CLASS_NAME}:{METHOD_NAME}: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ sharedSecretBytes[{i}]: {sharedSecretBytes[i]}");
+                    }
+                    */
                     Context.Device.SetSharedSecret(sharedSecretBytes);
                 }
             }
