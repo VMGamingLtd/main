@@ -1,5 +1,0 @@
-1)
-Added game object:
-
-Canvas / MainUI / FriendsTabFriendRequests
-

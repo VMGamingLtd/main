@@ -122,7 +122,6 @@ namespace Friends
                 Transform transformButtonAdd = friendRequestButton.transform.Find("ButtonAdd");
                 Button buttonAdd = transformButtonAdd.GetComponent<Button>();
                 buttonAdd.onClick.AddListener(MakeOnButtonAddClicked(lastIndexAllFriendRequestButtons));
-                Debug.LogWarning($"{CLASS_NAME}:{METHOD_NAME}: ButtonAdd not found or missing Button component.");
 
                 // Hook up "Revoke" (Decline)
                 Transform transformButtonRevoke = friendRequestButton.transform.Find("ButtonRevoke");
